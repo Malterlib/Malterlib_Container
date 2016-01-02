@@ -1,0 +1,55 @@
+// Copyright © 2015 Hansoft AB 
+// Distributed under the MIT license, see license text in LICENSE.Malterlib
+
+Import "../Core/Lib_Malterlib.MTarget"
+
+%Group "{Malterlib}/{Lib_Malterlib_Container}"
+{
+	%Group Container
+	{
+		%Group Include
+		{
+			Compile.Type "C++"
+			{
+				!!DocumentationEnabled true
+			}
+			%File "Include/Mib/Container/^*"
+		}
+		%File "Source/*"
+		%Group Documentation
+		{
+			%File "Documentation/*"
+		}
+	}
+}
+
+
+Property
+{
+	MalterlibLibrary_Container true
+	{
+		&
+		{
+			MalterlibLibrary_Container ""
+			MalterlibLibrary_All true
+		}
+	}
+	MalterlibSubLibraries "Container;@(MalterlibSubLibraries)"
+	{
+		!!MalterlibLibrary_Container true
+	}
+//	MalterlibSubLibrarySeparate_Lib_Malterlib_Container true
+	MalterlibIncludeRoots "@('Include'->MakeAbsolute());@(MalterlibIncludeRoots)"
+	{
+		!!MalterlibLibrary_Container true
+	}
+}
+
+Property
+{
+	!!MalterlibEnableInternalTests true
+	
+	MalterlibTests "Malterlib_Container;@(MalterlibTests)"
+	MalterlibTestFiles_Malterlib_Container "@('Test/*'->MakeAbsolute())"
+}
+
