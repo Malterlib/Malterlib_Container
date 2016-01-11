@@ -2101,6 +2101,9 @@ namespace NMib
 			{						
 				mint Low = 0;
 				mint High = f_GetLen();
+				
+				if (High == 0)
+					return -1;
 
 				while(Low < High)
 				{
