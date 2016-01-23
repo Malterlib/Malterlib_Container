@@ -36,11 +36,11 @@ namespace NMib
 				o_FormatInto += "[";
 				auto iValue = f_GetIterator();
 				if (iValue)
-					o_FormatInto += NStr::CStr::CFormat("{}") << *iValue;
+					o_FormatInto += typename tf_CFormatInto::CFormat("{}") << *iValue;
 				for (; iValue; ++iValue)
 				{
 					o_FormatInto += ", ";
-					o_FormatInto += NStr::CStr::CFormat("{}") << *iValue;
+					o_FormatInto += typename tf_CFormatInto::CFormat("{}") << *iValue;
 				}
 				o_FormatInto += "]";
 			}
@@ -50,12 +50,12 @@ namespace NMib
 				auto iValue = f_GetIterator();
 				if (iValue)
 				{
-					o_FormatInto += NStr::CStr::CFormat("\t{}") << *iValue;
+					o_FormatInto += typename tf_CFormatInto::CFormat("\t{}") << *iValue;
 					++iValue;
 					for (; iValue; ++iValue)
 					{
 						o_FormatInto += ",\n";
-						o_FormatInto += NStr::CStr::CFormat("\t{}") << *iValue;
+						o_FormatInto += typename tf_CFormatInto::CFormat("\t{}") << *iValue;
 					}
 					o_FormatInto += "\n]\n";
 				}
