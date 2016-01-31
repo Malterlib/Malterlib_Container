@@ -90,6 +90,21 @@ namespace NMib
 				return Iter;
 			}
 
+			typename CMap::CIterator f_GetIteratorLower(const t_CKey &_Start)
+			{
+				auto Iter = m_Regions.f_GetIterator_LargestLessThanEqual(_Start);
+				if (Iter == nullptr)
+					Iter = m_Regions.f_GetIterator();
+				return Iter;
+			}
+			typename CMap::CIteratorConst f_GetIteratorLower(const t_CKey &_Start) const
+			{
+				auto Iter = m_Regions.f_GetIterator_LargestLessThanEqual(_Start);
+				if (Iter == nullptr)
+					Iter = m_Regions.f_GetIterator();
+				return Iter;
+			}
+
 			void f_MakeRegion(const t_CKey &_Start, const t_CKey &_End)
 			{
 				f_MakeRegion(_Start, _End, CVoidFunctor());
