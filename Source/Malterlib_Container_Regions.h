@@ -105,6 +105,14 @@ namespace NMib
 				return Iter;
 			}
 
+			CRegionData const *f_GetData(const t_CKey &_Key) const
+			{
+				auto *pValue = m_Regions.f_FindLargestLessThanEqual(_Key);
+				if (pValue && _Key < pValue->f_End())
+					return pValue;
+				return nullptr;
+			}
+
 			void f_MakeRegion(const t_CKey &_Start, const t_CKey &_End)
 			{
 				f_MakeRegion(_Start, _End, CVoidFunctor());
