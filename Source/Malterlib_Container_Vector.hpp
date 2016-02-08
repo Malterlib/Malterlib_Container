@@ -36,7 +36,10 @@ namespace NMib
 				o_FormatInto += "[";
 				auto iValue = f_GetIterator();
 				if (iValue)
+				{
 					o_FormatInto += typename tf_CFormatInto::CFormat("{}") << *iValue;
+					++iValue;
+				}
 				for (; iValue; ++iValue)
 				{
 					o_FormatInto += ", ";
