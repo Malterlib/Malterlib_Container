@@ -57,6 +57,9 @@ namespace NMib
 			};
 			CMap m_Regions;
 		public:
+			
+			using CIterator = typename CMap::CIterator;
+			using CIteratorConst = typename CMap::CIteratorConst;
 
 			void f_Clear()
 			{
@@ -66,23 +69,23 @@ namespace NMib
 			{
 				return m_Regions.f_IsEmpty();
 			}
-			typename CMap::CIterator f_GetIterator()
+			CIterator f_GetIterator()
 			{
 				return m_Regions.f_GetIterator();
 			}
-			typename CMap::CIteratorConst f_GetIterator() const
+			CIteratorConst f_GetIterator() const
 			{
 				return m_Regions.f_GetIterator();
 			}
 
-			typename CMap::CIterator f_GetIterator(const t_CKey &_Start)
+			CIterator f_GetIterator(const t_CKey &_Start)
 			{
 				auto Iter = m_Regions.f_GetIterator_SmallestGreaterThanEqual(_Start);
 				if (Iter == nullptr)
 					Iter = m_Regions.f_GetIterator();
 				return Iter;
 			}
-			typename CMap::CIteratorConst f_GetIterator(const t_CKey &_Start) const
+			CIteratorConst f_GetIterator(const t_CKey &_Start) const
 			{
 				auto Iter = m_Regions.f_GetIterator_SmallestGreaterThanEqual(_Start);
 				if (Iter == nullptr)
@@ -90,14 +93,14 @@ namespace NMib
 				return Iter;
 			}
 
-			typename CMap::CIterator f_GetIteratorLower(const t_CKey &_Start)
+			CIterator f_GetIteratorLower(const t_CKey &_Start)
 			{
 				auto Iter = m_Regions.f_GetIterator_LargestLessThanEqual(_Start);
 				if (Iter == nullptr)
 					Iter = m_Regions.f_GetIterator();
 				return Iter;
 			}
-			typename CMap::CIteratorConst f_GetIteratorLower(const t_CKey &_Start) const
+			CIteratorConst f_GetIteratorLower(const t_CKey &_Start) const
 			{
 				auto Iter = m_Regions.f_GetIterator_LargestLessThanEqual(_Start);
 				if (Iter == nullptr)
