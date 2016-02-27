@@ -323,7 +323,7 @@ namespace NMib
 			{
 				mcp_bIsReference = NTraits::TCIsReference<t_CData>::mc_Value
 			};
-			class CAllocatorDisable
+			class CAllocatorDisable : public NMem::CAllocator_Base
 			{
 			public:
 				typedef typename t_CAllocator::CPtrHolder CPtrHolder;

@@ -89,7 +89,7 @@ namespace NMib
 			typedef TCLinkedListMember<t_CData> CMember;
 			
 
-			class CAllocatorDisable
+			class CAllocatorDisable : public NMem::CAllocator_Base
 			{
 			public:
 				typedef typename t_CAllocator::CPtrHolder CPtrHolder;
