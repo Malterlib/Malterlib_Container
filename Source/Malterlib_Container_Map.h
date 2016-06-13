@@ -1584,6 +1584,13 @@ namespace NMib
 				: CSuper((CSuper const &)_Other)
 			{
 			}
+			
+			TCSet(TCInitializerList<t_CKey> const &_Values)
+			{
+				for (auto &Value : _Values)
+					(*this)[Value];
+			}
+			
 			template <typename tf_COther>
 			TCSet(tf_COther &&_Other)
 				: CSuper(fg_Forward<tf_COther>(_Other))
