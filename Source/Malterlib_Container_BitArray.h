@@ -109,9 +109,9 @@ namespace NMib
 		
 		private:
 
-			static const CEntryType mcp_FullySet = TCLimitsInt<CEntryType>::mc_Max;
-			static const CEntryType mcp_FullySetLast = (CEntryType(1) << (t_nBits - (t_nBits / (ENumBitsPerEntry)) * (ENumBitsPerEntry))) - 1;
-			static const CEntryType mcp_FullyUnset = 0;
+			static constexpr CEntryType mcp_FullySet = TCLimitsInt<CEntryType>::mc_Max;
+			static constexpr CEntryType mcp_FullySetLast = (CEntryType(1) << (t_nBits - (t_nBits / (ENumBitsPerEntry)) * (ENumBitsPerEntry))) - 1;
+			static constexpr CEntryType mcp_FullyUnset = 0;
 
 		};
 		

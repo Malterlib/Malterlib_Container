@@ -89,8 +89,8 @@ namespace NMib
 			template <mint t_nBits, mint t_nBitsInternal, mint t_nLevel, template <mint t_nBits2> class t_TCBitArray, mint t_nMaxLevels>
 			struct TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, true>
 			{
-				static const mint mc_nLevels = t_nLevel;
-				static const bool mc_bIsLastLevelCalc = true;
+				static constexpr mint mc_nLevels = t_nLevel;
+				static constexpr bool mc_bIsLastLevelCalc = true;
 				
 				TCBitArrayPowerTwoInternalArray(bool _bInitValues);
 				void f_Clear();

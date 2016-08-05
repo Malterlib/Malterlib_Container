@@ -77,7 +77,7 @@ namespace NMib
 
 			typedef NPrivate::TCBitArrayPowerTwoInternalArray<t_nBits, t_nBits, 0, t_TCBitArray, t_nMaxLevels> CInternal;
 			CInternal m_Bits;
-			static const mint mc_nLevels = CInternal::mc_nLevels;
+			static constexpr mint mc_nLevels = CInternal::mc_nLevels;
 		};
 	}
 }
