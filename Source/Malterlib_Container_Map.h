@@ -933,7 +933,7 @@ namespace NMib
 				if (pData)
 					return pData->f_GetData();
 				else
-					return *((const CUserData *)0);
+					DMibError("Key not found");
 			}
 
 			template <typename tf_CKey>
