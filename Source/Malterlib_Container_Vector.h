@@ -2552,10 +2552,10 @@ namespace NMib
 		}
 
 		template <typename tf_CFirst, typename... tf_CParams>
-		TCVector<typename NTraits::TCRemoveReference<tf_CFirst>::CType> fg_CreateVector(tf_CFirst && _First, tf_CParams && ..._Params)
+		TCVector<typename NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>::CType> fg_CreateVector(tf_CFirst && _First, tf_CParams && ..._Params)
 		{
-			TCVector<typename NTraits::TCRemoveReference<tf_CFirst>::CType> Return;
-			fg_CreateVectorHelper<typename NTraits::TCRemoveReference<tf_CFirst>::CType>(Return, fg_Forward<tf_CFirst>(_First), fg_Forward<tf_CParams>(_Params)...);
+			TCVector<typename NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>::CType> Return;
+			fg_CreateVectorHelper<typename NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>::CType>(Return, fg_Forward<tf_CFirst>(_First), fg_Forward<tf_CParams>(_Params)...);
 			return Return;
 		}
 
