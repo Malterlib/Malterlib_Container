@@ -36,11 +36,14 @@ namespace NMib
 				o_FormatInto += "{";
 				auto iValue = this->f_GetIterator();
 				if (iValue)
-					o_FormatInto += typename tf_CFormatInto::CFormat("{} = {}") << iValue.f_GetKey() << *iValue;
-				for (; iValue; ++iValue)
 				{
-					o_FormatInto += ", ";
 					o_FormatInto += typename tf_CFormatInto::CFormat("{} = {}") << iValue.f_GetKey() << *iValue;
+					++iValue;
+					for (; iValue; ++iValue)
+					{
+						o_FormatInto += ", ";
+						o_FormatInto += typename tf_CFormatInto::CFormat("{} = {}") << iValue.f_GetKey() << *iValue;
+					}
 				}
 				o_FormatInto += "}";
 			}
@@ -73,11 +76,14 @@ namespace NMib
 				o_FormatInto += "{";
 				auto iValue = this->f_GetIterator();
 				if (iValue)
-					o_FormatInto += typename tf_CFormatInto::CFormat("{}") << *iValue;
-				for (; iValue; ++iValue)
 				{
-					o_FormatInto += ", ";
 					o_FormatInto += typename tf_CFormatInto::CFormat("{}") << *iValue;
+					++iValue;
+					for (; iValue; ++iValue)
+					{
+						o_FormatInto += ", ";
+						o_FormatInto += typename tf_CFormatInto::CFormat("{}") << *iValue;
+					}
 				}
 				o_FormatInto += "}";
 			}
