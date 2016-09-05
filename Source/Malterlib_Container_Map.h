@@ -1618,6 +1618,35 @@ namespace NMib
 			void f_Format(tf_CFormatInto &o_FormatInto, tf_CFormatOptions const &_Options) const;
 		};
 
+		template <typename tf_CReturn, typename... tf_CParams>
+		void fg_CreateSetHelper(TCSet<tf_CReturn> &_Return)
+		{
+		}
+
+		template <typename tf_CReturn, typename tf_CFirst, typename... tf_CParams>
+		void fg_CreateSetHelper(TCSet<tf_CReturn> &_Return, tf_CFirst &&_First, tf_CParams && ...p_Params)
+		{
+			_Return[fg_Forward<tf_CFirst>(_First)];
+			fg_CreateSetHelper<tf_CReturn>(_Return, fg_Forward<tf_CParams>(p_Params)...);
+		}
+
+		template <typename tf_CFirst, typename... tf_CParams>
+		TCSet<typename NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>::CType> fg_CreateSet(tf_CFirst && _First, tf_CParams && ...p_Params)
+		{
+			TCSet<typename NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>::CType> Return;
+			fg_CreateSetHelper<typename NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>::CType>(Return, fg_Forward<tf_CFirst>(_First), fg_Forward<tf_CParams>(p_Params)...);
+			return Return;
+		}
+
+		template <typename tf_CReturn, typename... tf_CParams>
+		TCSet<tf_CReturn> fg_CreateSet(tf_CParams && ...p_Params)
+		{
+			TCSet<tf_CReturn> Return;
+			fg_CreateSetHelper<tf_CReturn>(Return, fg_Forward<tf_CParams>(p_Params)...);
+			return Return;
+		}
+		
+
 		template <typename t_CKey, typename t_CCompare = NMib::CSort_Default>
 		class TCSetWithPool : public TCSet<t_CKey, t_CCompare, NMem::TCPoolAllocator<TCMapTreeMember<t_CKey, CMapSet>>> 
 		{
