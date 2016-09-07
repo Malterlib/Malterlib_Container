@@ -3,10 +3,18 @@
 
 #pragma once
 
+#include "Malterlib_Container_Shared.h"
+
 namespace NMib
 {
 	namespace NContainer
 	{
+		template <typename t_CData, typename t_CAllocator, typename t_CBoundsChecker, typename t_CInternalData, typename t_CStaticData>
+		struct TCIsContainer<TCVector<t_CData, t_CAllocator, t_CBoundsChecker, t_CInternalData, t_CStaticData>>
+		{
+			static constexpr bool mc_Value = true;
+		};
+		
 		template <typename t_CData, typename t_CAllocator, typename t_CBoundsChecker, typename t_CInternalData, typename t_CStaticData>
 		template <typename tf_COption>
 		bool TCVector<t_CData, t_CAllocator, t_CBoundsChecker, t_CInternalData, t_CStaticData>::f_FormatParseOption(CFormatOptions &_Options, tf_COption &_Option) const
@@ -37,12 +45,15 @@ namespace NMib
 				auto iValue = f_GetIterator();
 				if (iValue)
 				{
-					o_FormatInto += typename tf_CFormatInto::CFormat("{}") << *iValue;
+					auto pFormat = "{}";
+					if (TCIsContainer<t_CData>::mc_Value)
+						pFormat = "{vs}";
+					o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << *iValue;
 					++iValue;
 					for (; iValue; ++iValue)
 					{
 						o_FormatInto += ", ";
-						o_FormatInto += typename tf_CFormatInto::CFormat("{}") << *iValue;
+						o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << *iValue;
 					}
 				}
 				o_FormatInto += "]";
