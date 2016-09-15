@@ -2530,7 +2530,8 @@ namespace NMib
 
 			struct CFormatOptions
 			{
-				zbool m_bSingleLine;
+				bool m_bSingleLine = false;
+				bool m_bBrackets = true;
 			};
 			
 			template <typename tf_COption>

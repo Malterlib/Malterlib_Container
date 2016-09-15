@@ -28,6 +28,9 @@ namespace NMib
 					case 'S':
 						_Options.m_bSingleLine = true;
 						return true;
+					case 'B':
+						_Options.m_bBrackets = false;
+						return true;
 					}
 				}
 				break;
@@ -41,7 +44,9 @@ namespace NMib
 		{
 			if (_Options.m_LocalOptions.m_bSingleLine)
 			{
-				o_FormatInto += "{";
+				
+				if (_Options.m_LocalOptions.m_bBrackets)
+					o_FormatInto += "{";
 				auto iValue = this->f_GetIterator();
 				if (iValue)
 				{
@@ -64,11 +69,13 @@ namespace NMib
 						o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << iValue.f_GetKey() << *iValue;
 					}
 				}
-				o_FormatInto += "}";
+				if (_Options.m_LocalOptions.m_bBrackets)
+					o_FormatInto += "}";
 			}
 			else
 			{
-				o_FormatInto += "{\n";
+				if (_Options.m_LocalOptions.m_bBrackets)
+					o_FormatInto += "{\n";
 				auto iValue = this->f_GetIterator();
 				if (iValue)
 				{
@@ -79,9 +86,12 @@ namespace NMib
 						o_FormatInto += ",\n";
 						o_FormatInto += typename tf_CFormatInto::CFormat("\t{} = {}") << iValue.f_GetKey() << *iValue;
 					}
-					o_FormatInto += "\n}\n";
+					if (_Options.m_LocalOptions.m_bBrackets)
+						o_FormatInto += "\n}\n";
+					else
+						o_FormatInto += "\n";
 				}
-				else
+				else if (_Options.m_LocalOptions.m_bBrackets)
 					o_FormatInto += "}\n";
 			}
 		}
@@ -92,7 +102,8 @@ namespace NMib
 		{
 			if (_Options.m_LocalOptions.m_bSingleLine)
 			{
-				o_FormatInto += "{";
+				if (_Options.m_LocalOptions.m_bBrackets)
+					o_FormatInto += "{";
 				auto iValue = this->f_GetIterator();
 				if (iValue)
 				{
@@ -104,11 +115,13 @@ namespace NMib
 						o_FormatInto += typename tf_CFormatInto::CFormat("{}") << *iValue;
 					}
 				}
-				o_FormatInto += "}";
+				if (_Options.m_LocalOptions.m_bBrackets)
+					o_FormatInto += "}";
 			}
 			else
 			{
-				o_FormatInto += "{\n";
+				if (_Options.m_LocalOptions.m_bBrackets)
+					o_FormatInto += "{\n";
 				auto iValue = this->f_GetIterator();
 				if (iValue)
 				{
@@ -119,9 +132,12 @@ namespace NMib
 						o_FormatInto += ",\n";
 						o_FormatInto += typename tf_CFormatInto::CFormat("\t{}") << *iValue;
 					}
-					o_FormatInto += "\n}\n";
+					if (_Options.m_LocalOptions.m_bBrackets)
+						o_FormatInto += "\n}\n";
+					else
+						o_FormatInto += "\n";
 				}
-				else
+				else if (_Options.m_LocalOptions.m_bBrackets)
 					o_FormatInto += "}\n";
 			}
 		}
