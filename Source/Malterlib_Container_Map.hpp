@@ -107,12 +107,15 @@ namespace NMib
 				auto iValue = this->f_GetIterator();
 				if (iValue)
 				{
-					o_FormatInto += typename tf_CFormatInto::CFormat("{}") << *iValue;
+					auto pFormat = "{}";
+					if (TCIsContainer<t_CKey>::mc_Value)
+						pFormat = "{vs}";
+					o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << *iValue;
 					++iValue;
 					for (; iValue; ++iValue)
 					{
 						o_FormatInto += ", ";
-						o_FormatInto += typename tf_CFormatInto::CFormat("{}") << *iValue;
+						o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << *iValue;
 					}
 				}
 				if (_Options.m_LocalOptions.m_bBrackets)
