@@ -2567,6 +2567,9 @@ namespace NMib
 			fg_CreateVectorHelper<tf_CReturn>(Return, fg_Forward<tf_CParams>(_Params)...);
 			return Return;
 		}
+
+		template <typename t_CData, typename t_CAllocator = NMib::NMem::CAllocator_Heap, typename t_CBoundsChecker = CVectorBoundsCheckDefault, typename t_CInternalData = CVectorData, typename t_CStaticData = TCVectorStaticData_GrowDouble<16, false> >
+		using TCGrowingVector = TCVector<t_CData, t_CAllocator, t_CBoundsChecker, t_CInternalData, t_CStaticData>;
 	}
 
 	namespace NStream
