@@ -8,7 +8,7 @@ namespace NMib
 	namespace NContainer
 	{
 		template <mint t_nBits, mint t_nMaxLevels, template <mint t_nBits2> class t_TCBitArray>
-		TCBitArrayPowerTwo<t_nBits, t_nMaxLevels, t_TCBitArray>::TCBitArrayPowerTwo(bool _bInitValues)
+		constexpr TCBitArrayPowerTwo<t_nBits, t_nMaxLevels, t_TCBitArray>::TCBitArrayPowerTwo(bool _bInitValues)
 			: m_Bits(_bInitValues)
 		{
 		}

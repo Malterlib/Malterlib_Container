@@ -21,7 +21,7 @@ namespace NMib
 				typedef TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, (t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry> CSuper;
 				TCBitArray<t_nBitsInternal> m_Bits;
 				
-				TCBitArrayHierarchicalInternalArray(bool _bInitValues);
+				constexpr TCBitArrayHierarchicalInternalArray(bool _bInitValues);
 				void f_Clear();
 
 				template <typename tf_CStream>
@@ -65,7 +65,7 @@ namespace NMib
 			template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal>
 			struct TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, true>
 			{
-				TCBitArrayHierarchicalInternalArray(bool _bInitValues);
+				constexpr TCBitArrayHierarchicalInternalArray(bool _bInitValues);
 				void f_Clear();
 				
 				template <typename tf_CStream>

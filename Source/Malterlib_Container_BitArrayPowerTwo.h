@@ -15,7 +15,7 @@ namespace NMib
 		{
 		public:
 
-			TCBitArrayPowerTwo(bool _bInitValues = true);
+			constexpr TCBitArrayPowerTwo(bool _bInitValues = true);
 			void f_Clear();
 			template <typename tf_CStream>
 			void f_Feed(tf_CStream &_Stream) const;

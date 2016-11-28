@@ -8,7 +8,7 @@ namespace NMib
 	namespace NContainer
 	{
 		template <mint t_nBits>
-		TCBitArrayHierarchical<t_nBits>::TCBitArrayHierarchical(bool _bInitValues)
+		constexpr TCBitArrayHierarchical<t_nBits>::TCBitArrayHierarchical(bool _bInitValues)
 			: m_Bits(_bInitValues)
 		{
 		}

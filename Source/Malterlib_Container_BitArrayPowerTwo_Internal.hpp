@@ -11,7 +11,7 @@ namespace NMib
 		{
 			
 			template <mint t_nBits, mint t_nBitsInternal, mint t_nLevel, template <mint t_nBits2> class t_TCBitArray, mint t_nMaxLevels, bool t_bLast>
-			TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::TCBitArrayPowerTwoInternalArray(bool _bInitValues)
+			constexpr TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::TCBitArrayPowerTwoInternalArray(bool _bInitValues)
 				: CSuper(_bInitValues)
 				, m_Bits(_bInitValues)
 			{

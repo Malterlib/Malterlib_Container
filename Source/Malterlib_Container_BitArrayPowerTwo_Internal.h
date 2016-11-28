@@ -22,7 +22,7 @@ namespace NMib
 				typedef TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels> CSuper;
 				t_TCBitArray<t_nBitsInternal> m_Bits;
 				
-				TCBitArrayPowerTwoInternalArray(bool _bInitValues);
+				constexpr TCBitArrayPowerTwoInternalArray(bool _bInitValues);
 				
 				void f_Clear();
 

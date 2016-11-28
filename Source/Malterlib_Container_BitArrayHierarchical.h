@@ -18,7 +18,7 @@ namespace NMib
 			typedef typename TCBitArray<t_nBits>::CEntryType CEntryType;
 		public:
 			
-			TCBitArrayHierarchical(bool _bInitValues = true);
+			constexpr TCBitArrayHierarchical(bool _bInitValues = true);
 			void f_Clear();
 			
 			template <typename tf_CStream>

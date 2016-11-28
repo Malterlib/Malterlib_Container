@@ -13,7 +13,7 @@ namespace NMib
 		{
 			
 			template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal, bool t_bLast>
-			TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::TCBitArrayHierarchicalInternalArray(bool _bInitValues)
+			constexpr TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::TCBitArrayHierarchicalInternalArray(bool _bInitValues)
 				: CSuper(_bInitValues)
 				, m_Bits(_bInitValues)
 			{
@@ -227,7 +227,7 @@ namespace NMib
 			/// ====
 			
 			template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal>
-			inline_small TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, true>::TCBitArrayHierarchicalInternalArray(bool _bInitValues)
+			constexpr inline_small TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, true>::TCBitArrayHierarchicalInternalArray(bool _bInitValues)
 			{
 			}
 			
