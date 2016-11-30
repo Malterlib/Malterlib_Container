@@ -1159,9 +1159,10 @@ namespace NMib
 				return 0;
 			}
 
-			TCVector &operator << (const t_CData &_Data)
+			template <typename tf_CData>
+			TCVector &operator << (tf_CData &&_Data)
 			{
-				f_Insert(_Data);
+				f_Insert(fg_Forward<tf_CData>(_Data));
 				return *this;
 			}
 
