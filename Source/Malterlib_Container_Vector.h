@@ -1171,8 +1171,15 @@ namespace NMib
 			| Insert last																						|
 			|___________________________________________________________________________________________________|
 			\***************************************************************************************************/
-
-
+			
+			t_CData *f_Insert(TCInitializerList<t_CData> const &_Elements)
+			{
+				mint iFirstElement = f_GetLen();
+				for (auto &Element : _Elements)
+					f_Insert(Element);
+				return f_GetArray() + iFirstElement;
+			}
+			
 			template <typename t_CDataOther, typename t_CAllocatorOther, typename t_CBoundsCheckerOther, typename t_CInternalDataOther, typename t_CStaticDataOther>
 			t_CData *f_Insert(TCVector<t_CDataOther, t_CAllocatorOther, t_CBoundsCheckerOther, t_CInternalDataOther, t_CStaticDataOther> const &_Vector)
 			{
