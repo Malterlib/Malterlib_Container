@@ -1006,6 +1006,7 @@ namespace NMib
 			
 			TCVector(TCInitializerList<t_CData> const &_Values)
 			{
+				m_StaticData.m_pData = nullptr;
 				for (auto &Value : _Values)
 					f_Insert(Value);
 			}
