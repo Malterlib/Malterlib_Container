@@ -1204,6 +1204,14 @@ namespace NMib
 				fg_DeleteObject(mp_Data, pMember);
 			}
 
+			void f_ExtractAndInsert(TCMap &_Map, CUserData *_pData)
+			{
+				static_assert(!NTraits::TCIsReference<t_CData>::mc_Value, "This function is not supported when mapping reference types");
+				mint Offset = CMapTreeMember::fs_GetOffset();
+				CMapTreeMember *pMember = (CMapTreeMember *)(((uint8 *)_pData) - Offset);
+				_Map.mp_Data.m_Tree.f_Remove(pMember);
+				mp_Data.m_Tree.f_Insert(pMember);
+			}
 
 			template <typename tf_CKey>
 			bint f_Exists(tf_CKey &&_Key) const
