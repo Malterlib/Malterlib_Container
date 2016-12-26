@@ -76,13 +76,12 @@ namespace NMib
 		
 		template <mint t_nBits>
 		constexpr TCBitArray<t_nBits>::TCBitArray(bool _bInitValues)
+			: mp_Entries{0}
 		{
-			if (_bInitValues)
-				f_Clear();
 		}
 
 		template <mint t_nBits>
-		constexpr void TCBitArray<t_nBits>::f_Clear()
+		void TCBitArray<t_nBits>::f_Clear()
 		{
 			for (mint i = 0; i < ENumEntries; ++i)
 				mp_Entries[i] = 0;

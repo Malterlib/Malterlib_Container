@@ -15,7 +15,7 @@ namespace NMib
 
 			constexpr TCBitArray(bool _bInitValues = true);
 			
-			constexpr void f_Clear();
+			void f_Clear();
 
 			template <typename tf_CStream>
 			void f_Feed(tf_CStream &_Stream) const;
