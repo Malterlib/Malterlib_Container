@@ -954,9 +954,17 @@ namespace NMib
 				fg_FeedLenToStream(_Stream, nItems);
 
 				for (auto iItem = _Data.f_GetIterator(); iItem; ++iItem)
-				{
 					_Stream << *iItem;
-				}
+			}
+
+			static void fs_Feed(t_CStream &_Stream, NContainer::TCLinkedList<t_CData, t_CAllocator> &&_Data)
+			{
+				mint nItems = _Data.f_GetLen();
+				
+				fg_FeedLenToStream(_Stream, nItems);
+
+				for (auto iItem = _Data.f_GetIterator(); iItem; ++iItem)
+					_Stream << fg_Move(*iItem);
 			}
 	
 			static void fs_Consume(t_CStream &_Stream, NContainer::TCLinkedList<t_CData, t_CAllocator> &_Data)
@@ -965,9 +973,7 @@ namespace NMib
 				fg_ConsumeLenFromStream(_Stream, nItems);
 
 				for (mint i = 0; i < nItems; ++i)
-				{
 					_Stream >> _Data.f_Insert();
-				};
 			}
 		};
 	}
