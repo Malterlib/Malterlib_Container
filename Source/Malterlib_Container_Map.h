@@ -915,11 +915,11 @@ namespace NMib
 			template <typename tf_CKey>
 			CUserData& operator[] (tf_CKey &&_Key)
 			{
-				CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(fg_Forward<tf_CKey>(_Key));
+				CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
 				if (!pData)
 				{
 					pData = (CMapTreeMember *)mp_Data.f_AllocAligned(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
-					new((void *)pData) CMapTreeMember(_Key);
+					new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key));
 					mp_Data.m_Tree.f_Insert(pData);
 				}
 				return pData->f_GetData();
@@ -928,7 +928,7 @@ namespace NMib
 			template <typename tf_CKey>
 			const CUserData& operator[] (tf_CKey&& _Key) const
 			{
-				const CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(fg_Forward<tf_CKey>(_Key));
+				const CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
 				// Will return a null ref if data does not exist (is this valid in C++?)
 				if (pData)
 					return pData->f_GetData();
@@ -968,7 +968,7 @@ namespace NMib
 			template <typename tf_CKey, typename... tfp_CParam>
 			TCMapResult<CUserData &> operator () (tf_CKey &&_Key, tfp_CParam && ... p_Params)
 			{
-				CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(fg_Forward<tf_CKey>(_Key));
+				CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
 				bint bWasCreated = false;
 				if (!pData)
 				{
@@ -1030,7 +1030,7 @@ namespace NMib
 			template <typename tf_CKey>
 			const CUserData * f_FindEqual(tf_CKey &&_Key) const
 			{
-				const CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(fg_Forward<tf_CKey>(_Key));
+				const CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
 				if (pData)
 					return &pData->f_GetData();
 				else
@@ -1040,7 +1040,7 @@ namespace NMib
 			template <typename tf_CKey>
 			CUserData * f_FindEqual(tf_CKey &&_Key)
 			{
-				CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(fg_Forward<tf_CKey>(_Key));
+				CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
 				if (pData)
 					return &pData->f_GetData();
 				else
@@ -1216,13 +1216,13 @@ namespace NMib
 			template <typename tf_CKey>
 			bint f_Exists(tf_CKey &&_Key) const
 			{
-				return mp_Data.m_Tree.f_FindEqual(fg_Forward<tf_CKey>(_Key)) != nullptr;
+				return mp_Data.m_Tree.f_FindEqual(_Key) != nullptr;
 			}
 
 			template <typename tf_CKey>
 			bint f_Lookup(tf_CKey &&_Key, CUserData& _Data) const
 			{
-				CMapTreeMember *pMember = mp_Data.m_Tree.f_FindEqual(fg_Forward<tf_CKey>(_Key));
+				CMapTreeMember *pMember = mp_Data.m_Tree.f_FindEqual(_Key);
 				if (pMember)
 				{
 					_Data = pMember->f_GetData();
@@ -1235,7 +1235,7 @@ namespace NMib
 			template <typename tf_CKey>
 			bint f_Remove(tf_CKey &&_Key)
 			{
-				CMapTreeMember *pMember = mp_Data.m_Tree.f_FindEqual(fg_Forward<tf_CKey>(_Key));
+				CMapTreeMember *pMember = mp_Data.m_Tree.f_FindEqual(_Key);
 				if (pMember)
 				{
 					mp_Data.m_Tree.f_Remove(pMember);
