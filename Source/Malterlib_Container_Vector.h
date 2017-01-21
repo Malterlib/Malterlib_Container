@@ -2495,6 +2495,33 @@ namespace NMib
 				return Ret;
 			}
 
+			template <typename t_CSorter>
+			void f_UniqueIfSorted(t_CSorter &&_Sorter)
+			{
+				if (f_GetLen() <= 1)
+					return;
+
+				DMibSafeCheck(f_IsSorted(fg_Forward<t_CSorter>(_Sorter)), "Vector must be sorted");
+
+				auto iUniqueFinish = f_GetIterator();
+				auto iData = iUniqueFinish;
+
+				while (++iData)
+				{
+					if (fg_Forward<t_CSorter>(_Sorter)(*iUniqueFinish, *iData) && (++iUniqueFinish != iData))
+						*iUniqueFinish = fg_Move(*iData);
+				}
+				++iUniqueFinish;
+
+				mint iPos = iUniqueFinish ? iUniqueFinish - f_GetIterator() : f_GetLen();
+				f_SetLen(iPos);
+			}
+
+			void f_UniqueIfSorted()
+			{
+				f_UniqueIfSorted(CSort_Default());
+			}
+
 			template <typename t_CDataOther, typename t_CAllocatorOther, typename t_CBoundsCheckerOther, typename t_CInternalDataOther, typename t_CStaticDataOther>
 			bint operator == (TCVector<t_CDataOther, t_CAllocatorOther, t_CBoundsCheckerOther, t_CInternalDataOther, t_CStaticDataOther> const &_Other) const
 			{
