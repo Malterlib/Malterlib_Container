@@ -131,7 +131,9 @@ namespace NMib
 				CLocalData(NMem::CAllocatorConstructTag const &_Allocator, tfp_CParams && ...p_Params)
 					: t_CAllocator(fg_Forward<tfp_CParams>(p_Params)...)
 				{
-				}				
+				}
+				
+				CLocalData &operator = (CLocalData &&) = default;
 			};
 
 			CLocalData m_Data;
@@ -400,6 +402,16 @@ namespace NMib
 				f_Clear();
 				
 				fp_CopyFrom(_Other);
+
+				return *this;
+			}
+
+			TCLinkedList &operator = (TCLinkedList &&_Other)
+			{
+				DMibSafeCheck(this != &_Other, "Must not move same object to itself");
+
+				f_Clear();
+				m_Data = fg_Move(_Other.m_Data);
 
 				return *this;
 			}
