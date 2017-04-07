@@ -1011,6 +1011,12 @@ namespace NMib
 					f_Insert(Value);
 			}
 
+			TCVector(t_CData const *_pItems, mint _nItems)
+			{
+				m_StaticData.m_pData = nullptr;
+				f_Insert(_pItems, _nItems);
+			}
+
 			template <typename t_CDataOther, typename t_CAllocatorOther, typename t_CBoundsCheckerOther, typename t_CInternalDataOther, typename t_CStaticDataOther>
 			TCVector(TCVector<t_CDataOther, t_CAllocatorOther, t_CBoundsCheckerOther, t_CInternalDataOther, t_CStaticDataOther> const &_Source)
 			{
