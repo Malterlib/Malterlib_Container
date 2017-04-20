@@ -820,7 +820,12 @@ namespace NMib
 			{
 				fp_CopyAll(_Other);
 			}
-			
+
+			TCMap(TCInitializerList<CMapTreeMember> const &_Values)
+			{
+				for (auto &Value : _Values)
+					(*this)(Value.m_Key, Value.m_Data);
+			}
 			
 			template <typename... tfp_CParams>
 			TCMap(NMem::CAllocatorConstructTag const &_Allocator, tfp_CParams && ...p_Params)
