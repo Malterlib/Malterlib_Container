@@ -1,0 +1,92 @@
+// Copyright © 2015 Hansoft AB 
+// Distributed under the MIT license, see license text in LICENSE.Malterlib
+
+/**
+
+\page p_Malterlib_Container_STLComparison STL comparison
+
+Source: http://info.prelert.com/blog/stl-container-memory-usage
+
+Vector
+------
+
+Malterlib `TCVector` vs `std::vector`
+
+Type									| Malterlib	| LLVM libc++	| Visual Studio 2013	| GNU libstdc++ v3
+----									| ----		| ----			| ----					| ----
+sizeof(vector<T>)						|	8		|	24			|	24					|	24
+vector capacity() after one push_back()	|	16		|	1			|	1					|	1
+
+Linked List
+-----------
+
+Malterlib `TCLinkedList` vs `std::list`
+
+Type									| Malterlib			| LLVM libc++		| Visual Studio 2013	| GNU libstdc++ v3
+----									| ----				| ----				| ----					| ----
+sizeof(list<T>)							| 8					| 24				| 16					| 16
+empty memmory usage						| 8					| 24				| 16 + 16 + sizeof(T)	| 16
+list node size							| 16 + sizeof(T)	| 16 + sizeof(T)	| 16 + sizeof(T)		| 16 + sizeof(T)
+list nodes required						| size()			| size()			| 1 + size()			| size()
+size() / f_GetLen() complexity			| O(n)				| O(1)				| O(1)					| O(1)
+
+Map and set
+-----------
+
+Malterlib `TSet` and `TCMap` vs `std::set` and `std::map`
+
+Type									| Malterlib						| LLVM libc++										| Visual Studio 2013								| GNU libstdc++ v3
+----									| ----							| ----												| ----												| ----
+sizeof(map<K, V>)						| 8								| 24												| 16												| 48
+map (set) node size						| 16 + sizeof(K) + sizeof(V)	| 25‡ + sizeof(pair<K, V>)							| 26‡ + sizeof(pair<K, V>)							| 32 + sizeof(pair<K, V>)
+map (set) nodes required				| size()						| size()											| 1 + size()										| size()
+size() / f_GetLen() complexity			| O(n)							| O(1)												| O(1)												| O(1)
+Iterator invalidation on insert			| All iterators invalidated		| All iterators valid								| All iterators valid								| All iterators valid
+Iterator invalidation on remove			| All iterators invalidated		| Iterators pointng to removed element invalidated	| Iterators pointng to removed element invalidated	| Iterators pointng to removed element invalidated
+
+Examples of `std::set<T>` vs `TCSet<T>` with 10000 nodes
+
+Type							| Malterlib						| LLVM libc++				| Visual Studio 2013		| GNU libstdc++ v3
+----							| ----							| ----						| ----						| ----
+std::set<uint32> / TCSet<uint32>| 240008						| 320024					| 320016					| 400048
+std::set<uint64> / TCSet<uint64>| 240008						| 400024					| 400032					| 400048
+
+Empty memory usage
+------------------
+
+~~~
+	struct CTest
+	{
+		std::set<uint64> m_Set0;
+		std::set<uint64> m_Set1;
+		std::set<uint64> m_Set2;
+		std::vector<uint64> m_Vector0;
+		std::vector<uint64> m_Vector1;
+		std::vector<uint64> m_Vector2;
+		std::list<uint64> m_List0;
+		std::list<uint64> m_List1;
+		std::list<uint64> m_List2;
+	};
+~~~
+
+~~~
+	struct CTest
+	{
+		TCSet<uint64> m_Set0;
+		TCSet<uint64> m_Set1;
+		TCSet<uint64> m_Set2;
+		TCVector<uint64> m_Vector0;
+		TCVector<uint64> m_Vector1;
+		TCVector<uint64> m_Vector2;
+		TCLinkedList<uint64> m_List0;
+		TCLinkedList<uint64> m_List1;
+		TCLinkedList<uint64> m_List2;
+	};
+~~~
+
+Type									| Malterlib						| LLVM libc++				| Visual Studio 2013		| GNU libstdc++ v3
+----									| ----							| ----						| ----						| ----
+Empty CTest instance memory usage		| 72							| 216						| 360						| 264
+Heap allocations constructing on stack	| 0								| 0							| 6							| 0
+
+*/

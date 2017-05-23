@@ -6,3 +6,15 @@
 	 
 	Contains container templates.
  */
+
+/**
+
+\page p_Malterlib Modules
+- \subpage p_Malterlib_Container
+ 
+\page p_Malterlib_Container Container
+
+- \subpage p_Malterlib_Container_STLComparison
+
+*/
+
