@@ -81,7 +81,7 @@ namespace NMib
 			};
 			
 		public:
-			typedef typename TCSizeHelper<t_nBits < sizeof(uaint)*8>::CType CEntryType;
+			using CEntryType = typename TCSizeHelper<(t_nBits < sizeof(uaint)*8)>::CType;
 			
 		private:
 
@@ -110,7 +110,7 @@ namespace NMib
 		private:
 
 			static constexpr CEntryType mcp_FullySet = TCLimitsInt<CEntryType>::mc_Max;
-			static constexpr CEntryType mcp_FullySetLast = (CEntryType(1) << (t_nBits - (t_nBits / (ENumBitsPerEntry)) * (ENumBitsPerEntry))) - 1;
+			static constexpr CEntryType mcp_FullySetLast = ((CEntryType(1) << (t_nBits - (t_nBits / (ENumBitsPerEntry)) * (ENumBitsPerEntry))) - 1);
 			static constexpr CEntryType mcp_FullyUnset = 0;
 
 		};
