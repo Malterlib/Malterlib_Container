@@ -74,7 +74,7 @@ namespace
 			DMibTest(DMibExpr(List.f_GetFirst()) == DMibExpr(11));
 
 			int32 ToInsertFirst = 55;
-			int32 &Inserted = List.f_InsertFirst(ToInsertFirst);
+			[[maybe_unused]] int32 &Inserted = List.f_InsertFirst(ToInsertFirst);
 			DMibTest(DMibExpr(List.f_GetFirst()) == DMibExpr(55));
 
 			List.f_Remove(0);
@@ -91,7 +91,7 @@ namespace
 			DMibTest(DMibExpr(List.f_GetLast()) == DMibExpr(13));
 
 			int32 ToInsertLast = 66;
-			int32 &InsertedLast = List.f_InsertLast(ToInsertLast);
+			[[maybe_unused]] int32 &InsertedLast = List.f_InsertLast(ToInsertLast);
 			DMibTest(DMibExpr(List.f_GetLast()) == DMibExpr(66));
 
 			List.f_Remove(List.f_GetLen() - 1);

@@ -447,10 +447,8 @@ namespace NMib
 
 					while (_Length > 0)
 					{
-						auto pLow = _Iterator;
-						auto pHigh = _Iterator + _Length;
-						auto *pOldLow = pLow;
-						auto *pOldHigh = pHigh;
+						[[maybe_unused]] auto pLow = _Iterator;
+						[[maybe_unused]] auto pHigh = _Iterator + _Length;
 
 /*						auto *pInsertResultLow = fg_InsertSortTry(pLow, pHigh, _Comp);
 						if (pInsertResultLow == pHigh)
@@ -928,8 +926,6 @@ namespace NMib
 
 					CThing& operator =(CThing &&_MoveThis)
 					{
-						if (this == &_MoveThis)
-							int32 x = 0;
 						DMibTest(DMibExpr(this != &_MoveThis )) (ETestFlag_Aggregated);
 						DMibTest(DMibExpr(_MoveThis.m_Val != -1)) (ETestFlag_Aggregated);
 						m_Val = _MoveThis.m_Val;

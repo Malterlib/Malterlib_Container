@@ -86,7 +86,7 @@ namespace
 				DMibTestPath("Assign child already existst");
 				t_CRegistry Registry2;
 				t_CRegistry *pChild2 = Registry2.f_SetValue("Test2", "Test2");
-				t_CRegistry *pChild3 = Registry2.f_SetValue("Test1", "Test3");
+				[[maybe_unused]] t_CRegistry *pChild3 = Registry2.f_SetValue("Test1", "Test3");
 				DMibTest(DMibExpr(Registry2.f_GetValue("Test1", "")) == DMibExpr("Test3"));
 				DMibTest(DMibExpr(Registry2.f_GetValue("Test2", "")) == DMibExpr("Test2"));
 
@@ -149,7 +149,7 @@ namespace
 				DMibTest(DMibExpr(Registry3) == DMibExpr(Registry4)) (ETestFlag_NoValues);
 			}
 			t_CRegistry Registry;
-			t_CRegistry *pChild = Registry.f_SetValue("Test1", "Test1");
+			[[maybe_unused]] t_CRegistry *pChild = Registry.f_SetValue("Test1", "Test1");
 			DMibTest(DMibExpr(Registry.f_GetValue("Test1", "")) == DMibExpr("Test1"));
 			{
 				DMibTestPath("Constructor");
@@ -238,7 +238,7 @@ namespace
 				t_CRegistry Registry2;
 				t_CRegistry *pChild = Registry.f_SetValue("Test1", "Test1"); //
 				t_CRegistry *pChild2 = Registry2.f_SetValue("Test2", "Test2");
-				t_CRegistry *pChild3 = Registry2.f_SetValue("Test1", "Test3");
+				[[maybe_unused]] t_CRegistry *pChild3 = Registry2.f_SetValue("Test1", "Test3");
 				DMibTest(DMibExpr(Registry.f_GetValue("Test1", "")) == DMibExpr("Test1"));
 				DMibTest(DMibExpr(Registry2.f_GetValue("Test1", "")) == DMibExpr("Test3"));
 				DMibTest(DMibExpr(Registry2.f_GetValue("Test2", "")) == DMibExpr("Test2"));
