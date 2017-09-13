@@ -10,9 +10,6 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <vector>
-#include <boost/shared_ptr.hpp>
-#include <boost/interprocess/containers/flat_set.hpp>
-#include <boost/interprocess/containers/flat_map.hpp>
 
 // This is disabled for GCC & clang due to a lookup issue with
 // boost declaring std::pair and the compiler not finding the definition from <utlity>
