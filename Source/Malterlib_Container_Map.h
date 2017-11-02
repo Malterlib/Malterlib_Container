@@ -1,4 +1,4 @@
-﻿// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB 
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
@@ -1207,6 +1207,20 @@ namespace NMib
 				CMapTreeMember *pMember = (CMapTreeMember *)(((uint8 *)_pData) - Offset);
 				mp_Data.m_Tree.f_Remove(pMember);
 				fg_DeleteObject(mp_Data, pMember);
+			}
+
+			// This only makes sense when the actual pointer of the node is used for comparion
+			bool f_TryRemovePointerBasedComparison(CUserData * _pData)
+			{
+				static_assert(!NTraits::TCIsReference<t_CData>::mc_Value, "This function is not supported when mapping reference types");
+				mint Offset = CMapTreeMember::fs_GetOffset();
+				CMapTreeMember *pMember = (CMapTreeMember *)(((uint8 *)_pData) - Offset);
+				if (!mp_Data.m_Tree.f_FindEqual(pMember->f_GetData()))
+					return false;
+				mp_Data.m_Tree.f_Remove(pMember);
+				DMibFastCheck(!mp_Data.m_Tree.f_FindEqual(pMember->f_GetData()));
+				fg_DeleteObject(mp_Data, pMember);
+				return true;
 			}
 
 			void f_ExtractAndInsert(TCMap &_Map, CUserData *_pData)
