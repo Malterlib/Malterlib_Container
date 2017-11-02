@@ -2026,7 +2026,7 @@ namespace NMib
 					for (mint i = 0; i < Len; ++i, (Prev = Current))
 					{
 						Current = _Str.f_GetAt(i);
-						if (Current == '\"' || Current == '{' || Current == '#' || Current == '\\')
+						if (Current == '\"' || Current == '{' || Current == '}' || Current == '#' || Current == '\\')
 						{
 							bNeedEscape = true;
 							break;
@@ -2848,6 +2848,18 @@ namespace NMib
 				if (_SetRootValue)
 					f_SetThisValue(_ToAdd.f_GetThisValue());
 				fpr_Add(&_ToAdd);
+			}
+
+			void f_Subtract(const TCRegistry &_ToSubtract)
+			{
+				for (auto Iter = _ToSubtract.m_Children.f_GetIterator(); Iter; ++Iter)
+				{
+					const TCRegistry *pReg = Iter;
+					t_CKeyStr Name = pReg->f_GetName();
+					auto *pChild = f_GetChild(Name);
+					if (pChild)
+						f_DeleteChild(pChild);
+				}
 			}
 
 			const t_CData &f_GetValue(t_CKeyStr _Str, const t_CData &_Default) const
