@@ -1618,7 +1618,46 @@ namespace NMib
 				for (auto &Value : _Values)
 					(*this)[Value];
 			}
-			
+
+			template <typename tf_CContainer, TCEnableIfType<!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value> * = nullptr>
+			TCSet &f_AddContainer(tf_CContainer &&_Container)
+			{
+				for (auto &Value : _Container)
+					(*this)[Value];
+				return *this;
+			}
+
+			TCSet f_Or(TCSet const &_Other) const
+			{
+				TCSet Return = *this;
+				Return += _Other;
+				return Return;
+			}
+
+			TCSet f_And(TCSet const &_Other) const
+			{
+				TCSet Return;
+				auto iLeft = this->f_GetIterator();
+				auto iRight = _Other.f_GetIterator();
+
+				while (true)
+				{
+					while (iLeft && *iLeft < *iRight)
+						++iLeft;
+					if (!iLeft)
+						break;
+					while (iRight && *iRight < *iLeft)
+						++iRight;
+					if (!iRight)
+						break;
+					Return[*iLeft];
+					++iLeft;
+					++iRight;
+				}
+
+				return Return;
+			}
+
 			template <typename tf_COther>
 			TCSet(tf_COther &&_Other)
 				: CSuper(fg_Forward<tf_COther>(_Other))
