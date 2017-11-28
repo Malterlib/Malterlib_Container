@@ -815,7 +815,8 @@ namespace NMib
 			{
 				CMember *pMember = fsp_MemberFromData(_Member);
 				DMibSafeCheck(pMember->m_ListLink.f_IsInList(), "Object is not linked into the list");
-				DMibSafeCheck(m_Data.m_List.f_Contains(pMember), "You must make sure that what you are removing is an actual object in the list");
+				// This is too slow to check
+				//DMibSafeCheck(m_Data.m_List.f_Contains(pMember), "You must make sure that what you are removing is an actual object in the list");
 				m_Data.m_List.f_Remove(pMember);
 				fg_DeleteObject(m_Data, pMember);
 			}
