@@ -1,4 +1,4 @@
-﻿// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB 
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #include <Mib/Core/Core>
@@ -142,36 +142,46 @@ namespace NMib
 			CMember *fp_Create(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams)
 			{
 				static_assert(NTraits::TCIsSame<tf_CType, t_CData>::mc_Value || NTraits::TCIsVoid<tf_CType>::mc_Value, "Cannot override creation type");
-				CMember * pData = (CMember *)m_Data.f_AllocAligned(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+				auto Memory = m_Data.f_AllocSafe(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+				CMember * pData = (CMember *)Memory.m_pMemory;
 				new((void *)pData) CMember(fg_Move(_CreateParams));
+				Memory.f_Claim();
 				return pData;
 			}
 
 			CMember *fp_Create(t_CData &_ToInsert)
 			{
-				CMember * pData = (CMember *)m_Data.f_AllocAligned(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+				auto Memory = m_Data.f_AllocSafe(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+				CMember * pData = (CMember *)Memory.m_pMemory;
 				new((void *)pData) CMember(_ToInsert);
+				Memory.f_Claim();
 				return pData;
 			}
 
 			CMember *fp_Create(t_CData &&_ToInsert)
 			{
-				CMember * pData = (CMember *)m_Data.f_AllocAligned(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+				auto Memory = m_Data.f_AllocSafe(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+				CMember * pData = (CMember *)Memory.m_pMemory;
 				new((void *)pData) CMember(fg_Move(_ToInsert));
+				Memory.f_Claim();
 				return pData;
 			}
 
 			CMember *fp_Create(const t_CData &_ToInsert)
 			{
-				CMember * pData = (CMember *)m_Data.f_AllocAligned(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+				auto Memory = m_Data.f_AllocSafe(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+				CMember * pData = (CMember *)Memory.m_pMemory;
 				new((void *)pData) CMember(_ToInsert);
+				Memory.f_Claim();
 				return pData;
 			}
 
 			CMember *fp_Create()
 			{
-				CMember * pData = (CMember *)m_Data.f_AllocAligned(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+				auto Memory = m_Data.f_AllocSafe(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+				CMember * pData = (CMember *)Memory.m_pMemory;
 				new((void *)pData) CMember();
+				Memory.f_Claim();
 				return pData;
 			}
 			
@@ -393,7 +403,7 @@ namespace NMib
 
 			void f_Clear()
 			{
-				m_Data.m_List.f_DeleteAllAllocator((t_CAllocator &)m_Data);
+				m_Data.m_List.f_DeleteAllAllocatorDefiniteType((t_CAllocator &)m_Data);
 			}			
 
 			TCLinkedList &operator = (const TCLinkedList &_Other)
@@ -818,7 +828,7 @@ namespace NMib
 				// This is too slow to check
 				//DMibSafeCheck(m_Data.m_List.f_Contains(pMember), "You must make sure that what you are removing is an actual object in the list");
 				m_Data.m_List.f_Remove(pMember);
-				fg_DeleteObject(m_Data, pMember);
+				fg_DeleteObjectDefiniteType(m_Data, pMember);
 			}
 
 			t_CData f_Pop()
@@ -827,7 +837,7 @@ namespace NMib
 				DMibSafeCheck(pMember, "You cannot pop from an empty list");
 				m_Data.m_List.f_Remove(pMember);
 				t_CData ToReturn = fg_Move(pMember->fp_GetObject());
-				fg_DeleteObject(m_Data, pMember);
+				fg_DeleteObjectDefiniteType(m_Data, pMember);
 				return fg_Move(ToReturn);
 			}
 

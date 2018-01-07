@@ -588,8 +588,16 @@ namespace NMib
 			typedef t_CData CData;
 			typedef typename t_CStaticData::CExtraVectorData CExtraVectorData;
 		private:
+			static constexpr mint mcp_Alignment =
+				fg_MaxConstexpr
+				(
+				 	NTraits::TCAlignmentOf<t_CData>::mc_Value
+				 	, NTraits::TCAlignmentOf<CExtraVectorData>::mc_Value
+				 	, NTraits::TCAlignmentOf<t_CInternalData>::mc_Value
+				)
+			;
 
-			class CVectorData : public CExtraVectorData
+			class alignas(mcp_Alignment) CVectorData : public CExtraVectorData
 			{
 			public:
 				t_CInternalData m_InternalData;
@@ -964,13 +972,13 @@ namespace NMib
 
 				mint Granularity = m_StaticData.f_Allocator().f_GranularityAlloc();
 				mint Size = fg_AlignUp(nObjects * sizeof(t_CData) + sizeof(CVectorData), Granularity);
-				
-				m_StaticData.f_Allocator().f_Free(_pData, Size);
+
+				m_StaticData.f_Allocator().f_Free(_pData, fg_AlignUp(Size, mcp_Alignment));
 			}
 			
 			CVectorData *fp_AllocData(mint _Size)
 			{
-				return (CVectorData *)m_StaticData.f_Allocator().f_Alloc(_Size, EAllocationFlag_WillFreeWithSize);
+				return (CVectorData *)m_StaticData.f_Allocator().f_AllocAligned(_Size, mcp_Alignment, EAllocationFlag_WillFreeWithSize);
 			}
 			
 		public:
@@ -1977,21 +1985,44 @@ namespace NMib
 				f_Clear();
 			}
 
+			void f_DeleteAllDefiniteType()
+			{
+				mint Len = f_GetLen();
+				t_CData *pArray = f_GetArray();
+				for (mint i = 0; i < Len; ++i)
+					fg_DeleteObjectDefiniteType(NMem::CDefaultAllocator(), pArray[i]);
+				f_Clear();
+			}
+
 			template <typename t_CAllocator2, typename t_CData2>
 			static void fsp_DeleteAllAllocatorHelper(t_CData2 *_pData)
 			{
 				fg_DeleteObject(t_CAllocator2(), _pData);
 			}
-				
+
 			template <typename t_CAllocator2>
 			void f_DeleteAllAllocator()
 			{
 				mint Len = f_GetLen();
 				t_CData *pArray = f_GetArray();
 				for (mint i = 0; i < Len; ++i)
-				{
 					fsp_DeleteAllAllocatorHelper<t_CAllocator2>(pArray[i]);
-				}
+				f_Clear();
+			}
+
+			template <typename t_CAllocator2, typename t_CData2>
+			static void fsp_DeleteAllAllocatorHelperDefiniteType(t_CData2 *_pData)
+			{
+				fg_DeleteObjectDefiniteType(t_CAllocator2(), _pData);
+			}
+
+			template <typename t_CAllocator2>
+			void f_DeleteAllAllocatorDefiniteType()
+			{
+				mint Len = f_GetLen();
+				t_CData *pArray = f_GetArray();
+				for (mint i = 0; i < Len; ++i)
+					fsp_DeleteAllAllocatorHelperDefiniteType<t_CAllocator2>(pArray[i]);
 				f_Clear();
 			}
 
@@ -2001,9 +2032,7 @@ namespace NMib
 				mint Len = f_GetLen();
 				t_CData *pArray = f_GetArray();
 				for (mint i = 0; i < Len; ++i)
-				{
 					t_CDeleter::fs_Delete(pArray[i]);
-				}
 				f_Clear();
 			}
 

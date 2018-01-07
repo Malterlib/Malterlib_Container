@@ -1,4 +1,4 @@
-﻿// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB 
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #include <Mib/Core/Core>
@@ -2373,7 +2373,7 @@ namespace NMib
 					m_pParent->m_Children.f_Insert(this);
 				}
 				m_Data = fg_Move(_Source.m_Data);
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 				m_Children = fg_Move(_Source.m_Children);
 				auto Iter = m_Children.f_GetIterator();
 				while (Iter)
@@ -2398,7 +2398,7 @@ namespace NMib
 					m_pParent->m_Children.f_Insert(this);
 				}
 				m_Data = _Source.m_Data;
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 
 				auto Iter = _Source.m_Children.f_GetIterator();
 				while (Iter)
@@ -2452,7 +2452,7 @@ namespace NMib
 			TCRegistry &f_SetContents(TCRegistry &&_Source)
 			{
 				m_Data = fg_Move(_Source.m_Data);
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 				m_Children = fg_Move(_Source.m_Children);
 				auto Iter = m_Children.f_GetIterator();
 				while (Iter)
@@ -2466,7 +2466,7 @@ namespace NMib
 			TCRegistry &f_SetContents( const TCRegistry &_Source)
 			{
 				m_Data = _Source.m_Data;
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 
 				auto Iter = _Source.m_Children.f_GetIterator();
 				while (Iter)
@@ -2486,7 +2486,7 @@ namespace NMib
 				if (m_pParent && m_ChildLink.f_IsInTree())
 					m_pParent->m_Children.f_Remove(this);
 
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 
 #ifdef DMibDebug
 				if (NSys::fg_Compiler_AlwaysFalse())
@@ -2499,7 +2499,7 @@ namespace NMib
 
 			void f_Clear()
 			{
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 				m_Data = t_CData();
 			}
 
@@ -3182,14 +3182,14 @@ namespace NMib
 
 			void f_DeleteAllChildren()
 			{
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 			}
 
 			template <typename t_CTempStr>
 			void f_ParseStr(const t_CTempStr &_Text)
 			{
 				// Remove anything existing
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 
 				if (ESupportFileLine || ESupportWhiteSpace)
 				{
@@ -3207,7 +3207,7 @@ namespace NMib
 			void f_ParseStr(const t_CTempStr &_Text, t_CTempStr2 &_File)
 			{
 				// Remove anything existing
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 
 				if (ESupportFileLine || ESupportWhiteSpace)
 				{
@@ -3227,7 +3227,7 @@ namespace NMib
 			void f_Parse(NStream::CBinaryStream &_Stream)
 			{
 				// Remove anything existing
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 
 				t_CTempStr ToParse = t_CTempStr::fs_ReadTextStream(_Stream);
 
@@ -3238,7 +3238,7 @@ namespace NMib
 			void f_Parse(NStream::CBinaryStream &_Stream, t_CFile &_File)
 			{
 				// Remove anything existing
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 
 				t_CTempStr ToParse = t_CTempStr::fs_ReadTextStream(_Stream);
 
@@ -3261,7 +3261,7 @@ namespace NMib
 			void f_ParseLaxStr(const t_CTempStr &_Text)
 			{
 				// Remove anything existing
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 
 				if (ESupportFileLine || ESupportWhiteSpace)
 				{
@@ -3279,7 +3279,7 @@ namespace NMib
 			void f_ParseLaxStr(const t_CTempStr &_Text, t_CTempStr2 &_File)
 			{
 				// Remove anything existing
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 
 				if (ESupportFileLine || ESupportWhiteSpace)
 				{
@@ -3299,7 +3299,7 @@ namespace NMib
 			void f_ParseLax(NStream::CBinaryStream &_Stream)
 			{
 				// Remove anything existing
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 
 				t_CTempStr ToParse = t_CTempStr::fs_ReadTextStream(_Stream);
 
@@ -3310,7 +3310,7 @@ namespace NMib
 			void f_ParseLax(NStream::CBinaryStream &_Stream, t_CFile &_File)
 			{
 				// Remove anything existing
-				m_Children.m_Tree.f_DeleteAll();
+				m_Children.m_Tree.f_DeleteAllDefiniteType();
 
 				t_CTempStr ToParse = t_CTempStr::fs_ReadTextStream(_Stream);
 

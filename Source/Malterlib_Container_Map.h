@@ -734,7 +734,7 @@ namespace NMib
 				}
 				void f_Remove()
 				{
-					mp_Iter.f_DeleteAllocator(mp_pMap->mp_Data.m_Tree, CMapTreeMemberCompare(), (t_CAllocator &)mp_pMap->mp_Data);
+					mp_Iter.f_DeleteAllocatorDefiniteType(mp_pMap->mp_Data.m_Tree, CMapTreeMemberCompare(), (t_CAllocator &)mp_pMap->mp_Data);
 				}
 
 				inline_small CUserDataQualified *f_GetCurrent() const
@@ -799,7 +799,7 @@ namespace NMib
 			}
 			void f_Clear()
 			{
-				mp_Data.m_Tree.f_DeleteAllAllocator((t_CAllocator &)mp_Data);
+				mp_Data.m_Tree.f_DeleteAllAllocatorDefiniteType((t_CAllocator &)mp_Data);
 			}
 
 			TCMap &operator = (const TCMap &_Other)
@@ -923,8 +923,10 @@ namespace NMib
 				CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
 				if (!pData)
 				{
-					pData = (CMapTreeMember *)mp_Data.f_AllocAligned(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+					auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+					pData = (CMapTreeMember *)Memory.m_pMemory;
 					new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key));
+					Memory.f_Claim();
 					mp_Data.m_Tree.f_Insert(pData);
 				}
 				return pData->f_GetData();
@@ -947,8 +949,10 @@ namespace NMib
 				CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
 				if (!pData)
 				{
-					pData = (CMapTreeMember *)mp_Data.f_AllocAligned(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+					auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+					pData = (CMapTreeMember *)Memory.m_pMemory;
 					new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key));
+					Memory.f_Claim();
 					mp_Data.m_Tree.f_Insert(pData);
 				}
 				return pData->f_GetData();
@@ -961,8 +965,10 @@ namespace NMib
 				if (!pData)
 				{
 					_bCreated = true;
-					pData = (CMapTreeMember *)mp_Data.f_AllocAligned(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+					auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+					pData = (CMapTreeMember *)Memory.m_pMemory;
 					new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CArgs>(p_Args)...);
+					Memory.f_Claim();
 					mp_Data.m_Tree.f_Insert(pData);
 				}
 				else
@@ -978,8 +984,10 @@ namespace NMib
 				if (!pData)
 				{
 					bWasCreated = true;
-					pData = (CMapTreeMember *)mp_Data.f_AllocAligned(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+					auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+					pData = (CMapTreeMember *)Memory.m_pMemory;
 					new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
+					Memory.f_Claim();
 					mp_Data.m_Tree.f_Insert(pData);
 				}
 				return TCMapResult<CUserData &>(pData->f_GetData(), bWasCreated);
@@ -1020,7 +1028,7 @@ namespace NMib
 							{
 								if (!bRet)
 								{
-									mp_Data.f_Free(pData);
+									mp_Data.f_Free(pData, sizeof(CMapTreeMember));
 									return false;
 								}
 								bRet = _Functor(Mapper);
@@ -1206,7 +1214,7 @@ namespace NMib
 				mint Offset = CMapTreeMember::fs_GetOffset();
 				CMapTreeMember *pMember = (CMapTreeMember *)(((uint8 *)_pData) - Offset);
 				mp_Data.m_Tree.f_Remove(pMember);
-				fg_DeleteObject(mp_Data, pMember);
+				fg_DeleteObjectDefiniteType(mp_Data, pMember);
 			}
 
 			// This only makes sense when the actual pointer of the node is used for comparion
@@ -1219,7 +1227,7 @@ namespace NMib
 					return false;
 				mp_Data.m_Tree.f_Remove(pMember);
 				DMibFastCheck(!mp_Data.m_Tree.f_FindEqual(pMember->f_GetData()));
-				fg_DeleteObject(mp_Data, pMember);
+				fg_DeleteObjectDefiniteType(mp_Data, pMember);
 				return true;
 			}
 
@@ -1258,7 +1266,7 @@ namespace NMib
 				if (pMember)
 				{
 					mp_Data.m_Tree.f_Remove(pMember);
-					fg_DeleteObject(mp_Data, pMember);
+					fg_DeleteObjectDefiniteType(mp_Data, pMember);
 					return true;
 				}
 				return false;
@@ -1430,11 +1438,13 @@ namespace NMib
 	
 				while (nItems)
 				{
-					CMapTreeMember *pData = (CMapTreeMember *)mp_Data.f_AllocAligned(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+					auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+					CMapTreeMember *pData = (CMapTreeMember *)Memory.m_pMemory;
 					pData = new((void *)pData) CMapTreeMember();
+					Memory.f_Claim();
 					auto Cleanup = g_OnScopeExit > [&]
 						{
-							fg_DeleteObject(mp_Data, pData);
+							fg_DeleteObjectDefiniteType(mp_Data, pData);
 						}
 					;
 					pData->f_Consume(_Stream);
@@ -1476,14 +1486,16 @@ namespace NMib
 					if (!pKey || !pValue)
 						continue;
 
-					CMapTreeMember *pData = (CMapTreeMember *)mp_Data.f_AllocAligned(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+					auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+					CMapTreeMember *pData = (CMapTreeMember *)Memory.m_pMemory;
+					Memory.f_Claim();
 					pData = new((void *)pData) CMapTreeMember();
 
 					*pKey >> NStream::fg_Named("Key", pData->f_GetKey());
 					*pValue >> NStream::fg_Named("Value", pData->f_GetValue());
 					if (mp_Data.m_Tree.f_FindEqual(pData->f_GetKey()))
 					{
-						fg_DeleteObject(mp_Data, pData);
+						fg_DeleteObjectDefiniteType(mp_Data, pData);
 						DMibError("TCMap stream contained a duplicate key"); 
 					}
 					else
