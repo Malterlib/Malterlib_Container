@@ -574,6 +574,7 @@ namespace NMib
 			}
 
 		};
+
 		template 
 		<
 			typename t_CData,			// The class you want in the array
@@ -588,6 +589,37 @@ namespace NMib
 			typedef t_CData CData;
 			typedef typename t_CStaticData::CExtraVectorData CExtraVectorData;
 		private:
+
+#if defined(DCompiler_MSVC_Workaround)
+			static constexpr mint fsp_Alignment()
+			{
+				return fg_MaxConstexpr
+					(
+				 		NTraits::TCAlignmentOf<t_CData>::mc_Value
+				 		, NTraits::TCAlignmentOf<CExtraVectorData>::mc_Value
+				 		, NTraits::TCAlignmentOf<t_CInternalData>::mc_Value
+					)
+				;
+			}
+
+			class alignas(fsp_Alignment()) CVectorData : public CExtraVectorData
+			{
+			public:
+				t_CInternalData m_InternalData;
+				inline_small void f_SetLen(mint _Len)
+				{
+					return m_InternalData.f_SetLen(_Len);
+				}
+				inline_small mint f_GetLen() const
+				{
+					return m_InternalData.f_GetLen();
+				}
+				inline_small t_CData *f_GetData()
+				{
+					return (t_CData *)(this + 1);
+				}
+			};
+#else
 			static constexpr mint mcp_Alignment =
 				fg_MaxConstexpr
 				(
@@ -614,7 +646,7 @@ namespace NMib
 					return (t_CData *)(this + 1);
 				}
 			};
-
+#endif
 
 			class CStaticData : public t_CStaticData
 			{
@@ -973,12 +1005,20 @@ namespace NMib
 				mint Granularity = m_StaticData.f_Allocator().f_GranularityAlloc();
 				mint Size = fg_AlignUp(nObjects * sizeof(t_CData) + sizeof(CVectorData), Granularity);
 
+#if defined(DCompiler_MSVC_Workaround)
+				m_StaticData.f_Allocator().f_Free(_pData, fg_AlignUp(Size, fsp_Alignment()));
+#else
 				m_StaticData.f_Allocator().f_Free(_pData, fg_AlignUp(Size, mcp_Alignment));
+#endif
 			}
 			
 			CVectorData *fp_AllocData(mint _Size)
 			{
+#if defined(DCompiler_MSVC_Workaround)
+				return (CVectorData *)m_StaticData.f_Allocator().f_AllocAligned(_Size, fsp_Alignment(), EAllocationFlag_WillFreeWithSize);
+#else
 				return (CVectorData *)m_StaticData.f_Allocator().f_AllocAligned(_Size, mcp_Alignment, EAllocationFlag_WillFreeWithSize);
+#endif
 			}
 			
 		public:
