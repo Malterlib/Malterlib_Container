@@ -2911,7 +2911,7 @@ namespace NMib
 
 			t_CData f_GetValueNoPathMove(t_CKeyStr const &_Str)
 			{
-				TCRegistry const *pRegistry = t_CRegistryKey::fs_FindEqual(*this, _Str);
+				TCRegistry *pRegistry = t_CRegistryKey::fs_FindEqual(*this, _Str);
 				if (pRegistry)
 				{
 					return fg_Move(pRegistry->m_Data);
