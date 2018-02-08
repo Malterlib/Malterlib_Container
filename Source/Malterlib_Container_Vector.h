@@ -1947,6 +1947,13 @@ namespace NMib
 				return Temp;
 			}
 
+			t_CData f_PopBack()
+			{
+				aint iLast = f_GetLen() - 1;
+				t_CData Temp = fg_Move(f_GetArray()[iLast]);
+				f_Remove(iLast);
+				return Temp;
+			}
 
 			t_CData *f_AddArrayAtEnd(mint _Size)
 			{
