@@ -1423,7 +1423,7 @@ namespace NMib
 
 			t_CData &f_InsertLast(t_CData &&_Data)
 			{
-				return f_Insert(_Data);
+				return f_Insert(fg_Move(_Data));
 			}
 
 			t_CData &f_InsertLast()
