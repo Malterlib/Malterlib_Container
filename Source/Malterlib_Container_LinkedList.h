@@ -436,7 +436,13 @@ namespace NMib
 				: m_Data(fg_Move(_Other.m_Data))
 			{
 			}
-			
+
+			TCLinkedList(TCInitializerList<t_CData> const &_Values)
+			{
+				for (auto &Value : _Values)
+					f_Insert(Value);
+			}
+
 			TCLinkedList(const TCLinkedList &_Other)
 			{
 				fp_CopyFrom(_Other);
