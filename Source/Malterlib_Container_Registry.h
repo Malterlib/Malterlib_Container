@@ -2166,8 +2166,9 @@ namespace NMib
 				PreDataValue += KeyNameEscaped;
 				_Stream += KeyNameEscaped;
 
+				bool bHasScope = _pReg->f_HasScope();
 
-				if (!DataStr.f_IsEmpty() || _pReg->m_Children.m_Tree.f_IsEmpty() || bForceEscaped )
+				if (!DataStr.f_IsEmpty() || !bHasScope || bForceEscaped )
 				{
 					if (ESupportWhiteSpace)
 					{
@@ -2213,20 +2214,7 @@ namespace NMib
 					_Stream += NewLine;
 
 	
-				if 
-				(
-					!_pReg->m_Children.m_Tree.f_IsEmpty() || 
-					(
-						ESupportWhiteSpace 
-						&& 
-						(
-							!fsp_OnlyWhiteSpace(_pReg->m_Key.f_GetWhiteSpace(EWhiteSpaceLocation_AfterChildScopeStart))
-							|| !fsp_OnlyWhiteSpace(_pReg->m_Key.f_GetWhiteSpace(EWhiteSpaceLocation_BeforeChildScopeStart))
-							|| !fsp_OnlyWhiteSpace(_pReg->m_Key.f_GetWhiteSpace(EWhiteSpaceLocation_BeforeChildScopeEnd))
-							|| !fsp_OnlyWhiteSpace(_pReg->m_Key.f_GetWhiteSpace(EWhiteSpaceLocation_AfterChildScopeEnd))
-						)
-					)
-				)
+				if (bHasScope)
 				{
 					if (ESupportWhiteSpace)
 					{
@@ -2677,6 +2665,22 @@ namespace NMib
 			{
 				DMibFastCheck(f_IsValidWhiteSpace(_Location, _Str));
 				m_Key.f_SetWhiteSpace(_Location, _Str);
+			}
+
+			bool f_HasScope() const
+			{
+				return !m_Children.m_Tree.f_IsEmpty() ||
+					(
+						ESupportWhiteSpace
+						&&
+						(
+							!fsp_OnlyWhiteSpace(m_Key.f_GetWhiteSpace(EWhiteSpaceLocation_AfterChildScopeStart))
+							|| !fsp_OnlyWhiteSpace(m_Key.f_GetWhiteSpace(EWhiteSpaceLocation_BeforeChildScopeStart))
+							|| !fsp_OnlyWhiteSpace(m_Key.f_GetWhiteSpace(EWhiteSpaceLocation_BeforeChildScopeEnd))
+							|| !fsp_OnlyWhiteSpace(m_Key.f_GetWhiteSpace(EWhiteSpaceLocation_AfterChildScopeEnd))
+						)
+					)
+				;
 			}
 
 			auto f_GetWhiteSpace(EWhiteSpaceLocation _Location) const -> decltype(fp_GetKeyHelper().f_GetWhiteSpace(_Location))
