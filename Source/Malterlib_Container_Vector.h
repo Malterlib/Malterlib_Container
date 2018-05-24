@@ -573,6 +573,10 @@ namespace NMib
 				return *this;
 			}
 
+			mint f_GetLen() const
+			{
+				return m_End - m_Begin;
+			}
 		};
 
 		template 
