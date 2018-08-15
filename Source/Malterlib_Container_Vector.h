@@ -661,6 +661,10 @@ namespace NMib
 				{
 					return m_Allocator;
 				}
+				t_CAllocator const &f_Allocator() const
+				{
+					return m_Allocator;
+				}
 			};
 
 			class CStaticDataEmptyAllocator : public t_CStaticData
@@ -670,6 +674,10 @@ namespace NMib
 				t_CAllocator &f_Allocator()
 				{
 					return *((t_CAllocator *)this);
+				}
+				t_CAllocator const &f_Allocator() const
+				{
+					return *((t_CAllocator const *)this);
 				}
 			};
 
@@ -1163,6 +1171,22 @@ namespace NMib
 					return m_StaticData.m_pData->f_GetLen() == 0;
 				else
 					return true;
+			}
+
+			mint f_GetArrayAllocSize() const
+			{
+				auto pData = m_StaticData.m_pData;
+				if (!pData)
+					return 0;
+				
+				mint nObjects = pData->f_GetAllocSize(pData->f_GetLen());
+#if defined(DCompiler_MSVC_Workaround)
+				mint Size = fg_AlignUp(nObjects * sizeof(t_CData) + sizeof(CVectorData), fsp_Alignment());
+#else
+				mint Size = fg_AlignUp(nObjects * sizeof(t_CData) + sizeof(CVectorData), mcp_Alignment);
+#endif
+				mint nBytes = m_StaticData.f_Allocator().f_SizePadded(Size);
+				return nBytes;
 			}
 
 			const t_CData *f_GetArray() const
