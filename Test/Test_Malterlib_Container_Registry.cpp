@@ -1,4 +1,4 @@
-﻿// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB 
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #include <Mib/Test/Exception>
@@ -6,6 +6,8 @@
 using namespace NMib::NRegistry;
 using namespace NMib::NStr;
 using namespace NMib;
+
+#pragma clang diagnostic ignored "-Wself-assign-overloaded"
 
 namespace
 {
