@@ -7,7 +7,9 @@ using namespace NMib::NRegistry;
 using namespace NMib::NStr;
 using namespace NMib;
 
+#ifdef DCompiler_clang
 #pragma clang diagnostic ignored "-Wself-assign-overloaded"
+#endif
 
 namespace
 {
