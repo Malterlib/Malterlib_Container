@@ -3484,6 +3484,7 @@ namespace NMib
 				_StringTable.f_ConsumeString(_Stream, m_Data);
 				uint64 nItems;
 				fg_ConsumeLenFromStream(_Stream, nItems);
+				fg_CheckLengthLimit(_Stream, nItems);
 				while (nItems)
 				{
 					TCRegistry *pChild = DMibNew TCRegistry(this);

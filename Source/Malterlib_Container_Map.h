@@ -1435,7 +1435,8 @@ namespace NMib
 
 				uint64 nItems;
 				fg_ConsumeLenFromStream(_Stream, nItems);
-	
+				fg_CheckLengthLimit(_Stream, nItems);
+
 				while (nItems)
 				{
 					auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);

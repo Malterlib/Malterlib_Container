@@ -2756,6 +2756,7 @@ namespace NMib
 			{
 				uint64 nItems;
 				fg_ConsumeLenFromStream(_Stream, nItems);
+				fg_CheckLengthLimit(_Stream, nItems);
 				_Data.f_SetLen(nItems);
 
 				for (mint i = 0; i < nItems; ++i)
@@ -2783,6 +2784,7 @@ namespace NMib
 			{\
 				uint64 nItems;\
 				fg_ConsumeLenFromStream(_Stream, nItems);\
+				fg_CheckLengthLimit(_Stream, nItems);\
 				_Data.f_SetLen(nItems);\
 				_Stream.f_ConsumeBytes(_Data.f_GetArray(), nItems * sizeof(_DataType));\
 				if (sizeof(_DataType) != 1)\
