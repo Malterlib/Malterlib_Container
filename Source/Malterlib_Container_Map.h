@@ -1647,11 +1647,19 @@ namespace NMib
 				return Return;
 			}
 
+			TCSet operator | (TCSet const &_Right) const
+			{
+				return f_Or(_Right);
+			}
+
 			TCSet f_And(TCSet const &_Other) const
 			{
 				TCSet Return;
 				auto iLeft = this->f_GetIterator();
 				auto iRight = _Other.f_GetIterator();
+
+				if (!iRight)
+					return {};
 
 				while (true)
 				{
@@ -1669,6 +1677,71 @@ namespace NMib
 				}
 
 				return Return;
+			}
+
+			TCSet operator & (TCSet const &_Right) const
+			{
+				return f_And(_Right);
+			}
+
+			TCSet f_Xor(TCSet const &_Right) const
+			{
+				TCSet Return;
+				auto iLeft = this->f_GetIterator();
+				auto iRight = _Right.f_GetIterator();
+				if (!iRight)
+				{
+					for (; iLeft; ++iLeft)
+						Return[*iLeft];
+					return Return;
+				}
+
+				while (true)
+				{
+					for (; iLeft && *iLeft < *iRight; ++iLeft)
+						Return[*iLeft];
+
+					if (!iLeft)
+					{
+						for (; iRight; ++iRight)
+							Return[*iRight];
+						break;
+					}
+					for (; iRight && *iRight < *iLeft; ++iRight)
+						Return[*iRight];
+					if (!iRight)
+					{
+						for (; iLeft; ++iLeft)
+							Return[*iLeft];
+						break;
+					}
+					Return[*iLeft];
+					++iLeft;
+					++iRight;
+				}
+
+				return Return;
+			}
+
+			TCSet operator ^ (TCSet const &_Right)
+			{
+				return f_Xor(_Right);
+			}
+
+			TCSet f_Difference(TCSet const &_Right) const
+			{
+				TCSet Return = *this;
+
+				DMibFastCheck(&Return != this);
+				
+				Return -= _Right;
+
+				return Return;
+			}
+
+			TCSet operator - (TCSet const &_Right)
+			{
+				return f_Difference(_Right);
 			}
 
 			template <typename tf_COther>
