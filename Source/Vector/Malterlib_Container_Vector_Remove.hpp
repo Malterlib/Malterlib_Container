@@ -1,0 +1,84 @@
+// Copyright © 2015 Hansoft AB 
+// Distributed under the MIT license, see license text in LICENSE.Malterlib
+
+#pragma once
+
+namespace NMib::NContainer
+{
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	t_CData TCVector<t_CData, t_CAllocator, t_COptions>::f_Pop()
+	{
+		t_CData Temp = fg_Move((*this)[0]);
+		f_Remove(0);
+		return Temp;
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	t_CData TCVector<t_CData, t_CAllocator, t_COptions>::f_PopBack()
+	{
+		aint iLast = f_GetLen() - 1;
+		t_CData Temp = fg_Move(f_GetArray()[iLast]);
+		f_Remove(iLast);
+		return Temp;
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Remove(mint _Start, mint _Len)
+	{
+		if (_Len == 0)
+			return;
+		mint CurrentLen = f_GetLen();
+
+		fsp_CheckBounds(CurrentLen, _Start);
+		fsp_CheckBounds(CurrentLen, _Start+_Len-1);
+
+		_Start = fg_Min(_Start, CurrentLen-1);
+		_Len = fg_Min(CurrentLen - _Start, _Len);
+
+		mint NewLen = CurrentLen-_Len;
+		if (NewLen == 0)
+			return f_Clear();
+
+		CVectorData *pNewData;
+		if (NewLen != CurrentLen)
+		{
+			if (fsp_NeedRealloc(NewLen, mp_StaticData.m_pData))
+			{
+				// New list
+				pNewData = fp_AllocDataGrow(NewLen);
+
+				t_CData *pOldArray = f_GetArray();
+				t_CData *pNewArray = pNewData->f_GetData();
+
+				// Construct all new datas with copy constructor from old datas
+				NPrivate::fg_MoveArray(pNewArray, pOldArray, _Start);
+				if (NewLen > _Start)
+					NPrivate::fg_MoveArray(pNewArray + _Start, pOldArray + _Start + _Len, (NewLen - _Start));
+
+				DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize);
+				auto pOldData = mp_StaticData.m_pData;
+				pNewData->m_Length = NewLen;
+				mp_StaticData.m_pData = pNewData;
+
+				if (pOldData)
+				{
+					NPrivate::fg_DestroyArray(pOldArray, CurrentLen, CurrentLen);
+					fp_FreeData(pOldData);
+				}
+			}
+			else
+			{
+				t_CData *pOldArray = f_GetArray();
+
+				// Destroy All datas that are to be destroyed
+				mint nToDestroy = _Len;
+				NPrivate::fg_DestroyArray(pOldArray + _Start, _Len, nToDestroy);
+
+				if (NewLen > _Start)
+					NPrivate::fg_MoveDestroyOverlappingArray(pOldArray + _Start, pOldArray + _Start + _Len, (NewLen - _Start));
+
+				mp_StaticData.m_pData->m_Length = NewLen;
+			}
+		}
+	}
+}

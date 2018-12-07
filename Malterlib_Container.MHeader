@@ -15,7 +15,7 @@ Import "../Core/Lib_Malterlib.MTarget"
 			}
 			%File "Include/Mib/Container/^*"
 		}
-		%File "Source/*"
+		%File "Source/^*"
 		%Group Documentation
 		{
 			%File "Documentation/*"

@@ -1,0 +1,109 @@
+// Copyright © 2015 Hansoft AB 
+// Distributed under the MIT license, see license text in LICENSE.Malterlib
+
+#pragma once
+
+namespace NMib::NContainer
+{
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(TCInitializerList<t_CData> const &_Elements)
+	{
+		mint iFirstElement = f_GetLen();
+		for (auto &Element : _Elements)
+			f_Insert(Element);
+		return f_GetArray() + iFirstElement;
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector)
+	{
+		mint PrevLen = f_GetLen();
+		mint AddLen = _Vector.f_GetLen();
+		mint NewLen = PrevLen + AddLen;
+		t_CData *pArray = fp_MakeRoom(NewLen);
+		tf_CData const *pSrcArray = _Vector.f_GetArray();
+
+		mint nCopied = 0;
+		try
+		{
+			NPrivate::fg_CopyArray(pArray + PrevLen, pSrcArray, AddLen, nCopied);
+		}
+		catch (...)
+		{
+			NPrivate::fg_DestroyArray(pArray + PrevLen, nCopied, nCopied);
+			throw;
+		}
+		if (mp_StaticData.m_pData)
+			mp_StaticData.m_pData->m_Length = NewLen;
+
+		return pArray + PrevLen;
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(TCVector<tf_CData, tf_CAllocator, tf_COptions> &_Vector)
+	{
+		return f_Insert(fg_Const(_Vector));
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(const t_CData *_pData, mint _Len)
+	{
+		aint PrevLen = f_GetLen();
+		aint NewLen = PrevLen + _Len;
+		t_CData *pArray = fp_MakeRoom(NewLen);
+
+		mint nCopied = 0;
+		try
+		{
+			NPrivate::fg_CopyArray(pArray + PrevLen, _pData, _Len, nCopied);
+		}
+		catch (...)
+		{
+			NPrivate::fg_DestroyArray(pArray + PrevLen, nCopied, nCopied);
+			throw;
+		}
+		if (mp_StaticData.m_pData)
+			mp_StaticData.m_pData->m_Length = NewLen;
+
+		return pArray + PrevLen;
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(t_CData *_pData, mint _Len)
+	{
+		return f_Insert((t_CData const *)_pData, _Len);
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	inline_never t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::fp_Insert(t_CData const &_Data)
+	{
+		mint PrevLen = f_GetLen();
+		t_CData *pArray = fp_MakeRoom(PrevLen + 1) + PrevLen;
+		new((void *)(pArray)) t_CData(_Data);
+		++mp_StaticData.m_pData->m_Length;
+		return *pArray;
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(const t_CData &_Data)
+	{
+		mint PrevLen = f_GetLen();
+		auto pData = mp_StaticData.m_pData;
+		if (fsp_CanGrow(PrevLen + 1, pData))
+		{
+			t_CData *pArray = pData->f_GetData() + PrevLen;
+			new((void *)(pArray)) t_CData(_Data);
+			++pData->m_Length;
+			return *pArray;
+		}
+		return fp_Insert(_Data);
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	inline_small t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(t_CData &_Data)
+	{
+		return f_Insert(fg_Const(_Data));
+	}
+}

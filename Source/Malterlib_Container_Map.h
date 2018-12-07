@@ -383,8 +383,10 @@ namespace NMib
 							, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
 							, [&](void * _pAlloc, mint _Size) -> bool
 							{
+								auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
 								auto pData = (CMapTreeMember *)_pAlloc;
 								new((void *)pData) CMapTreeMember(iSource.f_GetKey(), *iSource);
+								Cleanup.f_Claim();
 								_Map.mp_Data.m_Tree.f_Insert(pData);
 								++iSource;
 								return iSource;
@@ -407,8 +409,10 @@ namespace NMib
 							, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
 							, [&](void * _pAlloc, mint _Size) -> bool
 							{
+								auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
 								auto pData = (CMapTreeMember *)_pAlloc;
 								new((void *)pData) CMapTreeMember(iSource.f_GetKey(), fg_Move(*iSource));
+								Cleanup.f_Claim();
 								_Map.mp_Data.m_Tree.f_Insert(pData);
 								++iSource;
 								return iSource;
@@ -439,8 +443,10 @@ namespace NMib
 							, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
 							, [&](void * _pAlloc, mint _Size) -> bool
 							{
+								auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
 								auto pData = (CMapTreeMember *)_pAlloc;
 								new((void *)pData) CMapTreeMember(iSource.f_GetKey(), *iSource);
+								Cleanup.f_Claim();
 								_Map.mp_Data.m_Tree.f_Insert(pData);
 					
 								++iSource;
@@ -481,8 +487,10 @@ namespace NMib
 							, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
 							, [&](void * _pAlloc, mint _Size) -> bool
 							{
+								auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
 								auto pData = (CMapTreeMember *)_pAlloc;
 								new((void *)pData) CMapTreeMember(iSource.f_GetKey(), fg_Move(*iSource));
+								Cleanup.f_Claim();
 								_Map.mp_Data.m_Tree.f_Insert(pData);
 					
 								++iSource;
@@ -521,8 +529,10 @@ namespace NMib
 							, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
 							, [&](void * _pAlloc, mint _Size) -> bool
 							{
+								auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
 								auto pData = (CMapTreeMember *)_pAlloc;
 								new((void *)pData) CMapTreeMember(iSource.f_GetKey(), *const_cast<CData *>(&*iSource));
+								Cleanup.f_Claim();
 								_Map.mp_Data.m_Tree.f_Insert(pData);
 								++iSource;
 								return iSource;
@@ -553,8 +563,10 @@ namespace NMib
 							, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
 							, [&](void * _pAlloc, mint _Size) -> bool
 							{
+								auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
 								auto pData = (CMapTreeMember *)_pAlloc;
 								new((void *)pData) CMapTreeMember(iSource.f_GetKey(), *const_cast<CData *>(&*iSource));
+								Cleanup.f_Claim();
 								_Map.mp_Data.m_Tree.f_Insert(pData);
 					
 								++iSource;
@@ -813,18 +825,42 @@ namespace NMib
 
 			TCMap(const TCMap &_Other)
 			{
+				auto Cleanup = g_OnScopeExit > [&]
+					{
+						f_Clear();
+					}
+				;
+
 				fp_CopyAll(_Other);
+
+				Cleanup.f_Clear();
 			}
 
 			TCMap(TCMap &_Other)
 			{
+				auto Cleanup = g_OnScopeExit > [&]
+					{
+						f_Clear();
+					}
+				;
+
 				fp_CopyAll(_Other);
+
+				Cleanup.f_Clear();
 			}
 
 			TCMap(TCInitializerList<CMapTreeMember> const &_Values)
 			{
+				auto Cleanup = g_OnScopeExit > [&]
+					{
+						f_Clear();
+					}
+				;
+
 				for (auto &Value : _Values)
 					(*this)(Value.m_Key, Value.m_Data);
+
+				Cleanup.f_Clear();
 			}
 			
 			template <typename... tfp_CParams>
@@ -837,7 +873,15 @@ namespace NMib
 			template <typename tf_CKey, typename tf_CData, typename tf_CCompare, typename tf_CAllocator>
 			TCMap(const TCMap<tf_CKey, tf_CData, tf_CCompare, tf_CAllocator> &_Other)
 			{
+				auto Cleanup = g_OnScopeExit > [&]
+					{
+						f_Clear();
+					}
+				;
+
 				fp_CopyAll(_Other);
+
+				Cleanup.f_Clear();
 			}
 
 			template <typename tf_CKey, typename tf_CData, typename tf_CCompare, typename tf_CAllocator>
@@ -851,7 +895,15 @@ namespace NMib
 			template <typename tf_CKey, typename tf_CData, typename tf_CCompare, typename tf_CAllocator>
 			TCMap(TCMap<tf_CKey, tf_CData, tf_CCompare, tf_CAllocator> &_Other)
 			{
+				auto Cleanup = g_OnScopeExit > [&]
+					{
+						f_Clear();
+					}
+				;
+
 				fp_CopyAll(_Other);
+
+				Cleanup.f_Clear();
 			}
 
 			template <typename tf_CKey, typename tf_CData, typename tf_CCompare, typename tf_CAllocator>
@@ -865,7 +917,15 @@ namespace NMib
 			template <typename tf_CKey, typename tf_CData, typename tf_CCompare, typename tf_CAllocator>
 			TCMap(TCMap<tf_CKey, tf_CData, tf_CCompare, tf_CAllocator> &&_Other)
 			{
+				auto Cleanup = g_OnScopeExit > [&]
+					{
+						f_Clear();
+					}
+				;
+
 				fp_MoveAll(_Other);
+
+				Cleanup.f_Clear();
 			}
 
 			template <typename tf_CKey, typename tf_CData, typename tf_CCompare, typename tf_CAllocator>
@@ -1002,8 +1062,10 @@ namespace NMib
 						, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
 						, [&](void * _pAlloc, mint _Size) -> bool
 						{
+							auto Cleanup = mp_Data.f_MakeSafe(_pAlloc, _Size);
 							CMapper Mapper(_pAlloc);
 							bool bRet = _Functor(Mapper);
+							Cleanup.f_Claim();
 							auto pData = (CMapTreeMember *)_pAlloc;
 							mp_Data.m_Tree.f_Insert(pData);
 							return bRet;
@@ -1021,18 +1083,18 @@ namespace NMib
 						, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
 						, [&](void * _pAlloc, mint _Size) -> bool
 						{
+							auto Cleanup = mp_Data.f_MakeSafe(_pAlloc, _Size);
+
 							CConditionalMapper Mapper(_pAlloc, *this);
 							bool bRet = _Functor(Mapper);
 							auto pData = (CMapTreeMember *)_pAlloc;
 							while (Mapper.m_bAddFailed)
 							{
 								if (!bRet)
-								{
-									mp_Data.f_Free(pData, sizeof(CMapTreeMember));
 									return false;
-								}
 								bRet = _Functor(Mapper);
 							}
+							Cleanup.f_Claim();
 							mp_Data.m_Tree.f_Insert(pData);
 							return bRet;
 						}
