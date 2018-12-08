@@ -85,7 +85,6 @@ namespace NMib::NContainer
 
 			NPrivate::fg_MoveArray(pNewArray, pOldArray, OldRemainingCells);
 
-			DMibFastCheck(_bTrim || !mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize);
 			Cleanup.f_Clear();
 			pNewData->m_Length = NewLen;
 			auto pOldData = mp_StaticData.m_pData;

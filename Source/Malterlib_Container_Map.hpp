@@ -1,149 +1,145 @@
-﻿// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB 
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
 
 #include "Malterlib_Container_Shared.h"
 
-namespace NMib
+namespace NMib::NContainer
 {
-	namespace NContainer
+	template <typename t_CKey, typename t_CData, typename t_CCompare, typename t_CAllocator>
+	struct TCIsContainer<TCMap<t_CKey, t_CData, t_CCompare, t_CAllocator>>
 	{
-		template <typename t_CKey, typename t_CData, typename t_CCompare, typename t_CAllocator>
-		struct TCIsContainer<TCMap<t_CKey, t_CData, t_CCompare, t_CAllocator>>
-		{
-			static constexpr bool mc_Value = true;
-		};
-		
-		template <typename t_CKey, typename t_CData, typename t_CCompare, typename t_CAllocator>
-		template <typename tf_COption>
-		bool TCMap<t_CKey, t_CData, t_CCompare, t_CAllocator>::f_FormatParseOption(CFormatOptions &_Options, tf_COption &_Option) const
-		{
-			switch (_Option.m_FormatTypes.m_Format1)
-			{
-			case 'V':
-				{
-					switch (_Option.m_FormatTypes.m_Format2)
-					{
-					case 'S':
-						_Options.m_bSingleLine = true;
-						return true;
-					case 'B':
-						_Options.m_bBrackets = false;
-						return true;
-					}
-				}
-				break;
-			}
-			return false;
-		}
+		static constexpr bool mc_Value = true;
+	};
 
-		template <typename t_CKey, typename t_CData, typename t_CCompare, typename t_CAllocator>
-		template <typename tf_CFormatInto, typename tf_CFormatOptions>
-		void TCMap<t_CKey, t_CData, t_CCompare, t_CAllocator>::f_Format(tf_CFormatInto &o_FormatInto, tf_CFormatOptions const &_Options) const
+	template <typename t_CKey, typename t_CData, typename t_CCompare, typename t_CAllocator>
+	template <typename tf_COption>
+	bool TCMap<t_CKey, t_CData, t_CCompare, t_CAllocator>::f_FormatParseOption(CFormatOptions &_Options, tf_COption &_Option) const
+	{
+		switch (_Option.m_FormatTypes.m_Format1)
 		{
-			if (_Options.m_LocalOptions.m_bSingleLine)
+		case 'V':
 			{
-				
-				if (_Options.m_LocalOptions.m_bBrackets)
-					o_FormatInto += "{";
-				auto iValue = this->f_GetIterator();
-				if (iValue)
+				switch (_Option.m_FormatTypes.m_Format2)
 				{
-					auto pFormat = "{} = {}";
-					if (TCIsContainer<t_CKey>::mc_Value)
-					{
-						if (TCIsContainer<t_CData>::mc_Value)
-							pFormat = "{vs} = {vs}";
-						else
-							pFormat = "{vs} = {}";
-					}
-					else if (TCIsContainer<t_CData>::mc_Value)
-						pFormat = "{} = {vs}";
-					
+				case 'S':
+					_Options.m_bSingleLine = true;
+					return true;
+				case 'B':
+					_Options.m_bBrackets = false;
+					return true;
+				}
+			}
+			break;
+		}
+		return false;
+	}
+
+	template <typename t_CKey, typename t_CData, typename t_CCompare, typename t_CAllocator>
+	template <typename tf_CFormatInto, typename tf_CFormatOptions>
+	void TCMap<t_CKey, t_CData, t_CCompare, t_CAllocator>::f_Format(tf_CFormatInto &o_FormatInto, tf_CFormatOptions const &_Options) const
+	{
+		if (_Options.m_LocalOptions.m_bSingleLine)
+		{
+
+			if (_Options.m_LocalOptions.m_bBrackets)
+				o_FormatInto += "{";
+			auto iValue = this->f_GetIterator();
+			if (iValue)
+			{
+				auto pFormat = "{} = {}";
+				if (TCIsContainer<t_CKey>::mc_Value)
+				{
+					if (TCIsContainer<t_CData>::mc_Value)
+						pFormat = "{vs} = {vs}";
+					else
+						pFormat = "{vs} = {}";
+				}
+				else if (TCIsContainer<t_CData>::mc_Value)
+					pFormat = "{} = {vs}";
+
+				o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << iValue.f_GetKey() << *iValue;
+				++iValue;
+				for (; iValue; ++iValue)
+				{
+					o_FormatInto += ", ";
 					o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << iValue.f_GetKey() << *iValue;
-					++iValue;
-					for (; iValue; ++iValue)
-					{
-						o_FormatInto += ", ";
-						o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << iValue.f_GetKey() << *iValue;
-					}
 				}
-				if (_Options.m_LocalOptions.m_bBrackets)
-					o_FormatInto += "}";
 			}
-			else
-			{
-				if (_Options.m_LocalOptions.m_bBrackets)
-					o_FormatInto += "{\n";
-				auto iValue = this->f_GetIterator();
-				if (iValue)
-				{
-					o_FormatInto += typename tf_CFormatInto::CFormat("\t{} = {}") << iValue.f_GetKey() << *iValue;
-					++iValue;
-					for (; iValue; ++iValue)
-					{
-						o_FormatInto += ",\n";
-						o_FormatInto += typename tf_CFormatInto::CFormat("\t{} = {}") << iValue.f_GetKey() << *iValue;
-					}
-					if (_Options.m_LocalOptions.m_bBrackets)
-						o_FormatInto += "\n}\n";
-					else
-						o_FormatInto += "\n";
-				}
-				else if (_Options.m_LocalOptions.m_bBrackets)
-					o_FormatInto += "}\n";
-			}
+			if (_Options.m_LocalOptions.m_bBrackets)
+				o_FormatInto += "}";
 		}
-
-		template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-		template <typename tf_CFormatInto, typename tf_CFormatOptions>
-		void TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Format(tf_CFormatInto &o_FormatInto, tf_CFormatOptions const &_Options) const
+		else
 		{
-			if (_Options.m_LocalOptions.m_bSingleLine)
+			if (_Options.m_LocalOptions.m_bBrackets)
+				o_FormatInto += "{\n";
+			auto iValue = this->f_GetIterator();
+			if (iValue)
 			{
-				if (_Options.m_LocalOptions.m_bBrackets)
-					o_FormatInto += "{";
-				auto iValue = this->f_GetIterator();
-				if (iValue)
+				o_FormatInto += typename tf_CFormatInto::CFormat("\t{} = {}") << iValue.f_GetKey() << *iValue;
+				++iValue;
+				for (; iValue; ++iValue)
 				{
-					auto pFormat = "{}";
-					if (TCIsContainer<t_CKey>::mc_Value)
-						pFormat = "{vs}";
-					o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << *iValue;
-					++iValue;
-					for (; iValue; ++iValue)
-					{
-						o_FormatInto += ", ";
-						o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << *iValue;
-					}
+					o_FormatInto += ",\n";
+					o_FormatInto += typename tf_CFormatInto::CFormat("\t{} = {}") << iValue.f_GetKey() << *iValue;
 				}
 				if (_Options.m_LocalOptions.m_bBrackets)
-					o_FormatInto += "}";
+					o_FormatInto += "\n}\n";
+				else
+					o_FormatInto += "\n";
 			}
-			else
-			{
-				if (_Options.m_LocalOptions.m_bBrackets)
-					o_FormatInto += "{\n";
-				auto iValue = this->f_GetIterator();
-				if (iValue)
-				{
-					o_FormatInto += typename tf_CFormatInto::CFormat("\t{}") << *iValue;
-					++iValue;
-					for (; iValue; ++iValue)
-					{
-						o_FormatInto += ",\n";
-						o_FormatInto += typename tf_CFormatInto::CFormat("\t{}") << *iValue;
-					}
-					if (_Options.m_LocalOptions.m_bBrackets)
-						o_FormatInto += "\n}\n";
-					else
-						o_FormatInto += "\n";
-				}
-				else if (_Options.m_LocalOptions.m_bBrackets)
-					o_FormatInto += "}\n";
-			}
+			else if (_Options.m_LocalOptions.m_bBrackets)
+				o_FormatInto += "}\n";
 		}
 	}
 
-};
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename tf_CFormatInto, typename tf_CFormatOptions>
+	void TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Format(tf_CFormatInto &o_FormatInto, tf_CFormatOptions const &_Options) const
+	{
+		if (_Options.m_LocalOptions.m_bSingleLine)
+		{
+			if (_Options.m_LocalOptions.m_bBrackets)
+				o_FormatInto += "{";
+			auto iValue = this->f_GetIterator();
+			if (iValue)
+			{
+				auto pFormat = "{}";
+				if (TCIsContainer<t_CKey>::mc_Value)
+					pFormat = "{vs}";
+				o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << *iValue;
+				++iValue;
+				for (; iValue; ++iValue)
+				{
+					o_FormatInto += ", ";
+					o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << *iValue;
+				}
+			}
+			if (_Options.m_LocalOptions.m_bBrackets)
+				o_FormatInto += "}";
+		}
+		else
+		{
+			if (_Options.m_LocalOptions.m_bBrackets)
+				o_FormatInto += "{\n";
+			auto iValue = this->f_GetIterator();
+			if (iValue)
+			{
+				o_FormatInto += typename tf_CFormatInto::CFormat("\t{}") << *iValue;
+				++iValue;
+				for (; iValue; ++iValue)
+				{
+					o_FormatInto += ",\n";
+					o_FormatInto += typename tf_CFormatInto::CFormat("\t{}") << *iValue;
+				}
+				if (_Options.m_LocalOptions.m_bBrackets)
+					o_FormatInto += "\n}\n";
+				else
+					o_FormatInto += "\n";
+			}
+			else if (_Options.m_LocalOptions.m_bBrackets)
+				o_FormatInto += "}\n";
+		}
+	}
+}

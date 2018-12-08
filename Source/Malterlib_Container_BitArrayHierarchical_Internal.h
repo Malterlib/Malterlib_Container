@@ -1,102 +1,95 @@
-﻿// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB 
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
 
-namespace NMib
+namespace NMib::NContainer::NPrivate
 {
-	namespace NContainer
+	template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal, bool t_bLast = (t_nBitsInternal <= 1)>
+	struct TCBitArrayHierarchicalInternalArray : public TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>
 	{
-		namespace NPrivate
+		enum
 		{
-			template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal, bool t_bLast = (t_nBitsInternal <= 1)>
-			struct TCBitArrayHierarchicalInternalArray : public TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>
-			{
-				enum
-				{
-					mc_bIsRoot = (t_nBitsInternal <= t_nBitsPerEntry)
-					, mc_bIsFirstLevel = t_nBitsInternal == t_nBits
-					, mc_nSuperBits = ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)
-				};
-				typedef TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)> CSuper;
-				TCBitArray<t_nBitsInternal> m_Bits;
-				
-				constexpr TCBitArrayHierarchicalInternalArray(bool _bInitValues);
-				void f_Clear();
+			mc_bIsRoot = (t_nBitsInternal <= t_nBitsPerEntry)
+			, mc_bIsFirstLevel = t_nBitsInternal == t_nBits
+			, mc_nSuperBits = ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)
+		};
+		typedef TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)> CSuper;
+		TCBitArray<t_nBitsInternal> m_Bits;
 
-				template <typename tf_CStream>
-				void f_Feed(tf_CStream &_Stream) const;
+		constexpr TCBitArrayHierarchicalInternalArray(bool _bInitValues);
+		void f_Clear();
 
-				template <typename tf_CStream>
-				void f_Consume(tf_CStream &_Stream);
+		template <typename tf_CStream>
+		void f_Feed(tf_CStream &_Stream) const;
 
-				bool f_IsFullySet() const;
-				bool f_IsFullyFree() const;
+		template <typename tf_CStream>
+		void f_Consume(tf_CStream &_Stream);
 
-				template <bool tf_bValue>
-				void f_SetBit(mint _Bit);
-				void f_SetBit(mint _Bit, bool _bValue);
+		bool f_IsFullySet() const;
+		bool f_IsFullyFree() const;
 
-				template <bool tf_bValue>
-				void f_SetBitRange(mint _StartBit, mint _nBits);
-				void f_SetBitRange(mint _StartBit, mint _nBits, bool _bValue);
+		template <bool tf_bValue>
+		void f_SetBit(mint _Bit);
+		void f_SetBit(mint _Bit, bool _bValue);
 
-				bool f_GetBit(mint _Bit) const;
-				
-				aint f_FindFreeBit() const;
-				aint f_FindFreeBitAndSet();
+		template <bool tf_bValue>
+		void f_SetBitRange(mint _StartBit, mint _nBits);
+		void f_SetBitRange(mint _StartBit, mint _nBits, bool _bValue);
 
-				aint f_FindFreeBitReverse() const;
-				aint f_FindFreeBitReverseAndSet();
+		bool f_GetBit(mint _Bit) const;
 
-				aint f_FindUpperBound(mint _StartBit) const;
-				template <typename t_CFunctor>
-				void f_EnumFreeBits(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
-				template <typename t_CFunctor>
-				void f_EnumFreeBitRanges(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		aint f_FindFreeBit() const;
+		aint f_FindFreeBitAndSet();
 
-				template <typename t_CFunctor>
-				void f_EnumSetBitRanges(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		aint f_FindFreeBitReverse() const;
+		aint f_FindFreeBitReverseAndSet();
 
-				template <typename t_CFunctor>
-				void f_EnumSetBits(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
-			};
-			
-			template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal>
-			struct TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, true>
-			{
-				constexpr TCBitArrayHierarchicalInternalArray(bool _bInitValues);
-				void f_Clear();
-				
-				template <typename tf_CStream>
-				void f_Feed(tf_CStream &_Stream) const;
-				template <typename tf_CStream>
-				void f_Consume(tf_CStream &_Stream);
-				
-				template <bool tf_bValue>
-				void f_SetBit(mint _Bit);
-				void f_SetBit(mint _Bit, bool _bValue);
+		aint f_FindUpperBound(mint _StartBit) const;
+		template <typename t_CFunctor>
+		void f_EnumFreeBits(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		template <typename t_CFunctor>
+		void f_EnumFreeBitRanges(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
 
-				template <bool tf_bValue>
-				void f_SetBitRange(mint _StartBit, mint _nBits);
-				void f_SetBitRange(mint _StartBit, mint _nBits, bool _bValue);
-				
-				bool f_IsFullySet() const;
-				bool f_IsFullyFree() const;
-				
-				bool f_GetBit(mint _Bit) const;
-				
-				aint f_FindFreeBit() const;
-				aint f_FindFreeBitAndSet();
-				
-				aint f_FindFreeBitReverse() const;
-				aint f_FindFreeBitReverseAndSet();
-				
-				aint f_FindUpperBound(mint _StartBit) const;
-			};
-			
-		}
-	}
+		template <typename t_CFunctor>
+		void f_EnumSetBitRanges(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+
+		template <typename t_CFunctor>
+		void f_EnumSetBits(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+	};
+
+	template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal>
+	struct TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, true>
+	{
+		constexpr TCBitArrayHierarchicalInternalArray(bool _bInitValues);
+		void f_Clear();
+
+		template <typename tf_CStream>
+		void f_Feed(tf_CStream &_Stream) const;
+		template <typename tf_CStream>
+		void f_Consume(tf_CStream &_Stream);
+
+		template <bool tf_bValue>
+		void f_SetBit(mint _Bit);
+		void f_SetBit(mint _Bit, bool _bValue);
+
+		template <bool tf_bValue>
+		void f_SetBitRange(mint _StartBit, mint _nBits);
+		void f_SetBitRange(mint _StartBit, mint _nBits, bool _bValue);
+
+		bool f_IsFullySet() const;
+		bool f_IsFullyFree() const;
+
+		bool f_GetBit(mint _Bit) const;
+
+		aint f_FindFreeBit() const;
+		aint f_FindFreeBitAndSet();
+
+		aint f_FindFreeBitReverse() const;
+		aint f_FindFreeBitReverseAndSet();
+
+		aint f_FindUpperBound(mint _StartBit) const;
+	};
 }
 
 #include "Malterlib_Container_BitArrayHierarchical_Internal.hpp"

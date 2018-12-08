@@ -36,7 +36,7 @@ namespace NMib::NContainer
 	{
 		aint PrevLen = f_GetLen();
 		t_CData *pArray = fp_MakeRoom(PrevLen + 1) + PrevLen;
-		_CreateParams.template f_Create<t_CData>(NMem::TCAllocator_Placement<sizeof(t_CData)>((void *)(pArray)));
+		_CreateParams.template f_Create<t_CData>(NMemory::TCAllocator_Placement<sizeof(t_CData)>((void *)(pArray)));
 		++mp_StaticData.m_pData->m_Length;
 		return *pArray;
 
@@ -51,7 +51,7 @@ namespace NMib::NContainer
 		if (fsp_CanGrow(PrevLen + 1, pData))
 		{
 			t_CData *pArray = pData->f_GetData() + PrevLen;
-			_CreateParams.template f_Create<t_CData>(NMem::TCAllocator_Placement<sizeof(t_CData)>((void *)(pArray)));
+			_CreateParams.template f_Create<t_CData>(NMemory::TCAllocator_Placement<sizeof(t_CData)>((void *)(pArray)));
 			++pData->m_Length;
 			return *pArray;
 		}

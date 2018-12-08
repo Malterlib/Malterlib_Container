@@ -5,15 +5,15 @@
 
 #include <Mib/Core/Core>
 
-namespace NMib
+namespace NMib::NContainer
 {
-	namespace NContainer
+	template <typename t_CType>
+	struct TCIsContainer
 	{
-		template <typename t_CType>
-		struct TCIsContainer
-		{
-			static constexpr bool mc_Value = false;
-		};
-		
-	}
+		static constexpr bool mc_Value = false;
+	};
 }
+
+#ifndef DMibPNoShortCuts
+	using namespace NMib::NContainer;
+#endif

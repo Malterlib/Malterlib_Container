@@ -64,7 +64,7 @@ namespace NMib::NContainer::NPrivate
 	static void fg_MoveArray(t_CData *_pDest, t_CData *_pSrc, mint _Len)
 	{
 		if constexpr (NTraits::TCHasTrivialCopyConstructor<t_CData>::mc_Value)
-			NMem::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
+			NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
 		else
 		{
 #if DMibEnableSafeCheck > 0
@@ -110,7 +110,7 @@ namespace NMib::NContainer::NPrivate
 	{
 		if constexpr (NTraits::TCHasTrivialCopyConstructor<t_CData>::mc_Value)
 		{
-			NMem::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
+			NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
 			o_Len += _Len;
 		}
 		else if constexpr (NTraits::TCIsConstructorNothrowCallableWith<t_CData, void (t_CData const &)>::mc_Value)
@@ -164,11 +164,11 @@ namespace NMib::NContainer::NPrivate
 		{
 			if constexpr (NTraits::TCHasTrivialDestructor<t_CData>::mc_Value)
 			{
-				NMem::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
+				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
 			}
 			else
 			{
-				NMem::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
+				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
 				for (smint i = smint(_Len) - 1; i >= 0; --i)
 				{
 					_pSrc[i].~t_CData();
@@ -215,11 +215,11 @@ namespace NMib::NContainer::NPrivate
 		{
 			if constexpr (NTraits::TCHasTrivialDestructor<t_CData>::mc_Value)
 			{
-				NMem::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
+				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
 			}
 			else
 			{
-				NMem::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
+				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
 				for (mint i = 0; i < _Len; ++i)
 					_pSrc[i].~t_CData();
 			}
@@ -255,7 +255,7 @@ namespace NMib::NContainer::NPrivate
 		if constexpr (NTraits::TCHasTrivialCopyConstructor<t_CData>::mc_Value)
 		{
 			if constexpr (NTraits::TCHasTrivialDestructor<t_CData>::mc_Value)
-				NMem::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
+				NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
 			else
 			{
 #if DMibEnableSafeCheck > 0
@@ -267,7 +267,7 @@ namespace NMib::NContainer::NPrivate
 #endif
 				for (mint i = 0; i < _Len; ++i)
 					_pDest[i].~t_CData();
-				NMem::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
+				NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
 
 #if DMibEnableSafeCheck > 0
 				Cleanup.f_Clear();

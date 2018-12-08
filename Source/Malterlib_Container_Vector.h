@@ -420,11 +420,8 @@ namespace NMib::NContainer
 		CStaticData mp_StaticData;
 	};
 
-	template <typename t_CData, typename t_CAllocator = NMib::NMem::CAllocator_Heap, typename t_COptions = TCVectorOptions<16, false> >
+	template <typename t_CData, typename t_CAllocator = NMib::NMemory::CAllocator_Heap, typename t_COptions = TCVectorOptions<16, false> >
 	using TCGrowingVector = TCVector<t_CData, t_CAllocator, t_COptions>;
-
-	using CByteVector = TCVector<uint8>;
-	using CSecureByteVector = TCVector<uint8, NMem::CAllocator_HeapSecure>;
 
 	template <typename tf_CFirst, typename... tf_CParams>
 	TCVector<typename NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>::CType> fg_CreateVector(tf_CFirst && _First, tf_CParams && ..._Params);
@@ -479,3 +476,7 @@ namespace NMib::NContainer
 #include "Vector/Malterlib_Container_Vector_SetLen.hpp"
 #include "Vector/Malterlib_Container_Vector_Sort.hpp"
 #include "Vector/Malterlib_Container_Vector_Stream.hpp"
+
+#ifndef DMibPNoShortCuts
+	using namespace NMib::NContainer;
+#endif

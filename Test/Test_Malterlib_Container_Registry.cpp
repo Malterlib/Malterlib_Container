@@ -3,7 +3,7 @@
 
 #include <Mib/Test/Exception>
 
-using namespace NMib::NRegistry;
+using namespace NMib::NContainer;
 using namespace NMib::NStr;
 using namespace NMib;
 
@@ -415,7 +415,7 @@ namespace
 					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated)) (ETestFlag_NoValues);
 
 					CRegistryPreserve_CStr *pValue2 = Registry.f_GetChild("1st_Root/Value2");
-					DMibTest(DMibExpr(pValue2) && DMibExpr(pValue2->f_GetWhiteSpace(EWhiteSpaceLocation_After)) == DMibExpr(" // After Value 2" DMibNewLine)) (ETestFlag_NoValues);
+					DMibTest(DMibExpr(pValue2) && DMibExpr(pValue2->f_GetWhiteSpace(ERegistryWhiteSpaceLocation_After)) == DMibExpr(" // After Value 2" DMibNewLine)) (ETestFlag_NoValues);
 
 					CRegistryPreserve_CStr Registry2 = Registry;
 					CStr RegistryStrGenerated2 = Registry2.f_GenerateStr();
@@ -424,11 +424,11 @@ namespace
 					CRegistryPreserve_CStr *pValue3 = Registry.f_GetChild("1st_Root/Value3");
 					DMibTest(DMibExpr(pValue3));
 					if (pValue3)
-						pValue3->f_SetWhiteSpace(EWhiteSpaceLocation_After, " // After Value 3" DMibNewLine);
+						pValue3->f_SetWhiteSpace(ERegistryWhiteSpaceLocation_After, " // After Value 3" DMibNewLine);
 					if (pValue3)
-						pValue3->f_SetWhiteSpace(EWhiteSpaceLocation_Between, "/* Middle */");
+						pValue3->f_SetWhiteSpace(ERegistryWhiteSpaceLocation_Between, "/* Middle */");
 					if (pValue3)
-						pValue3->f_SetWhiteSpace(EWhiteSpaceLocation_BeforeKey, "\t/* Before */");
+						pValue3->f_SetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, "\t/* Before */");
 
 					CStr RegistryStrResult = 
 					"1st_Root RootValue\r\n"
@@ -627,7 +627,7 @@ namespace
 
 					{
 						DMibTestPath("Single");
-						TCCopyTest<NMib::NRegistry::TCRegistry<NStr::CStr, NStr::CStr, NMib::NRegistry::TCRegistryKeyStr<NStr::CStr> >>::fs_DoTest();
+						TCCopyTest<NMib::NContainer::TCRegistry<NStr::CStr, NStr::CStr, NMib::NContainer::TCRegistryKeyStr<NStr::CStr> >>::fs_DoTest();
 					}
 					{
 						DMibTestPath("Multi");
@@ -643,7 +643,7 @@ namespace
 
 					{
 						DMibTestPath("Single");
-						TCMoveTest<TCRegistry<CStr, CStr, NMib::NRegistry::TCRegistryKeyStr<CStr> >>::fs_DoTest();
+						TCMoveTest<TCRegistry<CStr, CStr, NMib::NContainer::TCRegistryKeyStr<CStr> >>::fs_DoTest();
 					}
 					{
 						DMibTestPath("Multi");
