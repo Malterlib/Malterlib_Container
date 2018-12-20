@@ -235,16 +235,16 @@ namespace NMib::NContainer
 			TCLinkedList *m_pLinkedList;
 		public:
 #ifdef DMibDebuggerHelpers
-			static TCLinkedList* ms_pList;
-			static CList* ms_pIntrusiveList;
+			assure_used static TCLinkedList *fs_Debug_List();
+			assure_used static CList *fs_Debug_IntrusiveList();
 #endif
 
 			CIterator()
 			{
 				m_pLinkedList = nullptr;
 #ifdef DMibDebuggerHelpers
-				(void)&ms_pList;
-				(void)&ms_pIntrusiveList;
+				static_assert(TCInstantiateValue<&fs_Debug_List>::mc_Value);
+				static_assert(TCInstantiateValue<&fs_Debug_IntrusiveList>::mc_Value);
 #endif
 			}
 
@@ -252,8 +252,8 @@ namespace NMib::NContainer
 			{
 				*this = _Map.f_GetIterator();
 #ifdef DMibDebuggerHelpers
-				(void)&ms_pList;
-				(void)&ms_pIntrusiveList;
+				static_assert(TCInstantiateValue<&fs_Debug_List>::mc_Value);
+				static_assert(TCInstantiateValue<&fs_Debug_IntrusiveList>::mc_Value);
 #endif
 			}
 
@@ -320,14 +320,14 @@ namespace NMib::NContainer
 		public:
 
 #ifdef DMibDebuggerHelpers
-			static TCLinkedList* ms_pList;
-			static CList* ms_pIntrusiveList;
+			assure_used static TCLinkedList *fs_Debug_List();
+			assure_used static CList *fs_Debug_IntrusiveList();
 #endif
 			CIteratorConst()
 			{
 #ifdef DMibDebuggerHelpers
-				(void)&ms_pList;
-				(void)&ms_pIntrusiveList;
+				static_assert(TCInstantiateValue<&fs_Debug_List>::mc_Value);
+				static_assert(TCInstantiateValue<&fs_Debug_IntrusiveList>::mc_Value);
 #endif
 			}
 
@@ -335,8 +335,8 @@ namespace NMib::NContainer
 			{
 				*this = _Map.f_GetIterator();
 #ifdef DMibDebuggerHelpers
-				(void)&ms_pList;
-				(void)&ms_pIntrusiveList;
+				static_assert(TCInstantiateValue<&fs_Debug_List>::mc_Value);
+				static_assert(TCInstantiateValue<&fs_Debug_IntrusiveList>::mc_Value);
 #endif
 			}
 
@@ -957,15 +957,28 @@ namespace NMib::NContainer
 	};
 #ifdef DMibDebuggerHelpers
 	template <typename t_CData, typename t_CAllocator>
-	assure_used TCLinkedList<t_CData, t_CAllocator>* TCLinkedList<t_CData, t_CAllocator>::CIterator::ms_pList = nullptr;
-	template <typename t_CData, typename t_CAllocator>
-	assure_used TCLinkedList<t_CData, t_CAllocator>* TCLinkedList<t_CData, t_CAllocator>::CIteratorConst::ms_pList = nullptr;
+	assure_used TCLinkedList<t_CData, t_CAllocator> *TCLinkedList<t_CData, t_CAllocator>::CIterator::fs_Debug_List()
+	{
+		return nullptr;
+	}
 
+	template <typename t_CData, typename t_CAllocator>
+	assure_used TCLinkedList<t_CData, t_CAllocator>* TCLinkedList<t_CData, t_CAllocator>::CIteratorConst::fs_Debug_List()
+	{
+		return nullptr;
+	}
 
 	template <typename t_CData, typename t_CAllocator>
-	assure_used typename TCLinkedList<t_CData, t_CAllocator>::CList* TCLinkedList<t_CData, t_CAllocator>::CIterator::ms_pIntrusiveList = nullptr;
+	assure_used typename TCLinkedList<t_CData, t_CAllocator>::CList *TCLinkedList<t_CData, t_CAllocator>::CIterator::fs_Debug_IntrusiveList()
+	{
+		return nullptr;
+	}
+
 	template <typename t_CData, typename t_CAllocator>
-	assure_used typename TCLinkedList<t_CData, t_CAllocator>::CList* TCLinkedList<t_CData, t_CAllocator>::CIteratorConst::ms_pIntrusiveList = nullptr;
+	assure_used typename TCLinkedList<t_CData, t_CAllocator>::CList* TCLinkedList<t_CData, t_CAllocator>::CIteratorConst::fs_Debug_IntrusiveList()
+	{
+		return nullptr;
+	}
 #endif
 }
 

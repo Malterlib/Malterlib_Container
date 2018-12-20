@@ -934,9 +934,11 @@ namespace NMib::NContainer
 
 		struct CChildren_PreserveOrder
 		{
+			DMibListLinkDS_Member(m_Link);
+
 			struct CDLinkTranslatorm_Link
 			{
-				template <typename t_CClass>
+				template <typename t_CClass, mint t_Offset = sizeof(t_CRegistryKey) + sizeof(t_CData) + sizeof(NIntrusive::TCAVLLink<>)>
 				struct TCOffset
 				{
 					enum
@@ -945,8 +947,6 @@ namespace NMib::NContainer
 					};
 				};
 			};
-
-			DMibListLinkDS_Member(m_Link);
 
 			typedef NMib::NIntrusive::TCDLinkList
 				<
@@ -959,8 +959,8 @@ namespace NMib::NContainer
 				>
 				CLinkedList
 			;
-			CLinkedList m_ChildrenOrder;
 
+			CLinkedList m_ChildrenOrder;
 			CTree m_Tree;
 
 			CChildren_PreserveOrder()
@@ -1024,7 +1024,6 @@ namespace NMib::NContainer
 				}
 
 			}
-
 		};
 
 		typedef typename TCChooseType<t_bPreserveOrder, CChildren_PreserveOrder, CChildren_Sorted>::CType CChildren;
@@ -2474,11 +2473,8 @@ namespace NMib::NContainer
 			m_Children.m_Tree.f_DeleteAllDefiniteType();
 
 #ifdef DMibDebug
-			if (NSys::fg_Compiler_AlwaysFalse())
-			{
-				NSys::fg_Compiler_MakeActive(0, &TCRegistry::fp_Debug_GetUTF16);
-				NSys::fg_Compiler_MakeActive(0, &TCRegistry::f_DebugTraceTree);
-			}
+			static_assert(TCInstantiateValue<&TCRegistry::fp_Debug_GetUTF16>::mc_Value);
+			static_assert(TCInstantiateValue<&TCRegistry::f_DebugTraceTree>::mc_Value);
 #endif
 		}
 
