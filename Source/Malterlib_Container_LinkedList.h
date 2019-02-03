@@ -235,8 +235,8 @@ namespace NMib::NContainer
 			TCLinkedList *m_pLinkedList;
 		public:
 #ifdef DMibDebuggerHelpers
-			assure_used static TCLinkedList *fs_Debug_List();
-			assure_used static CList *fs_Debug_IntrusiveList();
+			static TCLinkedList *fs_Debug_List();
+			static CList *fs_Debug_IntrusiveList();
 #endif
 
 			CIterator()
@@ -320,8 +320,8 @@ namespace NMib::NContainer
 		public:
 
 #ifdef DMibDebuggerHelpers
-			assure_used static TCLinkedList *fs_Debug_List();
-			assure_used static CList *fs_Debug_IntrusiveList();
+			static TCLinkedList *fs_Debug_List();
+			static CList *fs_Debug_IntrusiveList();
 #endif
 			CIteratorConst()
 			{
@@ -957,25 +957,25 @@ namespace NMib::NContainer
 	};
 #ifdef DMibDebuggerHelpers
 	template <typename t_CData, typename t_CAllocator>
-	assure_used TCLinkedList<t_CData, t_CAllocator> *TCLinkedList<t_CData, t_CAllocator>::CIterator::fs_Debug_List()
+	TCLinkedList<t_CData, t_CAllocator> *TCLinkedList<t_CData, t_CAllocator>::CIterator::fs_Debug_List()
 	{
 		return nullptr;
 	}
 
 	template <typename t_CData, typename t_CAllocator>
-	assure_used TCLinkedList<t_CData, t_CAllocator>* TCLinkedList<t_CData, t_CAllocator>::CIteratorConst::fs_Debug_List()
+	TCLinkedList<t_CData, t_CAllocator>* TCLinkedList<t_CData, t_CAllocator>::CIteratorConst::fs_Debug_List()
 	{
 		return nullptr;
 	}
 
 	template <typename t_CData, typename t_CAllocator>
-	assure_used typename TCLinkedList<t_CData, t_CAllocator>::CList *TCLinkedList<t_CData, t_CAllocator>::CIterator::fs_Debug_IntrusiveList()
+	typename TCLinkedList<t_CData, t_CAllocator>::CList *TCLinkedList<t_CData, t_CAllocator>::CIterator::fs_Debug_IntrusiveList()
 	{
 		return nullptr;
 	}
 
 	template <typename t_CData, typename t_CAllocator>
-	assure_used typename TCLinkedList<t_CData, t_CAllocator>::CList* TCLinkedList<t_CData, t_CAllocator>::CIteratorConst::fs_Debug_IntrusiveList()
+	typename TCLinkedList<t_CData, t_CAllocator>::CList* TCLinkedList<t_CData, t_CAllocator>::CIteratorConst::fs_Debug_IntrusiveList()
 	{
 		return nullptr;
 	}
