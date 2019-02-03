@@ -428,13 +428,13 @@ namespace NMib::NContainer
 	template <typename tf_CReturn, typename... tf_CParams>
 	TCVector<tf_CReturn> fg_CreateVector(tf_CParams && ..._Params);
 
-	DMibImpErrorClass(CExceptionList, NException::CException);
+	DMibImpErrorClassDefine(CExceptionList, NException::CException);
 #	define DMibErrorList(_Description) DMibImpError(NMib::NContainer::CExceptionList, _Description)
 #	ifndef DMibPNoShortCuts
 #		define DErrorList(_Description) DMibErrorList(_Description)
 #	endif
 
-	DMibImpErrorClass(CExceptionListBoundCheck, CExceptionList);
+	DMibImpErrorClassDefine(CExceptionListBoundCheck, CExceptionList);
 #	define DMibErrorListBoundCheck(_Description) DMibImpError(NMib::NContainer::CExceptionListBoundCheck, _Description)
 #	ifndef DMibPNoShortCuts
 #		define DErrorListBoundCheck(_Description) DMibErrorListBoundCheck(_Description)

@@ -1,6 +1,8 @@
 // Copyright © 2015 Hansoft AB 
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
+#pragma once
+
 #include <Mib/Core/Core>
 #include <Mib/Container/Map>
 #include <Mib/Exception/Exception>
@@ -10,12 +12,13 @@
 
 namespace NMib::NContainer
 {
-	DMibImpErrorClass(CExceptionRegistry, NMib::NException::CException);
-#		define DMibErrorRegistry(d_Description) DMibImpError(NMib::NContainer::CExceptionRegistry, d_Description)
+	DMibImpErrorClassDefine(CExceptionRegistry, NMib::NException::CException);
 
-#		ifndef DMibPNoShortCuts
-#			define DErrorRegistry(d_Description) DMibErrorRegistry(d_Description)
-#		endif
+#	define DMibErrorRegistry(d_Description) DMibImpError(NMib::NContainer::CExceptionRegistry, d_Description)
+
+#	ifndef DMibPNoShortCuts
+#		define DErrorRegistry(d_Description) DMibErrorRegistry(d_Description)
+#	endif
 
 
 	template <typename t_CKeyStr, typename t_CData, typename t_CRegistryKey, bool t_bPreserveOrder>
