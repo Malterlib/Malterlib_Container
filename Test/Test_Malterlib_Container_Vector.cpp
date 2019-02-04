@@ -348,7 +348,7 @@ namespace
 					DMibTestPath("Grow");
 
 					TestVector0.f_Grow(20);
-					DMibAssert(TestVector0.f_GetLen(), >=, 20);
+					DMibAssert(TestVector0.f_GetLen(), >=, 20u);
 					TestVector0.f_SetLen(20);
 				}
 
