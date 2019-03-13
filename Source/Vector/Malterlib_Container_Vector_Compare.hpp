@@ -102,6 +102,34 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_CompareLexicographical(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const
+	{
+		mint Len0 = f_GetLen();
+		mint Len1 = _Other.f_GetLen();
+		mint Len = fg_Min(Len0, Len1);
+
+		const t_CData *pData0 = f_GetArray();
+		const tf_CData *pData1 = _Other.f_GetArray();
+
+		for (mint iElement = 0; iElement < Len; ++iElement)
+		{
+			if (pData0[iElement] > pData1[iElement])
+				return 1;
+			else if (pData0[iElement] < pData1[iElement])
+				return -1;
+		}
+
+		if (Len1 < Len0)
+			return 1;
+
+		if (Len0 < Len1)
+			return -1;
+
+		return 0;
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template
 	<
 		typename tf_CData0

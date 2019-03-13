@@ -88,6 +88,8 @@ namespace NMib::NContainer
 		aint f_Compare(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other, t_CFunctor &&_Functor) const;
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 		aint f_Compare(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const;
+		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
+		aint f_CompareLexicographical(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const;
 
 		template
 		<
