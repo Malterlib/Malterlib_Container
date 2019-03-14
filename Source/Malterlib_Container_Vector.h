@@ -304,6 +304,7 @@ namespace NMib::NContainer
 		aint f_BinarySearchLowerBound(tf_CSorter &&_Sorter, tf_CFind const &_ToFind) const;
 
 		mint f_Grow(mint _MinLen);
+		void f_Reserve(mint _Space);
 		void f_SetLen(mint _Len, bool _bTrim = true);
 		void f_SetAtLeastLen(mint _Len, mint _Grow = 4096);
 

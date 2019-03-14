@@ -45,6 +45,31 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Reserve(mint _Space)
+	{
+		if (!fsp_NeedReallocGrow(_Space, mp_StaticData.m_pData))
+			return;
+
+		CVectorData *pNewData = fp_AllocData(_Space);
+		t_CData *pOldArray = f_GetArray();
+		t_CData *pNewArray = pNewData->f_GetData();
+		mint CurrentLength = f_GetLen();
+
+		NPrivate::fg_MoveArray(pNewArray, pOldArray, CurrentLength);
+
+		pNewData->m_Length = CurrentLength;
+
+		auto pOldData = mp_StaticData.m_pData;
+		mp_StaticData.m_pData = pNewData;
+
+		if (pOldData)
+		{
+			NPrivate::fg_DestroyArray(pOldArray, CurrentLength, CurrentLength);
+			fp_FreeData(pOldData);
+		}
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	void TCVector<t_CData, t_CAllocator, t_COptions>::f_SetLen(mint _Len, bool _bTrim)
 	{
 		mint OldLen = f_GetLen();

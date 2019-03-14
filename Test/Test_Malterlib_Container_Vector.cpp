@@ -2,6 +2,7 @@
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #include <Mib/Test/Exception>
+#include <Mib/Test/Memory>
 
 /*************************************************************************************************\
 |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -250,7 +251,6 @@ namespace
 				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0,1,2,3,4,5,6,7,8,9)) && DMibExpr(2));
 			};
 
-
 			DMibTestSuite("Exceptions")
 			{
 
@@ -269,6 +269,38 @@ namespace
 				DMibTest(DMibExpr(TCThrowsException<CException>()) == DMibLExpr(List.f_Move(0, 2, 3)));
 				DMibTest(DMibExpr(TCThrowsException<CException>()) == DMibLExpr(List.f_Move(5, 2, 4)));
 			};
+
+#if DMibConfig_Memory_Shims_EnableLocal
+			DMibTestSuite("Reserve")
+			{
+				TCVector<int32> TestVector;
+
+				TestVector.f_Reserve(500);
+
+				{
+					CTestMemoryMeasure MeasureMemory("Alloc");
+					MeasureMemory.f_Start();
+					for (int32 i = 0; i < 500; ++i)
+						TestVector.f_Insert(i);
+
+					MeasureMemory.f_Stop(1);
+					NMib::NTest::CTestMemoryResult Results;
+					MeasureMemory.f_GetResults(Results);
+					DMibExpect(Results.m_AllAllocations.m_nAllocations.m_Average, ==, 0.0);
+				}
+
+				{
+					CTestMemoryMeasure MeasureMemory("Alloc");
+					MeasureMemory.f_Start();
+					for (int32 i = 0; i < 500; ++i)
+						TestVector.f_Insert(i);
+					MeasureMemory.f_Stop(1);
+					NMib::NTest::CTestMemoryResult Results;
+					MeasureMemory.f_GetResults(Results);
+					DMibExpect(Results.m_AllAllocations.m_nAllocations.m_Average, >, 0.0);
+				}
+			};
+#endif
 		}
 
 		struct CExceptionObject
@@ -367,7 +399,6 @@ namespace
 					TestVector0.f_Remove(0, 10);
 					DMibAssert(TestVector0.f_GetLen(), ==, 10);
 				}
-
 			};
 		}
 
