@@ -86,20 +86,17 @@ namespace NMib::NContainer
 
 		typedef TCLinkedListMember<t_CData> CMember;
 
-
 		class CAllocatorDisable : public NMemory::CAllocator_Base
 		{
 		public:
-			typedef typename t_CAllocator::CPtrHolder CPtrHolder;
 		};
-
 
 		typedef NMib::NIntrusive::TCDLinkList
 			<
 				CMember
 				, CLinkedListMemberBase::CDLinkTranslatorm_ListLink
-				, NMib::NIntrusive::TCDLinkAggregateListNoPrevPtr<NMib::NIntrusive::TCDLinkAggregateListNoPrevPtr_Data<typename t_CAllocator::CPtrHolder>>
-				, NMib::NIntrusive::TCDLinkAggregateListNoPrevPtrList<CAllocatorDisable>
+				, NMib::NIntrusive::TCDLinkAggregateListNoPrevPtr<NMib::NIntrusive::CDLinkAggregateListNoPrevPtr_Data>
+				, NMib::NIntrusive::CDLinkAggregateListNoPrevPtrList
 				, false
 				, CAllocatorDisable
 			> CList

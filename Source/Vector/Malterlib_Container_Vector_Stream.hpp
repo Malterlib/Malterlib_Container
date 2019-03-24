@@ -89,4 +89,14 @@ namespace NMib::NStream
 #ifdef DMibPUniqueType_ch32
 	DMibListVectorStreamSimpleImplement(ch32);
 #endif
+
+	template <typename t_CStream>
+	class TCBinaryStreamTypeReference<t_CStream, NContainer::CByteVector> : public TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8>>
+	{
+	};
+
+	template <typename t_CStream>
+	class TCBinaryStreamTypeReference<t_CStream, NContainer::CSecureByteVector> : public TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8, NMemory::CAllocator_HeapSecure>>
+	{
+	};
 }

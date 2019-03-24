@@ -427,9 +427,57 @@ namespace NMib::NContainer
 	using TCGrowingVector = TCVector<t_CData, t_CAllocator, t_COptions>;
 
 	template <typename tf_CFirst, typename... tf_CParams>
-	TCVector<typename NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>::CType> fg_CreateVector(tf_CFirst && _First, tf_CParams && ..._Params);
+	auto fg_CreateVector(tf_CFirst &&_First, tf_CParams &&...p_Params);
 	template <typename tf_CReturn, typename... tf_CParams>
-	TCVector<tf_CReturn> fg_CreateVector(tf_CParams && ..._Params);
+	auto fg_CreateVector(tf_CParams && ...p_Params);
+
+	struct CSecureByteVector;
+
+	struct CByteVector : public TCVector<uint8>
+	{
+		using TCVector<uint8>::TCVector;
+		using TCVector<uint8>::operator =;
+
+		CByteVector(CSecureByteVector &&) = delete;
+		CByteVector(CSecureByteVector const&) = delete;
+		CByteVector &operator = (CSecureByteVector &&) = delete;
+		CByteVector &operator = (CSecureByteVector const &) = delete;
+
+		CByteVector(TCVector<uint8> &&) = delete;
+		CByteVector(TCVector<uint8> const&) = delete;
+		CByteVector &operator = (TCVector<uint8> &&) = delete;
+		CByteVector &operator = (TCVector<uint8> const &) = delete;
+
+		CByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> &&) = delete;
+		CByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> const&) = delete;
+		CByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> &&) = delete;
+		CByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> const &) = delete;
+
+		CSecureByteVector f_ToSecure() const; // Accept the risk of this
+	};
+
+	struct CSecureByteVector : public TCVector<uint8, NMemory::CAllocator_HeapSecure>
+	{
+		using TCVector<uint8, NMemory::CAllocator_HeapSecure>::TCVector;
+		using TCVector<uint8, NMemory::CAllocator_HeapSecure>::operator =;
+
+		CSecureByteVector(CByteVector &&) = delete;
+		CSecureByteVector(CByteVector const&) = delete;
+		CSecureByteVector &operator = (CByteVector &&) = delete;
+		CSecureByteVector &operator = (CByteVector const &) = delete;
+
+		CSecureByteVector(TCVector<uint8> &&) = delete;
+		CSecureByteVector(TCVector<uint8> const&) = delete;
+		CSecureByteVector &operator = (TCVector<uint8> &&) = delete;
+		CSecureByteVector &operator = (TCVector<uint8> const &) = delete;
+
+		CSecureByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> &&) = delete;
+		CSecureByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> const&) = delete;
+		CSecureByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> &&) = delete;
+		CSecureByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> const &) = delete;
+
+		CByteVector f_ToInsecure() const; // Accept the risk of this
+	};
 
 	DMibImpErrorClassDefine(CExceptionList, NException::CException);
 #	define DMibErrorList(_Description) DMibImpError(NMib::NContainer::CExceptionList, _Description)

@@ -320,10 +320,10 @@ namespace NMib::NContainer
 		{
 			mcp_bIsReference = NTraits::TCIsReference<t_CData>::mc_Value
 		};
+
 		class CAllocatorDisable : public NMemory::CAllocator_Base
 		{
 		public:
-			typedef typename t_CAllocator::CPtrHolder CPtrHolder;
 		};
 
 		typedef NIntrusive::TCAVLTree<&CMapTreeMemberBase::m_Link, CMapTreeMemberCompare, CAllocatorDisable, CMapTreeMember> CAVLTree;
