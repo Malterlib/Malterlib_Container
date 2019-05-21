@@ -6,10 +6,12 @@
 
 namespace NMib::NContainer
 {
-	typedef TCRegistry<NStr::CMStrDeprecated, NStr::CMStrDeprecated, TCRegistryKeyStrMulti<NStr::CMStrDeprecated>> CRegistry_CMStrDeprecated;
-	typedef TCRegistry<NStr::CMStrDeprecated, NStr::CMStrDeprecated, TCRegistryKeyStrMulti<NStr::CMStrDeprecated>, true> CRegistryPreserveOrder_CMStrDeprecated;
-	typedef TCRegistry<NStr::CMStrDeprecated, NStr::CMStrDeprecated, TCRegistryKeyStrPreserve<NStr::CMStrDeprecated>> CRegistryPreserve_CMStrDeprecated;
-	typedef TCRegistry<NStr::CMStrDeprecated, NStr::CMStrDeprecated, TCRegistryKeyStrPreserve<NStr::CMStrDeprecated>, true> CRegistryPreserveAndOrder_CMStrDeprecated;
+	using CRegistry_CMStrDeprecated = TCRegistry<NStr::CMStrDeprecated, NStr::CMStrDeprecated, ERegistryFlag_DuplicateKeys>;
+	using CRegistryPreserveOrder_CMStrDeprecated = TCRegistry<NStr::CMStrDeprecated, NStr::CMStrDeprecated, ERegistryFlag_DuplicateKeys | ERegistryFlag_PreserveOrder>;
+	using CRegistryPreserve_CMStrDeprecated = TCRegistry<NStr::CMStrDeprecated, NStr::CMStrDeprecated, ERegistryFlag_DuplicateKeys | ERegistryFlag_PreserveWhitspace>;
+	using CRegistryPreserveAndOrder_CMStrDeprecated =
+		TCRegistry<NStr::CMStrDeprecated, NStr::CMStrDeprecated, ERegistryFlag_DuplicateKeys | ERegistryFlag_PreserveWhitspace | ERegistryFlag_PreserveOrder>
+	;
 }
 
 #ifndef DMibPNoShortCuts

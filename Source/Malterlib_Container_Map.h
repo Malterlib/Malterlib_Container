@@ -10,17 +10,6 @@ namespace NMib::NContainer
 	class CMapNoData
 	{
 	public:
-		template <typename tf_CRegistry>
-		void f_FeedNamed(tf_CRegistry &_Registry) const
-		{
-		}
-
-		template <typename tf_CRegistry>
-		bint f_ConsumeNamed(tf_CRegistry const &_Registry)
-		{
-			return true;
-		}
-
 		bint operator == (CMapNoData const &_Other) const
 		{
 			return true;
@@ -36,17 +25,6 @@ namespace NMib::NContainer
 	class CMapSet
 	{
 	public:
-		template <typename tf_CRegistry>
-		void f_FeedNamed(tf_CRegistry &_Registry) const
-		{
-		}
-
-		template <typename tf_CRegistry>
-		bint f_ConsumeNamed(tf_CRegistry const &_Registry)
-		{
-			return true;
-		}
-
 	};
 
 	struct CMapTreeMemberBase
@@ -1525,52 +1503,6 @@ namespace NMib::NContainer
 				--nItems;
 			}
 		}
-
-		template <typename tf_CRegistry>
-		void f_FeedNamed(tf_CRegistry &_Registry) const
-		{
-			CIteratorConst Iter = f_GetIterator();
-			while (Iter)
-			{
-				auto pEntry = _Registry.f_CreateChild("Entry", true);
-				*pEntry << NStream::fg_Named("Key", Iter.f_GetKey());
-				*pEntry << NStream::fg_Named("Value", *Iter);
-				++Iter;
-			};
-		}
-
-		template <typename tf_CRegistry>
-		bint f_ConsumeNamed(tf_CRegistry const &_Registry)
-		{
-			f_Clear();
-			auto Iter = _Registry.f_GetChildIterator();
-			while (Iter)
-			{
-				auto pKey = Iter->f_GetChildNoPath("Key");
-				auto pValue = Iter->f_GetChildNoPath("Value");
-				if (!pKey || !pValue)
-					continue;
-
-				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
-				CMapTreeMember *pData = (CMapTreeMember *)Memory.m_pMemory;
-				Memory.f_Claim();
-				pData = new((void *)pData) CMapTreeMember();
-
-				*pKey >> NStream::fg_Named("Key", pData->f_GetKey());
-				*pValue >> NStream::fg_Named("Value", pData->f_GetValue());
-				if (mp_Data.m_Tree.f_FindEqual(pData->f_GetKey()))
-				{
-					fg_DeleteObjectDefiniteType(mp_Data, pData);
-					DMibError("TCMap stream contained a duplicate key");
-				}
-				else
-					mp_Data.m_Tree.f_Insert(pData);
-
-				++Iter;
-			}
-			return true;
-		}
-
 
 		bint operator == (const TCMap &_Other) const
 		{
