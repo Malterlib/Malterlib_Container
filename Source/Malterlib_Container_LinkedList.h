@@ -862,7 +862,7 @@ namespace NMib::NContainer
 			return m_Data.m_List.f_GetLast()->fp_GetObject();
 		}
 
-		bint f_IsEmpty() const
+		bool f_IsEmpty() const
 		{
 			return m_Data.m_List.f_IsEmpty();
 		}
@@ -872,7 +872,7 @@ namespace NMib::NContainer
 			return m_Data.m_List.f_GetLen();
 		}
 
-		bint operator == (const TCLinkedList &_Other) const
+		bool operator == (const TCLinkedList &_Other) const
 		{
 			CIteratorConst Iter0 = *this;
 			CIteratorConst Iter1 = _Other;
@@ -893,7 +893,7 @@ namespace NMib::NContainer
 			return true;
 		}
 
-		bint operator < (const TCLinkedList &_Other) const
+		bool operator < (const TCLinkedList &_Other) const
 		{
 			CIteratorConst Iter0 = *this;
 			CIteratorConst Iter1 = _Other;

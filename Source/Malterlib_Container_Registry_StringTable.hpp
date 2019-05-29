@@ -79,7 +79,7 @@ namespace NMib::NContainer
 	template <typename tf_CStr>
 	t_CIndex TCRegistryStringTable<t_CStr, t_CIndex>::f_GetIndex(tf_CStr const &_String)
 	{
-		bint bCreated = false;
+		bool bCreated = false;
 		CIndex &Index = m_Strings.f_Map(_String, bCreated);
 		if (bCreated)
 		{

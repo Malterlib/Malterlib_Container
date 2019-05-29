@@ -10,12 +10,12 @@ namespace NMib::NContainer
 	class CMapNoData
 	{
 	public:
-		bint operator == (CMapNoData const &_Other) const
+		bool operator == (CMapNoData const &_Other) const
 		{
 			return true;
 		}
 
-		bint operator < (CMapNoData const &_Other) const
+		bool operator < (CMapNoData const &_Other) const
 		{
 			return false;
 		}
@@ -212,7 +212,7 @@ namespace NMib::NContainer
 	class CMapWasCreated
 	{
 		template <typename t_CKey, typename t_CData, typename t_CCompare, typename t_CAllocator> friend class TCMap;
-		bint mp_bWasCreated;
+		bool mp_bWasCreated;
 	private:
 		operator bool () const
 		{
@@ -226,15 +226,15 @@ namespace NMib::NContainer
 		template <typename t_CKey, typename t_CData, typename t_CCompare, typename t_CAllocator> friend class TCMap;
 
 		t_CReturnType mp_Return;
-		bint mp_bWasCreated;
-		inline_small TCMapResult(t_CReturnType _Return, bint _bWasCreated)
+		bool mp_bWasCreated;
+		inline_small TCMapResult(t_CReturnType _Return, bool _bWasCreated)
 			: mp_Return(_Return)
 			, mp_bWasCreated(_bWasCreated)
 		{
 		}
 	public:
 
-		inline_small bint f_WasCreated() const
+		inline_small bool f_WasCreated() const
 		{
 			return mp_bWasCreated;
 		}
@@ -269,24 +269,24 @@ namespace NMib::NContainer
 		{
 		public:
 
-			bint operator () (CMapTreeMember const &_Left, CMapTreeMember const &_Right) const
+			bool operator () (CMapTreeMember const &_Left, CMapTreeMember const &_Right) const
 			{
 				return t_CCompare()(_Left.m_Key, _Right.m_Key);
 			}
 
-			bint operator () (CMapTreeMember &_Left, CMapTreeMember &_Right) const
+			bool operator () (CMapTreeMember &_Left, CMapTreeMember &_Right) const
 			{
 				return t_CCompare()(_Left.m_Key, _Right.m_Key);
 			}
 
 			template <typename tf_CKey>
-			bint operator () (CMapTreeMember const &_Left, tf_CKey const &_Right) const
+			bool operator () (CMapTreeMember const &_Left, tf_CKey const &_Right) const
 			{
 				return t_CCompare()(_Left.m_Key, _Right);
 			}
 
 			template <typename tf_CKey>
-			bint operator () (tf_CKey const &_Left, CMapTreeMember const &_Right) const
+			bool operator () (tf_CKey const &_Left, CMapTreeMember const &_Right) const
 			{
 				return t_CCompare()(_Left, _Right.m_Key);
 			}
@@ -333,7 +333,7 @@ namespace NMib::NContainer
 
 		CLocalData mp_Data;
 
-		template <bint t_bIsRef, typename t_CDummy = int>
+		template <bool t_bIsRef, typename t_CDummy = int>
 		class TCMapCopy
 		{
 		public:
@@ -629,10 +629,10 @@ namespace NMib::NContainer
 			}
 		};
 
-		template <bint t_bReverse, bint t_bConst, bint t_bBidirectional>
+		template <bool t_bReverse, bool t_bConst, bool t_bBidirectional>
 		friend class TCIterator;
 
-		template <bint t_bReverse, bint t_bConst, bint t_bBidirectional>
+		template <bool t_bReverse, bool t_bConst, bool t_bBidirectional>
 		class TCIterator
 		{
 			friend class TCMap;
@@ -999,7 +999,7 @@ namespace NMib::NContainer
 		}
 
 		template <typename tf_CKey, typename... tfp_CArgs>
-		CUserData& f_Map (tf_CKey &&_Key, bint &_bCreated, tfp_CArgs && ... p_Args)
+		CUserData& f_Map (tf_CKey &&_Key, bool &_bCreated, tfp_CArgs && ... p_Args)
 		{
 			CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
 			if (!pData)
@@ -1020,7 +1020,7 @@ namespace NMib::NContainer
 		TCMapResult<CUserData &> operator () (tf_CKey &&_Key, tfp_CParam && ... p_Params)
 		{
 			CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
-			bint bWasCreated = false;
+			bool bWasCreated = false;
 			if (!pData)
 			{
 				bWasCreated = true;
@@ -1283,13 +1283,13 @@ namespace NMib::NContainer
 		}
 
 		template <typename tf_CKey>
-		bint f_Exists(tf_CKey &&_Key) const
+		bool f_Exists(tf_CKey &&_Key) const
 		{
 			return mp_Data.m_Tree.f_FindEqual(_Key) != nullptr;
 		}
 
 		template <typename tf_CKey>
-		bint f_Lookup(tf_CKey &&_Key, CUserData& _Data) const
+		bool f_Lookup(tf_CKey &&_Key, CUserData& _Data) const
 		{
 			CMapTreeMember *pMember = mp_Data.m_Tree.f_FindEqual(_Key);
 			if (pMember)
@@ -1302,7 +1302,7 @@ namespace NMib::NContainer
 		}
 
 		template <typename tf_CKey>
-		bint f_Remove(tf_CKey &&_Key)
+		bool f_Remove(tf_CKey &&_Key)
 		{
 			CMapTreeMember *pMember = mp_Data.m_Tree.f_FindEqual(_Key);
 			if (pMember)
@@ -1314,7 +1314,7 @@ namespace NMib::NContainer
 			return false;
 		}
 
-		bint f_IsEmpty() const
+		bool f_IsEmpty() const
 		{
 			return mp_Data.m_Tree.f_IsEmpty();
 		}
@@ -1504,7 +1504,7 @@ namespace NMib::NContainer
 			}
 		}
 
-		bint operator == (const TCMap &_Other) const
+		bool operator == (const TCMap &_Other) const
 		{
 			CIteratorConst Iter0 = *this;
 			CIteratorConst Iter1 = _Other;
@@ -1527,7 +1527,7 @@ namespace NMib::NContainer
 			return true;
 		}
 
-		bint operator < (const TCMap &_Other) const
+		bool operator < (const TCMap &_Other) const
 		{
 			CIteratorConst Iter0 = *this;
 			CIteratorConst Iter1 = _Other;

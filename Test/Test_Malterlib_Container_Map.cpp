@@ -1,4 +1,4 @@
-﻿// Copyright © 2015 Hansoft AB 
+﻿// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #include <set>
@@ -7,7 +7,7 @@ namespace
 	class CMap_Tests : public NMib::NTest::CTest
 	{
 	public:
-	
+
 
 		void f_Dynamic()
 		{
@@ -37,7 +37,7 @@ namespace
 					Testing.f_Remove(&ToRemove);
 				};
 			};
-			
+
 			DMibTestSuite("Misc")
 			{
 
@@ -249,7 +249,7 @@ namespace
 
 				NMib::NContainer::TCMap<int, int const &> Testing;
 
-				bint bCreated;
+				bool bCreated;
 				for (int i = 0; i < 10; ++i)
 					Testing.f_Map(i, bCreated, Values[i]);
 
@@ -283,9 +283,9 @@ namespace
 			};
 
 
-		}	
+		}
 	};
-	
+
 	DMibTestRegister(CMap_Tests, Malterlib::Container);
 }
 

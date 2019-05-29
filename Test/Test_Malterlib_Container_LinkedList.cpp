@@ -1,4 +1,4 @@
-﻿// Copyright © 2015 Hansoft AB 
+﻿// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 /*************************************************************************************************\
@@ -81,7 +81,7 @@ namespace
 				DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u));
 
 				{
-					bint bCorrectOrder = true;
+					bool bCorrectOrder = true;
 					for (mint i = 0; i < nItems; ++i)
 						bCorrectOrder = bCorrectOrder && DMibListLinkD_Iter(CTestClass, m_Link)(TestList)[aint(i)]->m_Value == i;
 					DMibTest(DMibExpr(bCorrectOrder));
@@ -106,7 +106,7 @@ namespace
 					DMibTest(DMibExpr(TestList.f_GetLen()) == DMibExpr(nItems));
 					DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u));
 					{
-						bint bCorrectOrder = true;
+						bool bCorrectOrder = true;
 						for (mint i = 0; i < nItems; ++i)
 							bCorrectOrder = bCorrectOrder && DMibListLinkD_Iter(CTestClass, m_Link)(TestList)[aint(i)]->m_Value == i;
 						DMibTest(DMibExpr(bCorrectOrder));
@@ -129,7 +129,7 @@ namespace
 					DMibTest(DMibExpr(TestList.f_GetLen()) == DMibExpr(nItems) && DMibExpr(2));
 					DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u) && DMibExpr(2));
 					{
-						bint bCorrectOrder = true;
+						bool bCorrectOrder = true;
 						for (mint i = 0; i < nItems; ++i)
 							bCorrectOrder = bCorrectOrder && DMibListLinkD_Iter(CTestClass, m_Link)(TestList)[aint(i)]->m_Value == i;
 						DMibTest(DMibExpr(bCorrectOrder) && DMibExpr(2));
@@ -170,7 +170,7 @@ namespace
 				DMibTest(DMibExpr(OtherList.f_CheckList(false)) && DMibExpr(5));
 				DMibTest(DMibExpr(TestList.f_CheckList(false)) && DMibExpr(5));
 			}
-				
+
 		}
 
 		class CTestS
@@ -239,7 +239,7 @@ namespace
 					DMibTest(DMibExpr(TestList.f_GetLen()) == DMibExpr(nItems));
 					DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u));
 					{
-						bint bCorrectOrder = true;
+						bool bCorrectOrder = true;
 						for (mint i = 0; i < nItems; ++i)
 							bCorrectOrder = bCorrectOrder && DMibListLinkDS_Iter(CTestS, m_Link)(TestList)[aint(i)]->m_Value == i;
 						DMibTest(DMibExpr(bCorrectOrder));
@@ -266,7 +266,7 @@ namespace
 					DMibTest(DMibExpr(TestList.f_GetLen()) == DMibExpr(nItems));
 					DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u));
 					{
-						bint bCorrectOrder = true;
+						bool bCorrectOrder = true;
 						for (mint i = 0; i < nItems; ++i)
 							bCorrectOrder = bCorrectOrder && DMibListLinkDS_Iter(CTestS, m_Link)(TestList)[aint(i)]->m_Value == i;
 						DMibTest(DMibExpr(bCorrectOrder));
@@ -293,7 +293,7 @@ namespace
 					DMibTest(DMibExpr(TestList.f_GetLen()) == DMibExpr(nItems));
 					DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u));
 					{
-						bint bCorrectOrder = true;
+						bool bCorrectOrder = true;
 						for (mint i = 0; i < nItems; ++i)
 							bCorrectOrder = bCorrectOrder && DMibListLinkDS_Iter(CTestS, m_Link)(TestList)[aint(i)]->m_Value == i;
 						DMibTest(DMibExpr(bCorrectOrder));
@@ -350,14 +350,14 @@ namespace
 
 			DMibTest(DMibExpr(List.f_GetLen()) == DMibExpr(10u));
 			{
-				bint bCorrectOrder = true;
+				bool bCorrectOrder = true;
 				NMib::NContainer::TCLinkedList<int32>::CIterator Iter = List;
 				for (int32 i = 0; i < nItems; ++i, ++Iter)
 					bCorrectOrder = bCorrectOrder && *Iter == i;
 				DMibTest(DMibExpr(bCorrectOrder));
 			}
 			{
-				bint bCorrectOrder = true;
+				bool bCorrectOrder = true;
 				NMib::NContainer::TCLinkedList<int32>::CIteratorConst Iter = List;
 				for (int32 i = 0; i < nItems; ++i, ++Iter)
 					bCorrectOrder = bCorrectOrder && *Iter == i;
@@ -498,8 +498,8 @@ namespace
 			{
 				this->f_Dynamic();
 			};
-		}	
+		}
 	};
-	
+
 	DMibTestRegister(CLinkedList_Tests, Malterlib::Container);
 }

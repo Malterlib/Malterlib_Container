@@ -1,4 +1,4 @@
-﻿// Copyright © 2015 Hansoft AB 
+﻿// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #include <Mib/Core/Core>
@@ -24,10 +24,10 @@ namespace NMib
 			using namespace NMib::NTime;
 			using namespace NMib::NContainer;
 			typedef CTimerMin TestTimer;
-			class MapTester 
+			class MapTester
 			{
 				int m_nItems;
-				bint m_bRandom;
+				bool m_bRandom;
 				std::vector<std::pair<int,int>> m_Key_Data;
 			private: // Measure
 				template <typename Op>
@@ -47,28 +47,28 @@ namespace NMib
 			private: // Generate test data
 				template <class Map>
 				Map getFilledMap() const
-				{					
+				{
 					Map map;
 					for(int i=0;i<10000;++i) { map[m_Key_Data[i].first] = m_Key_Data[i].second; }
 					return map;
 				}
 				template <class Set>
 				Set getFilledSet() const
-				{					
+				{
 					Set set;
 					for(int i=0;i<10000;++i) { set.insert(m_Key_Data[i].first); }
 					return set;
 				}
 				template <>
 				TCMap<int,int> getFilledMap<TCMap<int,int>>() const
-				{					
+				{
 					TCMap<int,int> map;
 					for(int i=0;i<10000;++i) { map[m_Key_Data[i].first] = m_Key_Data[i].second; }
 					return map;
 				}
 				template <>
 				TCMap<int> getFilledSet<TCMap<int>>() const
-				{					
+				{
 					TCMap<int> set;
 					for(int i=0;i<10000;++i) { set[m_Key_Data[i].first]; }
 					return set;
@@ -96,7 +96,7 @@ namespace NMib
 					Set set2 = getFilledSet<Set>();
 					TestTimer Time;
 
-					bool found = true; // To prevent loop from being optimized away 
+					bool found = true; // To prevent loop from being optimized away
 					MeasureForAllKeys(Time,[&](int key) { found = found && (set2.find(key) != set2.end()); });
 					DMibTest(DMibExpr( Time / MalterlibTime) > DMibExpr(1.0));
 				};
@@ -104,7 +104,7 @@ namespace NMib
 				void accessInMap(CTimerMin const& MalterlibTime) {
 					fp_CheckInit();
 					Map set = getFilledMap<Map>();
-					int found = 0; // To prevent loop from being optimized away 
+					int found = 0; // To prevent loop from being optimized away
 					TestTimer Time;
 					MeasureForAllKeys(Time,[&](int key) { found += set[key]; });
 					DMibTest(DMibExpr( Time / MalterlibTime) > DMibExpr(1.0));
@@ -131,44 +131,44 @@ namespace NMib
 					if (m_Key_Data.empty())
 					{
 						m_Key_Data.reserve(m_nItems);
-						if (!m_bRandom) 
+						if (!m_bRandom)
 						{
 							for(int i=0;i<m_nItems;++i) { m_Key_Data.push_back(std::make_pair(i,i)); }
-						} 
-						else 
+						}
+						else
 						{
 							NMisc::CRandomShiftRNG RandomRng;
-							for(int i = 0; i < m_nItems; ++i) 
+							for(int i = 0; i < m_nItems; ++i)
 								m_Key_Data.push_back(std::make_pair(1 + (RandomRng.f_GetValue<int>() % (10000000-1)),1 + (RandomRng.f_GetValue<int>() % (10000000-1))));
 						}
 					}
 				}
-				
+
 			public: // Test cases
-				MapTester(int num_items,bool random) 
+				MapTester(int num_items,bool random)
 					: m_nItems(num_items)
 					, m_bRandom(random)
 				{
 				}
-				void insert_id_in_set() 
+				void insert_id_in_set()
 				{
 					TestTimer MalterlibTime;
-					DMibTestSuite("Malterlib") 
+					DMibTestSuite("Malterlib")
 					{
 						fp_CheckInit();
 						TCMap<int> set1;
-						bint created;
+						bool created;
 						MeasureForAllKeys(MalterlibTime,[&](int key) { set1.f_Map(key,created); });
 					};
 					DMibTestSuite("std::set")           { this->insertInSet<std::set<int>>(MalterlibTime); };
 					//DMibTestSuite("std::unordered_set") { this->insertInSet<std::unordered_set<int>>(MalterlibTime); };
 					//DMibTestSuite("boost::flat_set")    { this->insertInSet<boost::interprocess::flat_set<int>>(MalterlibTime); };
 				}
-				void insert_id_in_map() 
+				void insert_id_in_map()
 				{
 					TestTimer MalterlibTime;
-					DMibTestSuite("Malterlib") 
-					{ 
+					DMibTestSuite("Malterlib")
+					{
 						fp_CheckInit();
 						TCMap<int,int> set1;
 						MeasureForAllKeyValues(MalterlibTime,[&](int key,int value) { set1[key] = value; });
@@ -176,12 +176,12 @@ namespace NMib
 					DMibTestSuite("std::map")           { this->insertInMap<std::map<int,int>>(MalterlibTime); };
 					//DMibTestSuite("std::unordered_map") { this->insertInMap<std::tr1::unordered_map<int,int>>(MalterlibTime); };
 					//DMibTestSuite("boost::flat_map")    { this->insertInMap<boost::interprocess::flat_map<int,int>>(MalterlibTime); };
-				}					
-				void access_id_in_map() 
+				}
+				void access_id_in_map()
 				{
 					TestTimer MalterlibTime;
-					DMibTestSuite("Malterlib") 
-					{ 
+					DMibTestSuite("Malterlib")
+					{
 						fp_CheckInit();
 						auto set = this->getFilledMap<TCMap<int,int>>();
 						int found = 0;
@@ -191,40 +191,40 @@ namespace NMib
 					//DMibTestSuite("std::unordered_map") { this->accessInMap<std::unordered_map<int,int>>(MalterlibTime); };
 					//DMibTestSuite("boost::flat_map")    { this->accessInMap<boost::interprocess::flat_map<int,int>>(MalterlibTime); };
 				}
-				void access_id_in_set() 
+				void access_id_in_set()
 				{
 					TestTimer MalterlibTime;
-					DMibTestSuite("Malterlib") 
+					DMibTestSuite("Malterlib")
 					{
 						fp_CheckInit();
 						TCMap<int> set1;
 						for(int i=0;i<10000;++i) { set1[m_Key_Data[i].first]; }
 
-						bint found = true;
+						bool found = true;
 						MeasureForAllKeys(MalterlibTime,[&](int key) { found = found && !!set1.f_Exists(key); });
 					};
 					DMibTestSuite("std::set")           { this->accessInSet<std::set<int>>(MalterlibTime); };
 					//DMibTestSuite("boost::flat_set")    { this->accessInSet<boost::interprocess::flat_set<int>>(MalterlibTime); };
-					//DMibTestSuite("std::unordered_set") { this->accessInSet<std::tr1::unordered_set<int>>(MalterlibTime); };					
+					//DMibTestSuite("std::unordered_set") { this->accessInSet<std::tr1::unordered_set<int>>(MalterlibTime); };
 				}
-				void erase_id_in_set() 
+				void erase_id_in_set()
 				{
 					TestTimer MalterlibTime;
 					DMibTestSuite("Malterlib")
-					{ 
+					{
 						fp_CheckInit();
 						auto set = this->getFilledSet<TCMap<int>>();
 						MeasureForAllKeys(MalterlibTime,[&](int key) { set.f_Remove(key); });
 					};
 					DMibTestSuite("std::set")           { this->eraseInSet<std::set<int>>(MalterlibTime); };
-					//DMibTestSuite("std::unordered_set") { this->eraseInSet<std::tr1::unordered_set<int>>(MalterlibTime); };					
+					//DMibTestSuite("std::unordered_set") { this->eraseInSet<std::tr1::unordered_set<int>>(MalterlibTime); };
 					//DMibTestSuite("boost::flat_set")    { this->eraseInSet<boost::interprocess::flat_set<int>>(MalterlibTime); };
 				}
-				void erase_id_in_map() 
+				void erase_id_in_map()
 				{
 					TestTimer MalterlibTime;
-					DMibTestSuite("Malterlib") 
-					{ 
+					DMibTestSuite("Malterlib")
+					{
 						fp_CheckInit();
 						auto set = this->getFilledMap<TCMap<int,int>>();
 						MeasureForAllKeys(MalterlibTime,[&](int key) { set.f_Remove(key); });
@@ -240,34 +240,34 @@ namespace NMib
 			public: // Define test suites
 				void f_Suite(MapTester&& mt)
 				{
-					DMibTestCategory("Set") 
+					DMibTestCategory("Set")
 					{
-						DMibTestCategory("Insert") 
-						{ 
-							mt.insert_id_in_set(); 
+						DMibTestCategory("Insert")
+						{
+							mt.insert_id_in_set();
 						};
-						DMibTestCategory("Access") 
-						{ 
-							mt.access_id_in_set(); 
+						DMibTestCategory("Access")
+						{
+							mt.access_id_in_set();
 						};
 						DMibTestCategory("Erase")
-						{ 
-							mt.erase_id_in_set(); 
+						{
+							mt.erase_id_in_set();
 						};
 					};
-					DMibTestCategory("Map") 
+					DMibTestCategory("Map")
 					{
-						DMibTestCategory("Insert") 
-						{ 
-							mt.insert_id_in_map(); 
+						DMibTestCategory("Insert")
+						{
+							mt.insert_id_in_map();
 						};
-						DMibTestCategory("Access") 
-						{ 
-							mt.access_id_in_map(); 
+						DMibTestCategory("Access")
+						{
+							mt.access_id_in_map();
 						};
-						DMibTestCategory("Erase")  
-						{ 
-							mt.erase_id_in_map(); 
+						DMibTestCategory("Erase")
+						{
+							mt.erase_id_in_map();
 						};
 					};
 				}

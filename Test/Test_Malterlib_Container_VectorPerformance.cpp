@@ -1,4 +1,4 @@
-﻿// Copyright © 2015 Hansoft AB 
+﻿// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #include <Mib/Core/Core>
@@ -18,7 +18,7 @@ namespace NMib
 
 		template <typename tf_CIterator, typename tf_CCompare>
 		bool fg_IsReverseSorted(tf_CIterator _iFirst, tf_CIterator _iLast, tf_CCompare &&_Compare)
-		{	
+		{
 			if (_iFirst != _iLast)
 			{
 				for (tf_CIterator iNext = _iFirst; ++iNext != _iLast; ++_iFirst)
@@ -38,7 +38,7 @@ namespace NMib
 
 		template <typename tf_CIterator, typename tf_CCompare>
 		bool fg_IsSorted(tf_CIterator _iFirst, tf_CIterator _iLast, tf_CCompare &&_Compare)
-		{	
+		{
 			if (_iFirst != _iLast)
 			{
 				for (tf_CIterator iNext = _iFirst; ++iNext != _iLast; ++_iFirst)
@@ -80,12 +80,12 @@ namespace NMib
 			{
 				while (fg_Forward<t_CSorter>(_Sorter)(*_pBegin, *_pBegin2))
 				{
-					
+
 				}
 			}*/
 		}
 
-		enum 
+		enum
 		{
 			EInsertSortTryMaxSwaps = 16
 		};
@@ -95,7 +95,7 @@ namespace NMib
 			//return _pHigh;
 			mint Swaps = 0;
 			t_CData *pI = _pHigh - 2;
-			for (; pI >= _pLow; pI--) 
+			for (; pI >= _pLow; pI--)
 			{
 				t_CData *pJ = pI + 1;
 
@@ -169,7 +169,7 @@ namespace NMib
 				}
 			;
 
-			for (; pL < pEnd; ++pL) 
+			for (; pL < pEnd; ++pL)
 			{
 				if (_Sorter(pL[1], *pL))
 				{
@@ -185,7 +185,7 @@ namespace NMib
 		inline_always void fg_InsertSort(t_CData *_pLow, t_CData *_pHigh, t_CSorter &&_Sorter)
 		{
 			t_CData *pI = _pLow + 1;
-			for (; pI < _pHigh; pI++) 
+			for (; pI < _pHigh; pI++)
 			{
 				t_CData *pJ = pI - 1;
 
@@ -437,7 +437,7 @@ namespace NMib
 					{
 						if (pInsertResultHigh != pOldLow)
 							fg_InplaceMergeLists(pOldLow, pInsertResultHigh, pOldHigh, _Comp);
-		
+
 //						if (!fg_IsSorted(pOldLow, pOldHigh, _Comp))
 //							int x = 0;
 
@@ -557,7 +557,7 @@ namespace NMib
 			class CVectorPerformance_Tests : public CTest
 			{
 				template <int32 tf_nItems>
-				void fp_Insert_Big() 
+				void fp_Insert_Big()
 				{
 #ifdef DMibDebug
 					int32 nRep = 1;
@@ -573,7 +573,7 @@ namespace NMib
 					CTimerMin MalterlibTime;
 					CTimerMin StdTime;
 
-					for (int32 i=0;i<nRep;++i) 
+					for (int32 i=0;i<nRep;++i)
 					{
 						TCVector<Big> Vec1;
 						MalterlibTime.f_Start();
@@ -581,7 +581,7 @@ namespace NMib
 							Vec1.f_Insert(Item);
 						MalterlibTime.f_Stop();
 					}
-					for (int32 i=0;i<nRep;++i) 
+					for (int32 i=0;i<nRep;++i)
 					{
 						std::vector<Big> Vec2;
 						StdTime.f_Start();
@@ -592,7 +592,7 @@ namespace NMib
 					DMibTest(DMibExpr(StdTime) / DMibExpr(MalterlibTime) > DMibExpr(1.0));
 				}
 				template <int32 tf_nItems>
-				void fp_Insert_Simple() 
+				void fp_Insert_Simple()
 				{
 #ifdef DMibDebug
 					int32 nRep = 1;
@@ -605,7 +605,7 @@ namespace NMib
 					int32 Item = 1;
 					CTimerMin MalterlibTime;
 					CTimerMin StdTime;
-					for (int32 i=0;i<nRep;++i) 
+					for (int32 i=0;i<nRep;++i)
 					{
 						TCVector<int32> Vec1;
 						MalterlibTime.f_Start();
@@ -613,7 +613,7 @@ namespace NMib
 							Vec1.f_Insert(Item);
 						MalterlibTime.f_Stop();
 					}
-					for (int32 i=0;i<nRep;++i) 
+					for (int32 i=0;i<nRep;++i)
 					{
 						std::vector<int32> Vec2;
 						StdTime.f_Start();
@@ -624,7 +624,7 @@ namespace NMib
 					DMibTest(DMibExpr(StdTime) / DMibExpr(MalterlibTime) > DMibExpr(1.0));
 				}
 				template <int32 tf_nItems>
-				void fp_Insert_Vector() 
+				void fp_Insert_Vector()
 				{
 #ifdef DMibDebug
 					int32 nRep = 1;
@@ -636,14 +636,14 @@ namespace NMib
 
 					TCVector<int32> Vec1;
 					std::vector<int32> Vec2;
-					for (int32 i=0;i<100;++i) 
-					{ 
-						Vec1.f_Insert(1); 
+					for (int32 i=0;i<100;++i)
+					{
+						Vec1.f_Insert(1);
 					}
 
-					for (int32 i=0;i<100;++i) 
+					for (int32 i=0;i<100;++i)
 					{
-						Vec2.push_back(1); 
+						Vec2.push_back(1);
 					}
 
 					TCVector<TCVector<int32>> vecvec1;
@@ -651,21 +651,21 @@ namespace NMib
 
 					CTimerMin MalterlibTime;
 					CTimerMin StdTime;
-					for (int32 i=0;i<nRep;++i) 
+					for (int32 i=0;i<nRep;++i)
 					{
 						MalterlibTime.f_Start();
-						for (int32 i=0;i<tf_nItems;++i) 
+						for (int32 i=0;i<tf_nItems;++i)
 						{
-							vecvec1.f_Insert(Vec1); 
+							vecvec1.f_Insert(Vec1);
 						}
 						MalterlibTime.f_Stop();
 					}
-					for (int32 i=0;i<nRep;++i) 
+					for (int32 i=0;i<nRep;++i)
 					{
 						StdTime.f_Start();
 						for (int32 i=0;i<tf_nItems;++i)
 						{
-							vecvec2.push_back(Vec2); 
+							vecvec2.push_back(Vec2);
 						}
 						StdTime.f_Stop();
 					}
@@ -689,7 +689,7 @@ namespace NMib
 				};
 
 				template <int32 tf_nItems, ESortType tf_SortType>
-				void fp_Sort_Simple() 
+				void fp_Sort_Simple()
 				{
 					NMisc::CRandomShiftRNG Random;
 
@@ -731,13 +731,13 @@ namespace NMib
 								Value = i;
 							else
 								Value = (tf_nItems - 1) - i;
-							break;							
+							break;
 						case ESortType_TwoSortedRanges:
 							if (i < tf_nItems / 2)
 								Value = i;
 							else
 								Value = i - tf_nItems / 2;
-							break;							
+							break;
 						case ESortType_AlmostSorted:
 							Value = i + Random.f_GetValue<uint32>() % 5;
 							break;
@@ -763,8 +763,8 @@ namespace NMib
 
 					CTimerMin MalterlibTime;
 					CTimerMin StdTime;
-					
-					for (int32 i=0;i<nRep;++i) 
+
+					for (int32 i=0;i<nRep;++i)
 					{
 						TCVector<int32> Vec1 = ToSortMalterlib;
 						MalterlibTime.f_Start();
@@ -780,7 +780,7 @@ namespace NMib
 							}
 						}
 					}
-					for (int32 i=0;i<nRep;++i) 
+					for (int32 i=0;i<nRep;++i)
 					{
 						TCVector<int32> Vec2 = ToSortMalterlib;
 						StdTime.f_Start();
@@ -806,7 +806,7 @@ namespace NMib
 				};
 
 				template <int32 tf_nItems, ESortType tf_SortType>
-				void fp_Sort_Stability() 
+				void fp_Sort_Stability()
 				{
 					NMisc::CRandomShiftRNG Random;
 
@@ -880,7 +880,7 @@ namespace NMib
 					;
 					CTimerMin MalterlibTime;
 					CTimerMin StdTime;
-					for (int32 i=0;i<nRep;++i) 
+					for (int32 i=0;i<nRep;++i)
 					{
 						TCVector<CTestClass> Vec1 = ToSortMalterlib;
 						MalterlibTime.f_Start();
@@ -893,7 +893,7 @@ namespace NMib
 						}
 					}
 
-					for (int32 i=0;i<nRep;++i) 
+					for (int32 i=0;i<nRep;++i)
 					{
 						std::vector<CTestClass> Vec2 = ToSortStl;
 						StdTime.f_Start();
@@ -908,18 +908,18 @@ namespace NMib
 				struct CThing
 				{
 					int32 m_Val;
-					CThing() : m_Val(-1) 
+					CThing() : m_Val(-1)
 					{
 					}
-					CThing(int32 _V) : m_Val(_V) 
-					{ 
+					CThing(int32 _V) : m_Val(_V)
+					{
 					}
 				private:
 					CThing(const CThing& _CopyThis) : m_Val(_CopyThis.m_Val)
 					{
 					}
 				public:
-					CThing(CThing && _MoveThis) 
+					CThing(CThing && _MoveThis)
 					{
 						*this = fg_Move(_MoveThis);
 					}
@@ -939,97 +939,97 @@ namespace NMib
 				{
 					DMibTestCategory(NMib::NStr::CStr(NMib::NStr::CStr::CFormat("{} items") << tf_nItems))
 					{
-						DMibTestSuite("Insert simple Items") 
-						{ 
-							fp_Insert_Simple<tf_nItems>(); 
+						DMibTestSuite("Insert simple Items")
+						{
+							fp_Insert_Simple<tf_nItems>();
 						};
-						DMibTestSuite("Insert big Items") 
-						{ 
-							fp_Insert_Big<tf_nItems>(); 
+						DMibTestSuite("Insert big Items")
+						{
+							fp_Insert_Big<tf_nItems>();
 						};
-						DMibTestSuite("Insert vectors") 
-						{ 
-							fp_Insert_Vector<tf_nItems>(); 
+						DMibTestSuite("Insert vectors")
+						{
+							fp_Insert_Vector<tf_nItems>();
 						};
 #if 1
-						DMibTestSuite("Sort random") 
-						{ 
-							fp_Sort_Simple<tf_nItems, ESortType_Random>(); 
+						DMibTestSuite("Sort random")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_Random>();
 						};
-						DMibTestSuite("Sort sorted") 
-						{ 
-							fp_Sort_Simple<tf_nItems, ESortType_Sorted>(); 
+						DMibTestSuite("Sort sorted")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_Sorted>();
 						};
-						DMibTestSuite("Sort reversed") 
-						{ 
-							fp_Sort_Simple<tf_nItems, ESortType_Reversed>(); 
+						DMibTestSuite("Sort reversed")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_Reversed>();
 						};
-						DMibTestSuite("Sort half sorted half reversed") 
-						{ 
-							fp_Sort_Simple<tf_nItems, ESortType_HalfSortedHalfReversed>(); 
+						DMibTestSuite("Sort half sorted half reversed")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_HalfSortedHalfReversed>();
 						};
-						DMibTestSuite("Sort two sorted ranges") 
-						{ 
-							fp_Sort_Simple<tf_nItems, ESortType_TwoSortedRanges>(); 
+						DMibTestSuite("Sort two sorted ranges")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_TwoSortedRanges>();
 						};
-						DMibTestSuite("Sort almost sorted") 
-						{ 
-							fp_Sort_Simple<tf_nItems, ESortType_AlmostSorted>(); 
+						DMibTestSuite("Sort almost sorted")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_AlmostSorted>();
 						};
-						DMibTestSuite("Sort almost reversed") 
-						{ 
-							fp_Sort_Simple<tf_nItems, ESortType_AlmostReversed>(); 
+						DMibTestSuite("Sort almost reversed")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_AlmostReversed>();
 						};
-						DMibTestSuite("Sort many same") 
-						{ 
-							fp_Sort_Simple<tf_nItems, ESortType_ManySame>(); 
+						DMibTestSuite("Sort many same")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_ManySame>();
 						};
-						DMibTestSuite("Sort same") 
-						{ 
-							fp_Sort_Simple<tf_nItems, ESortType_AllSame>(); 
+						DMibTestSuite("Sort same")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_AllSame>();
 						};
-						DMibTestSuite("Sort uneven") 
-						{ 
-							fp_Sort_Simple<tf_nItems, ESortType_Uneven>(); 
+						DMibTestSuite("Sort uneven")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_Uneven>();
 						};
-						DMibTestSuite("Sort one unsorted") 
-						{ 
-							fp_Sort_Simple<tf_nItems, ESortType_OneUnsorted>(); 
+						DMibTestSuite("Sort one unsorted")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_OneUnsorted>();
 						};
 #else
-						DMibTestSuite("Sort same") 
-						{ 
-							fp_Sort_Simple<tf_nItems, ESortType_AllSame>(); 
+						DMibTestSuite("Sort same")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_AllSame>();
 						};
 #endif
 #if 0
-						DMibTestSuite("Sort stable random") 
-						{ 
-							fp_Sort_Stability<tf_nItems, ESortType_Random>(); 
+						DMibTestSuite("Sort stable random")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_Random>();
 						};
-						DMibTestSuite("Sort stable sorted") 
-						{ 
-							fp_Sort_Stability<tf_nItems, ESortType_Sorted>(); 
+						DMibTestSuite("Sort stable sorted")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_Sorted>();
 						};
-						DMibTestSuite("Sort stable reversed") 
-						{ 
-							fp_Sort_Stability<tf_nItems, ESortType_Reversed>(); 
+						DMibTestSuite("Sort stable reversed")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_Reversed>();
 						};
-						DMibTestSuite("Sort stable almost sorted") 
-						{ 
-							fp_Sort_Stability<tf_nItems, ESortType_AlmostSorted>(); 
+						DMibTestSuite("Sort stable almost sorted")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_AlmostSorted>();
 						};
-						DMibTestSuite("Sort stable many same") 
-						{ 
-							fp_Sort_Stability<tf_nItems, ESortType_ManySame>(); 
+						DMibTestSuite("Sort stable many same")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_ManySame>();
 						};
-						DMibTestSuite("Sort stable all same") 
-						{ 
-							fp_Sort_Stability<tf_nItems, ESortType_AllSame>(); 
+						DMibTestSuite("Sort stable all same")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_AllSame>();
 						};
-						DMibTestSuite("Sort stable uneven") 
-						{ 
-							fp_Sort_Stability<tf_nItems, ESortType_Uneven>(); 
+						DMibTestSuite("Sort stable uneven")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_Uneven>();
 						};
 #endif
 					};
@@ -1048,7 +1048,7 @@ namespace NMib
 
 							lVec[9] = CThing(0);
 
-							lVec.f_Sort([](CThing const& _A, CThing const& _B) -> bint
+							lVec.f_Sort([](CThing const& _A, CThing const& _B) -> bool
 							{
 								return _A.m_Val < _B.m_Val;
 							} );
@@ -1065,9 +1065,9 @@ namespace NMib
 					{
 //						f_TestItems<2>();
 						//f_TestItems<100000>();
-						DMibTestSuite("Debug") 
+						DMibTestSuite("Debug")
 						{
-							fp_Sort_Simple<21, ESortType_Reversed>(); 
+							fp_Sort_Simple<21, ESortType_Reversed>();
 						};
 
 #if 0

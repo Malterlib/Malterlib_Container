@@ -59,14 +59,14 @@ namespace
 
 				DMibTest(DMibExpr(List.f_GetLen() == 10));
 				{
-					bint bCorrectOrder = true;
+					bool bCorrectOrder = true;
 					TCVector<int32>::CIterator Iter = List.f_GetIterator();
 					for (int32 i = 0; i < nItems; ++i, ++Iter)
 						bCorrectOrder = bCorrectOrder && *Iter == i;
 					DMibTest(DMibExpr(bCorrectOrder));
 				}
 				{
-					bint bCorrectOrder2 = true;
+					bool bCorrectOrder2 = true;
 					TCVector<int32>::CIteratorConst Iter = NMib::fg_Const(List).f_GetIterator();
 					for (int32 i = 0; i < nItems; ++i, ++Iter)
 						bCorrectOrder2 = bCorrectOrder2 && *Iter == i;
