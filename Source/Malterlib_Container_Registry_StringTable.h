@@ -47,3 +47,5 @@ namespace NMib::NContainer
 		t_CIndex m_CurrentIndex;
 	};
 }
+
+#include "Malterlib_Container_Registry_StringTable.hpp"
