@@ -221,7 +221,7 @@ namespace NMib::NContainer
 
 		aint ParseMode = 0;
 
-		tf_CStr KeyName;
+		t_CStr KeyName;
 		bool bKeyNameWasEscaped = false;
 
 		TCRegistry *pReg = nullptr;
@@ -233,12 +233,12 @@ namespace NMib::NContainer
 		{
 			if (pReg || this->f_GetParent())
 			{
-				tf_CStr Temp = _ParseContext.f_GetNextWhiteSpace(_ToParse, _iBeforeParse);
+				t_CStr Temp = _ParseContext.f_GetNextWhiteSpace(_ToParse, _iBeforeParse);
 				aint iFind = Temp.f_FindCharReverse('\n');
 				if (iFind >= 0)
 				{
-					tf_CStr Left = Temp.f_Left(iFind+1);
-					tf_CStr Right = Temp.f_Extract(iFind+1);
+					t_CStr Left = Temp.f_Left(iFind+1);
+					t_CStr Right = Temp.f_Extract(iFind+1);
 					if (this->f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_After, Left) && this->f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, Right))
 					{
 						if (pReg)
@@ -340,12 +340,12 @@ namespace NMib::NContainer
 					pLastChildReg = pReg;
 					if constexpr (mc_bSupportWhiteSpace)
 					{
-						tf_CStr Temp = _ParseContext.f_GetNextWhiteSpace(_ToParse, iBeforeParse);
+						t_CStr Temp = _ParseContext.f_GetNextWhiteSpace(_ToParse, iBeforeParse);
 						aint iFind = Temp.f_FindCharReverse('\n');
 						if (iFind >= 0)
 						{
-							tf_CStr Left = Temp.f_Left(iFind+1);
-							tf_CStr Right = Temp.f_Extract(iFind+1);
+							t_CStr Left = Temp.f_Left(iFind+1);
+							t_CStr Right = Temp.f_Extract(iFind+1);
 							if (f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_After, Left) && f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_BeforeChildScopeStart, Right))
 							{
 								pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_After, Left);
@@ -386,12 +386,12 @@ namespace NMib::NContainer
 					DMibError((NMib::NStr::CStr::CFormat(DMibPFileLineFormat " Mismatching key/value pairs within scope") << _ParseContext.f_GetFile() << _ParseContext.f_GetLine()).f_GetStr());
 				if constexpr (mc_bSupportWhiteSpace)
 				{
-					tf_CStr Temp = _ParseContext.f_GetNextWhiteSpace(_ToParse, iParse);
+					t_CStr Temp = _ParseContext.f_GetNextWhiteSpace(_ToParse, iParse);
 					aint iFind = Temp.f_FindCharReverse('\n');
 					if (iFind >= 0)
 					{
-						tf_CStr Left = Temp.f_Left(iFind+1);
-						tf_CStr Right = Temp.f_Extract(iFind+1);
+						t_CStr Left = Temp.f_Left(iFind+1);
+						t_CStr Right = Temp.f_Extract(iFind+1);
 						if (f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_After, Left) && f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_BeforeChildScopeEnd, Right))
 						{
 							if (pReg)
@@ -427,7 +427,7 @@ namespace NMib::NContainer
 			{
 				aint iBeforeParse = iParse;
 				bool bWasEscaped = false;
-				tf_CStr Temp = fsp_ParseIdentifierStr<tf_bAllowLineBreakInEscapedString>(_ToParse, iParse, _ParseContext, bWasEscaped);
+				t_CStr Temp = fsp_ParseIdentifierStr<tf_bAllowLineBreakInEscapedString>(_ToParse, iParse, _ParseContext, bWasEscaped);
 				if (ParseMode == 0)
 				{
 					if constexpr (mc_bSupportWhiteSpace)
@@ -445,7 +445,7 @@ namespace NMib::NContainer
 						pReg->f_SetForceEscapedKey(true);
 					if (bWasEscaped)
 						pReg->f_SetForceEscapedValue(true);
-					pReg->f_SetThisValue(TCRegistry_ParseValue<tf_CStr, t_CData>(Temp, bWasEscaped));
+					pReg->f_SetThisValue(TCRegistry_ParseValue<t_CStr, t_CData>(Temp, bWasEscaped));
 					if constexpr (mc_bSupportFileLine)
 						pReg->mp_Key.f_SetFileLine(_ParseContext.f_GetFile(), _ParseContext.f_GetLine());
 					if constexpr (mc_bSupportWhiteSpace)
@@ -487,7 +487,7 @@ namespace NMib::NContainer
 				{
 					if (StartWhiteSpace != iParse)
 					{
-						tf_CStr Temp = _ToParse.f_Extract(StartWhiteSpace , iParse - StartWhiteSpace);
+						t_CStr Temp = _ToParse.f_Extract(StartWhiteSpace , iParse - StartWhiteSpace);
 
 						if (bLastHadChildren)
 							pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_AfterChildScopeEnd, Temp);

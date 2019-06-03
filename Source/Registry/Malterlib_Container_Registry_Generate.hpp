@@ -88,26 +88,23 @@ namespace NMib::NContainer
 	template <bool tf_bIncludeFileLine, bool tf_bEscapeNewLines, typename tf_CStr>
 	void TCRegistry<t_CStr, t_CData, t_Flags>::fspr_GenerateStr(tf_CStr &_Stream, mint _Level, const TCRegistry *_pReg)
 	{
-		tf_CStr PreData;
+		t_CStr PreData;
 		if (tf_bIncludeFileLine)
-			PreData = (typename tf_CStr::CFormat(DMibPFileLineFormat " ") << _pReg->mp_Key.f_GetFile() << _pReg->mp_Key.f_GetLine()).f_GetStr();
+			PreData = (typename t_CStr::CFormat(DMibPFileLineFormat " ") << _pReg->mp_Key.f_GetFile() << _pReg->mp_Key.f_GetLine()).f_GetStr();
 
 		PreData.f_AddChars('\t', _Level);
 
-		tf_CStr KeyNameEscaped;
-		tf_CStr ValueEscaped;
-		tf_CStr DataStr;
+		t_CStr KeyNameEscaped;
+		t_CStr ValueEscaped;
+		t_CStr DataStr;
 
 		bool bForceEscaped = _pReg->f_GetForceEscapedValue();
 		TCRegistry_FormatValue<t_CData>::fs_Generate(DataStr, _pReg->mp_Data, bForceEscaped);
 
-/*				tf_CStr Space;
-		Space.f_AddChar(' ');
-		tf_CStr NewLine = DMibNewLine;*/
 		const ch8 *Space = " ";
 		const ch8 *NewLine = DMibNewLine;
 
-		tf_CStr PreDataValue;
+		t_CStr PreDataValue;
 		if constexpr (mc_bSupportWhiteSpace)
 		{
 			auto WhiteSpace = _pReg->mp_Key.f_GetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey);
