@@ -103,23 +103,21 @@ namespace NMib::NContainer
 		}
 
 		{
-			t_CStr Temp = _Str;
-			aint iParse = 0;
-			typename t_CStr::CMaxChar Current = Temp.f_GetAt(iParse);
+			ch8 const *pParse = _Str.f_GetStr();
+			auto Current = *pParse;
 			CEmptyParseContext ParseContext;
 
 			while (Current)
 			{
 				// Parse away white space
 				while (NStr::fg_CharIsWhiteSpace(Current))
-					Current = Temp.f_GetAt(++iParse);
+					Current = *(++pParse);
 
-				//aint iStart = iParse;
-				if (Current == '/' && Temp.f_GetAt(iParse+1) == '/') // Comment
+				if (Current == '/' && pParse[1] == '/') // Comment
 				{
 					if (bLineCommentValid)
 					{
-						if (!fsp_ParseToEndOfLine(Temp, iParse, ParseContext))
+						if (!fsp_ParseToEndOfLine(pParse, ParseContext))
 						{
 							bValidWhiteSpace = false;
 							break;
@@ -131,9 +129,9 @@ namespace NMib::NContainer
 						break;
 					}
 				}
-				else if (Current == '/' && Temp.f_GetAt(iParse+1) == '*') // Comment
+				else if (Current == '/' && pParse[1] == '*') // Comment
 				{
-					if (!fsp_ParseToEndOfComment(Temp, iParse, ParseContext))
+					if (!fsp_ParseToEndOfComment(pParse, ParseContext))
 					{
 						bValidWhiteSpace = false;
 						break;
@@ -144,7 +142,7 @@ namespace NMib::NContainer
 					bValidWhiteSpace = false;
 					break;
 				}
-				Current = Temp.f_GetAt(iParse);
+				Current = *pParse;
 			}
 		}
 		return bValidWhiteSpace;

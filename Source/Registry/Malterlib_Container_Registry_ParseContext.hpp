@@ -4,13 +4,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::CPreserveParseContext()
-	{
-		m_Line = 1;
-		m_iLastStartWhitespace = 0;
-		m_pLastAdded = nullptr;
-		m_bLastHadChildren = false;
-	}
+	TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::CPreserveParseContext() = default;
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
 	void TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_SetFile(t_CStr const &_File)
@@ -37,25 +31,21 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_SetStartWhiteSpace(aint _iPos)
+	void TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_SetStartWhiteSpace(ch8 const *_pParse)
 	{
-		m_iLastStartWhitespace = _iPos;
+		m_pLastStartWhitespace = _pParse;
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	aint TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetStartWhiteSpace() const
+	ch8 const *TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetStartWhiteSpace() const
 	{
-		return m_iLastStartWhitespace;
+		return m_pLastStartWhitespace;
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetNextWhiteSpace
-		(
-			t_CStr const &_ToParse
-			, aint _iParse
-		)
+	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetNextWhiteSpace(ch8 const *_pParse)
 	{
-		return _ToParse.f_Extract(f_GetStartWhiteSpace(), _iParse - f_GetStartWhiteSpace());
+		return t_CStr(m_pLastStartWhitespace, _pParse - m_pLastStartWhitespace);
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
@@ -101,6 +91,19 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	void TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_SetStartParse(CChar const *_pStartParse)
+	{
+		m_pStartParse = _pStartParse;
+		m_pLastStartWhitespace = _pStartParse;
+	}
+
+	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	auto TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetStartParse() const -> CChar const *
+	{
+		return m_pStartParse;
+	}
+
+	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
 	void TCRegistry<t_CStr, t_CData, t_Flags>::CEmptyParseContext::f_SetFile(t_CStr const &_File)
 	{
 	}
@@ -124,15 +127,15 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::CEmptyParseContext::f_SetStartWhiteSpace(aint _iPos)
+	void TCRegistry<t_CStr, t_CData, t_Flags>::CEmptyParseContext::f_SetStartWhiteSpace(ch8 const *_pParse)
 	{
 
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	aint TCRegistry<t_CStr, t_CData, t_Flags>::CEmptyParseContext::f_GetStartWhiteSpace() const
+	ch8 const *TCRegistry<t_CStr, t_CData, t_Flags>::CEmptyParseContext::f_GetStartWhiteSpace() const
 	{
-		return -1;
+		return nullptr;
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
@@ -145,11 +148,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::CEmptyParseContext::f_GetNextWhiteSpace
-		(
-			t_CStr const &_ToParse
-			, aint _iParse
-		)
+	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::CEmptyParseContext::f_GetNextWhiteSpace(ch8 const *_pParse)
 	{
 		return t_CStr();
 	}
@@ -174,6 +173,17 @@ namespace NMib::NContainer
 			bool &o_bLastHadChildren
 		)
 		const -> TCRegistry *
+	{
+		return nullptr;
+	}
+
+	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	void TCRegistry<t_CStr, t_CData, t_Flags>::CEmptyParseContext::f_SetStartParse(CChar const *_pStartParse)
+	{
+	}
+
+	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	auto TCRegistry<t_CStr, t_CData, t_Flags>::CEmptyParseContext::f_GetStartParse() const -> CChar const *
 	{
 		return nullptr;
 	}

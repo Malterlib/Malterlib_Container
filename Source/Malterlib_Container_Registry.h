@@ -43,7 +43,7 @@ namespace NMib::NContainer
 }
 
 #include "Malterlib_Container_Registry_Key.h"
-#include "Malterlib_Container_Registry_ParseValue.h"
+#include "Malterlib_Container_Registry_CustomValue.h"
 
 namespace NMib::NContainer
 {
@@ -61,6 +61,8 @@ namespace NMib::NContainer
 			 	, "Preserve whitespace can only be used together with duplicate keys"
 			)
 		;
+
+		using CChar = typename t_CStr::CChar;
 
 		using CRegistryKey = typename TCChooseType
 			<
@@ -178,6 +180,49 @@ namespace NMib::NContainer
 			CTree m_Tree;
 		};
 
+		struct CPreserveParseContext
+		{
+			CPreserveParseContext();
+			void f_SetFile(t_CStr const &_File);
+			t_CStr const &f_GetFile() const;
+			int32 f_GetLine() const;
+			void f_AddLine();
+			void f_SetStartWhiteSpace(ch8 const *_pParse);
+			ch8 const *f_GetStartWhiteSpace() const;
+			t_CStr f_GetNextWhiteSpace(ch8 const *_pParse);
+			void f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
+			t_CStr const &f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const;
+			void f_SetLastAdded(TCRegistry *_pReg, bool _bHadChildren);
+			TCRegistry *f_GetLastAdded(bool &_bLastHadChildren) const;
+			void f_SetStartParse(CChar const *_pStartParse);
+			CChar const *f_GetStartParse() const;
+
+			t_CStr m_File;
+			int32 m_Line = 1;
+			ch8 const *m_pLastStartWhitespace = nullptr;
+			t_CStr m_WhiteSpace[ERegistryWhiteSpaceLocation_Max];
+			TCRegistry *m_pLastAdded = nullptr;
+			CChar const *m_pStartParse = nullptr;
+			bool m_bLastHadChildren = false;
+		};
+
+		struct CEmptyParseContext
+		{
+			void f_SetFile(t_CStr const &_File);
+			ch8 const *f_GetFile() const;
+			int32 f_GetLine() const;
+			void f_AddLine();
+			void f_SetStartWhiteSpace(ch8 const *_pParse);
+			ch8 const *f_GetStartWhiteSpace() const;
+			void f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
+			t_CStr f_GetNextWhiteSpace(ch8 const *_pParse);
+			t_CStr f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const;
+			void f_SetLastAdded(TCRegistry *_pReg, bool _bHadChildren);
+			TCRegistry *f_GetLastAdded(bool &_bLastHadChildren) const;
+			void f_SetStartParse(CChar const *_pStartParse);
+			CChar const *f_GetStartParse() const;
+		};
+
 	public:
 		static constexpr bool mc_bSupportForceCreate = CRegistryKey::mc_bSupportForceCreate;
 		static constexpr bool mc_bSupportWhiteSpace = CRegistryKey::mc_bSupportWhiteSpace;
@@ -187,6 +232,7 @@ namespace NMib::NContainer
 		using CKeyStr = t_CStr;
 		using CData = t_CData;
 		using CIterator = typename CChildren::CIterator;
+		using CParseContext = typename TCChooseType<mc_bSupportFileLine || mc_bSupportWhiteSpace, CPreserveParseContext, CEmptyParseContext>::CType;
 
 		TCRegistry();
 		TCRegistry(TCRegistry &&_Source);
@@ -325,52 +371,6 @@ namespace NMib::NContainer
 		TCRegistry *f_SetValueNoPath(t_CStr const &_Name, t_CData const &_Data);
 
 	private:
-		struct CPreserveParseContext
-		{
-			CPreserveParseContext();
-			void f_SetFile(t_CStr const &_File);
-			t_CStr const &f_GetFile() const;
-			int32 f_GetLine() const;
-			void f_AddLine();
-			void f_SetStartWhiteSpace(aint _iPos);
-			aint f_GetStartWhiteSpace() const;
-			t_CStr f_GetNextWhiteSpace(t_CStr const &_ToParse, aint _iParse);
-			void f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
-			t_CStr const &f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const;
-			void f_SetLastAdded(TCRegistry *_pReg, bool _bHadChildren);
-			TCRegistry *f_GetLastAdded(bool &_bLastHadChildren) const;
-
-			t_CStr m_File;
-			int32 m_Line;
-			aint m_iLastStartWhitespace;
-			t_CStr m_WhiteSpace[ERegistryWhiteSpaceLocation_Max];
-			TCRegistry *m_pLastAdded;
-			bool m_bLastHadChildren;
-		};
-
-		struct CEmptyParseContext
-		{
-			void f_SetFile(t_CStr const &_File);
-			ch8 const *f_GetFile() const;
-			int32 f_GetLine() const;
-			void f_AddLine();
-			void f_SetStartWhiteSpace(aint _iPos);
-			aint f_GetStartWhiteSpace() const;
-			void f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
-			t_CStr f_GetNextWhiteSpace(t_CStr const &_ToParse, aint _iParse);
-			t_CStr f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const;
-			void f_SetLastAdded(TCRegistry *_pReg, bool _bHadChildren);
-			TCRegistry *f_GetLastAdded(bool &_bLastHadChildren) const;
-		};
-
-		using CParseContext = typename TCChooseType
-			<
-				mc_bSupportFileLine || mc_bSupportWhiteSpace
-				, CPreserveParseContext
-				, CEmptyParseContext
-			>::CType
-		;
-
 		TCRegistry(TCRegistry *_pParent);
 
 		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
@@ -398,16 +398,16 @@ namespace NMib::NContainer
 		TCRegistry const *fp_GetChildParse(t_CStr &_Str, t_CStr *_pNotFound, TCRegistry const **_pPrev = nullptr) const;
 		TCRegistry *fp_GetChildParse(t_CStr &_Str, t_CStr *_pNotFound, TCRegistry **_pPrev = nullptr);
 
-		template <bool tf_bAllowLineBreakInEscapedString, typename tf_CStr>
-		static tf_CStr fsp_ParseIdentifierStr(tf_CStr const &_ToParse, aint &_Pos, CParseContext &_ParseContext, bool &_bWasEscaped);
-		template <typename tf_CStr, typename tf_CParseContext>
-		bool fsp_ParseToEndOfLine(tf_CStr const &_ToParse, aint &_Pos, tf_CParseContext &_ParseContext);
-		template <typename tf_CStr, typename tf_CParseContext>
-		bool fsp_ParseToEndOfComment(tf_CStr const &_ToParse, aint &_Pos, tf_CParseContext &_ParseContext);
-		template <bool tf_bAllowLineBreakInEscapedString, typename tf_CStr>
-		aint fpr_Parse(tf_CStr const &_ToParse, aint _Pos, CParseContext &_ParseContext);
-		template <bool tf_bAllowLineBreakInEscapedString, typename tf_CStr>
-		void fp_Parse(tf_CStr const &_ToParse, CParseContext &_ParseContext);
+		template <bool tf_bAllowLineBreakInEscapedString>
+		static t_CStr fsp_ParseIdentifierStr(ch8 const * &o_pParse, CParseContext &_ParseContext, bool &_bWasEscaped);
+		template <typename tf_CParseContext>
+		bool fsp_ParseToEndOfLine(ch8 const * &o_pParse, tf_CParseContext &_ParseContext);
+		template <typename tf_CParseContext>
+		bool fsp_ParseToEndOfComment(ch8 const * &o_pParse, tf_CParseContext &_ParseContext);
+		template <bool tf_bAllowLineBreakInEscapedString>
+		ch8 const *fpr_Parse(ch8 const *_pParse, CParseContext &_ParseContext);
+		template <bool tf_bAllowLineBreakInEscapedString>
+		void fp_Parse(ch8 const *_pParse, CParseContext &_ParseContext);
 		template <bool tf_bEscapeNewLines>
 		static void fsp_GetEscapedStr(t_CStr const &_Str, t_CStr &_Dest, bool _bForceEscape, t_CStr const &_PreData);
 		template <typename tf_CStr>

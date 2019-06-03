@@ -6,59 +6,38 @@
 namespace NMib::NContainer
 {
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	template <bool tf_bAllowLineBreakInEscapedString, typename tf_CStr>
-	tf_CStr TCRegistry<t_CStr, t_CData, t_Flags>::fsp_ParseIdentifierStr
+	template <bool tf_bAllowLineBreakInEscapedString>
+	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::fsp_ParseIdentifierStr
 		(
-		 	tf_CStr const &_ToParse
-		 	, aint &_Pos
+		 	ch8 const * &o_pParse
 		 	, CParseContext &_ParseContext
 		 	, bool &_bWasEscaped
 		)
 	{
-/*
-		aint iBeforeParse = iParse;
-		tf_CStr Temp;
-		while (Current)
-		{
-			if (Current == '\\')
-			{
-				Temp += _ToParse.f_Extract(iStart, iParse - iStart);
-				Current = _ToParse.f_GetAt(++iParse)
-				while (Current && NStr::fg_CharIsWhiteSpace(Current))
-					Current = _ToParse.f_GetAt(++iParse)
-			}
-			if (NStr::fg_CharIsWhiteSpace(Current))
-				break;
-			Current = _ToParse.f_GetAt(++iParse);
-		}
-
-		_ToParse.f_Extract(iStart, iParse - iStart);
-		*/
-
-		tf_CStr Ret;
+		t_CStr Ret;
 		_bWasEscaped = false;
-		aint iPos = _Pos;
+		auto pParse = o_pParse;
 		aint Mode = 0;
-		aint iStart = iPos;
+		auto pStart = pParse;
 		aint iStartEscapeSequenceLine = 0;
-		typename tf_CStr::CMaxChar Current = _ToParse.f_GetAt(iPos);
+		auto Current = *pParse;
 		while (Current)
 		{
 			if (Mode == 0)
 			{
 				if (Current == '\"')
 				{
-					Ret += _ToParse.f_Extract(iStart, iPos - iStart);
+					Ret.f_AddStr(pStart, pParse - pStart);
 					iStartEscapeSequenceLine = _ParseContext.f_GetLine();
-					iStart = iPos + 1;
+					pStart = pParse + 1;
 					Mode = 1;
 					_bWasEscaped = true;
 				}
 				else if (Current == '\\')
 				{
-					Ret += _ToParse.f_Extract(iStart, iPos - iStart);
+					Ret.f_AddStr(pStart, pParse - pStart);
 					// Parse away any whitespace
-					Current = _ToParse.f_GetAt(++iPos);
+					Current = *(++pParse);
 					while (Current && NStr::fg_CharIsWhiteSpace(Current))
 					{
 						if constexpr (mc_bSupportFileLine)
@@ -68,27 +47,27 @@ namespace NMib::NContainer
 								_ParseContext.f_AddLine();
 							}
 						}
-						Current = _ToParse.f_GetAt(++iPos);
+						Current = *(++pParse);
 					}
 
 					if
 					(
 						!Current || Current == '{' || Current == '}'
-						|| (Current == '/' && _ToParse.f_GetAt(iPos+1) == '/')
-						|| (Current == '/' && _ToParse.f_GetAt(iPos+1) == '*')
+						|| (Current == '/' && pParse[1] == '/')
+						|| (Current == '/' && pParse[1] == '*')
 					)
 					{
 						DMibError((NMib::NStr::CStr::CFormat(DMibPFileLineFormat " \\ needs to be followed with a continuation of the text") << _ParseContext.f_GetFile() << _ParseContext.f_GetLine()).f_GetStr());
 					}
 
-					iStart = iPos;
+					pStart = pParse;
 					continue;
 				}
 				else if
 				(
 					NStr::fg_CharIsWhiteSpace(Current) || Current == '{' || Current == '}'
-					|| (Current == '/' && _ToParse.f_GetAt(iPos+1) == '/')
-					|| (Current == '/' && _ToParse.f_GetAt(iPos+1) == '*')
+					|| (Current == '/' && pParse[1] == '/')
+					|| (Current == '/' && pParse[1] == '*')
 				)
 				{
 					break;
@@ -106,8 +85,8 @@ namespace NMib::NContainer
 
 				if (Current == '\\')
 				{
-					typename tf_CStr::CMaxChar Next = _ToParse.f_GetAt(iPos+1);
-					Ret += _ToParse.f_Extract(iStart, iPos - iStart);
+					auto Next = pParse[1];
+					Ret.f_AddStr(pStart, pParse - pStart);
 					switch (Next)
 					{
 					case 'r':
@@ -129,8 +108,8 @@ namespace NMib::NContainer
 						DMibError((NMib::NStr::CStr::CFormat(DMibPFileLineFormat " Invalid escape character") << _ParseContext.f_GetFile() << _ParseContext.f_GetLine()).f_GetStr());
 						break;
 					}
-					++iPos;
-					iStart = iPos + 1;
+					++pParse;
+					pStart = pParse + 1;
 				}
 				else if (Current == '\r' || Current == '\n')
 				{
@@ -139,57 +118,55 @@ namespace NMib::NContainer
 				}
 				else if (Current == '\"')
 				{
-					Ret += _ToParse.f_Extract(iStart, iPos - iStart);
+					Ret.f_AddStr(pStart, pParse - pStart);
 					Mode = 0;
-					iStart = iPos + 1;
+					pStart = pParse + 1;
 				}
 			}
 
-			Current = _ToParse.f_GetAt(++iPos);
+			Current = *(++pParse);
 		}
 		if (Mode == 1)
-		{
 			DMibError((NMib::NStr::CStr::CFormat(DMibPFileLineFormat " No matching end for escaped text (\")") << _ParseContext.f_GetFile() << _ParseContext.f_GetLine()).f_GetStr());
-		}
-		Ret += _ToParse.f_Extract(iStart, iPos - iStart);
-		_Pos = iPos;
+		Ret.f_AddStr(pStart, pParse - pStart);
+		o_pParse = pParse;
 		return Ret;
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	template <typename tf_CStr, typename tf_CParseContext>
-	bool TCRegistry<t_CStr, t_CData, t_Flags>::fsp_ParseToEndOfLine(const tf_CStr &_ToParse, aint &_Pos, tf_CParseContext &_ParseContext)
+	template <typename tf_CParseContext>
+	bool TCRegistry<t_CStr, t_CData, t_Flags>::fsp_ParseToEndOfLine(ch8 const * &o_pParse, tf_CParseContext &_ParseContext)
 	{
-		aint iPos = _Pos + 2;
+		auto pParse = o_pParse + 2;
 		bool bRet = false;
 
-		typename tf_CStr::CMaxChar Current = _ToParse.f_GetAt(iPos);
+		auto Current = *pParse;
 		while (Current)
 		{
 			if (Current == '\n')
 			{
 				if constexpr (mc_bSupportFileLine)
 					_ParseContext.f_AddLine();
-				++iPos;
+				++pParse;
 				bRet = true;
 				break;
 			}
-			++iPos;
-			Current = _ToParse.f_GetAt(iPos);
+			++pParse;
+			Current = *pParse;
 		}
 
-		_Pos = iPos;
+		o_pParse = pParse;
 		return bRet;
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	template <typename tf_CStr, typename tf_CParseContext>
-	bool TCRegistry<t_CStr, t_CData, t_Flags>::fsp_ParseToEndOfComment(const tf_CStr &_ToParse, aint &_Pos, tf_CParseContext &_ParseContext)
+	template <typename tf_CParseContext>
+	bool TCRegistry<t_CStr, t_CData, t_Flags>::fsp_ParseToEndOfComment(ch8 const * &o_pParse, tf_CParseContext &_ParseContext)
 	{
-		aint iPos = _Pos + 2;
+		auto pParse = o_pParse + 2;
 		bool bRet = false;
 
-		typename tf_CStr::CMaxChar Current = _ToParse.f_GetAt(iPos);
+		auto Current = *pParse;
 		while (Current)
 		{
 			if constexpr (mc_bSupportFileLine)
@@ -198,26 +175,26 @@ namespace NMib::NContainer
 					_ParseContext.f_AddLine();
 			}
 
-			if (Current == '*' && _ToParse.f_GetAt(iPos+1) == '/')
+			if (Current == '*' && pParse[1] == '/')
 			{
-				iPos += 2;;
+				pParse += 2;
 				bRet = true;
 				break;
 			}
-			++iPos;
-			Current = _ToParse.f_GetAt(iPos);
+			++pParse;
+			Current = *pParse;
 		}
 
-		_Pos = iPos;
+		o_pParse = pParse;
 		return bRet;
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	template <bool tf_bAllowLineBreakInEscapedString, typename tf_CStr>
-	aint TCRegistry<t_CStr, t_CData, t_Flags>::fpr_Parse(const tf_CStr &_ToParse, aint _Pos, CParseContext &_ParseContext)
+	template <bool tf_bAllowLineBreakInEscapedString>
+	ch8 const *TCRegistry<t_CStr, t_CData, t_Flags>::fpr_Parse(ch8 const *_pParse, CParseContext &_ParseContext)
 	{
-		aint iParse = _Pos;
-		typename tf_CStr::CMaxChar Current = _ToParse.f_GetAt(iParse);
+		ch8 const *pParse = _pParse;
+		auto Current = *pParse;
 
 		aint ParseMode = 0;
 
@@ -227,13 +204,13 @@ namespace NMib::NContainer
 		TCRegistry *pReg = nullptr;
 		TCRegistry *pLastChildReg = nullptr;
 		bool bHadChildren = false;
+		bool bKeyWithoutLine = false;
 
-
-		auto fl_FixupWhitespaceBeforeKey = [&] (aint _iBeforeParse)
+		auto fl_FixupWhitespaceBeforeKey = [&] (ch8 const *_pBeforeParse)
 		{
 			if (pReg || this->f_GetParent())
 			{
-				t_CStr Temp = _ParseContext.f_GetNextWhiteSpace(_ToParse, _iBeforeParse);
+				t_CStr Temp = _ParseContext.f_GetNextWhiteSpace(_pBeforeParse);
 				aint iFind = Temp.f_FindCharReverse('\n');
 				if (iFind >= 0)
 				{
@@ -267,15 +244,15 @@ namespace NMib::NContainer
 				}
 			}
 			else
-				_ParseContext.f_SetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, _ParseContext.f_GetNextWhiteSpace(_ToParse, _iBeforeParse));
-			_ParseContext.f_SetStartWhiteSpace(iParse);
+				_ParseContext.f_SetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, _ParseContext.f_GetNextWhiteSpace(_pBeforeParse));
+			_ParseContext.f_SetStartWhiteSpace(pParse);
 		};
 
-		auto fl_FixupWhitespaceBeforeValue = [&] (aint _iBeforeParse)
+		auto fl_FixupWhitespaceBeforeValue = [&] (ch8 const *_pBeforeParse)
 		{
 			pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, _ParseContext.f_GetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey));
-			pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_Between, _ParseContext.f_GetNextWhiteSpace(_ToParse, _iBeforeParse));
-			_ParseContext.f_SetStartWhiteSpace(iParse);
+			pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_Between, _ParseContext.f_GetNextWhiteSpace(_pBeforeParse));
+			_ParseContext.f_SetStartWhiteSpace(pParse);
 		};
 
 		while (Current)
@@ -286,33 +263,37 @@ namespace NMib::NContainer
 				if constexpr (mc_bSupportFileLine)
 				{
 					if (Current == '\n')
+					{
+						bKeyWithoutLine = false;
 						_ParseContext.f_AddLine();
+					}
 				}
 
-				Current = _ToParse.f_GetAt(++iParse);
+				Current = *(++pParse);
 			}
 
-			if (Current == '/' && _ToParse.f_GetAt(iParse+1) == '/') // Comment
+			if (Current == '/' && pParse[1] == '/') // Comment
 			{
-				fsp_ParseToEndOfLine(_ToParse, iParse, _ParseContext);
+				fsp_ParseToEndOfLine(pParse, _ParseContext);
+				bKeyWithoutLine = false;
 			}
-			else if (Current == '/' && _ToParse.f_GetAt(iParse+1) == '*') // Comment
+			else if (Current == '/' && pParse[1] == '*') // Comment
 			{
 				aint StartParseLine = _ParseContext.f_GetLine();
-				if (!fsp_ParseToEndOfComment(_ToParse, iParse, _ParseContext))
+				if (!fsp_ParseToEndOfComment(pParse, _ParseContext))
 				{
 					DMibError((NMib::NStr::CStr::CFormat(DMibPFileLineFormat " No end found for block comment") << _ParseContext.f_GetFile() << StartParseLine).f_GetStr());
 				}
 			}
-			else if (Current == '{')
+			else if (Current == '{' && (!TCRegistry_CustomValue<t_CData>::mc_bRequireStartScopeOnSeparateLine || !bKeyWithoutLine))
 			{
 				aint LineBeforeStart = _ParseContext.f_GetLine();
-				aint iBeforeParse = iParse;
-				++iParse;
+				auto pBeforeParse = pParse;
+				++pParse;
 				if (ParseMode == 1)
 				{
 					pReg = f_CreateChildNoPath(KeyName, mc_bSupportForceCreate);
-					pReg->f_SetThisValue("");
+					pReg->f_SetThisValue({});
 					if constexpr (mc_bSupportFileLine)
 						pReg->mp_Key.f_SetFileLine(_ParseContext.f_GetFile(), _ParseContext.f_GetLine());
 
@@ -340,7 +321,7 @@ namespace NMib::NContainer
 					pLastChildReg = pReg;
 					if constexpr (mc_bSupportWhiteSpace)
 					{
-						t_CStr Temp = _ParseContext.f_GetNextWhiteSpace(_ToParse, iBeforeParse);
+						t_CStr Temp = _ParseContext.f_GetNextWhiteSpace(pBeforeParse);
 						aint iFind = Temp.f_FindCharReverse('\n');
 						if (iFind >= 0)
 						{
@@ -365,20 +346,20 @@ namespace NMib::NContainer
 							pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_BeforeChildScopeStart, Temp);
 							pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_AfterChildScopeStart);
 						}
-						_ParseContext.f_SetStartWhiteSpace(iParse);
+						_ParseContext.f_SetStartWhiteSpace(pParse);
 					}
 
-					iParse = pReg->fpr_Parse<tf_bAllowLineBreakInEscapedString>(_ToParse, iParse, _ParseContext);
-					Current = _ToParse.f_GetAt(iParse);
+					pParse = pReg->fpr_Parse<tf_bAllowLineBreakInEscapedString>(pParse, _ParseContext);
+					Current = *pParse;
 					if (Current != '}')
 					{
 						DMibError((NMib::NStr::CStr::CFormat(DMibPFileLineFormat " No matching '}' found") << _ParseContext.f_GetFile() << LineBeforeStart).f_GetStr());
 					}
-					++iParse;
+					++pParse;
 				}
 
 				bHadChildren = true;
-				Current = _ToParse.f_GetAt(iParse);
+				Current = *pParse;
 			}
 			else if (Current == '}')
 			{
@@ -386,7 +367,7 @@ namespace NMib::NContainer
 					DMibError((NMib::NStr::CStr::CFormat(DMibPFileLineFormat " Mismatching key/value pairs within scope") << _ParseContext.f_GetFile() << _ParseContext.f_GetLine()).f_GetStr());
 				if constexpr (mc_bSupportWhiteSpace)
 				{
-					t_CStr Temp = _ParseContext.f_GetNextWhiteSpace(_ToParse, iParse);
+					t_CStr Temp = _ParseContext.f_GetNextWhiteSpace(pParse);
 					aint iFind = Temp.f_FindCharReverse('\n');
 					if (iFind >= 0)
 					{
@@ -419,75 +400,111 @@ namespace NMib::NContainer
 							pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_After);
 						fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_BeforeChildScopeEnd, Temp);
 					}
-					_ParseContext.f_SetStartWhiteSpace(iParse+1);
+					_ParseContext.f_SetStartWhiteSpace(pParse+1);
 				}
-				return iParse;
+				return pParse;
 			}
 			else if (Current)
 			{
-				aint iBeforeParse = iParse;
-				bool bWasEscaped = false;
-				t_CStr Temp = fsp_ParseIdentifierStr<tf_bAllowLineBreakInEscapedString>(_ToParse, iParse, _ParseContext, bWasEscaped);
 				if (ParseMode == 0)
 				{
+					auto pBeforeParse = pParse;
+					bool bWasEscaped = false;
+					t_CStr Temp = fsp_ParseIdentifierStr<tf_bAllowLineBreakInEscapedString>(pParse, _ParseContext, bWasEscaped);
 					if constexpr (mc_bSupportWhiteSpace)
-						fl_FixupWhitespaceBeforeKey(iBeforeParse);
+						fl_FixupWhitespaceBeforeKey(pBeforeParse);
 					bHadChildren = false;
 					KeyName = Temp;
 					bKeyNameWasEscaped = bWasEscaped;
+					bKeyWithoutLine = true;
 					ParseMode = 1;
 				}
 				else
 				{
-					bHadChildren = false;
-					pReg = f_CreateChildNoPath(KeyName, mc_bSupportForceCreate);
-					if (bKeyNameWasEscaped)
-						pReg->f_SetForceEscapedKey(true);
-					if (bWasEscaped)
-						pReg->f_SetForceEscapedValue(true);
-					pReg->f_SetThisValue(TCRegistry_ParseValue<t_CStr, t_CData>(Temp, bWasEscaped));
-					if constexpr (mc_bSupportFileLine)
-						pReg->mp_Key.f_SetFileLine(_ParseContext.f_GetFile(), _ParseContext.f_GetLine());
-					if constexpr (mc_bSupportWhiteSpace)
-						fl_FixupWhitespaceBeforeValue(iBeforeParse);
-					ParseMode = 0;
+					if constexpr (TCRegistry_CustomValue<t_CData>::mc_bDefault)
+					{
+						auto pBeforeParse = pParse;
+						bool bWasEscaped = false;
+						t_CStr Temp = fsp_ParseIdentifierStr<tf_bAllowLineBreakInEscapedString>(pParse, _ParseContext, bWasEscaped);
+						bHadChildren = false;
+						pReg = f_CreateChildNoPath(KeyName, mc_bSupportForceCreate);
+						if (bKeyNameWasEscaped)
+							pReg->f_SetForceEscapedKey(true);
+						if (bWasEscaped)
+							pReg->f_SetForceEscapedValue(true);
+						pReg->f_SetThisValue(Temp);
+						if constexpr (mc_bSupportFileLine)
+							pReg->mp_Key.f_SetFileLine(_ParseContext.f_GetFile(), _ParseContext.f_GetLine());
+						if constexpr (mc_bSupportWhiteSpace)
+							fl_FixupWhitespaceBeforeValue(pBeforeParse);
+						ParseMode = 0;
+					}
+					else
+					{
+						try
+						{
+							auto pBeforeParse = pParse;
+							bool bWasEscaped = false;
+							auto TempValue = TCRegistry_CustomValue<t_CData>::fs_Parse(pParse, _ParseContext, bWasEscaped);
+
+							bHadChildren = false;
+							bKeyWithoutLine = false;
+							pReg = f_CreateChildNoPath(KeyName, mc_bSupportForceCreate);
+							if (bKeyNameWasEscaped)
+								pReg->f_SetForceEscapedKey(true);
+							if (bWasEscaped)
+								pReg->f_SetForceEscapedValue(true);
+							pReg->f_SetThisValue(fg_Move(TempValue));
+							if constexpr (mc_bSupportFileLine)
+								pReg->mp_Key.f_SetFileLine(_ParseContext.f_GetFile(), _ParseContext.f_GetLine());
+							if constexpr (mc_bSupportWhiteSpace)
+								fl_FixupWhitespaceBeforeValue(pBeforeParse);
+							ParseMode = 0;
+						}
+						catch (NException::CException const &_Exception)
+						{
+							DMibError
+								(
+								 	NMib::NStr::CStr::CFormat(DMibPFileLineFormat " Failed to parse value: {}")
+									<< _ParseContext.f_GetFile()
+									<< _ParseContext.f_GetLine()
+								 	<< _Exception
+								)
+							;
+						}
+					}
 				}
 			}
 
 			_ParseContext.f_SetLastAdded(pReg, bHadChildren);
-			Current = _ToParse.f_GetAt(iParse);
+			Current = *pParse;
 		}
 
 		if (ParseMode == 1)
 			DMibError((NMib::NStr::CStr::CFormat(DMibPFileLineFormat " Mismatching key/value pairs within scope") << _ParseContext.f_GetFile() << _ParseContext.f_GetLine()).f_GetStr());
 
-		return iParse;
+		return pParse;
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	template <bool tf_bAllowLineBreakInEscapedString, typename tf_CStr>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fp_Parse(const tf_CStr &_ToParse, CParseContext &_ParseContext)
+	template <bool tf_bAllowLineBreakInEscapedString>
+	void TCRegistry<t_CStr, t_CData, t_Flags>::fp_Parse(ch8 const *_pParse, CParseContext &_ParseContext)
 	{
-		aint iParse = fpr_Parse<tf_bAllowLineBreakInEscapedString>(_ToParse, 0, _ParseContext);
-		{
-			ch32 Current = _ToParse.f_GetAt(iParse);
-			if (Current == '}')
-			{
-				DMibError((NMib::NStr::CStr::CFormat(DMibPFileLineFormat " No matching '{{' found") << _ParseContext.f_GetFile() << _ParseContext.f_GetLine()).f_GetStr());
-			}
-		}
+		ch8 const *pParse = fpr_Parse<tf_bAllowLineBreakInEscapedString>(_pParse, _ParseContext);
+		if (*pParse == '}')
+			DMibError((NMib::NStr::CStr::CFormat(DMibPFileLineFormat " No matching '{{' found") << _ParseContext.f_GetFile() << _ParseContext.f_GetLine()).f_GetStr());
 
 		if constexpr (mc_bSupportWhiteSpace)
 		{
-			aint StartWhiteSpace = _ParseContext.f_GetStartWhiteSpace();
+			auto pStartWhiteSpace = _ParseContext.f_GetStartWhiteSpace();
 			{
 				bool bLastHadChildren = false;
 				TCRegistry *pReg = _ParseContext.f_GetLastAdded(bLastHadChildren);
 				if (pReg)
 				{
-					if (StartWhiteSpace != iParse)
+					if (pStartWhiteSpace != pParse)
 					{
-						t_CStr Temp = _ToParse.f_Extract(StartWhiteSpace , iParse - StartWhiteSpace);
+						t_CStr Temp = t_CStr(pStartWhiteSpace, pParse - pStartWhiteSpace);
 
 						if (bLastHadChildren)
 							pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_AfterChildScopeEnd, Temp);
@@ -518,10 +535,11 @@ namespace NMib::NContainer
 		if constexpr (mc_bSupportFileLine || mc_bSupportWhiteSpace)
 		{
 			Context.f_SetFile(_File);
+			Context.f_SetStartParse(_Text.f_GetStr());
 			mp_Key.f_SetFileLine(_File, 0);
 		}
 
-		fp_Parse<false>(_Text, Context);
+		fp_Parse<false>(_Text.f_GetStr(), Context);
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
@@ -543,9 +561,10 @@ namespace NMib::NContainer
 		{
 			mp_Key.f_SetFileLine(_File, 0);
 			Context.f_SetFile(_File);
+			Context.f_SetStartParse(_Text.f_GetStr());
 		}
 
-		fp_Parse<true>(_Text, Context);
+		fp_Parse<true>(_Text.f_GetStr(), Context);
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>

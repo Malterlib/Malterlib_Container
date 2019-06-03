@@ -95,11 +95,15 @@ namespace NMib::NContainer
 		PreData.f_AddChars('\t', _Level);
 
 		t_CStr KeyNameEscaped;
-		t_CStr ValueEscaped;
-		t_CStr DataStr;
 
 		bool bForceEscaped = _pReg->f_GetForceEscapedValue();
-		TCRegistry_FormatValue<t_CData>::fs_Generate(DataStr, _pReg->mp_Data, bForceEscaped);
+		bool bHasScope = _pReg->f_HasScope();
+
+		bool bValueIsEmpty;
+		if constexpr (TCRegistry_CustomValue<t_CData>::mc_bDefault)
+			bValueIsEmpty = _pReg->mp_Data.f_IsEmpty();
+		else
+			bValueIsEmpty = TCRegistry_CustomValue<t_CData>::fs_ValueIsEmpty(_pReg->mp_Data, bForceEscaped || !bHasScope);
 
 		const ch8 *Space = " ";
 		const ch8 *NewLine = DMibNewLine;
@@ -131,15 +135,13 @@ namespace NMib::NContainer
 		PreDataValue += KeyNameEscaped;
 		_Stream += KeyNameEscaped;
 
-		bool bHasScope = _pReg->f_HasScope();
-
-		if (!DataStr.f_IsEmpty() || !bHasScope || bForceEscaped )
+		if (!bValueIsEmpty || !bHasScope || bForceEscaped)
 		{
 			if constexpr (mc_bSupportWhiteSpace)
 			{
 				auto WhiteSpace = _pReg->mp_Key.f_GetWhiteSpace(ERegistryWhiteSpaceLocation_Between);
 
-				if (!WhiteSpace.f_IsEmpty() || (_pReg->mp_Key.f_GetParsed(ERegistryWhiteSpaceLocation_Between) && (!_pReg->mp_Children.m_Tree.f_IsEmpty() || !DataStr.f_IsEmpty())))
+				if (!WhiteSpace.f_IsEmpty() || (_pReg->mp_Key.f_GetParsed(ERegistryWhiteSpaceLocation_Between) && (!_pReg->mp_Children.m_Tree.f_IsEmpty() || !bValueIsEmpty)))
 				{
 					aint iFind = WhiteSpace.f_FindCharReverse('\n');
 					if (iFind >= 0)
@@ -161,9 +163,14 @@ namespace NMib::NContainer
 			}
 
 			fsp_ReplaceWithWhitespace(PreDataValue);
-			fsp_GetEscapedStr<tf_bEscapeNewLines>(DataStr, ValueEscaped, bForceEscaped, PreDataValue);
-
-			_Stream += ValueEscaped;
+			if constexpr (TCRegistry_CustomValue<t_CData>::mc_bDefault)
+			{
+				t_CStr ValueEscaped;
+				fsp_GetEscapedStr<tf_bEscapeNewLines>(_pReg->mp_Data, ValueEscaped, bForceEscaped, PreDataValue);
+				_Stream += ValueEscaped;
+			}
+			else
+				TCRegistry_CustomValue<t_CData>::fs_Generate(_Stream, _pReg->mp_Data, bForceEscaped || !bHasScope, _Level, PreDataValue);
 		}
 
 		if constexpr (mc_bSupportWhiteSpace)
