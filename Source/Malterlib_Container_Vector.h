@@ -43,6 +43,7 @@ namespace NMib::NContainer
 
 		TCVector(TCInitializerList<t_CData> const &_Values);
 		TCVector(t_CData const *_pItems, mint _nItems);
+		TCVector(mint _nItems);
 
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 		TCVector(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Source);
@@ -498,6 +499,7 @@ namespace NMib::NContainer
 #include "Vector/Malterlib_Container_Vector_Allocation.hpp"
 #include "Vector/Malterlib_Container_Vector_BoundsCheck.hpp"
 #include "Vector/Malterlib_Container_Vector_Compare.hpp"
+#include "Vector/Malterlib_Container_Vector_ConstructSetLen.hpp"
 #include "Vector/Malterlib_Container_Vector_ConstructCopy.hpp"
 #include "Vector/Malterlib_Container_Vector_ConstructMove.hpp"
 #include "Vector/Malterlib_Container_Vector_CreateVector.hpp"
