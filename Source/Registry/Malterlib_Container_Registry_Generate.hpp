@@ -46,7 +46,7 @@ namespace NMib::NContainer
 					bNeedEscape = true;
 					break;
 				}
-				else if (tf_bEscapeNewLines)
+				else if constexpr (tf_bEscapeNewLines)
 				{
 					if (Current == '\n')
 					{
@@ -58,7 +58,7 @@ namespace NMib::NContainer
 		}
 		if (bNeedEscape)
 		{
-			if (tf_bEscapeNewLines)
+			if constexpr (tf_bEscapeNewLines)
 			{
 				mint Len = _Str.f_GetLen();
 				mint iStart = 0;
@@ -89,7 +89,7 @@ namespace NMib::NContainer
 	void TCRegistry<t_CStr, t_CData, t_Flags>::fspr_GenerateStr(tf_CStr &_Stream, mint _Level, const TCRegistry *_pReg)
 	{
 		t_CStr PreData;
-		if (tf_bIncludeFileLine)
+		if constexpr (tf_bIncludeFileLine)
 			PreData = (typename t_CStr::CFormat(DMibPFileLineFormat " ") << _pReg->mp_Key.f_GetFile() << _pReg->mp_Key.f_GetLine()).f_GetStr();
 
 		PreData.f_AddChars('\t', _Level);

@@ -23,7 +23,7 @@ namespace NMib::NContainer::NPrivate
 	template <typename tf_CStream>
 	void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_Feed(tf_CStream &_Stream) const
 	{
-		if (mc_bIsFirstLevel)
+		if constexpr (mc_bIsFirstLevel)
 			_Stream << m_Bits;
 	}
 
@@ -43,7 +43,7 @@ namespace NMib::NContainer::NPrivate
 	template <typename tf_CStream>
 	void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_Consume(tf_CStream &_Stream)
 	{
-		if (mc_bIsFirstLevel)
+		if constexpr (mc_bIsFirstLevel)
 		{
 			CSuper::f_Clear();
 			_Stream >> m_Bits;
@@ -60,9 +60,9 @@ namespace NMib::NContainer::NPrivate
 	void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_SetBit(mint _Bit)
 	{
 		m_Bits.template f_SetBit<tf_bValue>(_Bit);
-		if (tf_bValue)
+		if constexpr (tf_bValue)
 		{
-			if (t_nBitsInternal & mint(1))
+			if constexpr (t_nBitsInternal & mint(1))
 			{
 				if (_Bit != t_nBitsInternal - 1)
 				{
@@ -78,7 +78,7 @@ namespace NMib::NContainer::NPrivate
 		}
 		else
 		{
-			if (t_nBitsInternal & mint(1))
+			if constexpr (t_nBitsInternal & mint(1))
 			{
 				if (_Bit != t_nBitsInternal - 1 && !m_Bits.f_GetBit(_Bit ^ mint(1)))
 				{
@@ -103,7 +103,7 @@ namespace NMib::NContainer::NPrivate
 		if (_bValue)
 		{
 			m_Bits.template f_SetBit<true>(_Bit);
-			if (t_nBitsInternal & mint(1))
+			if constexpr (t_nBitsInternal & mint(1))
 			{
 				if (_Bit != t_nBitsInternal - 1)
 				{
@@ -120,7 +120,7 @@ namespace NMib::NContainer::NPrivate
 		else
 		{
 			m_Bits.template f_SetBit<false>(_Bit);
-			if (t_nBitsInternal & mint(1))
+			if constexpr (t_nBitsInternal & mint(1))
 			{
 				if (_Bit != t_nBitsInternal - 1 && !m_Bits.f_GetBit(_Bit ^ mint(1)))
 				{
@@ -157,7 +157,7 @@ namespace NMib::NContainer::NPrivate
 		aint Bit = m_Bits.f_FindFreeBitAndSet();
 		if (Bit >= 0)
 		{
-			if (t_nBitsInternal & mint(1))
+			if constexpr (t_nBitsInternal & mint(1))
 			{
 				if (Bit != t_nBitsInternal - 1)
 				{
@@ -186,7 +186,7 @@ namespace NMib::NContainer::NPrivate
 		aint Bit = m_Bits.f_FindFreeBitReverseAndSet();
 		if (Bit >= 0)
 		{
-			if (t_nBitsInternal & mint(1))
+			if constexpr (t_nBitsInternal & mint(1))
 			{
 				if (Bit != t_nBitsInternal - 1)
 				{
@@ -362,10 +362,10 @@ namespace NMib::NContainer::NPrivate
 	template <mint t_nBits, mint t_nBitsInternal, mint t_nLevel, template <mint t_nBits2> class t_TCBitArray, mint t_nMaxLevels, bool t_bLast>
 	inline_always bool TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::fp_IsFullyFree() const
 	{
-		if (mc_bIsLastLevel)
+		if constexpr (mc_bIsLastLevel)
 			return m_Bits.f_IsFullyFree();
 
-		if (t_nBitsInternal & mint(1))
+		if constexpr (t_nBitsInternal & mint(1))
 			return CSuper::fp_IsFullyFree() && !m_Bits.f_GetBit(t_nBitsInternal-1);
 		else
 			return CSuper::fp_IsFullyFree();

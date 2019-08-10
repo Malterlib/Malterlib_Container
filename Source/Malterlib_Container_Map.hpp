@@ -49,14 +49,14 @@ namespace NMib::NContainer
 			if (iValue)
 			{
 				auto pFormat = "{} = {}";
-				if (TCIsContainer<t_CKey>::mc_Value)
+				if constexpr (TCIsContainer<t_CKey>::mc_Value)
 				{
-					if (TCIsContainer<t_CData>::mc_Value)
+					if constexpr (TCIsContainer<t_CData>::mc_Value)
 						pFormat = "{vs} = {vs}";
 					else
 						pFormat = "{vs} = {}";
 				}
-				else if (TCIsContainer<t_CData>::mc_Value)
+				else if constexpr (TCIsContainer<t_CData>::mc_Value)
 					pFormat = "{} = {vs}";
 
 				o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << iValue.f_GetKey() << *iValue;
@@ -106,7 +106,7 @@ namespace NMib::NContainer
 			if (iValue)
 			{
 				auto pFormat = "{}";
-				if (TCIsContainer<t_CKey>::mc_Value)
+				if constexpr (TCIsContainer<t_CKey>::mc_Value)
 					pFormat = "{vs}";
 				o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << *iValue;
 				++iValue;

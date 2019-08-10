@@ -174,7 +174,7 @@ namespace NMib::NContainer
 		mint iSubBit = _Bit % ENumBitsPerEntry;
 		auto NewEntry = fp_SetBit(mp_Entries[iEntry], iSubBit, _bValue);
 		mp_Entries[iEntry] = NewEntry;
-		if (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
 		{
 			mint NumEntries = ENumEntries - 1;
 			if (iEntry < NumEntries)
@@ -202,7 +202,7 @@ namespace NMib::NContainer
 		auto NewEntry = fp_SetBitRange<tf_bValue>(mp_Entries[iEntry], iSubBit, nBitsToSet);
 		mp_Entries[iEntry] = NewEntry;
 
-		if (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
 		{
 			mint NumEntries = ENumEntries - 1;
 			if (iEntry < NumEntries)
@@ -225,7 +225,7 @@ namespace NMib::NContainer
 		mint iSubBit = _Bit % ENumBitsPerEntry;
 		auto NewEntry = fp_SetBit<tf_bValue>(mp_Entries[iEntry], iSubBit);
 		mp_Entries[iEntry] = NewEntry;
-		if (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
 		{
 			mint NumEntries = ENumEntries - 1;
 			if (iEntry < NumEntries)
@@ -255,7 +255,7 @@ namespace NMib::NContainer
 		DMibFastCheck(_Bit < t_nBits);
 		mint iEntry = _Bit / ENumBitsPerEntry;
 
-		if (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
 		{
 			mint NumEntries = ENumEntries - 1;
 			if (iEntry < NumEntries)
@@ -272,7 +272,7 @@ namespace NMib::NContainer
 	{
 		mint iEntry = _StartBitApproximately / ENumBitsPerEntry;
 		DMibFastCheck(iEntry < ENumEntries);
-		if (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
 		{
 			mint NumEntries = ENumEntries - 1;
 			if (iEntry < NumEntries)
@@ -314,7 +314,7 @@ namespace NMib::NContainer
 	{
 		aint iEntry = _StartBitApproximately / ENumBitsPerEntry;
 		DMibFastCheck(iEntry < ENumEntries);
-		if (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
 		{
 			aint NumEntries = ENumEntries - 1;
 			if (iEntry < NumEntries)
@@ -402,7 +402,7 @@ namespace NMib::NContainer
 	template <mint t_nBits>
 	inline_small bool TCBitArray<t_nBits>::f_IsFullySet() const
 	{
-		if (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
 		{
 			mint nEntries = ENumEntries - 1;
 			for (mint i = 0; i < nEntries; ++i)
@@ -433,7 +433,7 @@ namespace NMib::NContainer
 	template <mint t_nBits>
 	inline_small bool TCBitArray<t_nBits>::f_IsFullyFree() const
 	{
-		if (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
 		{
 			mint nEntries = ENumEntries - 1;
 			for (mint i = 0; i < nEntries; ++i)
@@ -464,7 +464,7 @@ namespace NMib::NContainer
 	template <mint t_nBits>
 	inline_always aint TCBitArray<t_nBits>::fp_FindFreeBit(mint &_iEntry) const
 	{
-		if (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
 		{
 			for (mint i = 0; i < ENumEntries - 1; ++i)
 			{
@@ -506,7 +506,7 @@ namespace NMib::NContainer
 	template <mint t_nBits>
 	inline_always aint TCBitArray<t_nBits>::fp_FindFreeBitReverse(mint &_iEntry) const
 	{
-		if (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
 		{
 			{
 				CEntryType Entry = mp_Entries[ENumEntries - 1] | (CEntryType(~mcp_FullySetLast));

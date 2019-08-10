@@ -40,7 +40,7 @@ namespace NMib::NContainer
 			if (iValue)
 			{
 				auto pFormat = "{}";
-				if (TCIsContainer<t_CData>::mc_Value)
+				if constexpr (TCIsContainer<t_CData>::mc_Value)
 					pFormat = "{vs}";
 				o_FormatInto += typename tf_CFormatInto::CFormat(pFormat) << *iValue;
 				++iValue;

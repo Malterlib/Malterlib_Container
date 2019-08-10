@@ -25,14 +25,14 @@ namespace NMib::NContainer::NPrivate
 	template <typename tf_CStream>
 	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_Feed(tf_CStream &_Stream) const
 	{
-		if (mc_bIsFirstLevel)
+		if constexpr (mc_bIsFirstLevel)
 			_Stream << m_Bits;
 	}
 
 	template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal, bool t_bLast>
 	inline_small bool TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_IsFullySet() const
 	{
-		if (mc_bIsRoot)
+		if constexpr (mc_bIsRoot)
 		{
 			return m_Bits.f_IsFullySet();
 		}
@@ -42,7 +42,7 @@ namespace NMib::NContainer::NPrivate
 	template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal, bool t_bLast>
 	inline_small bool TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_IsFullyFree() const
 	{
-		if (mc_bIsRoot)
+		if constexpr (mc_bIsRoot)
 		{
 			return m_Bits.f_IsFullyFree();
 		}
@@ -53,7 +53,7 @@ namespace NMib::NContainer::NPrivate
 	template <typename tf_CStream>
 	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_Consume(tf_CStream &_Stream)
 	{
-		if (mc_bIsFirstLevel)
+		if constexpr (mc_bIsFirstLevel)
 		{
 			CSuper::f_Clear();
 			_Stream >> m_Bits;
@@ -148,10 +148,13 @@ namespace NMib::NContainer::NPrivate
 		if (Free < 0)
 			return -1;
 		aint Bit = m_Bits.f_FindFreeBitAndSet(Free * t_nBitsPerEntry);
-		if (mc_bIsFirstLevel && Bit >= 0)
+		if constexpr (mc_bIsFirstLevel)
 		{
-			if (m_Bits.f_GetWholeEntrySet(Bit))
-				CSuper::template f_SetBit<true>(Bit / t_nBitsPerEntry);
+			if (Bit >= 0)
+			{
+				if (m_Bits.f_GetWholeEntrySet(Bit))
+					CSuper::template f_SetBit<true>(Bit / t_nBitsPerEntry);
+			}
 		}
 		return Bit;
 	}
@@ -174,10 +177,13 @@ namespace NMib::NContainer::NPrivate
 		if (Free < 0)
 			return -1;
 		aint Bit = m_Bits.f_FindFreeBitReverseAndSet(Free * t_nBitsPerEntry);
-		if (mc_bIsFirstLevel && Bit >= 0)
+		if constexpr (mc_bIsFirstLevel)
 		{
-			if (m_Bits.f_GetWholeEntrySet(Bit))
-				CSuper::template f_SetBit<true>(Bit / t_nBitsPerEntry);
+			if (Bit >= 0)
+			{
+				if (m_Bits.f_GetWholeEntrySet(Bit))
+					CSuper::template f_SetBit<true>(Bit / t_nBitsPerEntry);
+			}
 		}
 		return Bit;
 	}

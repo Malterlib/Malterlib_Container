@@ -52,7 +52,7 @@ namespace NMib::NStream
 		{\
 			mint nItems = _Data.f_GetLen();\
 			fg_FeedLenToStream(_Stream, nItems);\
-			if (sizeof(_DataType) != 1)\
+			if constexpr (sizeof(_DataType) != 1)\
 				fg_FeedEndianArrayToStream(_Stream, _Data.f_GetArray(), nItems, _Stream.f_Endian());\
 			else\
 				_Stream.f_FeedBytes(_Data.f_GetArray(), nItems * sizeof(_DataType));\
@@ -64,7 +64,7 @@ namespace NMib::NStream
 			fg_CheckLengthLimit(_Stream, nItems);\
 			_Data.f_SetLen(nItems);\
 			_Stream.f_ConsumeBytes(_Data.f_GetArray(), nItems * sizeof(_DataType));\
-			if (sizeof(_DataType) != 1)\
+			if constexpr (sizeof(_DataType) != 1)\
 				fg_ByteSwapArray(_Stream, _Data.f_GetArray(), nItems, _Stream.f_Endian());\
 		}\
 	};

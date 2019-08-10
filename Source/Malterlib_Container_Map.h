@@ -653,7 +653,7 @@ namespace NMib::NContainer
 			TCIterator(CMapQualified &_Map)
 			{
 				mp_pMap = &_Map;
-				if (t_bReverse)
+				if constexpr (t_bReverse)
 					mp_Iter.f_StartBackward(_Map.mp_Data.m_Tree);
 				else
 					mp_Iter.f_StartForward(_Map.mp_Data.m_Tree);
@@ -671,7 +671,7 @@ namespace NMib::NContainer
 			TCIterator &operator = (CMapQualified &_Map)
 			{
 				mp_pMap = &_Map;
-				if (t_bReverse)
+				if constexpr (t_bReverse)
 					mp_Iter.f_StartBackward(_Map.mp_Data.m_Tree);
 				else
 					mp_Iter.f_StartForward(_Map.mp_Data.m_Tree);
@@ -686,16 +686,16 @@ namespace NMib::NContainer
 
 			inline_medium void f_Next()
 			{
-				if (t_bBidirectional)
+				if constexpr (t_bBidirectional)
 				{
-					if (t_bReverse)
+					if constexpr (t_bReverse)
 						mp_Iter.f_PrevBidirectional();
 					else
 						mp_Iter.f_NextBidirectional();
 				}
 				else
 				{
-					if (t_bReverse)
+					if constexpr (t_bReverse)
 						mp_Iter.f_Prev();
 					else
 						mp_Iter.f_Next();
@@ -705,7 +705,7 @@ namespace NMib::NContainer
 			{
 				static_assert(t_bBidirectional, "Only available when bidirectional");
 
-				if (t_bReverse)
+				if constexpr (t_bReverse)
 					mp_Iter.f_NextBidirectional();
 				else
 					mp_Iter.f_PrevBidirectional();
