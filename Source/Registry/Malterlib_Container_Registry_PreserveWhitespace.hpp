@@ -119,7 +119,8 @@ namespace NMib::NContainer
 					{
 						if (!fsp_ParseToEndOfLine(pParse, ParseContext))
 						{
-							bValidWhiteSpace = false;
+							if (!(_Location == ERegistryWhiteSpaceLocation_AfterChildScopeEnd && mp_pParent && !mp_pParent->mp_pParent))
+								bValidWhiteSpace = false;
 							break;
 						}
 					}
