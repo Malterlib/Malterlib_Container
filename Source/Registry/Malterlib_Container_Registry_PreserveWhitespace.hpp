@@ -100,6 +100,9 @@ namespace NMib::NContainer
 		case ERegistryWhiteSpaceLocation_BeforeChildScopeEnd:
 			bLineCommentValid = false;
 			break;
+		case ERegistryWhiteSpaceLocation_Max:
+			DMibNeverGetHere;
+			break;
 		}
 
 		{
