@@ -24,6 +24,7 @@ namespace NMib::NContainer
 		, ERegistryFlag_PreserveOrder = DMibBit(0)
 		, ERegistryFlag_DuplicateKeys = DMibBit(1)
 		, ERegistryFlag_PreserveWhitspace = DMibBit(2)
+		, ERegistryFlag_FullLocation = DMibBit(3)
 	};
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags = ERegistryFlag_None>
@@ -70,7 +71,7 @@ namespace NMib::NContainer
 				, typename TCChooseType
 				<
 					(t_Flags & ERegistryFlag_PreserveWhitspace) != 0
-					, TCRegistryKeyStrPreserve<t_CStr>
+					, TCRegistryKeyStrPreserve<t_CStr, t_Flags>
 					, TCRegistryKeyStrMulti<t_CStr>
 				>::CType
 				, TCRegistryKeyStr<t_CStr>
@@ -83,7 +84,7 @@ namespace NMib::NContainer
 		template <typename t_CStr2>
 		friend struct TCRegistryKeyStrMulti;
 
-		template <typename t_CStr2>
+		template <typename t_CStr2, ERegistryFlag t_Flags2>
 		friend struct TCRegistryKeyStrPreserve;
 
 		template <typename t_CStr2, typename t_CData2, ERegistryFlag t_Flags2>
@@ -184,9 +185,8 @@ namespace NMib::NContainer
 		{
 			CPreserveParseContext();
 			void f_SetFile(t_CStr const &_File);
-			t_CStr const &f_GetFile() const;
-			int32 f_GetLine() const;
-			void f_AddLine();
+			NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> f_GetLocation(ch8 const *_pParse) const;
+			void f_AddLine(ch8 const *_pParse);
 			void f_SetStartWhiteSpace(ch8 const *_pParse);
 			ch8 const *f_GetStartWhiteSpace() const;
 			t_CStr f_GetNextWhiteSpace(ch8 const *_pParse);
@@ -196,10 +196,13 @@ namespace NMib::NContainer
 			TCRegistry *f_GetLastAdded(bool &_bLastHadChildren) const;
 			void f_SetStartParse(CChar const *_pStartParse);
 			CChar const *f_GetStartParse() const;
+			t_CStr f_FormatLocation(NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> const &_Location) const;
+			t_CStr f_FormatLocation(ch8 const *_pParse) const;
 
 			t_CStr m_File;
-			int32 m_Line = 1;
+			uint32 m_Line = 1;
 			ch8 const *m_pLastStartWhitespace = nullptr;
+			ch8 const *m_pLastStartLine = nullptr;
 			t_CStr m_WhiteSpace[ERegistryWhiteSpaceLocation_Max];
 			TCRegistry *m_pLastAdded = nullptr;
 			CChar const *m_pStartParse = nullptr;
@@ -208,31 +211,21 @@ namespace NMib::NContainer
 
 		struct CEmptyParseContext
 		{
-			void f_SetFile(t_CStr const &_File);
-			ch8 const *f_GetFile() const;
-			int32 f_GetLine() const;
-			void f_AddLine();
-			void f_SetStartWhiteSpace(ch8 const *_pParse);
-			ch8 const *f_GetStartWhiteSpace() const;
-			void f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
-			t_CStr f_GetNextWhiteSpace(ch8 const *_pParse);
-			t_CStr f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const;
-			void f_SetLastAdded(TCRegistry *_pReg, bool _bHadChildren);
-			TCRegistry *f_GetLastAdded(bool &_bLastHadChildren) const;
-			void f_SetStartParse(CChar const *_pStartParse);
-			CChar const *f_GetStartParse() const;
+			int f_GetLocation(ch8 const *_pParse) const;
+			t_CStr f_FormatLocation(ch8 const *_pParse) const;
+			t_CStr f_FormatLocation(int _Location) const;
 		};
 
 	public:
 		static constexpr bool mc_bSupportForceCreate = CRegistryKey::mc_bSupportForceCreate;
 		static constexpr bool mc_bSupportWhiteSpace = CRegistryKey::mc_bSupportWhiteSpace;
-		static constexpr bool mc_bSupportFileLine = CRegistryKey::mc_bSupportFileLine;
+		static constexpr bool mc_bSupportLocation = CRegistryKey::mc_bSupportLocation;
 
 		using CChildren = typename TCChooseType<(t_Flags & ERegistryFlag_PreserveOrder) != 0, CChildren_PreserveOrder, CChildren_Sorted>::CType;
 		using CKeyStr = t_CStr;
 		using CData = t_CData;
 		using CIterator = typename CChildren::CIterator;
-		using CParseContext = typename TCChooseType<mc_bSupportFileLine || mc_bSupportWhiteSpace, CPreserveParseContext, CEmptyParseContext>::CType;
+		using CParseContext = typename TCChooseType<mc_bSupportLocation || mc_bSupportWhiteSpace, CPreserveParseContext, CEmptyParseContext>::CType;
 
 		TCRegistry();
 		TCRegistry(TCRegistry &&_Source);
@@ -322,21 +315,32 @@ namespace NMib::NContainer
 		TCRegistry const *f_GetParent() const;
 		t_CStr f_GetPath() const;
 
-		auto f_GetFile() const -> decltype(fg_GetType<CRegistryKey &>().f_GetFile());
-		void f_SetFile(t_CStr const &_File);
-		void f_SetLine(t_CStr const &_Line);
+		template <bool tf_bSupportLocation = mc_bSupportLocation>
+		auto f_GetLocation() const -> TCEnableIfType<tf_bSupportLocation, NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>> const &;
+		template <bool tf_bSupportLocation = mc_bSupportLocation>
+		auto f_SetLocation(NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> const &_Location) -> TCEnableIfType<tf_bSupportLocation>;
+		template <bool tf_bSupportLocation = mc_bSupportLocation && (t_Flags & ERegistryFlag_FullLocation) != 0>
+		auto f_GetValueLocation() const -> TCEnableIfType<tf_bSupportLocation, NStr::TCParseLocation<t_CStr, true>> const &;
+		template <bool tf_bSupportLocation = mc_bSupportLocation && (t_Flags & ERegistryFlag_FullLocation) != 0>
+		auto f_SetValueLocation(NStr::TCParseLocation<t_CStr, true> const &_Location) -> TCEnableIfType<tf_bSupportLocation>;
 
-		auto f_GetLine() const -> decltype(fg_GetType<CRegistryKey &>().f_GetLine());
-		auto f_GetForceEscapedKey() const -> decltype(fg_GetType<CRegistryKey &>().f_GetForceEscapedKey());
-		auto f_GetForceEscapedValue() const -> decltype(fg_GetType<CRegistryKey &>().f_GetForceEscapedValue());
-		void f_SetForceEscapedKey(bool _bForced);
-		void f_SetForceEscapedValue(bool _bForced);
+		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
+		auto f_GetForceEscapedKey() const -> TCEnableIfType<tf_bSupportWhiteSpace, bool>;
+		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
+		auto f_GetForceEscapedValue() const -> TCEnableIfType<tf_bSupportWhiteSpace, bool>;
+		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
+		auto f_SetForceEscapedKey(bool _bForced) -> TCEnableIfType<tf_bSupportWhiteSpace>;
+		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
+		auto f_SetForceEscapedValue(bool _bForced) -> TCEnableIfType<tf_bSupportWhiteSpace>;
 
-		template <typename tf_CStr>
-		bool f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation _Location, tf_CStr const &_Str);
-		void f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
+		template <typename tf_CStr, bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
+		auto f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation _Location, tf_CStr const &_Str) -> TCEnableIfType<tf_bSupportWhiteSpace, bool>;
+		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
+		auto f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str) -> TCEnableIfType<tf_bSupportWhiteSpace>;
+		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
+		auto f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const  -> TCEnableIfType<tf_bSupportWhiteSpace, NStr::CStr>;
+
 		bool f_HasScope() const;
-		auto f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const -> decltype(fg_GetType<CRegistryKey &>().f_GetWhiteSpace(_Location));
 
 		void f_Merge(TCRegistry const &_MergeWith, bool _bMergeRoot = false);
 		template <typename tf_FPredicate>
@@ -435,6 +439,7 @@ namespace NMib::NContainer
 	using CRegistryPreserveOrder = TCRegistry<NStr::CStr, NStr::CStr, ERegistryFlag_DuplicateKeys | ERegistryFlag_PreserveOrder>;
 	using CRegistryPreserveWhitespace = TCRegistry<NStr::CStr, NStr::CStr, ERegistryFlag_DuplicateKeys | ERegistryFlag_PreserveWhitspace>;
 	using CRegistryPreserveAll = TCRegistry<NStr::CStr, NStr::CStr, ERegistryFlag_DuplicateKeys | ERegistryFlag_PreserveWhitspace | ERegistryFlag_PreserveOrder>;
+	using CRegistryPreserveAllFull = TCRegistry<NStr::CStr, NStr::CStr, ERegistryFlag_DuplicateKeys | ERegistryFlag_PreserveWhitspace | ERegistryFlag_PreserveOrder | ERegistryFlag_FullLocation>;
 }
 
 #ifndef DMibPNoShortCuts

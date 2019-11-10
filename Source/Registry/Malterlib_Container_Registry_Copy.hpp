@@ -57,10 +57,11 @@ namespace NMib::NContainer
 	void TCRegistry<t_CStr, t_CData, t_Flags>::fp_Copy(TCRegistry<tf_CStr, tf_CData, tf_Flags> const &_Source)
 	{
 		f_SetThisValue(_Source.f_GetThisValue());
-		if constexpr (mc_bSupportFileLine)
+		if constexpr (mc_bSupportLocation)
 		{
-			f_SetFile(_Source.f_GetFile());
-			f_SetLine(_Source.f_GetLine());
+			f_SetLocation(_Source.f_GetLocation());
+			if constexpr (t_Flags & ERegistryFlag_FullLocation)
+				f_SetValueLocation(_Source.f_GetValueLocation());
 		}
 		if constexpr (mc_bSupportWhiteSpace)
 		{

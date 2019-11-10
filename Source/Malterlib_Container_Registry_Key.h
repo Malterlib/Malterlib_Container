@@ -7,7 +7,7 @@ namespace NMib::NContainer
 	struct TCRegistryKeyStr
 	{
 		static constexpr bool mc_bSupportForceCreate = false;
-		static constexpr bool mc_bSupportFileLine = false;
+		static constexpr bool mc_bSupportLocation = false;
 		static constexpr bool mc_bSupportWhiteSpace = false;
 
 		using CKey = t_CStr;
@@ -18,22 +18,9 @@ namespace NMib::NContainer
 		void f_Copy(TCRegistryKeyStr const &_Src);
 		void f_Set(t_CStr const &_Str);
 		t_CStr const &f_GetName() const;
-		t_CStr f_GetFile() const;
-		int32 f_GetLine() const;
-		bool f_GetParsed(ERegistryWhiteSpaceLocation _Location) const;
-		void f_SetParsed(ERegistryWhiteSpaceLocation _Location, bool _bParsed);
-		void f_SetForceEscapedKey(bool _bForced);
-		void f_SetForceEscapedValue(bool _bForced);
-		bool f_GetForceEscapedKey() const;
-		bool f_GetForceEscapedValue() const;
-		void f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
-		t_CStr f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const;
 
 		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
 		TCRegistryKeyStr(TCRegistry<tf_CStr, tf_CData, tf_Flags> *_pParent);
-
-		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-		void f_NewSequence(TCRegistry<tf_CStr, tf_CData, tf_Flags> *_pParent);
 
 		template <typename tf_CKey>
 		CRet f_Compare(tf_CKey const &_Right) const;
@@ -56,8 +43,6 @@ namespace NMib::NContainer
 		template <typename t_CIterator, typename tf_CStr>
 		static void fs_FindIterator(t_CIterator &_Iterator, tf_CStr const &_ToFind);
 
-		void f_SetFileLine(t_CStr const &_File, int32 _Line);
-
 	private:
 		// Don't allow copy construction
 		TCRegistryKeyStr(TCRegistryKeyStr const &_Other) = delete;
@@ -72,7 +57,7 @@ namespace NMib::NContainer
 	struct TCRegistryKeyStrMulti
 	{
 		static constexpr bool mc_bSupportForceCreate = true;
-		static constexpr bool mc_bSupportFileLine = false;
+		static constexpr bool mc_bSupportLocation = false;
 		static constexpr bool mc_bSupportWhiteSpace = false;
 
 		struct CKey
@@ -88,16 +73,6 @@ namespace NMib::NContainer
 		void f_Copy(TCRegistryKeyStrMulti const &_Src);
 		void f_Set(t_CStr const &_Str);
 		t_CStr const &f_GetName() const;
-		t_CStr f_GetFile() const;
-		int32 f_GetLine() const;
-		bool f_GetParsed(ERegistryWhiteSpaceLocation _Location) const;
-		void f_SetParsed(ERegistryWhiteSpaceLocation _Location, bool _bParsed);
-		void f_SetForceEscapedKey(bool _bForced);
-		void f_SetForceEscapedValue(bool _bForced);
-		bool f_GetForceEscapedKey() const;
-		bool f_GetForceEscapedValue() const;
-		void f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
-		t_CStr f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const;
 
 		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
 		TCRegistryKeyStrMulti(TCRegistry<tf_CStr, tf_CData, tf_Flags> *_pParent);
@@ -126,8 +101,6 @@ namespace NMib::NContainer
 		template <typename t_CIterator, typename tf_CStr>
 		static void fs_FindIterator(t_CIterator &_Iterator, tf_CStr const &_ToFind);
 
-		void f_SetFileLine(t_CStr const &_File, int32 _Line);
-
 	private:
 		TCRegistryKeyStrMulti(TCRegistryKeyStrMulti const &_Other) = delete;
 		TCRegistryKeyStrMulti &operator = (TCRegistryKeyStrMulti const &_Other) = delete;
@@ -135,16 +108,16 @@ namespace NMib::NContainer
 		TCRegistryKeyStrMulti &operator = (TCRegistryKeyStrMulti &&_Other) = delete;
 
 		t_CStr m_Name;
-		uint32 m_Sequence;
-		uint32 m_GenSequence;
+		uint32 m_Sequence = 0;
+		uint32 m_GenSequence = 0;
 	};
 
-	template <typename t_CStr>
+	template <typename t_CStr, ERegistryFlag t_Flags>
 	struct TCRegistryKeyStrPreserve
 	{
 		static constexpr bool mc_bSupportWhiteSpace = true;
 		static constexpr bool mc_bSupportForceCreate = true;
-		static constexpr bool mc_bSupportFileLine = true;
+		static constexpr bool mc_bSupportLocation = true;
 
 		struct CKey
 		{
@@ -153,14 +126,17 @@ namespace NMib::NContainer
 		};
 
 		using CRet = aint;
+		using CValueLocation = typename TCChooseType<(t_Flags & ERegistryFlag_FullLocation) != 0, NStr::TCParseLocation<t_CStr, true>, uint8>::CType;
 
 		void f_Move(TCRegistryKeyStrPreserve &&_Other);
 		CRet f_CompareKey(TCRegistryKeyStrPreserve const &_Right) const;
 		void f_Copy(TCRegistryKeyStrPreserve const &_Src);
 		void f_Set(t_CStr const &_Str);
 		t_CStr const &f_GetName() const;
-		t_CStr const &f_GetFile() const;
-		int32 f_GetLine() const;
+		NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> const &f_GetLocation() const;
+		void f_SetLocation(NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> const &_Location);
+		CValueLocation const &f_GetValueLocation() const;
+		void f_SetValueLocation(CValueLocation const &_Location);
 		bool f_GetParsed(ERegistryWhiteSpaceLocation _Location) const;
 		void f_SetParsed(ERegistryWhiteSpaceLocation _Location, bool _bParsed);
 		bool f_GetForceEscapedKey() const;
@@ -196,8 +172,6 @@ namespace NMib::NContainer
 		template <typename t_CIterator, typename tf_CStr>
 		static void fs_FindIterator(t_CIterator &_Iterator, tf_CStr const &_ToFind);
 
-		void f_SetFileLine(t_CStr const &_File, int32 _Line);
-
 	private:
 		TCRegistryKeyStrPreserve(TCRegistryKeyStrPreserve const &_Other) = delete;
 		TCRegistryKeyStrPreserve &operator = (TCRegistryKeyStrPreserve const &_Other) = delete;
@@ -205,16 +179,16 @@ namespace NMib::NContainer
 		TCRegistryKeyStrPreserve &operator = (TCRegistryKeyStrPreserve &&_Other) = delete;
 
 		t_CStr m_Name;
-		uint32 m_Sequence;
-		uint32 m_GenSequence;
+		uint32 m_Sequence = 0;
+		uint32 m_GenSequence = 0;
 
-		t_CStr m_File;
-		uint32 m_Line:30;
-		uint32 m_bForceEscapedKey:1;
-		uint32 m_bForceEscapedValue:1;
+		NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> m_Location;
 
 		t_CStr m_WhiteSpace[ERegistryWhiteSpaceLocation_Max];
+		CValueLocation m_ValueLocation;
 		NContainer::TCBitArray<ERegistryWhiteSpaceLocation_Max> m_Parsed;
+		uint8 m_bForceEscapedKey:1;
+		uint8 m_bForceEscapedValue:1;
 	};
 }
 

@@ -89,14 +89,19 @@ namespace NMib::NContainer
 	void TCRegistry<t_CStr, t_CData, t_Flags>::fspr_GenerateStr(tf_CStr &_Stream, mint _Level, const TCRegistry *_pReg)
 	{
 		t_CStr PreData;
-		if constexpr (tf_bIncludeFileLine)
-			PreData = (typename t_CStr::CFormat(DMibPFileLineFormat " ") << _pReg->mp_Key.f_GetFile() << _pReg->mp_Key.f_GetLine()).f_GetStr();
+		if constexpr (tf_bIncludeFileLine && mc_bSupportLocation)
+		{
+			auto &Location = _pReg->mp_Key.f_GetLocation();
+			PreData = typename t_CStr::CFormat("{} ") << Location;
+		}
 
 		PreData.f_AddChars('\t', _Level);
 
 		t_CStr KeyNameEscaped;
 
-		bool bForceEscaped = _pReg->f_GetForceEscapedValue();
+		bool bForceEscaped = false;
+		if constexpr (mc_bSupportWhiteSpace)
+			bForceEscaped = _pReg->f_GetForceEscapedValue();
 		bool bHasScope = _pReg->f_HasScope();
 
 		bool bValueIsEmpty;
@@ -131,7 +136,10 @@ namespace NMib::NContainer
 		}
 
 		fsp_ReplaceWithWhitespace(PreDataValue);
-		fsp_GetEscapedStr<tf_bEscapeNewLines>(_pReg->f_GetName(), KeyNameEscaped, _pReg->f_GetForceEscapedKey(), PreDataValue);
+		bool bForceEscape = false;
+		if constexpr (mc_bSupportWhiteSpace)
+			bForceEscape = _pReg->f_GetForceEscapedKey();
+		fsp_GetEscapedStr<tf_bEscapeNewLines>(_pReg->f_GetName(), KeyNameEscaped, bForceEscape, PreDataValue);
 		PreDataValue += KeyNameEscaped;
 		_Stream += KeyNameEscaped;
 

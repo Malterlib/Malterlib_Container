@@ -72,7 +72,8 @@ namespace NMib::NContainer
 			_pChild->mp_pParent->mp_Children.f_Remove(_pChild);
 
 		_pChild->mp_pParent = this;
-		_pChild->mp_Key.f_NewSequence(this);
+		if constexpr (CRegistryKey::mc_bSupportForceCreate)
+			_pChild->mp_Key.f_NewSequence(this);
 
 		mp_Children.f_Insert(_pChild, _pAfter);
 	}

@@ -32,7 +32,7 @@ namespace NMib::NContainer
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
 	void TCRegistry<t_CStr, t_CData, t_Flags>::f_DebugTraceTree() const
 	{
-		NStr::CStr Temp = f_GenerateStr<NStr::CStr, mc_bSupportFileLine, 1>();
+		NStr::CStr Temp = f_GenerateStr<NStr::CStr, mc_bSupportLocation, 1>();
 		DMibDTrace("{}" DMibNewLine, Temp);
 	}
 #endif
