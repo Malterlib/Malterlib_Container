@@ -984,6 +984,18 @@ namespace NMib::NContainer
 		}
 
 		template <typename tf_CKey>
+		CUserData &f_Insert(tf_CKey &&_Key)
+		{
+			return operator [](fg_Forward<tf_CKey>(_Key));
+		}
+
+		template <typename tf_CKey>
+		CUserData const &f_Insert(tf_CKey &&_Key) const
+		{
+			return operator [](fg_Forward<tf_CKey>(_Key));
+		}
+
+		template <typename tf_CKey>
 		CUserData& f_Map (tf_CKey &&_Key)
 		{
 			CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
