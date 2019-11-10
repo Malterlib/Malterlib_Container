@@ -12,7 +12,7 @@ namespace NMib::NContainer
 			mint m_PageSize = 0;
 		};
 
-		NStorage::TCAggregate<NThread::TCThreadLocal<CThreadLocal>> g_ThreadLocal = {DAggregateInit};
+		constinit NStorage::TCAggregate<NThread::TCThreadLocal<CThreadLocal>> g_ThreadLocal = {DAggregateInit};
 	}
 
 	CPagedByteVector::CPageSizeScope::CPageSizeScope(mint _PageSize)
