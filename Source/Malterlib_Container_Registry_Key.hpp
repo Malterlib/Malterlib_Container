@@ -467,7 +467,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CStr, ERegistryFlag t_Flags>
-	void TCRegistryKeyStrPreserve<t_CStr, t_Flags>::f_SetLocation(NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> const &_Location)
+	void TCRegistryKeyStrPreserve<t_CStr, t_Flags>::f_SetLocation(CLocation const &_Location)
 	{
 		m_Location = _Location;
 	}
@@ -479,7 +479,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CStr, ERegistryFlag t_Flags>
-	NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> const &TCRegistryKeyStrPreserve<t_CStr, t_Flags>::f_GetLocation() const
+	auto TCRegistryKeyStrPreserve<t_CStr, t_Flags>::f_GetLocation() const -> CLocation const &
 	{
 		return m_Location;
 	}

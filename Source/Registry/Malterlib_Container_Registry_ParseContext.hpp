@@ -13,7 +13,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetLocation(ch8 const *_pParse) const
+	auto TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetLocation(ch8 const *_pParse) const -> CLocation
 	{
 		if constexpr ((t_Flags & ERegistryFlag_FullLocation) != 0)
 		{
@@ -38,7 +38,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_FormatLocation(NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> const &_Location) const
+	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_FormatLocation(CLocation const &_Location) const
 	{
 		return typename t_CStr::CFormat("{} ") << _Location;
 	}

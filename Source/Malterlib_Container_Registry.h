@@ -51,6 +51,8 @@ namespace NMib::NContainer
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
 	struct TCRegistry
 	{
+		using CLocation = NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>;
+
 	private:
 		static_assert(sizeof(typename t_CStr::CChar) == 1, "Only 8 bit string types supported");
 
@@ -185,7 +187,7 @@ namespace NMib::NContainer
 		{
 			CPreserveParseContext();
 			void f_SetFile(t_CStr const &_File);
-			NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> f_GetLocation(ch8 const *_pParse) const;
+			CLocation f_GetLocation(ch8 const *_pParse) const;
 			void f_AddLine(ch8 const *_pParse);
 			void f_SetStartWhiteSpace(ch8 const *_pParse);
 			ch8 const *f_GetStartWhiteSpace() const;
@@ -196,7 +198,7 @@ namespace NMib::NContainer
 			TCRegistry *f_GetLastAdded(bool &_bLastHadChildren) const;
 			void f_SetStartParse(CChar const *_pStartParse);
 			CChar const *f_GetStartParse() const;
-			t_CStr f_FormatLocation(NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> const &_Location) const;
+			t_CStr f_FormatLocation(CLocation const &_Location) const;
 			t_CStr f_FormatLocation(ch8 const *_pParse) const;
 
 			t_CStr m_File;
@@ -316,9 +318,9 @@ namespace NMib::NContainer
 		t_CStr f_GetPath() const;
 
 		template <bool tf_bSupportLocation = mc_bSupportLocation>
-		auto f_GetLocation() const -> TCEnableIfType<tf_bSupportLocation, NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>> const &;
+		auto f_GetLocation() const -> TCEnableIfType<tf_bSupportLocation, CLocation> const &;
 		template <bool tf_bSupportLocation = mc_bSupportLocation>
-		auto f_SetLocation(NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> const &_Location) -> TCEnableIfType<tf_bSupportLocation>;
+		auto f_SetLocation(CLocation const &_Location) -> TCEnableIfType<tf_bSupportLocation>;
 		template <bool tf_bSupportLocation = mc_bSupportLocation && (t_Flags & ERegistryFlag_FullLocation) != 0>
 		auto f_GetValueLocation() const -> TCEnableIfType<tf_bSupportLocation, NStr::TCParseLocation<t_CStr, true>> const &;
 		template <bool tf_bSupportLocation = mc_bSupportLocation && (t_Flags & ERegistryFlag_FullLocation) != 0>

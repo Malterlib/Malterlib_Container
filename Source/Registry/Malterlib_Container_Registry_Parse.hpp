@@ -199,7 +199,7 @@ namespace NMib::NContainer
 
 		t_CStr KeyName;
 		bool bKeyNameWasEscaped = false;
-		decltype(_ParseContext.f_GetLocation(_pParse)) KeyLocation;
+		[[maybe_unused]] decltype(_ParseContext.f_GetLocation(_pParse)) KeyLocation;
 
 		TCRegistry *pReg = nullptr;
 		TCRegistry *pLastChildReg = nullptr;
@@ -555,7 +555,7 @@ namespace NMib::NContainer
 		{
 			Context.f_SetFile(_File);
 			Context.f_SetStartParse(_Text.f_GetStr());
-			mp_Key.f_SetLocation(NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>{_File});
+			mp_Key.f_SetLocation(CLocation{_File});
 			if constexpr ((t_Flags & ERegistryFlag_FullLocation) != 0)
 				mp_Key.f_SetValueLocation(NStr::TCParseLocation<t_CStr, true>{_File});
 		}
@@ -582,7 +582,7 @@ namespace NMib::NContainer
 		{
 			Context.f_SetFile(_File);
 			Context.f_SetStartParse(_Text.f_GetStr());
-			mp_Key.f_SetLocation(NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>{_File});
+			mp_Key.f_SetLocation(CLocation{_File});
 			if constexpr ((t_Flags & ERegistryFlag_FullLocation) != 0)
 				mp_Key.f_SetValueLocation(NStr::TCParseLocation<t_CStr, true>{_File});
 		}

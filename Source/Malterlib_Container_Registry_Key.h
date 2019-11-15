@@ -127,14 +127,15 @@ namespace NMib::NContainer
 
 		using CRet = aint;
 		using CValueLocation = typename TCChooseType<(t_Flags & ERegistryFlag_FullLocation) != 0, NStr::TCParseLocation<t_CStr, true>, uint8>::CType;
+		using CLocation = NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>;
 
 		void f_Move(TCRegistryKeyStrPreserve &&_Other);
 		CRet f_CompareKey(TCRegistryKeyStrPreserve const &_Right) const;
 		void f_Copy(TCRegistryKeyStrPreserve const &_Src);
 		void f_Set(t_CStr const &_Str);
 		t_CStr const &f_GetName() const;
-		NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> const &f_GetLocation() const;
-		void f_SetLocation(NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> const &_Location);
+		CLocation const &f_GetLocation() const;
+		void f_SetLocation(CLocation const &_Location);
 		CValueLocation const &f_GetValueLocation() const;
 		void f_SetValueLocation(CValueLocation const &_Location);
 		bool f_GetParsed(ERegistryWhiteSpaceLocation _Location) const;
@@ -182,7 +183,7 @@ namespace NMib::NContainer
 		uint32 m_Sequence = 0;
 		uint32 m_GenSequence = 0;
 
-		NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> m_Location;
+		CLocation m_Location;
 
 		t_CStr m_WhiteSpace[ERegistryWhiteSpaceLocation_Max];
 		CValueLocation m_ValueLocation;

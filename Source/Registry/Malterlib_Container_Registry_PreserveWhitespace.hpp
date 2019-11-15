@@ -39,7 +39,7 @@ namespace NMib::NContainer
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
 	template <bool tf_bSupportLocation>
-	auto TCRegistry<t_CStr, t_CData, t_Flags>::f_SetLocation(NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0> const &_Location) -> TCEnableIfType<tf_bSupportLocation>
+	auto TCRegistry<t_CStr, t_CData, t_Flags>::f_SetLocation(CLocation const &_Location) -> TCEnableIfType<tf_bSupportLocation>
 	{
 		return mp_Key.f_SetLocation(_Location);
 	}
@@ -53,7 +53,7 @@ namespace NMib::NContainer
 
 	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
 	template <bool tf_bSupportLocation>
-	auto TCRegistry<t_CStr, t_CData, t_Flags>::f_GetLocation() const -> TCEnableIfType<tf_bSupportLocation, NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>> const &
+	auto TCRegistry<t_CStr, t_CData, t_Flags>::f_GetLocation() const -> TCEnableIfType<tf_bSupportLocation, CLocation> const &
 	{
 		return mp_Key.f_GetLocation();
 	}
