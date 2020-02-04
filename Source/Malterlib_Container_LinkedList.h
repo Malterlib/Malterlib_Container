@@ -62,21 +62,10 @@ namespace NMib::NContainer
 		{
 		}
 
-		t_CData &fp_GetObject()
-		{
-			return m_Object;
-		}
-
-		const t_CData &fp_GetObject() const
-		{
-			return m_Object;
-		}
-
 	public:
 		~TCLinkedListMember()
 		{
 		}
-
 	};
 
 	template <typename t_CData, typename t_CAllocator>
@@ -284,7 +273,7 @@ namespace NMib::NContainer
 			{
 				CMember *pMember = m_Iter;
 				if (pMember)
-					return &pMember->fp_GetObject();
+					return &pMember->m_Object;
 				return nullptr;
 			}
 
@@ -361,7 +350,7 @@ namespace NMib::NContainer
 			{
 				const CMember *pMember = m_Iter;
 				if (pMember)
-					return &pMember->fp_GetObject();
+					return &pMember->m_Object;
 				return nullptr;
 			}
 
@@ -394,7 +383,6 @@ namespace NMib::NContainer
 		{
 			f_Clear();
 		}
-
 
 		void f_Clear()
 		{
@@ -457,6 +445,23 @@ namespace NMib::NContainer
 			return *this;
 		}
 
+		template <typename t_CFunctor>
+		void f_Sort(t_CFunctor &&_fCompare)
+		{
+			m_Data.m_List.f_Sort
+				(
+					[&](auto *_pLeft, auto *_pRight)
+					{
+						return _fCompare(_pLeft->m_Object, _pRight->m_Object);
+					}
+				)
+			;
+		}
+
+		void f_Sort()
+		{
+			f_Sort(CSort_Default{});
+		}
 
 		CIteratorConst f_GetIterator() const
 		{
@@ -477,42 +482,42 @@ namespace NMib::NContainer
 		{
 			CMember * pData = fp_Create();
 			m_Data.m_List.f_InsertAfter(pData, fsp_MemberFromData(*_InsertAfter));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertAfter(t_CData &_ToInsert, const CIterator &_InsertAfter)
 		{
 			CMember * pData = fp_Create(_ToInsert);
 			m_Data.m_List.f_InsertAfter(pData, fsp_MemberFromData(*_InsertAfter));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertAfter(t_CData &&_ToInsert, const CIterator &_InsertAfter)
 		{
 			CMember * pData = fp_Create(fg_Move(_ToInsert));
 			m_Data.m_List.f_InsertAfter(pData, fsp_MemberFromData(*_InsertAfter));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertAfter(const t_CData &_ToInsert, const CIterator &_InsertAfter)
 		{
 			CMember * pData = fp_Create(_ToInsert);
 			m_Data.m_List.f_InsertAfter(pData, fsp_MemberFromData(*_InsertAfter));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertAfter(t_CData *_ToInsert, const CIterator &_InsertAfter)
 		{
 			CMember * pData = fsp_MemberFromData(*_ToInsert);
 			m_Data.m_List.f_InsertAfter(pData, fsp_MemberFromData(*_InsertAfter));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertAfter(const t_CData *_ToInsert, const CIterator &_InsertAfter)
 		{
 			CMember * pData = fsp_MemberFromData(*_ToInsert);
 			m_Data.m_List.f_InsertAfter(pData, fsp_MemberFromData(*_InsertAfter));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		template <typename tf_CType, typename... tfp_CParams>
@@ -520,7 +525,7 @@ namespace NMib::NContainer
 		{
 			CMember * pData = fp_Create(fg_Move(_ToInsert));
 			m_Data.m_List.f_InsertAfter(pData, fsp_MemberFromData(*_InsertAfter));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////
@@ -530,7 +535,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertAfter);
 			CMember *pData = fp_Create();
 			m_Data.m_List.f_InsertAfter(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertAfter(t_CData &_ToInsert, const t_CData &_InsertAfter)
@@ -538,7 +543,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertAfter);
 			CMember * pData = fp_Create(_ToInsert);
 			m_Data.m_List.f_InsertAfter(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertAfter(t_CData &&_ToInsert, const t_CData &_InsertAfter)
@@ -546,7 +551,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertAfter);
 			CMember * pData = fp_Create(fg_Move(_ToInsert));
 			m_Data.m_List.f_InsertAfter(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertAfter(const t_CData &_ToInsert, const t_CData &_InsertAfter)
@@ -554,7 +559,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertAfter);
 			CMember * pData = fp_Create(_ToInsert);
 			m_Data.m_List.f_InsertAfter(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertAfter(t_CData *_ToInsert, const t_CData &_InsertAfter)
@@ -562,7 +567,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertAfter);
 			CMember * pData = fsp_MemberFromData(*_ToInsert);
 			m_Data.m_List.f_InsertAfter(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertAfter(const t_CData *_ToInsert, const t_CData &_InsertAfter)
@@ -570,7 +575,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertAfter);
 			CMember * pData = fsp_MemberFromData(*_ToInsert);
 			m_Data.m_List.f_InsertAfter(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 
@@ -580,7 +585,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertAfter);
 			CMember * pData = fp_Create(fg_Move(_ToInsert));
 			m_Data.m_List.f_InsertAfter(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////
@@ -589,42 +594,42 @@ namespace NMib::NContainer
 		{
 			CMember * pData = fp_Create();
 			m_Data.m_List.f_InsertBefore(pData, fsp_MemberFromData(*_InsertBefore));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertBefore(t_CData &_ToInsert, const CIterator &_InsertBefore)
 		{
 			CMember * pData = fp_Create(_ToInsert);
 			m_Data.m_List.f_InsertBefore(pData, fsp_MemberFromData(*_InsertBefore));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertBefore(t_CData &&_ToInsert, const CIterator &_InsertBefore)
 		{
 			CMember * pData = fp_Create(fg_Move(_ToInsert));
 			m_Data.m_List.f_InsertBefore(pData, fsp_MemberFromData(*_InsertBefore));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertBefore(const t_CData &_ToInsert, const CIterator &_InsertBefore)
 		{
 			CMember * pData = fp_Create(_ToInsert);
 			m_Data.m_List.f_InsertBefore(pData, fsp_MemberFromData(*_InsertBefore));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertBefore(t_CData *_ToInsert, const CIterator &_InsertBefore)
 		{
 			CMember * pData = fsp_MemberFromData(*_ToInsert);
 			m_Data.m_List.f_InsertBefore(pData, fsp_MemberFromData(*_InsertBefore));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertBefore(const t_CData *_ToInsert, const CIterator &_InsertBefore)
 		{
 			CMember * pData = fsp_MemberFromData(*_ToInsert);
 			m_Data.m_List.f_InsertBefore(pData, fsp_MemberFromData(*_InsertBefore));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		template <typename tf_CType, typename... tfp_CParams>
@@ -632,7 +637,7 @@ namespace NMib::NContainer
 		{
 			CMember * pData = fp_Create(fg_Move(_ToInsert));
 			m_Data.m_List.f_InsertBefore(pData, fsp_MemberFromData(*_InsertBefore));
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////
@@ -642,7 +647,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertBefore);
 			CMember *pData = fp_Create();
 			m_Data.m_List.f_InsertBefore(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertBefore(t_CData &_ToInsert, const t_CData &_InsertBefore)
@@ -650,7 +655,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertBefore);
 			CMember * pData = fp_Create(_ToInsert);
 			m_Data.m_List.f_InsertBefore(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertBefore(t_CData &&_ToInsert, const t_CData &_InsertBefore)
@@ -658,7 +663,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertBefore);
 			CMember * pData = fp_Create(fg_Move(_ToInsert));
 			m_Data.m_List.f_InsertBefore(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertBefore(const t_CData &_ToInsert, const t_CData &_InsertBefore)
@@ -666,7 +671,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertBefore);
 			CMember * pData = fp_Create(_ToInsert);
 			m_Data.m_List.f_InsertBefore(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertBefore(t_CData *_ToInsert, const t_CData &_InsertBefore)
@@ -674,7 +679,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertBefore);
 			CMember * pData = fsp_MemberFromData(*_ToInsert);
 			m_Data.m_List.f_InsertBefore(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertBefore(const t_CData *_ToInsert, const t_CData &_InsertBefore)
@@ -682,7 +687,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertBefore);
 			CMember * pData = fsp_MemberFromData(*_ToInsert);
 			m_Data.m_List.f_InsertBefore(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		template <typename tf_CType, typename... tfp_CParams>
@@ -691,7 +696,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_InsertBefore);
 			CMember * pData = fp_Create(fg_Move(_ToInsert));
 			m_Data.m_List.f_InsertBefore(pData, pMember);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 
@@ -701,27 +706,27 @@ namespace NMib::NContainer
 		{
 			CMember * pData = fp_Create(_ToInsert);
 			m_Data.m_List.f_Insert(pData);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_Insert(t_CData &&_ToInsert)
 		{
 			CMember * pData = fp_Create(fg_Move(_ToInsert));
 			m_Data.m_List.f_Insert(pData);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_Insert(const t_CData &_ToInsert)
 		{
 			CMember * pData = fp_Create(_ToInsert);
 			m_Data.m_List.f_Insert(pData);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 		t_CData &f_Insert()
 		{
 			CMember * pData = fp_Create();
 			m_Data.m_List.f_Insert(pData);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		template <typename tf_CType, typename... tfp_CParams>
@@ -729,7 +734,7 @@ namespace NMib::NContainer
 		{
 			CMember * pData = fp_Create(fg_Move(_ToInsert));
 			m_Data.m_List.f_Insert(pData);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////
@@ -761,28 +766,28 @@ namespace NMib::NContainer
 		{
 			CMember * pData = fp_Create(_ToInsert);
 			m_Data.m_List.f_InsertFirst(pData);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertFirst(t_CData &&_ToInsert)
 		{
 			CMember * pData = fp_Create(fg_Move(_ToInsert));
 			m_Data.m_List.f_InsertFirst(pData);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertFirst(const t_CData &_ToInsert)
 		{
 			CMember * pData = fp_Create(_ToInsert);
 			m_Data.m_List.f_InsertFirst(pData);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		t_CData &f_InsertFirst()
 		{
 			CMember * pData = fp_Create();
 			m_Data.m_List.f_InsertFirst(pData);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		template <typename tf_CType, typename... tfp_CParams>
@@ -790,7 +795,7 @@ namespace NMib::NContainer
 		{
 			CMember * pData = fp_Create(fg_Move(_ToInsert));
 			m_Data.m_List.f_InsertFirst(pData);
-			return pData->fp_GetObject();
+			return pData->m_Object;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////
@@ -837,29 +842,29 @@ namespace NMib::NContainer
 			CMember *pMember = m_Data.m_List.f_Pop();
 			DMibSafeCheck(pMember, "You cannot pop from an empty list");
 			m_Data.m_List.f_Remove(pMember);
-			t_CData ToReturn = fg_Move(pMember->fp_GetObject());
+			t_CData ToReturn = fg_Move(pMember->m_Object);
 			fg_DeleteObjectDefiniteType(m_Data, pMember);
 			return fg_Move(ToReturn);
 		}
 
 		t_CData &f_GetFirst()
 		{
-			return m_Data.m_List.f_GetFirst()->fp_GetObject();
+			return m_Data.m_List.f_GetFirst()->m_Object;
 		}
 
 		const t_CData &f_GetFirst() const
 		{
-			return m_Data.m_List.f_GetFirst()->fp_GetObject();
+			return m_Data.m_List.f_GetFirst()->m_Object;
 		}
 
 		t_CData &f_GetLast()
 		{
-			return m_Data.m_List.f_GetLast()->fp_GetObject();
+			return m_Data.m_List.f_GetLast()->m_Object;
 		}
 
 		const t_CData &f_GetLast() const
 		{
-			return m_Data.m_List.f_GetLast()->fp_GetObject();
+			return m_Data.m_List.f_GetLast()->m_Object;
 		}
 
 		bool f_IsEmpty() const
@@ -919,7 +924,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_Current);
 			CMember *pPrev = CInternalIterator::fs_GetPrev(pMember);
 			if (pPrev)
-				return &pPrev->fp_GetObject();
+				return &pPrev->m_Object;
 			return nullptr;
 		}
 
@@ -928,7 +933,7 @@ namespace NMib::NContainer
 			CMember *pMember = fsp_MemberFromData(_Current);
 			CMember *pNext = CInternalIterator::fs_GetNext(pMember);
 			if (pNext)
-				return &pNext->fp_GetObject();
+				return &pNext->m_Object;
 			return nullptr;
 		}
 
@@ -937,7 +942,7 @@ namespace NMib::NContainer
 			CMember const *pMember = (CMember const *)&_Current;
 			CMember const *pPrev = CInternalIterator::fs_GetPrev(pMember);
 			if (pPrev)
-				return &pPrev->fp_GetObject();
+				return &pPrev->m_Object;
 			return nullptr;
 		}
 
@@ -946,7 +951,7 @@ namespace NMib::NContainer
 			CMember const *pMember = (CMember const *)&_Current;
 			CMember const *pNext = CInternalIterator::fs_GetNext(pMember);
 			if (pNext)
-				return &pNext->fp_GetObject();
+				return &pNext->m_Object;
 			return nullptr;
 		}
 
