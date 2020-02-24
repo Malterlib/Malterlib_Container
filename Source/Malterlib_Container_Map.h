@@ -32,6 +32,9 @@ namespace NMib::NContainer
 		NIntrusive::TCAVLLink<> m_Link;
 	};
 
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	class TCSet;
+
 	template <typename t_CKey, typename t_CData>
 	class TCMapTreeMember : public CMapTreeMemberBase
 	{
@@ -1574,6 +1577,8 @@ namespace NMib::NContainer
 		bool f_FormatParseOption(CFormatOptions &_Options, tf_COption &_Option) const;
 		template <typename tf_CFormatInto, typename tf_CFormatOptions>
 		void f_Format(tf_CFormatInto &o_FormatInto, tf_CFormatOptions const &_Options) const;
+
+		TCSet<t_CKey, t_CCompare, t_CAllocator> f_KeySet() const;
 	};
 
 	template

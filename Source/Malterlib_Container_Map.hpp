@@ -14,6 +14,17 @@ namespace NMib::NContainer
 	};
 
 	template <typename t_CKey, typename t_CData, typename t_CCompare, typename t_CAllocator>
+	TCSet<t_CKey, t_CCompare, t_CAllocator> TCMap<t_CKey, t_CData, t_CCompare, t_CAllocator>::f_KeySet() const
+	{
+		TCSet<t_CKey, t_CCompare, t_CAllocator> Return;
+
+		for (auto &Value : *this)
+			Return[fs_GetKey(Value)];
+
+		return Return;
+	}
+
+	template <typename t_CKey, typename t_CData, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_COption>
 	bool TCMap<t_CKey, t_CData, t_CCompare, t_CAllocator>::f_FormatParseOption(CFormatOptions &_Options, tf_COption &_Option) const
 	{
