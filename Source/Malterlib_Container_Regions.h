@@ -7,49 +7,68 @@
 
 namespace NMib::NContainer
 {
+	template <typename t_CKey, typename t_CRegionData = NMib::CVoidTag>
+	struct TCRegionData : public t_CRegionData
+	{
+		TCRegionData()
+		{
+		}
+		TCRegionData(TCRegionData const &_Other)
+			: t_CRegionData(_Other)
+			, mp_End(_Other.mp_End)
+		{
+		}
+		TCRegionData(TCRegionData &&_Other)
+			: t_CRegionData(fg_Move(_Other))
+			, mp_End(fg_Move(_Other.mp_End))
+		{
+		}
+		t_CKey const &f_End() const
+		{
+			return mp_End;
+		}
+		t_CKey &f_End()
+		{
+			return mp_End;
+		}
+
+		t_CRegionData &f_Data()
+		{
+			return *this;
+		}
+		t_CRegionData const &f_Data() const
+		{
+			return *this;
+		}
+
+		DMibListLinkD_Link(TCRegionData, m_Link);
+	private:
+		t_CKey mp_End;
+	};
+
 	template <typename t_CKey, typename t_CRegionData = NMib::CVoidTag, typename t_CAllocator = NMemory::CAllocator_Heap>
 	class TCRegions
 	{
 		class CRegionData;
 		typedef TCMap<t_CKey, CRegionData, CSort_Default, t_CAllocator> CMap;
-		class CRegionData : public t_CRegionData
+		class CRegionData : public TCRegionData<t_CKey, t_CRegionData>
 		{
-			t_CKey m_End;
 		public:
 			CRegionData()
 			{
 			}
 			CRegionData(CRegionData const &_Other)
-				: t_CRegionData(_Other)
-				, m_End(_Other.m_End)
+				: TCRegionData<t_CKey, t_CRegionData>(_Other)
 			{
 			}
 			CRegionData(CRegionData &&_Other)
-				: t_CRegionData(fg_Move(_Other))
-				, m_End(fg_Move(_Other.m_End))
+				: TCRegionData<t_CKey, t_CRegionData>(fg_Move(_Other))
 			{
-			}
-			DMibListLinkD_Link(CRegionData, m_Link);
-			t_CKey const &f_End() const
-			{
-				return m_End;
-			}
-			t_CKey &f_End()
-			{
-				return m_End;
 			}
 
 			t_CKey const &f_Start() const
 			{
 				return CMap::fs_GetKey(this);
-			}
-			t_CRegionData &f_Data()
-			{
-				return *this;
-			}
-			t_CRegionData const &f_Data() const
-			{
-				return *this;
 			}
 		};
 		CMap m_Regions;
