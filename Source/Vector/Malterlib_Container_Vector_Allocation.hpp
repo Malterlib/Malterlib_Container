@@ -63,9 +63,9 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	inline_small mint TCVector<t_CData, t_CAllocator, t_COptions>::fsp_GetAllocSize(mint _NeededSize)
+	inline_never mint TCVector<t_CData, t_CAllocator, t_COptions>::fsp_GetAllocSize(mint _NeededSize)
 	{
-		return fg_Max(fg_Max((mint(1) << NMib::fg_GetHighestBitSet(_NeededSize-1)) << 1, _NeededSize), t_COptions::mc_MinSize);
+		return fg_Max(fg_Max((mint(1) << NMib::fg_GetHighestBitSetNoZero((_NeededSize-1) | 1)) << 1, _NeededSize), t_COptions::mc_MinSize);
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
