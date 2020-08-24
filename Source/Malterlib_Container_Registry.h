@@ -154,7 +154,7 @@ namespace NMib::NContainer
 				<
 					TCRegistry
 					, CDLinkTranslatorm_Link
-					, NMib::NIntrusive::TCDLinkAggregateListNoPrevPtr<NMib::NIntrusive::CDLinkAggregateListNoPrevPtr_Data>
+					, NMib::NIntrusive::CDLinkAggregateListNoPrevPtr
 					, NMib::NIntrusive::CDLinkAggregateListNoPrevPtrList
 					, false
 					, NMib::NMemory::CDefaultAllocator

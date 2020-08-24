@@ -17,7 +17,7 @@ namespace NMib::NContainer
 	};
 
 	template <typename t_CData>
-	class TCLinkedListMember : public CLinkedListMemberBase
+	class TCLinkedListMember final : public CLinkedListMemberBase
 	{
 		template <typename t_CData2, typename t_CAllocator2> friend class TCLinkedList;
 
@@ -84,7 +84,7 @@ namespace NMib::NContainer
 			<
 				CMember
 				, CLinkedListMemberBase::CDLinkTranslatorm_ListLink
-				, NMib::NIntrusive::TCDLinkAggregateListNoPrevPtr<NMib::NIntrusive::CDLinkAggregateListNoPrevPtr_Data>
+				, NMib::NIntrusive::CDLinkAggregateListNoPrevPtr
 				, NMib::NIntrusive::CDLinkAggregateListNoPrevPtrList
 				, false
 				, CAllocatorDisable
