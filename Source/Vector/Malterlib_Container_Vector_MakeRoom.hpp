@@ -21,7 +21,7 @@ namespace NMib::NContainer
 
 			NPrivate::fg_MoveArray(pNewArray + _Len, pOldArray, OldLen);
 
-			DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize);
+			DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize || !fp_Allocator().f_DeterministicSize());
 
 			auto pOldData = mp_StaticData.m_pData;
 			// Save new array
@@ -82,7 +82,7 @@ namespace NMib::NContainer
 			if (_iStart < OldLen)
 				NPrivate::fg_MoveArray(pNewArray + _iStart + _Len, pOldArray + _iStart, OldLen - _iStart);
 
-			DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize);
+			DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize || !fp_Allocator().f_DeterministicSize());
 			auto pOldData = mp_StaticData.m_pData;
 			pNewData->m_Length = NewLen;
 			mp_StaticData.m_pData = pNewData;
@@ -146,7 +146,7 @@ namespace NMib::NContainer
 			// Construct all new datas with copy constructor from old datas
 			NPrivate::fg_MoveArray(pNewArray, pOldArray, OldRemainingCells);
 
-			DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize);
+			DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize || !fp_Allocator().f_DeterministicSize());
 
 			// Save new array
 			auto pOldData = mp_StaticData.m_pData;
@@ -179,7 +179,7 @@ namespace NMib::NContainer
 			t_CData *pOldArray = f_GetArray();
 			mint CurrentLength = OldLen;
 
-			DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize);
+			DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize || !fp_Allocator().f_DeterministicSize());
 			// Destroy old array
 
 			// Save new array

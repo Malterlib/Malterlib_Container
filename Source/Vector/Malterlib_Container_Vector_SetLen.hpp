@@ -23,7 +23,7 @@ namespace NMib::NContainer
 			// Construct all new datas with copy constructor from old datas
 			NPrivate::fg_MoveArray(pNewArray, pOldArray, OldRemainingCells);
 
-			DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize);
+			DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize || !fp_Allocator().f_DeterministicSize());
 
 			auto pOldData = mp_StaticData.m_pData;
 			pNewData->m_Length = OldRemainingCells;

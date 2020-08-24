@@ -55,7 +55,7 @@ namespace NMib::NContainer
 				if (NewLen > _Start)
 					NPrivate::fg_MoveArray(pNewArray + _Start, pOldArray + _Start + _Len, (NewLen - _Start));
 
-				DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize);
+				DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize || !fp_Allocator().f_DeterministicSize());
 				auto pOldData = mp_StaticData.m_pData;
 				pNewData->m_Length = NewLen;
 				mp_StaticData.m_pData = pNewData;

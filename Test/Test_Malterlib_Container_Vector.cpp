@@ -360,8 +360,11 @@ namespace
 							ShrinkSizes.f_InsertFirst(AllocSize);
 						}
 					}
-					DMibExpect(AllocSizes, ==, ShrinkSizes);
-					DMibExpect(AllocSizes.f_GetLen(), ==, 12);
+					if (NMib::NMemory::fg_AllocHasDeterministicSize())
+					{
+						DMibExpect(AllocSizes, ==, ShrinkSizes);
+						DMibExpect(AllocSizes.f_GetLen(), ==, 12);
+					}
 				}
 
 				{
