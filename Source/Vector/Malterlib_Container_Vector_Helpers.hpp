@@ -33,6 +33,9 @@ namespace NMib::NContainer::NPrivate
 			DMibFastCheck(_Len == 0);
 			return;
 		}
+		
+		DMibFastCheck(_Len != 0);
+
 		if constexpr (NTraits::TCHasTrivialDestructor<t_CData>::mc_Value)
 		{
 			o_Len -= _Len;
@@ -64,7 +67,10 @@ namespace NMib::NContainer::NPrivate
 	static void fg_MoveArray(t_CData *_pDest, t_CData *_pSrc, mint _Len)
 	{
 		if constexpr (NTraits::TCHasTrivialCopyConstructor<t_CData>::mc_Value)
-			NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
+		{
+			if (_Len)
+				NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
+		}
 		else
 		{
 #if DMibEnableSafeCheck > 0
@@ -88,11 +94,11 @@ namespace NMib::NContainer::NPrivate
 	static void fg_MoveArray(t_CData0 *_pDest, t_CData1 *_pSrc, mint _Len)
 	{
 #if DMibEnableSafeCheck > 0
-			auto Cleanup = g_OnScopeExit > [&]
-				{
-					DMibFastCheck(false); // Move should not throw
-				}
-			;
+		auto Cleanup = g_OnScopeExit > [&]
+			{
+				DMibFastCheck(false); // Move should not throw
+			}
+		;
 #endif
 
 		for (mint i = 0; i < _Len; ++i)
@@ -110,7 +116,8 @@ namespace NMib::NContainer::NPrivate
 	{
 		if constexpr (NTraits::TCHasTrivialCopyConstructor<t_CData>::mc_Value)
 		{
-			NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
+			if (_Len)
+				NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
 			o_Len += _Len;
 		}
 		else if constexpr (NTraits::TCIsConstructorNothrowCallableWith<t_CData, void (t_CData const &)>::mc_Value)

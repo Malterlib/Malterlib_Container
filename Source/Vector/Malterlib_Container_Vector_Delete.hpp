@@ -15,7 +15,12 @@ namespace NMib::NContainer
 			delete pArray[i];
 			--mp_StaticData.m_pData->m_Length;
 		}
-		f_Clear();
+
+		if (mp_StaticData.m_pData)
+		{
+			fp_FreeData(mp_StaticData.m_pData);
+			mp_StaticData.m_pData = nullptr;
+		}
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
@@ -28,7 +33,12 @@ namespace NMib::NContainer
 			fg_DeleteObjectDefiniteType(NMemory::CDefaultAllocator(), pArray[i]);
 			--mp_StaticData.m_pData->m_Length;
 		}
-		f_Clear();
+
+		if (mp_StaticData.m_pData)
+		{
+			fp_FreeData(mp_StaticData.m_pData);
+			mp_StaticData.m_pData = nullptr;
+		}
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
@@ -49,7 +59,12 @@ namespace NMib::NContainer
 			fsp_DeleteAllAllocatorHelper<tf_CAllocator>(pArray[i]);
 			--mp_StaticData.m_pData->m_Length;
 		}
-		f_Clear();
+
+		if (mp_StaticData.m_pData)
+		{
+			fp_FreeData(mp_StaticData.m_pData);
+			mp_StaticData.m_pData = nullptr;
+		}
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
@@ -70,7 +85,12 @@ namespace NMib::NContainer
 			fsp_DeleteAllAllocatorHelperDefiniteType<tf_CAllocator>(pArray[i]);
 			--mp_StaticData.m_pData->m_Length;
 		}
-		f_Clear();
+
+		if (mp_StaticData.m_pData)
+		{
+			fp_FreeData(mp_StaticData.m_pData);
+			mp_StaticData.m_pData = nullptr;
+		}
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
@@ -84,7 +104,12 @@ namespace NMib::NContainer
 			tf_CDeleter::fs_Delete(pArray[i]);
 			--mp_StaticData.m_pData->m_Length;
 		}
-		f_Clear();
+
+		if (mp_StaticData.m_pData)
+		{
+			fp_FreeData(mp_StaticData.m_pData);
+			mp_StaticData.m_pData = nullptr;
+		}
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>

@@ -23,6 +23,8 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	auto TCVector<t_CData, t_CAllocator, t_COptions>::fp_AllocData(mint _nObjects) -> CVectorData *
 	{
+		DMibFastCheck(_nObjects != 0);
+
 #if defined(DCompiler_MSVC_Workaround)
 		static constexpr mint mc_MaxObjects = fg_AlignDownConstExpr(TCLimitsInt<mint>::mc_Max - sizeof(CVectorData), fsp_Alignment()) / sizeof(t_CData);
 #else

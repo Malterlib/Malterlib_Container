@@ -47,6 +47,9 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Reserve(mint _Space)
 	{
+		if (_Space == 0)
+			return;
+
 		if (!fsp_NeedReallocGrow(_Space, mp_StaticData.m_pData))
 			return;
 
