@@ -3,24 +3,25 @@
 
 namespace NMib::NContainer
 {
-	template <typename t_CStr>
+	template <typename t_CKey, typename t_CStr>
 	struct TCRegistryKeyStr
 	{
 		static constexpr bool mc_bSupportForceCreate = false;
 		static constexpr bool mc_bSupportLocation = false;
 		static constexpr bool mc_bSupportWhiteSpace = false;
 
-		using CKey = t_CStr;
+		using CKey = t_CKey;
+		using CStr = t_CStr;
 		using CRet = aint;
 
 		void f_Move(TCRegistryKeyStr &&_Other);
 		CRet f_CompareKey(TCRegistryKeyStr const &_Right) const;
 		void f_Copy(TCRegistryKeyStr const &_Src);
-		void f_Set(t_CStr const &_Str);
-		t_CStr const &f_GetName() const;
+		void f_Set(t_CKey const &_Str);
+		t_CKey const &f_GetName() const;
 
-		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-		TCRegistryKeyStr(TCRegistry<tf_CStr, tf_CData, tf_Flags> *_pParent);
+		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+		TCRegistryKeyStr(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
 		template <typename tf_CKey>
 		CRet f_Compare(tf_CKey const &_Right) const;
@@ -50,10 +51,10 @@ namespace NMib::NContainer
 		TCRegistryKeyStr(TCRegistryKeyStr &&_Other) = delete;
 		TCRegistryKeyStr &operator = (TCRegistryKeyStr &&_Other) = delete;
 
-		t_CStr m_Name;
+		t_CKey m_Name;
 	};
 
-	template <typename t_CStr>
+	template <typename t_CKey, typename t_CStr>
 	struct TCRegistryKeyStrMulti
 	{
 		static constexpr bool mc_bSupportForceCreate = true;
@@ -62,7 +63,7 @@ namespace NMib::NContainer
 
 		struct CKey
 		{
-			t_CStr m_Name;
+			t_CKey m_Name;
 			uint32 m_Sequence;
 		};
 
@@ -72,13 +73,13 @@ namespace NMib::NContainer
 		CRet f_CompareKey(TCRegistryKeyStrMulti const &_Right) const;
 		void f_Copy(TCRegistryKeyStrMulti const &_Src);
 		void f_Set(t_CStr const &_Str);
-		t_CStr const &f_GetName() const;
+		t_CKey const &f_GetName() const;
 
-		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-		TCRegistryKeyStrMulti(TCRegistry<tf_CStr, tf_CData, tf_Flags> *_pParent);
+		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+		TCRegistryKeyStrMulti(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
-		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-		void f_NewSequence(TCRegistry<tf_CStr, tf_CData, tf_Flags> *_pParent);
+		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+		void f_NewSequence(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
 		template <typename tf_CKey>
 		CRet f_Compare(tf_CKey const &_Right) const;
@@ -95,11 +96,11 @@ namespace NMib::NContainer
 		template <typename tf_CStream, typename tf_CIndex>
 		void f_Consume(tf_CStream &_Stream, TCRegistryStringTable<t_CStr, tf_CIndex> const &_StringTable);
 
-		template <typename tf_CRegistry, typename tf_CStr>
-		static tf_CRegistry *fs_FindEqual(tf_CRegistry const &_This, tf_CStr const &_ToFind);
+		template <typename tf_CRegistry, typename tf_CKey>
+		static tf_CRegistry *fs_FindEqual(tf_CRegistry const &_This, tf_CKey const &_ToFind);
 
-		template <typename t_CIterator, typename tf_CStr>
-		static void fs_FindIterator(t_CIterator &_Iterator, tf_CStr const &_ToFind);
+		template <typename t_CIterator, typename tf_CKey>
+		static void fs_FindIterator(t_CIterator &_Iterator, tf_CKey const &_ToFind);
 
 	private:
 		TCRegistryKeyStrMulti(TCRegistryKeyStrMulti const &_Other) = delete;
@@ -107,12 +108,12 @@ namespace NMib::NContainer
 		TCRegistryKeyStrMulti(TCRegistryKeyStrMulti &&_Other) = delete;
 		TCRegistryKeyStrMulti &operator = (TCRegistryKeyStrMulti &&_Other) = delete;
 
-		t_CStr m_Name;
+		t_CKey m_Name;
 		uint32 m_Sequence = 0;
 		uint32 m_GenSequence = 0;
 	};
 
-	template <typename t_CStr, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>
 	struct TCRegistryKeyStrPreserve
 	{
 		static constexpr bool mc_bSupportWhiteSpace = true;
@@ -121,7 +122,7 @@ namespace NMib::NContainer
 
 		struct CKey
 		{
-			t_CStr m_Name;
+			t_CKey m_Name;
 			uint32 m_Sequence;
 		};
 
@@ -132,8 +133,8 @@ namespace NMib::NContainer
 		void f_Move(TCRegistryKeyStrPreserve &&_Other);
 		CRet f_CompareKey(TCRegistryKeyStrPreserve const &_Right) const;
 		void f_Copy(TCRegistryKeyStrPreserve const &_Src);
-		void f_Set(t_CStr const &_Str);
-		t_CStr const &f_GetName() const;
+		void f_Set(t_CKey const &_Str);
+		t_CKey const &f_GetName() const;
 		CLocation const &f_GetLocation() const;
 		void f_SetLocation(CLocation const &_Location);
 		CValueLocation const &f_GetValueLocation() const;
@@ -147,11 +148,11 @@ namespace NMib::NContainer
 		void f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
 		t_CStr const &f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const;
 
-		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-		TCRegistryKeyStrPreserve(TCRegistry<tf_CStr, tf_CData, tf_Flags> *_pParent);
+		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+		TCRegistryKeyStrPreserve(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
-		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-		void f_NewSequence(TCRegistry<tf_CStr, tf_CData, tf_Flags> *_pParent);
+		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+		void f_NewSequence(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
 		template <typename tf_CKey>
 		CRet f_Compare(tf_CKey const &_Right) const;
@@ -179,7 +180,7 @@ namespace NMib::NContainer
 		TCRegistryKeyStrPreserve(TCRegistryKeyStrPreserve &&_Other) = delete;
 		TCRegistryKeyStrPreserve &operator = (TCRegistryKeyStrPreserve &&_Other) = delete;
 
-		t_CStr m_Name;
+		t_CKey m_Name;
 		uint32 m_Sequence = 0;
 		uint32 m_GenSequence = 0;
 
@@ -191,6 +192,9 @@ namespace NMib::NContainer
 		uint8 m_bForceEscapedKey:1;
 		uint8 m_bForceEscapedValue:1;
 	};
+
+	template <typename tf_CKey>
+	auto fg_RegistryNameStringForPath(tf_CKey const &_Key);
 }
 
 #include "Malterlib_Container_Registry_Key.hpp"

@@ -5,9 +5,9 @@
 
 namespace NMib::NContainer
 {
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-	bool TCRegistry<t_CStr, t_CData, t_Flags>::operator == (TCRegistry<tf_CStr, tf_CData, tf_Flags> const &_Other) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::operator == (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const
 	{
 		if (!(f_GetName() == _Other.f_GetName()))
 			return false;
@@ -27,9 +27,9 @@ namespace NMib::NContainer
 		return true;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-	bool TCRegistry<t_CStr, t_CData, t_Flags>::operator < (TCRegistry<tf_CStr, tf_CData, tf_Flags> const &_Other) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::operator < (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const
 	{
 		NMisc::ECompareResult Compare = NMisc::fg_Compare(f_GetName(), _Other.f_GetName());
 		Compare = NMisc::fg_Compare(Compare, f_GetThisValue(), _Other.f_GetThisValue());

@@ -5,11 +5,11 @@
 
 namespace NMib::NContainer
 {
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fpr_FindDiffs
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_FindDiffs
 		(
-		 	const t_CStr &_Path
-		 	, const TCRegistry &_Original
+		 	t_CStr const &_Path
+		 	, TCRegistry const &_Original
 		 	, NContainer::TCVector<t_CStr> &_Changed
 		 	, NContainer::TCVector<t_CStr> &_Added
 		 	, NContainer::TCVector<t_CStr> &_Deleted
@@ -23,7 +23,7 @@ namespace NMib::NContainer
 			{
 				const TCRegistry *pReg = Iter;
 				++Iter;
-				t_CStr Name = pReg->f_GetName();
+				auto Name = pReg->f_GetName();
 
 				const TCRegistry *pChild = f_GetChildNoPath(Name);
 				if (!pChild)
@@ -42,7 +42,7 @@ namespace NMib::NContainer
 			{
 				const TCRegistry *pReg = Iter;
 				++Iter;
-				t_CStr Name = pReg->f_GetName();
+				auto Name = pReg->f_GetName();
 
 				t_CStr Path = fsp_AppendPath(_Path, Name);
 				const TCRegistry *pChild = _Original.f_GetChildNoPath(Name);
@@ -64,8 +64,8 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fpr_FindChanges(const t_CStr &_Path, const TCRegistry &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_FindChanges(const t_CStr &_Path, const TCRegistry &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
 	{
 		// Find added and changed
 		{
@@ -97,8 +97,15 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fpr_FindChanges(const t_CStr &_Path, const TCRegistry &_Original, TCRegistry &_Changed, NContainer::TCVector<t_CStr> &_Deleted, bool _bIncludeAdded) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_FindChanges
+		(
+			t_CStr const &_Path
+			, TCRegistry const &_Original
+			, TCRegistry &_Changed
+			, NContainer::TCVector<t_CStr> &_Deleted
+			, bool _bIncludeAdded
+		) const
 	{
 		// Find deleted
 		{
@@ -147,20 +154,33 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_FindDiffs(const TCRegistry &_Original, NContainer::TCVector<t_CStr> &_Changed, NContainer::TCVector<t_CStr> &_Added, NContainer::TCVector<t_CStr> &_Deleted, bool _bRecursive) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FindDiffs
+		(
+			TCRegistry const &_Original
+			, NContainer::TCVector<t_CStr> &_Changed
+			, NContainer::TCVector<t_CStr> &_Added
+			, NContainer::TCVector<t_CStr> &_Deleted
+			, bool _bRecursive
+		) const
 	{
 		fpr_FindDiffs("", _Original, _Changed, _Added, _Deleted, _bRecursive);
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_FindChanges(const TCRegistry &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FindChanges(const TCRegistry &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
 	{
 		fpr_FindChanges("", _Original, _Changed, _bIncludeAdded);
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_FindChanges(const TCRegistry &_Original, TCRegistry &_Changed, NContainer::TCVector<t_CStr> &_Deleted, bool _bIncludeAdded) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FindChanges
+		(
+			TCRegistry const &_Original
+			, TCRegistry &_Changed
+			, NContainer::TCVector<t_CKey> &_Deleted
+			, bool _bIncludeAdded
+		) const
 	{
 		fpr_FindChanges("", _Original, _Changed, _Deleted, _bIncludeAdded);
 	}

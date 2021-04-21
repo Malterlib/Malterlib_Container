@@ -3,17 +3,17 @@
 
 namespace NMib::NContainer
 {
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::CPreserveParseContext() = default;
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::CPreserveParseContext() = default;
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_SetFile(t_CStr const &_File)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_SetFile(t_CStr const &_File)
 	{
 		m_File = _File;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	auto TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetLocation(ch8 const *_pParse) const -> CLocation
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_GetLocation(ch8 const *_pParse) const -> CLocation
 	{
 		if constexpr ((t_Flags & ERegistryFlag_FullLocation) != 0)
 		{
@@ -37,45 +37,54 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_FormatLocation(CLocation const &_Location) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_FormatLocation(CLocation const &_Location) const
 	{
 		return typename t_CStr::CFormat("{} ") << _Location;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_FormatLocation(ch8 const *_pParse) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_FormatLocation(ch8 const *_pParse) const
 	{
 		return f_FormatLocation(f_GetLocation(_pParse));
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_AddLine(ch8 const *_pParse)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_AddLine(ch8 const *_pParse)
 	{
+		auto *pParse = m_pLastStartLine;
+		while (*pParse && pParse < _pParse)
+		{
+			NStr::fg_ParseToEndOfLine(pParse);
+			if (pParse >= _pParse)
+				break;
+			if (NStr::fg_CharIsNewLine(*pParse))
+				++m_Line;
+			NStr::fg_ParseEndOfLine(pParse);
+		}
 		m_pLastStartLine = _pParse;
-		++m_Line;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_SetStartWhiteSpace(ch8 const *_pParse)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_SetStartWhiteSpace(ch8 const *_pParse)
 	{
 		m_pLastStartWhitespace = _pParse;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	ch8 const *TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetStartWhiteSpace() const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	ch8 const *TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_GetStartWhiteSpace() const
 	{
 		return m_pLastStartWhitespace;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetNextWhiteSpace(ch8 const *_pParse)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_GetNextWhiteSpace(ch8 const *_pParse)
 	{
 		return t_CStr(m_pLastStartWhitespace, _pParse - m_pLastStartWhitespace);
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_SetWhiteSpace
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_SetWhiteSpace
 		(
 			ERegistryWhiteSpaceLocation _Location
 			, t_CStr const &_Str
@@ -84,8 +93,8 @@ namespace NMib::NContainer
 		m_WhiteSpace[_Location] = _Str;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	t_CStr const &TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetWhiteSpace
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	t_CStr const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_GetWhiteSpace
 		(
 			ERegistryWhiteSpaceLocation _Location
 		)
@@ -94,8 +103,8 @@ namespace NMib::NContainer
 		return m_WhiteSpace[_Location];
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_SetLastAdded
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_SetLastAdded
 		(
 			TCRegistry *_pReg
 			, bool _bHadChildren
@@ -105,8 +114,8 @@ namespace NMib::NContainer
 		m_bLastHadChildren = _bHadChildren;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	auto TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetLastAdded
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_GetLastAdded
 		(
 			bool &_bLastHadChildren
 		)
@@ -116,34 +125,34 @@ namespace NMib::NContainer
 		return m_pLastAdded;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_SetStartParse(CChar const *_pStartParse)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_SetStartParse(CChar const *_pStartParse)
 	{
 		m_pStartParse = _pStartParse;
 		m_pLastStartLine = _pStartParse;
 		m_pLastStartWhitespace = _pStartParse;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	auto TCRegistry<t_CStr, t_CData, t_Flags>::CPreserveParseContext::f_GetStartParse() const -> CChar const *
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_GetStartParse() const -> CChar const *
 	{
 		return m_pStartParse;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::CEmptyParseContext::f_FormatLocation(ch8 const *_pParse) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CEmptyParseContext::f_FormatLocation(ch8 const *_pParse) const
 	{
 		return {};
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	int TCRegistry<t_CStr, t_CData, t_Flags>::CEmptyParseContext::f_GetLocation(ch8 const *_pParse) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	int TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CEmptyParseContext::f_GetLocation(ch8 const *_pParse) const
 	{
 		return 0;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::CEmptyParseContext::f_FormatLocation(int _Location) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CEmptyParseContext::f_FormatLocation(int _Location) const
 	{
 		return {};
 	}

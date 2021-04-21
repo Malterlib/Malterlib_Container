@@ -5,8 +5,8 @@
 
 namespace NMib::NContainer
 {
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fpr_AddAllChildren(const t_CStr &_Path, NContainer::TCVector<t_CStr> &_Added) const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_AddAllChildren(const t_CStr &_Path, NContainer::TCVector<t_CStr> &_Added) const
 	{
 		auto Iter = mp_Children.f_GetIterator();
 		while (Iter)
@@ -21,8 +21,8 @@ namespace NMib::NContainer
 	}
 
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fpr_Merge(const TCRegistry *_pMergeWith)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_Merge(const TCRegistry *_pMergeWith)
 	{
 		// Find deleted
 		{
@@ -39,9 +39,9 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <typename tf_FPredicate>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fpr_MergeIncludingValue(const TCRegistry *_pMergeWith, tf_FPredicate const &_fPredicate)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_MergeIncludingValue(const TCRegistry *_pMergeWith, tf_FPredicate const &_fPredicate)
 	{
 		// Find deleted
 		{
@@ -65,8 +65,8 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fpr_Add(const TCRegistry *_pAdd)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_Add(const TCRegistry *_pAdd)
 	{
 		auto Iter = _pAdd->mp_Children.f_GetIterator();
 		while (Iter)
@@ -80,8 +80,8 @@ namespace NMib::NContainer
 			pChild->fpr_Add(pReg);
 		}
 	}
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_Merge(const TCRegistry &_MergeWith, bool _bMergeRoot)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Merge(const TCRegistry &_MergeWith, bool _bMergeRoot)
 	{
 		if (_bMergeRoot)
 		{
@@ -96,9 +96,9 @@ namespace NMib::NContainer
 		fpr_Merge(&_MergeWith);
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <typename tf_FPredicate>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_MergeIncludingValue(const TCRegistry &_MergeWith, bool _bMergeRoot, tf_FPredicate const &_fPredicate)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_MergeIncludingValue(const TCRegistry &_MergeWith, bool _bMergeRoot, tf_FPredicate const &_fPredicate)
 	{
 		if (_bMergeRoot)
 		{
@@ -113,22 +113,22 @@ namespace NMib::NContainer
 		fpr_MergeIncludingValue(&_MergeWith, _fPredicate);
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_MergeIncludingValue(const TCRegistry &_MergeWith, bool _bMergeRoot)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_MergeIncludingValue(const TCRegistry &_MergeWith, bool _bMergeRoot)
 	{
 		f_MergeIncludingValue(_MergeWith, _bMergeRoot, [](TCRegistry const &_Reg) -> bool { return true; });
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_Add(const TCRegistry &_ToAdd, bool _SetRootValue)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Add(const TCRegistry &_ToAdd, bool _SetRootValue)
 	{
 		if (_SetRootValue)
 			f_SetThisValue(_ToAdd.f_GetThisValue());
 		fpr_Add(&_ToAdd);
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_Subtract(const TCRegistry &_ToSubtract)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Subtract(const TCRegistry &_ToSubtract)
 	{
 		for (auto Iter = _ToSubtract.mp_Children.f_GetIterator(); Iter; ++Iter)
 		{

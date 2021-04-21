@@ -9,6 +9,7 @@ namespace NMib::NContainer
 	struct TCRegistry_CustomValue
 	{
 		static constexpr bool mc_bDefault = true;
+		static constexpr bool mc_bDefaultKey = true;
 		static constexpr bool mc_bRequireStartScopeOnSeparateLine = false;
 
 //		template <typename tf_CString>

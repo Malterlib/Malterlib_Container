@@ -5,9 +5,9 @@
 
 namespace NMib::NContainer
 {
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <typename t_CTransform>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_Transform(const t_CTransform &_fTransformer)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Transform(const t_CTransform &_fTransformer)
 	{
 		NContainer::TCVector<TCRegistry *> Children;
 		{
@@ -28,9 +28,9 @@ namespace NMib::NContainer
 		_fTransformer.f_Transform(this);
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <typename tf_CFunctor>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_TransformFunc(const tf_CFunctor &_fTransformer)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_TransformFunc(const tf_CFunctor &_fTransformer)
 	{
 		NContainer::TCVector<TCRegistry *> Children;
 		{
@@ -51,9 +51,9 @@ namespace NMib::NContainer
 		_fTransformer(*this);
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <typename tf_CFunctor>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_ForEachInTree(const tf_CFunctor &_fFunctor) const
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ForEachInTree(const tf_CFunctor &_fFunctor) const
 	{
 		auto Iter = mp_Children.f_GetIterator();
 		while (Iter)
@@ -65,15 +65,15 @@ namespace NMib::NContainer
 		_fFunctor(*this);
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	auto TCRegistry<t_CStr, t_CData, t_Flags>::f_GetChildIterator() const -> CIterator
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetChildIterator() const -> CIterator
 	{
 		return mp_Children.f_GetIterator();
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <typename tf_CStr>
-	auto TCRegistry<t_CStr, t_CData, t_Flags>::f_GetChildIterator(tf_CStr const &_Str) const -> typename CTree::CIterator
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetChildIterator(tf_CStr const &_Str) const -> typename CTree::CIterator
 	{
 		typename CTree::CIterator Iter;
 		Iter.f_InitForSearch(mp_Children.m_Tree);

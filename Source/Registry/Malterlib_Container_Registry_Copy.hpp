@@ -5,8 +5,8 @@
 
 namespace NMib::NContainer
 {
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	TCRegistry<t_CStr, t_CData, t_Flags>::TCRegistry(TCRegistry const &_Source)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::TCRegistry(TCRegistry const &_Source)
 		: mp_Key((TCRegistry *)nullptr) // No parent
 		, mp_pParent(nullptr)
 	{
@@ -23,8 +23,8 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	auto TCRegistry<t_CStr, t_CData, t_Flags>::operator = (TCRegistry const &_Source) -> TCRegistry &
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::operator = (TCRegistry const &_Source) -> TCRegistry &
 	{
 		if (mp_pParent && mp_ChildLink.f_IsInTree())
 			mp_pParent->mp_Children.f_Remove(this);
@@ -52,9 +52,9 @@ namespace NMib::NContainer
 		return *this;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fp_Copy(TCRegistry<tf_CStr, tf_CData, tf_Flags> const &_Source)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_Copy(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Source)
 	{
 		f_SetThisValue(_Source.f_GetThisValue());
 		if constexpr (mc_bSupportLocation)
@@ -81,9 +81,9 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-	auto TCRegistry<t_CStr, t_CData, t_Flags>::operator = (TCRegistry<tf_CStr, tf_CData, tf_Flags> const &_Source) -> TCRegistry &
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::operator = (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Source) -> TCRegistry &
 	{
 		f_SetName(_Source.f_GetName());
 		fp_Copy(_Source);
@@ -91,8 +91,8 @@ namespace NMib::NContainer
 		return *this;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	auto TCRegistry<t_CStr, t_CData, t_Flags>::f_SetContents(TCRegistry const &_Source) -> TCRegistry &
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetContents(TCRegistry const &_Source) -> TCRegistry &
 	{
 		mp_Data = _Source.mp_Data;
 		mp_Children.m_Tree.f_DeleteAllDefiniteType();

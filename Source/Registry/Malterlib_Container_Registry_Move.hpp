@@ -5,8 +5,8 @@
 
 namespace NMib::NContainer
 {
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	TCRegistry<t_CStr, t_CData, t_Flags>::TCRegistry(TCRegistry &&_Source)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::TCRegistry(TCRegistry &&_Source)
 		: mp_Key((TCRegistry *)nullptr)
 		, mp_Data(fg_Move(_Source.mp_Data))
 		, mp_pParent(nullptr)
@@ -24,8 +24,8 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	auto TCRegistry<t_CStr, t_CData, t_Flags>::operator = (TCRegistry &&_Source) -> TCRegistry &
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::operator = (TCRegistry &&_Source) -> TCRegistry &
 	{
 		if (mp_pParent && mp_ChildLink.f_IsInTree())
 			mp_pParent->mp_Children.f_Remove(this);
@@ -53,8 +53,8 @@ namespace NMib::NContainer
 		return *this;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	auto TCRegistry<t_CStr, t_CData, t_Flags>::f_SetContents(TCRegistry &&_Source) -> TCRegistry &
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetContents(TCRegistry &&_Source) -> TCRegistry &
 	{
 		mp_Data = fg_Move(_Source.mp_Data);
 		mp_Children.m_Tree.f_DeleteAllDefiniteType();

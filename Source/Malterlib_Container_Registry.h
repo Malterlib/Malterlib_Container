@@ -27,7 +27,7 @@ namespace NMib::NContainer
 		, ERegistryFlag_FullLocation = DMibBit(3)
 	};
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags = ERegistryFlag_None>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags = ERegistryFlag_None, typename t_CStr = t_CKey>
 	struct TCRegistry;
 
 	enum ERegistryWhiteSpaceLocation
@@ -48,7 +48,7 @@ namespace NMib::NContainer
 
 namespace NMib::NContainer
 {
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	struct TCRegistry
 	{
 		using CLocation = NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>;
@@ -73,23 +73,23 @@ namespace NMib::NContainer
 				, typename TCChooseType
 				<
 					(t_Flags & ERegistryFlag_PreserveWhitspace) != 0
-					, TCRegistryKeyStrPreserve<t_CStr, t_Flags>
-					, TCRegistryKeyStrMulti<t_CStr>
+					, TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>
+					, TCRegistryKeyStrMulti<t_CKey, t_CStr>
 				>::CType
-				, TCRegistryKeyStr<t_CStr>
+				, TCRegistryKeyStr<t_CKey, t_CStr>
 			>::CType
 		;
 
-		template <typename t_CStr2>
+		template <typename t_CKey2, typename t_CStr2>
 		friend struct TCRegistryKeyStr;
 
-		template <typename t_CStr2>
+		template <typename t_CKey2, typename t_CStr2>
 		friend struct TCRegistryKeyStrMulti;
 
-		template <typename t_CStr2, ERegistryFlag t_Flags2>
+		template <typename t_CKey2, typename t_CStr2, ERegistryFlag t_Flags2>
 		friend struct TCRegistryKeyStrPreserve;
 
-		template <typename t_CStr2, typename t_CData2, ERegistryFlag t_Flags2>
+		template <typename t_CKey2, typename t_CData2, ERegistryFlag t_Flags2, typename t_CStr2>
 		friend struct TCRegistry;
 
 		template <typename t_CStream2, typename t_CData2>
@@ -224,7 +224,8 @@ namespace NMib::NContainer
 		static constexpr bool mc_bSupportLocation = CRegistryKey::mc_bSupportLocation;
 
 		using CChildren = typename TCChooseType<(t_Flags & ERegistryFlag_PreserveOrder) != 0, CChildren_PreserveOrder, CChildren_Sorted>::CType;
-		using CKeyStr = t_CStr;
+		using CKey = t_CKey;
+		using CStr = t_CStr;
 		using CData = t_CData;
 		using CIterator = typename CChildren::CIterator;
 		using CParseContext = typename TCChooseType<mc_bSupportLocation || mc_bSupportWhiteSpace, CPreserveParseContext, CEmptyParseContext>::CType;
@@ -236,32 +237,32 @@ namespace NMib::NContainer
 
 		TCRegistry &operator = (TCRegistry &&_Source);
 		TCRegistry &operator = (TCRegistry const &_Source);
-		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-		TCRegistry &operator = (TCRegistry<tf_CStr, tf_CData, tf_Flags> const &_Source);
+		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+		TCRegistry &operator = (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Source);
 
-		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-		bool operator == (TCRegistry<tf_CStr, tf_CData, tf_Flags> const &_Other) const;
-		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-		bool operator < (TCRegistry<tf_CStr, tf_CData, tf_Flags> const &_Other) const;
+		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+		bool operator == (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const;
+		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+		bool operator < (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const;
 
 		void f_Clear();
 
-		t_CStr const &f_GetName() const;
-		void f_SetName(t_CStr const &_Name);
+		t_CKey const &f_GetName() const;
+		void f_SetName(t_CKey const &_Name);
 
-		TCRegistry *f_InsertChild(t_CStr _Name, NMib::NStorage::TCUniquePointer<TCRegistry> &&_pChild);
+		TCRegistry *f_InsertChild(t_CKey _Name, NMib::NStorage::TCUniquePointer<TCRegistry> &&_pChild);
 		TCRegistry *f_CreateChild(t_CStr _Name, bool _bForceCreate = false);
-		TCRegistry *f_CreateChildNoPath(t_CStr const &_Name, bool _bForceCreate = false);
+		TCRegistry *f_CreateChildNoPath(t_CKey const &_Name, bool _bForceCreate = false);
 		bool f_HasChildren() const;
 		TCRegistry const *f_GetChild(t_CStr _Str) const;
 		TCRegistry *f_GetChild(t_CStr _Str);
-		template <typename tf_CStr>
-		TCRegistry const *f_GetChildNoPath(tf_CStr const &_Str) const;
-		template <typename tf_CStr>
-		TCRegistry *f_GetChildNoPath(tf_CStr const &_Str);
+		template <typename tf_CKey>
+		TCRegistry const *f_GetChildNoPath(tf_CKey const &_Str) const;
+		template <typename tf_CKey>
+		TCRegistry *f_GetChildNoPath(tf_CKey const &_Str);
 		void f_DeleteChild(TCRegistry *_pChild);
 		bool f_DeleteChild(t_CStr _Name, bool _bDeleteEmptyParentDirs = false);
-		bool f_DeleteChildNoPath(t_CStr const &_Name, bool _bDeleteEmptyParentDirs = false);
+		bool f_DeleteChildNoPath(t_CKey const &_Name, bool _bDeleteEmptyParentDirs = false);
 		void f_DeleteAllChildren();
 		void f_MoveChild(TCRegistry *_pChild, TCRegistry *_pAfter);
 		CTree const &f_GetChildren() const; // Only to be used for deleting iterators
@@ -289,7 +290,7 @@ namespace NMib::NContainer
 			const
 		;
 		void f_FindChanges(TCRegistry const &_Original, TCRegistry &_Changed, bool _bIncludeAdded = true) const;
-		void f_FindChanges(TCRegistry const &_Original, TCRegistry &_Changed, NContainer::TCVector<t_CStr> &_Deleted, bool _bIncludeAdded = true) const;
+		void f_FindChanges(TCRegistry const &_Original, TCRegistry &_Changed, NContainer::TCVector<t_CKey> &_Deleted, bool _bIncludeAdded = true) const;
 
 		template <typename tf_CStr, bool tf_bIncludeFileLine, bool tf_bEscapeNewLines>
 		tf_CStr f_GenerateStr() const;
@@ -365,6 +366,7 @@ namespace NMib::NContainer
 		void f_FeedWithStringTable(tf_CStream &_Stream);
 
 		t_CData const &f_GetThisValue() const;
+		t_CData &f_GetThisValue();
 		t_CData const &f_GetValue(t_CStr _Str, t_CData const &_Default) const;
 		t_CData const &f_GetValue(t_CStr const &_Str) const;
 		t_CData f_GetValueMove(t_CStr const &_Str);
@@ -376,11 +378,14 @@ namespace NMib::NContainer
 		TCRegistry *f_SetValue(t_CStr _Name, t_CData const &_Data);
 		TCRegistry *f_SetValueNoPath(t_CStr const &_Name, t_CData const &_Data);
 
+		template <bool tf_bAllowLineBreakInEscapedString>
+		static t_CStr fs_ParseIdentifierStr(ch8 const * &o_pParse, CParseContext &_ParseContext, bool &_bWasEscaped);
+
 	private:
 		TCRegistry(TCRegistry *_pParent);
 
-		template <typename tf_CStr, typename tf_CData, ERegistryFlag tf_Flags>
-		void fp_Copy(TCRegistry<tf_CStr, tf_CData, tf_Flags> const &_Source);
+		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+		void fp_Copy(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Source);
 		bool fpr_DebugIsValid() const;
 		void fp_FixChildren();
 		void fpr_AddAllChildren(t_CStr const &_Path, NContainer::TCVector<t_CStr> &_Added) const;
@@ -404,8 +409,6 @@ namespace NMib::NContainer
 		TCRegistry const *fp_GetChildParse(t_CStr &_Str, t_CStr *_pNotFound, TCRegistry const **_pPrev = nullptr) const;
 		TCRegistry *fp_GetChildParse(t_CStr &_Str, t_CStr *_pNotFound, TCRegistry **_pPrev = nullptr);
 
-		template <bool tf_bAllowLineBreakInEscapedString>
-		static t_CStr fsp_ParseIdentifierStr(ch8 const * &o_pParse, CParseContext &_ParseContext, bool &_bWasEscaped);
 		template <typename tf_CParseContext>
 		bool fsp_ParseToEndOfLine(ch8 const * &o_pParse, tf_CParseContext &_ParseContext);
 		template <typename tf_CParseContext>
@@ -415,7 +418,7 @@ namespace NMib::NContainer
 		template <bool tf_bAllowLineBreakInEscapedString>
 		void fp_Parse(ch8 const *_pParse, CParseContext &_ParseContext);
 		template <bool tf_bEscapeNewLines>
-		static void fsp_GetEscapedStr(t_CStr const &_Str, t_CStr &_Dest, bool _bForceEscape, t_CStr const &_PreData);
+		static void fsp_GetEscapedStrAppend(t_CStr const &_Str, t_CStr &_Dest, bool _bForceEscape, t_CStr const &_PreData);
 		template <typename tf_CStr>
 		static bool fsp_OnlyWhiteSpace(tf_CStr const &_Str);
 		template <typename tf_CStr>

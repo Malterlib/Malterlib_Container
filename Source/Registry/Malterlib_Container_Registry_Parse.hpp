@@ -5,14 +5,9 @@
 
 namespace NMib::NContainer
 {
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <bool tf_bAllowLineBreakInEscapedString>
-	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::fsp_ParseIdentifierStr
-		(
-		 	ch8 const * &o_pParse
-		 	, CParseContext &_ParseContext
-		 	, bool &_bWasEscaped
-		)
+	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fs_ParseIdentifierStr(ch8 const * &o_pParse, CParseContext &_ParseContext, bool &_bWasEscaped)
 	{
 		t_CStr Ret;
 		_bWasEscaped = false;
@@ -132,9 +127,9 @@ namespace NMib::NContainer
 		return Ret;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <typename tf_CParseContext>
-	bool TCRegistry<t_CStr, t_CData, t_Flags>::fsp_ParseToEndOfLine(ch8 const * &o_pParse, tf_CParseContext &_ParseContext)
+	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_ParseToEndOfLine(ch8 const * &o_pParse, tf_CParseContext &_ParseContext)
 	{
 		auto pParse = o_pParse + 2;
 		bool bRet = false;
@@ -158,9 +153,9 @@ namespace NMib::NContainer
 		return bRet;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <typename tf_CParseContext>
-	bool TCRegistry<t_CStr, t_CData, t_Flags>::fsp_ParseToEndOfComment(ch8 const * &o_pParse, tf_CParseContext &_ParseContext)
+	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_ParseToEndOfComment(ch8 const * &o_pParse, tf_CParseContext &_ParseContext)
 	{
 		auto pParse = o_pParse + 2;
 		bool bRet = false;
@@ -188,16 +183,16 @@ namespace NMib::NContainer
 		return bRet;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <bool tf_bAllowLineBreakInEscapedString>
-	ch8 const *TCRegistry<t_CStr, t_CData, t_Flags>::fpr_Parse(ch8 const *_pParse, CParseContext &_ParseContext)
+	ch8 const *TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_Parse(ch8 const *_pParse, CParseContext &_ParseContext)
 	{
 		ch8 const *pParse = _pParse;
 		auto Current = *pParse;
 
 		aint ParseMode = 0;
 
-		t_CStr KeyName;
+		t_CKey KeyName;
 		bool bKeyNameWasEscaped = false;
 		[[maybe_unused]] decltype(_ParseContext.f_GetLocation(_pParse)) KeyLocation;
 
@@ -416,7 +411,13 @@ namespace NMib::NContainer
 					bool bWasEscaped = false;
 					if constexpr (mc_bSupportLocation)
 						KeyLocation = _ParseContext.f_GetLocation(pParse);
-					t_CStr Temp = fsp_ParseIdentifierStr<tf_bAllowLineBreakInEscapedString>(pParse, _ParseContext, bWasEscaped);
+
+					t_CKey Temp;
+					if constexpr (!TCRegistry_CustomValue<t_CData>::mc_bDefaultKey)
+						TCRegistry_CustomValue<t_CData>::fs_ParseKey(pParse, _ParseContext, bWasEscaped, Temp);
+					else
+						Temp = fs_ParseIdentifierStr<tf_bAllowLineBreakInEscapedString>(pParse, _ParseContext, bWasEscaped);
+
 					if constexpr (mc_bSupportWhiteSpace)
 						fl_FixupWhitespaceBeforeKey(pBeforeParse);
 					bHadChildren = false;
@@ -432,7 +433,7 @@ namespace NMib::NContainer
 						auto pBeforeParse = pParse;
 						bool bWasEscaped = false;
 						auto ValueLocation = _ParseContext.f_GetLocation(pParse);
-						t_CStr Temp = fsp_ParseIdentifierStr<tf_bAllowLineBreakInEscapedString>(pParse, _ParseContext, bWasEscaped);
+						t_CStr Temp = fs_ParseIdentifierStr<tf_bAllowLineBreakInEscapedString>(pParse, _ParseContext, bWasEscaped);
 						bHadChildren = false;
 						pReg = f_CreateChildNoPath(KeyName, mc_bSupportForceCreate);
 						if constexpr (mc_bSupportWhiteSpace)
@@ -505,9 +506,9 @@ namespace NMib::NContainer
 		return pParse;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <bool tf_bAllowLineBreakInEscapedString>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fp_Parse(ch8 const *_pParse, CParseContext &_ParseContext)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_Parse(ch8 const *_pParse, CParseContext &_ParseContext)
 	{
 		ch8 const *pParse = fpr_Parse<tf_bAllowLineBreakInEscapedString>(_pParse, _ParseContext);
 		if (*pParse == '}')
@@ -543,8 +544,8 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_ParseStr(t_CStr const &_Text, t_CStr const &_File)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ParseStr(t_CStr const &_Text, t_CStr const &_File)
 	{
 		// Remove anything existing
 		mp_Children.m_Tree.f_DeleteAllDefiniteType();
@@ -563,15 +564,15 @@ namespace NMib::NContainer
 		fp_Parse<false>(_Text.f_GetStr(), Context);
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_Parse(NStream::CBinaryStream &_Stream, t_CStr const &_File)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Parse(NStream::CBinaryStream &_Stream, t_CStr const &_File)
 	{
 		f_ParseStr(t_CStr::fs_ReadTextStream(_Stream), _File);
 	}
 
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_ParseLaxStr(t_CStr const &_Text, t_CStr const &_File)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ParseLaxStr(t_CStr const &_Text, t_CStr const &_File)
 	{
 		// Remove anything existing
 		mp_Children.m_Tree.f_DeleteAllDefiniteType();
@@ -590,8 +591,8 @@ namespace NMib::NContainer
 		fp_Parse<true>(_Text.f_GetStr(), Context);
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::f_ParseLax(NStream::CBinaryStream &_Stream, t_CStr const &_File)
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ParseLax(NStream::CBinaryStream &_Stream, t_CStr const &_File)
 	{
 		f_ParseLaxStr(t_CStr::fs_ReadTextStream(_Stream), _File);
 	}

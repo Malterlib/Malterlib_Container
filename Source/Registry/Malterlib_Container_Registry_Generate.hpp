@@ -5,9 +5,9 @@
 
 namespace NMib::NContainer
 {
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <typename tf_CStr>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fsp_ReplaceWithWhitespace(tf_CStr &o_Str)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_ReplaceWithWhitespace(tf_CStr &o_Str)
 	{
 		for (auto pParse = o_Str.f_GetStrUniqueWritable(); *pParse; ++pParse)
 		{
@@ -16,9 +16,9 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <bool tf_bEscapeNewLines>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fsp_GetEscapedStr(const t_CStr &_Str, t_CStr &_Dest, bool _bForceEscape, const t_CStr &_PreData)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_GetEscapedStrAppend(const t_CStr &_Str, t_CStr &_Dest, bool _bForceEscape, const t_CStr &_PreData)
 	{
 		bool bNeedEscape = _bForceEscape || _Str.f_IsEmpty();
 
@@ -76,17 +76,15 @@ namespace NMib::NContainer
 				_Dest += _Str.f_Extract(iStart, Len - iStart).f_EscapeStr("\\\"\r\n\t", "\\\"rnt");
 			}
 			else
-				_Dest = _Str.f_EscapeStr();
+				_Dest += _Str.f_EscapeStr();
 		}
 		else
-		{
-			_Dest = _Str;
-		}
+			_Dest += _Str;
 	}
 	
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <bool tf_bIncludeFileLine, bool tf_bEscapeNewLines, typename tf_CStr>
-	void TCRegistry<t_CStr, t_CData, t_Flags>::fspr_GenerateStr(tf_CStr &_Stream, mint _Level, const TCRegistry *_pReg)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fspr_GenerateStr(tf_CStr &_Stream, mint _Level, const TCRegistry *_pReg)
 	{
 		t_CStr PreData;
 		if constexpr (tf_bIncludeFileLine && mc_bSupportLocation)
@@ -96,8 +94,6 @@ namespace NMib::NContainer
 		}
 
 		PreData.f_AddChars('\t', _Level);
-
-		t_CStr KeyNameEscaped;
 
 		bool bForceEscaped = false;
 		if constexpr (mc_bSupportWhiteSpace)
@@ -139,9 +135,15 @@ namespace NMib::NContainer
 		bool bForceEscape = false;
 		if constexpr (mc_bSupportWhiteSpace)
 			bForceEscape = _pReg->f_GetForceEscapedKey();
-		fsp_GetEscapedStr<tf_bEscapeNewLines>(_pReg->f_GetName(), KeyNameEscaped, bForceEscape, PreDataValue);
-		PreDataValue += KeyNameEscaped;
-		_Stream += KeyNameEscaped;
+
+		auto PreKeyLen = _Stream.f_GetLen();
+
+		if constexpr (TCRegistry_CustomValue<t_CData>::mc_bDefaultKey)
+			fsp_GetEscapedStrAppend<tf_bEscapeNewLines>(_pReg->f_GetName(), _Stream, bForceEscape, PreDataValue);
+		else
+			TCRegistry_CustomValue<t_CData>::fs_GenerateKey(_Stream, _pReg->f_GetName(), bForceEscape, _Level, PreDataValue);
+
+		PreDataValue.f_AddStr(_Stream.f_GetStr() + PreKeyLen, _Stream.f_GetLen() - PreKeyLen);
 
 		if (!bValueIsEmpty || !bHasScope || bForceEscaped)
 		{
@@ -172,11 +174,7 @@ namespace NMib::NContainer
 
 			fsp_ReplaceWithWhitespace(PreDataValue);
 			if constexpr (TCRegistry_CustomValue<t_CData>::mc_bDefault)
-			{
-				t_CStr ValueEscaped;
-				fsp_GetEscapedStr<tf_bEscapeNewLines>(_pReg->mp_Data, ValueEscaped, bForceEscaped, PreDataValue);
-				_Stream += ValueEscaped;
-			}
+				fsp_GetEscapedStrAppend<tf_bEscapeNewLines>(_pReg->mp_Data, _Stream, bForceEscaped, PreDataValue);
 			else
 				TCRegistry_CustomValue<t_CData>::fs_Generate(_Stream, _pReg->mp_Data, bForceEscaped || !bHasScope, _Level, PreDataValue);
 		}
@@ -257,9 +255,9 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <typename tf_CStr, bool tf_bIncludeFileLine, bool tf_bEscapeNewLines>
-	tf_CStr TCRegistry<t_CStr, t_CData, t_Flags>::f_GenerateStr() const
+	tf_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GenerateStr() const
 	{
 		tf_CStr Temp;
 		auto Iter = mp_Children.f_GetIterator();
@@ -271,14 +269,14 @@ namespace NMib::NContainer
 		return Temp;
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::f_GenerateStr() const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GenerateStr() const
 	{
 		return f_GenerateStr<t_CStr, 0, 1>();
 	}
 
-	template <typename t_CStr, typename t_CData, ERegistryFlag t_Flags>
-	t_CStr TCRegistry<t_CStr, t_CData, t_Flags>::f_GenerateStrLax() const
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GenerateStrLax() const
 	{
 		return f_GenerateStr<t_CStr, 0, 0>();
 	}
