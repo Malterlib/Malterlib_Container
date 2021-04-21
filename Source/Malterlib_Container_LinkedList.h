@@ -872,6 +872,13 @@ namespace NMib::NContainer
 			return m_Data.m_List.f_IsEmpty();
 		}
 
+		bool f_HasSingleEntry() const
+		{
+			if (m_Data.m_List.f_IsEmpty())
+				return false;
+			return m_Data.m_List.f_GetFirst()->m_ListLink.f_IsAloneInList();
+		}
+
 		mint f_GetLen() const
 		{
 			return m_Data.m_List.f_GetLen();
