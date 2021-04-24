@@ -284,7 +284,7 @@ namespace NMib::NContainer
 				if (!fsp_ParseToEndOfComment(pParse, _ParseContext))
 					DMibError(NStr::CStr::CFormat("{}No end found for block comment") << _ParseContext.f_FormatLocation(StartLocation));
 			}
-			else if (Current == '{' && (!TCRegistry_CustomValue<t_CData>::mc_bRequireStartScopeOnSeparateLine || !bKeyWithoutLine))
+			else if (Current == '{' && (!TCRegistry_CustomKeyValue<t_CKey, t_CData>::mc_bRequireStartScopeOnSeparateLine || !bKeyWithoutLine))
 			{
 				auto LineBeforeStartLocation = _ParseContext.f_GetLocation(pParse);
 				auto pBeforeParse = pParse;
@@ -413,8 +413,8 @@ namespace NMib::NContainer
 						KeyLocation = _ParseContext.f_GetLocation(pParse);
 
 					t_CKey Temp;
-					if constexpr (!TCRegistry_CustomValue<t_CData>::mc_bDefaultKey)
-						TCRegistry_CustomValue<t_CData>::fs_ParseKey(pParse, _ParseContext, bWasEscaped, Temp);
+					if constexpr (!TCRegistry_CustomKeyValue<t_CKey, t_CData>::mc_bDefaultKey)
+						TCRegistry_CustomKeyValue<t_CKey, t_CData>::fs_ParseKey(pParse, _ParseContext, bWasEscaped, Temp, KeyLocation);
 					else
 						Temp = fs_ParseIdentifierStr<tf_bAllowLineBreakInEscapedString>(pParse, _ParseContext, bWasEscaped);
 
@@ -428,7 +428,7 @@ namespace NMib::NContainer
 				}
 				else
 				{
-					if constexpr (TCRegistry_CustomValue<t_CData>::mc_bDefault)
+					if constexpr (TCRegistry_CustomKeyValue<t_CKey, t_CData>::mc_bDefault)
 					{
 						auto pBeforeParse = pParse;
 						bool bWasEscaped = false;
@@ -462,7 +462,7 @@ namespace NMib::NContainer
 							auto pBeforeParse = pParse;
 							bool bWasEscaped = false;
 							auto ValueLocation = _ParseContext.f_GetLocation(pParse);
-							auto TempValue = TCRegistry_CustomValue<t_CData>::fs_Parse(pParse, _ParseContext, bWasEscaped);
+							auto TempValue = TCRegistry_CustomKeyValue<t_CKey, t_CData>::fs_Parse(pParse, _ParseContext, bWasEscaped);
 
 							bHadChildren = false;
 							bKeyWithoutLine = false;

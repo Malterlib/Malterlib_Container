@@ -5,8 +5,8 @@
 
 namespace NMib::NContainer
 {
-	template <typename t_CData>
-	struct TCRegistry_CustomValue
+	template <typename t_CKey, typename t_CData>
+	struct TCRegistry_CustomKeyValue
 	{
 		static constexpr bool mc_bDefault = true;
 		static constexpr bool mc_bDefaultKey = true;

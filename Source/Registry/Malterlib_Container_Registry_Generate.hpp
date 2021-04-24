@@ -101,10 +101,10 @@ namespace NMib::NContainer
 		bool bHasScope = _pReg->f_HasScope();
 
 		bool bValueIsEmpty;
-		if constexpr (TCRegistry_CustomValue<t_CData>::mc_bDefault)
+		if constexpr (TCRegistry_CustomKeyValue<t_CKey, t_CData>::mc_bDefault)
 			bValueIsEmpty = _pReg->mp_Data.f_IsEmpty();
 		else
-			bValueIsEmpty = TCRegistry_CustomValue<t_CData>::fs_ValueIsEmpty(_pReg->mp_Data, bForceEscaped || !bHasScope);
+			bValueIsEmpty = TCRegistry_CustomKeyValue<t_CKey, t_CData>::fs_ValueIsEmpty(_pReg->mp_Data, bForceEscaped || !bHasScope);
 
 		const ch8 *Space = " ";
 		const ch8 *NewLine = DMibNewLine;
@@ -138,10 +138,10 @@ namespace NMib::NContainer
 
 		auto PreKeyLen = _Stream.f_GetLen();
 
-		if constexpr (TCRegistry_CustomValue<t_CData>::mc_bDefaultKey)
+		if constexpr (TCRegistry_CustomKeyValue<t_CKey, t_CData>::mc_bDefaultKey)
 			fsp_GetEscapedStrAppend<tf_bEscapeNewLines>(_pReg->f_GetName(), _Stream, bForceEscape, PreDataValue);
 		else
-			TCRegistry_CustomValue<t_CData>::fs_GenerateKey(_Stream, _pReg->f_GetName(), bForceEscape, _Level, PreDataValue);
+			TCRegistry_CustomKeyValue<t_CKey, t_CData>::fs_GenerateKey(_Stream, _pReg->f_GetName(), bForceEscape, _Level, PreDataValue);
 
 		PreDataValue.f_AddStr(_Stream.f_GetStr() + PreKeyLen, _Stream.f_GetLen() - PreKeyLen);
 
@@ -173,10 +173,10 @@ namespace NMib::NContainer
 			}
 
 			fsp_ReplaceWithWhitespace(PreDataValue);
-			if constexpr (TCRegistry_CustomValue<t_CData>::mc_bDefault)
+			if constexpr (TCRegistry_CustomKeyValue<t_CKey, t_CData>::mc_bDefault)
 				fsp_GetEscapedStrAppend<tf_bEscapeNewLines>(_pReg->mp_Data, _Stream, bForceEscaped, PreDataValue);
 			else
-				TCRegistry_CustomValue<t_CData>::fs_Generate(_Stream, _pReg->mp_Data, bForceEscaped || !bHasScope, _Level, PreDataValue);
+				TCRegistry_CustomKeyValue<t_CKey, t_CData>::fs_Generate(_Stream, _pReg->mp_Data, bForceEscaped || !bHasScope, _Level, PreDataValue);
 		}
 
 		if constexpr (mc_bSupportWhiteSpace)
