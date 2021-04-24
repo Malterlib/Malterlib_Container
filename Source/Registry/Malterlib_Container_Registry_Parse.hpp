@@ -487,6 +487,10 @@ namespace NMib::NContainer
 								fl_FixupWhitespaceBeforeValue(pBeforeParse);
 							ParseMode = 0;
 						}
+						catch (NStr::CExceptionParse const &)
+						{
+							throw;
+						}
 						catch (NException::CException const &_Exception)
 						{
 							DMibError(NStr::CStr::CFormat("{}Failed to parse value: {}") << _ParseContext.f_FormatLocation(ParseLocation) << _Exception);
