@@ -63,33 +63,33 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
-	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueNoPath(t_CStr const &_Str) const
+	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueNoPath(t_CKey const &_Name) const
 	{
-		TCRegistry const *pRegistry = CRegistryKey::fs_FindEqual(*this, _Str);
+		TCRegistry const *pRegistry = CRegistryKey::fs_FindEqual(*this, _Name);
 		if (pRegistry)
 		{
 			return pRegistry->mp_Data;
 		}
 		else
-			DMibErrorRegistry(typename t_CStr::CFormat("No such key '{}'") << _Str);
+			DMibErrorRegistry(typename t_CStr::CFormat("No such key '{}'") << _Name);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
-	t_CData TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueNoPathMove(t_CStr const &_Str)
+	t_CData TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueNoPathMove(t_CKey const &_Name)
 	{
-		TCRegistry *pRegistry = CRegistryKey::fs_FindEqual(*this, _Str);
+		TCRegistry *pRegistry = CRegistryKey::fs_FindEqual(*this, _Name);
 		if (pRegistry)
 		{
 			return fg_Move(pRegistry->mp_Data);
 		}
 		else
-			DMibErrorRegistry(typename t_CStr::CFormat("No such key '{}'") << _Str);
+			DMibErrorRegistry(typename t_CStr::CFormat("No such key '{}'") << _Name);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
-	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueNoPath(t_CStr const &_Str, const t_CData &_Default) const
+	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueNoPath(t_CKey const &_Name, const t_CData &_Default) const
 	{
-		TCRegistry const *pRegistry = CRegistryKey::fs_FindEqual(*this, _Str);
+		TCRegistry const *pRegistry = CRegistryKey::fs_FindEqual(*this, _Name);
 		if (pRegistry)
 		{
 			return pRegistry->mp_Data;
@@ -134,7 +134,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetValueNoPath(t_CStr const &_Name, const t_CData &_Data) -> TCRegistry *
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetValueNoPath(t_CKey const &_Name, const t_CData &_Data) -> TCRegistry *
 	{
 		TCRegistry *pChild = CRegistryKey::fs_FindEqual(*this, _Name);
 

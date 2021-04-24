@@ -189,17 +189,15 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
-	template <typename tf_CKey>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetChildNoPath(tf_CKey const &_Str) const -> TCRegistry const *
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetChildNoPath(t_CKey const &_Name) const -> TCRegistry const *
 	{
-		return mp_Key.fs_FindEqual(*this, _Str);
+		return mp_Key.fs_FindEqual(*this, _Name);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
-	template <typename tf_CKey>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetChildNoPath(tf_CKey const &_Str) -> TCRegistry *
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetChildNoPath(t_CKey const &_Name) -> TCRegistry *
 	{
-		return mp_Key.fs_FindEqual(*this, _Str);
+		return mp_Key.fs_FindEqual(*this, _Name);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>

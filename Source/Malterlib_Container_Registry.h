@@ -256,10 +256,8 @@ namespace NMib::NContainer
 		bool f_HasChildren() const;
 		TCRegistry const *f_GetChild(t_CStr _Str) const;
 		TCRegistry *f_GetChild(t_CStr _Str);
-		template <typename tf_CKey>
-		TCRegistry const *f_GetChildNoPath(tf_CKey const &_Str) const;
-		template <typename tf_CKey>
-		TCRegistry *f_GetChildNoPath(tf_CKey const &_Str);
+		TCRegistry const *f_GetChildNoPath(t_CKey const &_Str) const;
+		TCRegistry *f_GetChildNoPath(t_CKey const &_Str);
 		void f_DeleteChild(TCRegistry *_pChild);
 		bool f_DeleteChild(t_CStr _Name, bool _bDeleteEmptyParentDirs = false);
 		bool f_DeleteChildNoPath(t_CKey const &_Name, bool _bDeleteEmptyParentDirs = false);
@@ -370,13 +368,13 @@ namespace NMib::NContainer
 		t_CData const &f_GetValue(t_CStr _Str, t_CData const &_Default) const;
 		t_CData const &f_GetValue(t_CStr const &_Str) const;
 		t_CData f_GetValueMove(t_CStr const &_Str);
-		t_CData const &f_GetValueNoPath(t_CStr const &_Str) const;
-		t_CData f_GetValueNoPathMove(t_CStr const &_Str);
-		t_CData const &f_GetValueNoPath(t_CStr const &_Str, t_CData const &_Default) const;
+		t_CData const &f_GetValueNoPath(t_CKey const &_Name) const;
+		t_CData f_GetValueNoPathMove(t_CKey const &_Name);
+		t_CData const &f_GetValueNoPath(t_CKey const &_Name, t_CData const &_Default) const;
 		bool f_GetValueIfExists(t_CStr _Str, t_CData &o_OutValue) const;
 		void f_SetThisValue(t_CData const &_Data);
 		TCRegistry *f_SetValue(t_CStr _Name, t_CData const &_Data);
-		TCRegistry *f_SetValueNoPath(t_CStr const &_Name, t_CData const &_Data);
+		TCRegistry *f_SetValueNoPath(t_CKey const &_Name, t_CData const &_Data);
 
 		template <bool tf_bAllowLineBreakInEscapedString>
 		static t_CStr fs_ParseIdentifierStr(ch8 const * &o_pParse, CParseContext &_ParseContext, bool &_bWasEscaped);
