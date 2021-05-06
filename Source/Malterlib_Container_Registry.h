@@ -415,8 +415,8 @@ namespace NMib::NContainer
 		ch8 const *fpr_Parse(ch8 const *_pParse, CParseContext &_ParseContext);
 		template <bool tf_bAllowLineBreakInEscapedString>
 		void fp_Parse(ch8 const *_pParse, CParseContext &_ParseContext);
-		template <bool tf_bEscapeNewLines>
-		static void fsp_GetEscapedStrAppend(t_CStr const &_Str, t_CStr &_Dest, bool _bForceEscape, t_CStr const &_PreData);
+		template <bool tf_bEscapeNewLines, typename tf_CStr>
+		static void fsp_GetEscapedStrAppend(t_CStr const &_Str, tf_CStr &_Dest, bool _bForceEscape, t_CStr const &_PreData);
 		template <typename tf_CStr>
 		static bool fsp_OnlyWhiteSpace(tf_CStr const &_Str);
 		template <typename tf_CStr>

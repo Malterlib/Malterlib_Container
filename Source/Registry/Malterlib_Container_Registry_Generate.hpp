@@ -17,8 +17,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
-	template <bool tf_bEscapeNewLines>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_GetEscapedStrAppend(const t_CStr &_Str, t_CStr &_Dest, bool _bForceEscape, const t_CStr &_PreData)
+	template <bool tf_bEscapeNewLines, typename tf_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_GetEscapedStrAppend(const t_CStr &_Str, tf_CStr &_Dest, bool _bForceEscape, const t_CStr &_PreData)
 	{
 		bool bNeedEscape = _bForceEscape || _Str.f_IsEmpty();
 
