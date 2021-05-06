@@ -478,6 +478,26 @@ namespace NMib::NContainer
 			return Iterator;
 		}
 
+		CIteratorConst f_GetIteratorLast() const
+		{
+			if (f_IsEmpty())
+				return {};
+			CIteratorConst Iterator;
+			Iterator.m_Iter = m_Data.m_List.f_GetLast();
+			return Iterator;
+		}
+
+		CIterator f_GetIteratorLast()
+		{
+			if (f_IsEmpty())
+				return {};
+
+			CIterator Iterator;
+			Iterator.m_pLinkedList = this;
+			Iterator.m_Iter = m_Data.m_List.f_GetLast();
+			return Iterator;
+		}
+
 		t_CData &f_InsertAfter(const CIterator &_InsertAfter)
 		{
 			CMember * pData = fp_Create();
