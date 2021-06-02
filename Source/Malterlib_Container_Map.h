@@ -716,20 +716,7 @@ namespace NMib::NContainer
 			}
 			void f_Remove()
 			{
-#ifdef DCompiler_MSVC_Workaround
-				auto *pToDelete = mp_Iter.f_GetCurrent();
-				mp_Iter.f_Next();
-				auto *pToFind = mp_Iter.f_GetCurrent();
-				mp_pMap->mp_Data.m_Tree.f_Remove(pToDelete, CMapTreeMemberCompare());
-				fg_DeleteObjectDefiniteType((t_CAllocator &)mp_pMap->mp_Data, pToDelete);
-				if (pToFind)
-				{
-					mp_Iter.f_InitForSearch(&mp_pMap->mp_Data.m_Tree);
-					mp_Iter.f_FindEqualForward(*pToFind);
-				}
-#else
 				mp_Iter.f_DeleteAllocatorDefiniteType(mp_pMap->mp_Data.m_Tree, CMapTreeMemberCompare(), (t_CAllocator &)mp_pMap->mp_Data);
-#endif
 			}
 
 			inline_small CUserDataQualified *f_GetCurrent() const
