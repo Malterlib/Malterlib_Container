@@ -291,9 +291,9 @@ namespace NMib::NContainer
 		void f_FindChanges(TCRegistry const &_Original, TCRegistry &_Changed, NContainer::TCVector<t_CKey> &_Deleted, bool _bIncludeAdded = true) const;
 
 		template <typename tf_CStr, bool tf_bIncludeFileLine, bool tf_bEscapeNewLines>
-		tf_CStr f_GenerateStr() const;
-		t_CStr f_GenerateStr() const;
-		t_CStr f_GenerateStrLax() const;
+		tf_CStr f_GenerateStr(ch8 const *_pNewLine = DMibNewLine) const;
+		t_CStr f_GenerateStr(ch8 const *_pNewLine = DMibNewLine) const;
+		t_CStr f_GenerateStrLax(ch8 const *_pNewLine = DMibNewLine) const;
 
 		template <typename t_CTransform>
 		void f_Transform(t_CTransform const &_fTransformer);
@@ -416,7 +416,7 @@ namespace NMib::NContainer
 		template <bool tf_bAllowLineBreakInEscapedString>
 		void fp_Parse(ch8 const *_pParse, CParseContext &_ParseContext);
 		template <bool tf_bEscapeNewLines, typename tf_CStr>
-		static void fsp_GetEscapedStrAppend(t_CStr const &_Str, tf_CStr &_Dest, bool _bForceEscape, t_CStr const &_PreData);
+		static void fsp_GetEscapedStrAppend(t_CStr const &_Str, tf_CStr &_Dest, bool _bForceEscape, t_CStr const &_PreData, ch8 const *_pNewLine);
 		template <typename tf_CStr>
 		static bool fsp_OnlyWhiteSpace(tf_CStr const &_Str);
 		template <typename tf_CStr>
@@ -424,7 +424,7 @@ namespace NMib::NContainer
 		void fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
 		void fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation _Location);
 		template <bool tf_bIncludeFileLine, bool tf_bEscapeNewLines, typename tf_CStr>
-		static void fspr_GenerateStr(tf_CStr &_Stream, mint _Level, TCRegistry const *_pReg);
+		static void fspr_GenerateStr(tf_CStr &_Stream, mint _Level, TCRegistry const *_pReg, ch8 const *_pNewLine);
 		static t_CStr fsp_AppendPath(t_CStr const &_Path, t_CStr const &_Append);
 
 #ifdef DMibDebug
