@@ -273,12 +273,12 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GenerateStr(ch8 const *_pNewLine) const
 	{
-		return f_GenerateStr<t_CStr, 0, 1>();
+		return f_GenerateStr<t_CStr, 0, 1>(_pNewLine);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GenerateStrLax(ch8 const *_pNewLine) const
 	{
-		return f_GenerateStr<t_CStr, 0, 0>();
+		return f_GenerateStr<t_CStr, 0, 0>(_pNewLine);
 	}
 }
