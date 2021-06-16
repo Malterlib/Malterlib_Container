@@ -62,7 +62,10 @@ namespace NMib::NContainer
 
 				if (pOldData)
 				{
-					NPrivate::fg_DestroyArray(pOldArray, CurrentLen, CurrentLen);
+#if DMibEnableSafeCheck > 0
+					if (!pOldData->m_bReserved || CurrentLen)
+#endif
+						NPrivate::fg_DestroyArray(pOldArray, CurrentLen, CurrentLen);
 					fp_FreeData(pOldData);
 				}
 			}

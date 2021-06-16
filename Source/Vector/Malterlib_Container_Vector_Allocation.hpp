@@ -41,6 +41,9 @@ namespace NMib::NContainer
 #endif
 		pData->m_Length = 0;
 		pData->m_AllocSize = Size;
+#if DMibEnableSafeCheck > 0
+		pData->m_bReserved = false;
+#endif
 
 		return pData;
 	}

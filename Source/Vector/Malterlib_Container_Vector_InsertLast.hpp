@@ -64,19 +64,22 @@ namespace NMib::NContainer
 		aint PrevLen = f_GetLen();
 		t_CData *pArray = fp_MakeRoom(PrevLen + _Size);
 		mint nAdded = 0;
-		try
-		{
-			for (mint i = 0; i < _Size; ++i)
+
+		auto Cleanup = g_OnScopeExit > [&]
 			{
-				new((void *)(pArray + PrevLen + i)) t_CData();
-				++nAdded;
+				if (nAdded)
+					NPrivate::fg_DestroyArray(pArray + PrevLen, nAdded, nAdded);
 			}
-		}
-		catch (...)
+		;
+
+		for (mint i = 0; i < _Size; ++i)
 		{
-			NPrivate::fg_DestroyArray(pArray + PrevLen, nAdded, nAdded);
-			throw;
+			new((void *)(pArray + PrevLen + i)) t_CData();
+			++nAdded;
 		}
+
+		Cleanup.f_Clear();
+
 		if (mp_StaticData.m_pData)
 			mp_StaticData.m_pData->m_Length += _Size;
 		return pArray + PrevLen;

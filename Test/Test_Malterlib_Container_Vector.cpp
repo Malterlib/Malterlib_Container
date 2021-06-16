@@ -14,6 +14,7 @@ namespace
 {
 	using namespace NMib::NContainer;
 	using namespace NMib::NException;
+
 	class CVector_Tests : public NMib::NTest::CTest
 	{
 	public:
@@ -273,9 +274,16 @@ namespace
 #if DMibConfig_Memory_Shims_EnableLocal
 			DMibTestSuite("Reserve")
 			{
+				{
+					// Destroy empty reserved
+					TCVector<int32> TestVector;
+					TestVector.f_Reserve(500);
+				}
+
 				TCVector<int32> TestVector;
 
 				TestVector.f_Reserve(500);
+
 
 				{
 					CTestMemoryMeasure MeasureMemory("Alloc");
@@ -300,7 +308,39 @@ namespace
 					DMibExpect(Results.m_AllAllocations.m_nAllocations.m_Average, >, 0.0);
 				}
 			};
+			DMibTestSuite("ClearNoTrim")
+			{
+				TCVector<int32> TestVector;
+
+				{
+					CTestMemoryMeasure MeasureMemory("Alloc");
+					MeasureMemory.f_Start();
+					for (int32 i = 0; i < 500; ++i)
+						TestVector.f_Insert(i);
+
+					MeasureMemory.f_Stop(1);
+					NMib::NTest::CTestMemoryResult Results;
+					MeasureMemory.f_GetResults(Results);
+					DMibExpect(Results.m_AllAllocations.m_nAllocations.m_Average, >, 0.0);
+				}
+
+				TestVector.f_ClearNoTrim();
+
+				{
+					CTestMemoryMeasure MeasureMemory("Alloc");
+					MeasureMemory.f_Start();
+					for (int32 i = 0; i < 500; ++i)
+						TestVector.f_Insert(i);
+					MeasureMemory.f_Stop(1);
+					NMib::NTest::CTestMemoryResult Results;
+					MeasureMemory.f_GetResults(Results);
+					DMibExpect(Results.m_AllAllocations.m_nAllocations.m_Average, ==, 0.0);
+				}
+
+				TestVector.f_ClearNoTrim();
+			};
 #endif
+
 		}
 
 		struct CExceptionObject

@@ -16,16 +16,19 @@ namespace NMib::NContainer
 		tf_CData const *pSrcArray = _Vector.f_GetArray();
 
 		mint nCopied = 0;
-		try
-		{
-			NPrivate::fg_CopyArray(pArray, pSrcArray, AddLen, nCopied);
-		}
-		catch (...)
-		{
-			NPrivate::fg_DestroyArray(pArray, nCopied, nCopied);
-			fp_MakeRoomBeginUndo(AddLen);
-			throw;
-		}
+
+		auto Cleanup = g_OnScopeExit > [&]
+			{
+				if (nCopied)
+					NPrivate::fg_DestroyArray(pArray, nCopied, nCopied);
+
+				fp_MakeRoomBeginUndo(AddLen);
+			}
+		;
+
+		NPrivate::fg_CopyArray(pArray, pSrcArray, AddLen, nCopied);
+
+		Cleanup.f_Clear();
 
 		return pArray;
 	}
@@ -44,16 +47,19 @@ namespace NMib::NContainer
 		t_CData *pArray = fp_MakeRoomBegin(_Len);
 
 		mint nCopied = 0;
-		try
-		{
-			NPrivate::fg_CopyArray(pArray, _pData, _Len, nCopied);
-		}
-		catch (...)
-		{
-			NPrivate::fg_DestroyArray(pArray, nCopied, nCopied);
-			fp_MakeRoomBeginUndo(_Len);
-			throw;
-		}
+
+		auto Cleanup = g_OnScopeExit > [&]
+			{
+				if (nCopied)
+					NPrivate::fg_DestroyArray(pArray, nCopied, nCopied);
+				
+				fp_MakeRoomBeginUndo(_Len);
+			}
+		;
+
+		NPrivate::fg_CopyArray(pArray, _pData, _Len, nCopied);
+
+		Cleanup.f_Clear();
 
 		return pArray;
 	}

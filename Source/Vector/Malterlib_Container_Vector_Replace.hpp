@@ -75,7 +75,10 @@ namespace NMib::NContainer
 			// Destroy old array
 			if (pOldData)
 			{
-				NPrivate::fg_DestroyArray(pOldArray, CurrentLength);
+#if DMibEnableSafeCheck > 0
+				if (!pOldData->m_bReserved || CurrentLength)
+#endif
+					NPrivate::fg_DestroyArray(pOldArray, CurrentLength);
 				fp_FreeData(pOldData);
 			}
 		}

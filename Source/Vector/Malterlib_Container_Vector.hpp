@@ -145,7 +145,10 @@ namespace NMib::NContainer
 	{
 		if (mp_StaticData.m_pData)
 		{
-			NPrivate::fg_DestroyArray(mp_StaticData.m_pData->f_GetData(), f_GetLen(), mp_StaticData.m_pData->m_Length);
+#if DMibEnableSafeCheck > 0
+			if (!mp_StaticData.m_pData->m_bReserved || mp_StaticData.m_pData->m_Length)
+#endif
+				NPrivate::fg_DestroyArray(mp_StaticData.m_pData->f_GetData(), f_GetLen(), mp_StaticData.m_pData->m_Length);
 			fp_FreeData(mp_StaticData.m_pData);
 			mp_StaticData.m_pData = nullptr;
 		}
@@ -156,7 +159,14 @@ namespace NMib::NContainer
 	{
 		if (mp_StaticData.m_pData)
 		{
-			NPrivate::fg_DestroyArray(mp_StaticData.m_pData->f_GetData(), f_GetLen(), mp_StaticData.m_pData->m_Length);
+#if DMibEnableSafeCheck > 0
+			if (!mp_StaticData.m_pData->m_bReserved || mp_StaticData.m_pData->m_Length)
+#endif
+				NPrivate::fg_DestroyArray(mp_StaticData.m_pData->f_GetData(), f_GetLen(), mp_StaticData.m_pData->m_Length);
+
+#if DMibEnableSafeCheck > 0
+			mp_StaticData.m_pData->m_bReserved = true;
+#endif
 			mp_StaticData.m_pData->m_Length = 0;
 		}
 	}

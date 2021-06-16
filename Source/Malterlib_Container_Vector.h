@@ -339,6 +339,9 @@ namespace NMib::NContainer
 		public:
 			mint m_Length;
 			mint m_AllocSize;
+#if DMibEnableSafeCheck > 0
+			bool m_bReserved = false;
+#endif
 			inline_small t_CData *f_GetData()
 			{
 				return (t_CData *)(this + 1);
@@ -358,6 +361,9 @@ namespace NMib::NContainer
 		public:
 			mint m_Length;
 			mint m_AllocSize;
+#if DMibEnableSafeCheck > 0
+			bool m_bReserved = false;
+#endif
 			inline_small t_CData *f_GetData()
 			{
 				return (t_CData *)(this + 1);
