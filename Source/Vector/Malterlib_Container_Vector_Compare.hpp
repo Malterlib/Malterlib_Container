@@ -18,7 +18,7 @@ namespace NMib::NContainer
 
 		for (mint i = 0; i < Len; ++i)
 		{
-			if (pThisArray[i] != pOtherArray[i])
+			if (!(pThisArray[i] == pOtherArray[i]))
 				return false;
 		}
 
@@ -27,15 +27,16 @@ namespace NMib::NContainer
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-	bool TCVector<t_CData, t_CAllocator, t_COptions>::operator < (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const
+	auto TCVector<t_CData, t_CAllocator, t_COptions>::operator <=> (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const
 	{
+		using COrdering = decltype(fg_GetType<const t_CData &>() <=> fg_GetType<const tf_CData &>());
+
 		mint Len = f_GetLen();
 		mint OtherLen = _Other.f_GetLen();
 
-		if (Len < OtherLen)
-			return true;
-		else if (Len > OtherLen)
-			return false;
+		auto LenResult = Len <=> OtherLen;
+		if (LenResult != 0)
+			return COrdering(LenResult);
 
 		auto pThisArray = f_GetArray();
 		auto pOtherArray = _Other.f_GetArray();
@@ -45,15 +46,15 @@ namespace NMib::NContainer
 			auto &Left = pThisArray[i];
 			auto &Right = pOtherArray[i];
 
-			if (Left < Right)
-				return true;
-			else if (Left > Right)
-				return false;
+			auto Result = Left <=> Right;
+
+			if (Result != 0)
+				return Result;
 		}
 
-		return false;
+		return COrdering::equivalent;
 	}
-	
+
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions, typename t_CFunctor>
 	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_Compare(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other, t_CFunctor &&_Functor) const

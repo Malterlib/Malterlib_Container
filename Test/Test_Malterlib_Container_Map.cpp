@@ -1,4 +1,4 @@
-﻿// Copyright © 2015 Hansoft AB
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #include <set>
@@ -16,6 +16,26 @@ namespace
 		void f_DoTests()
 		{
 
+			DMibTestCategory("Bugs")
+			{
+				DMibTestSuite("1")
+				{
+
+					NMib::NContainer::TCMap<NMib::NStr::CStr, NMib::NContainer::TCVector<NMib::NStr::CStr>> Testing;
+					NMib::NStr::CStr Name;
+
+					Name = "subjectAltName";
+					Testing[Name].f_Insert("Test 2");
+
+					Name = "MalterlibHostID";
+					Testing[Name].f_Insert("Test 1");
+
+					auto *pTest = Testing.f_FindEqual("MalterlibHostID");
+					DMibAssertTrue(pTest);
+
+					DMibExpect(*pTest, ==, NMib::NContainer::TCVector<NMib::NStr::CStr>{"Test 1"});
+				};
+			};
 			DMibTestCategory("Remove")
 			{
 				DMibTestSuite("Set")

@@ -243,7 +243,7 @@ namespace NMib::NContainer
 		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
 		bool operator == (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const;
 		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
-		bool operator < (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const;
+		auto operator <=> (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const;
 
 		void f_Clear();
 

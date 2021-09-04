@@ -925,25 +925,27 @@ namespace NMib::NContainer
 			return true;
 		}
 
-		bool operator < (const TCLinkedList &_Other) const
+		auto operator <=> (const TCLinkedList &_Other) const
 		{
+			using COrdering = decltype(fg_GetType<t_CData const &>() <=> fg_GetType<t_CData const &>());
+
 			CIteratorConst Iter0 = *this;
 			CIteratorConst Iter1 = _Other;
 			while (Iter0 && Iter1)
 			{
-				if ((*Iter0 < *Iter1))
-					return true;
-				if ((*Iter1 < *Iter0))
-					return false;
+				if (auto Result = (*Iter0 <=> *Iter1); Result != 0)
+					return Result;
 
 				++Iter0;
 				++Iter1;
 			}
 
 			if (!Iter0 && Iter1)
-				return true;
+				return COrdering::less;
+			if (Iter0 && !Iter1)
+				return COrdering::greater;
 
-			return false;
+			return COrdering::equivalent;
 		}
 
 		static t_CData *fs_GetPrev(t_CData &_Current)

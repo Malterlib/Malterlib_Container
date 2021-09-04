@@ -29,27 +29,33 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 	template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
-	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::operator < (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::operator <=> (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const
 	{
-		NMisc::ECompareResult Compare = NMisc::fg_Compare(f_GetName(), _Other.f_GetName());
-		Compare = NMisc::fg_Compare(Compare, f_GetThisValue(), _Other.f_GetThisValue());
-		if (Compare)
-			return Compare < 0;
+		using COrdering = TCCommonOrderingType<decltype(f_GetName() <=> _Other.f_GetName()), decltype(f_GetThisValue() <=> _Other.f_GetThisValue())>;
+
+		if (auto Result = f_GetName() <=> _Other.f_GetName(); Result != 0)
+			return COrdering(Result);
+
+		if (auto Result = f_GetThisValue() <=> _Other.f_GetThisValue(); Result != 0)
+			return COrdering(Result);
 
 		auto Iter = f_GetChildIterator();
 		auto IterOther = _Other.f_GetChildIterator();
 		while (Iter && IterOther)
 		{
-			Compare = NMisc::fg_Compare(*Iter, *IterOther);
-			if (Compare)
-				return Compare < 0;
+			if (auto Result = *Iter <=> *IterOther; Result != 0)
+				return Result;
+
 			++Iter;
 			++IterOther;
 		}
+
 		if (IterOther && !Iter)
-			return false;
+			return COrdering::greater;
+
 		if (!IterOther && Iter)
-			return true;
+			return COrdering::less;
+
 		return false;
 	}
 }

@@ -82,8 +82,9 @@ namespace NMib::NContainer
 
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 		bool operator == (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const;
+
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-		bool operator < (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const;
+		auto operator <=> (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const;
 
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions, typename t_CFunctor>
 		aint f_Compare(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other, t_CFunctor &&_Functor) const;

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015 Hansoft AB
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #include <Mib/Core/Core>
@@ -799,9 +799,9 @@ namespace NMib
 					int32 m_Value;
 					int32 m_Sequence;
 
-					bool operator < (CTestClass const &_Right) const
+					auto operator <=> (CTestClass const &_Right) const
 					{
-						return m_Value < _Right.m_Value;
+						return m_Value <=> _Right.m_Value;
 					}
 				};
 

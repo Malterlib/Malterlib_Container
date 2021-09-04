@@ -10,21 +10,13 @@ namespace NMib::NContainer
 	class CMapNoData
 	{
 	public:
-		bool operator == (CMapNoData const &_Other) const
-		{
-			return true;
-		}
-
-		bool operator < (CMapNoData const &_Other) const
-		{
-			return false;
-		}
-
+		constexpr auto operator <=> (CMapNoData const &_Other) const = default;
 	};
 
 	class CMapSet
 	{
 	public:
+		constexpr auto operator <=> (CMapSet const &_Other) const = default;
 	};
 
 	struct CMapTreeMemberBase
@@ -266,7 +258,6 @@ namespace NMib::NContainer
 		typedef typename NTraits::TCRemoveReference<t_CData>::CType CData;
 		typedef TCMapTreeMember<t_CKey, t_CData> CMapTreeMember; // This needs to be public until we have C++14 usable for generic lambdas
 	private:
-
 
 		class CMapTreeMemberCompare
 		{
@@ -1521,37 +1512,41 @@ namespace NMib::NContainer
 				++Iter1;
 			}
 
-			if (Iter0 && !Iter1)
-				return false;
-			if (!Iter0 && Iter1)
+			if (!!Iter0 != !!Iter1)
 				return false;
 
 			return true;
 		}
 
-		bool operator < (const TCMap &_Other) const
+		auto operator <=> (const TCMap &_Other) const
 		{
+			using COrdering = TCCommonOrderingType
+				<
+					decltype(fg_GetType<t_CKey const &>() <=> fg_GetType<t_CKey const &>())
+					, decltype(fg_GetType<t_CData const &>() <=> fg_GetType<t_CData const &>())
+				>
+			;
+
 			CIteratorConst Iter0 = *this;
 			CIteratorConst Iter1 = _Other;
 			while (Iter0 && Iter1)
 			{
-				if (Iter0.f_GetKey() < Iter1.f_GetKey())
-					return true;
-				if (Iter1.f_GetKey() < Iter0.f_GetKey())
-					return false;
-				if (*Iter0 < *Iter1)
-					return true;
-				if (*Iter1 < *Iter0)
-					return false;
+				if (auto Result = Iter0.f_GetKey() <=> Iter1.f_GetKey(); Result != 0)
+					return COrdering(Result);
+
+				if (auto Result = *Iter0 <=> *Iter1; Result != 0)
+					return COrdering(Result);
 
 				++Iter0;
 				++Iter1;
 			}
 
 			if (!Iter0 && Iter1)
-				return true;
+				return COrdering::less;
+			else if (Iter0 && !Iter1)
+				return COrdering::greater;
 
-			return false;
+			return COrdering::equivalent;
 		}
 
 		struct CFormatOptions
