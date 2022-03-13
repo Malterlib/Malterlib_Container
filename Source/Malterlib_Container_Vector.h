@@ -323,6 +323,9 @@ namespace NMib::NContainer
 		template <typename tf_CFormatInto, typename tf_CFormatOptions>
 		void f_Format(tf_CFormatInto &o_FormatInto, tf_CFormatOptions const &_Options) const;
 
+		template <typename tf_CContainer>
+		static TCVector fs_FromContainer(tf_CContainer &&_Container);
+
 	private:
 #if defined(DCompiler_MSVC_Workaround)
 		static constexpr mint fsp_Alignment()
@@ -438,6 +441,9 @@ namespace NMib::NContainer
 	template <typename tf_CReturn, typename... tf_CParams>
 	auto fg_CreateVector(tf_CParams && ...p_Params);
 
+	template <typename tf_CContainer>
+	auto fg_VectorFromContainer(tf_CContainer &&_Container);
+
 	struct CSecureByteVector;
 
 	struct CByteVector : public TCVector<uint8>
@@ -509,6 +515,7 @@ namespace NMib::NContainer
 #include "Vector/Malterlib_Container_Vector_ConstructCopy.hpp"
 #include "Vector/Malterlib_Container_Vector_ConstructMove.hpp"
 #include "Vector/Malterlib_Container_Vector_CreateVector.hpp"
+#include "Vector/Malterlib_Container_Vector_VectorFromContainer.hpp"
 #include "Vector/Malterlib_Container_Vector_Delete.hpp"
 #include "Vector/Malterlib_Container_Vector_Find.hpp"
 #include "Vector/Malterlib_Container_Vector_Format.hpp"

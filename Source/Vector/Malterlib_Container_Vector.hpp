@@ -170,4 +170,16 @@ namespace NMib::NContainer
 			mp_StaticData.m_pData->m_Length = 0;
 		}
 	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	template <typename tf_CContainer>
+	auto TCVector<t_CData, t_CAllocator, t_COptions>::fs_FromContainer(tf_CContainer &&_Container) -> TCVector
+	{
+		TCVector Return;
+
+		for (auto &Value : _Container)
+			Return.f_Insert(fg_ForwardAs<tf_CContainer>(Value));
+
+		return Return;
+	}
 }
