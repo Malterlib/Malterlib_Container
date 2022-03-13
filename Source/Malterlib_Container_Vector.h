@@ -467,6 +467,8 @@ namespace NMib::NContainer
 		CByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> const &) = delete;
 
 		CSecureByteVector f_ToSecure() const; // Accept the risk of this
+		NStr::CStr f_ToString() const;
+		static CByteVector fs_FromString(NStr::CStr const &_String);
 	};
 
 	struct CSecureByteVector : public TCVector<uint8, NMemory::CAllocator_HeapSecure>
@@ -490,6 +492,8 @@ namespace NMib::NContainer
 		CSecureByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> const &) = delete;
 
 		CByteVector f_ToInsecure() const; // Accept the risk of this
+		NStr::CStrSecure f_ToString() const;
+		static CSecureByteVector fs_FromString(NStr::CStrSecure const &_String);
 	};
 
 	DMibImpErrorClassDefine(CExceptionList, NException::CException);
