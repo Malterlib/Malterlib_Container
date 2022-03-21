@@ -6,6 +6,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_FindDiffs
 		(
 		 	t_CStr const &_Path
@@ -65,6 +66,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_FindChanges(const t_CStr &_Path, const TCRegistry &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
 	{
 		// Find added and changed
@@ -98,6 +100,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_FindChanges
 		(
 			t_CStr const &_Path
@@ -155,6 +158,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FindDiffs
 		(
 			TCRegistry const &_Original
@@ -168,12 +172,14 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FindChanges(const TCRegistry &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
 	{
 		fpr_FindChanges("", _Original, _Changed, _bIncludeAdded);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FindChanges
 		(
 			TCRegistry const &_Original

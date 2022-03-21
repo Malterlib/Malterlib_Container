@@ -27,7 +27,19 @@ namespace NMib::NContainer
 		, ERegistryFlag_FullLocation = DMibBit(3)
 	};
 
+	template <typename t_CStr, ERegistryFlag t_Flags>
+	concept cCompatibleRegistryFlags =
+		(sizeof(typename t_CStr::CChar) == 1) // Only 8 bit string types supported
+		&&
+		( // Preserve whitespace can only be used together with duplicate keys
+			(t_Flags & (ERegistryFlag_PreserveWhitspace | ERegistryFlag_DuplicateKeys)) == ERegistryFlag_None
+			|| (t_Flags & (ERegistryFlag_PreserveWhitspace | ERegistryFlag_DuplicateKeys)) == ERegistryFlag_DuplicateKeys
+			|| (t_Flags & (ERegistryFlag_PreserveWhitspace | ERegistryFlag_DuplicateKeys)) == (ERegistryFlag_PreserveWhitspace | ERegistryFlag_DuplicateKeys)
+		)
+	;
+
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags = ERegistryFlag_None, typename t_CStr = t_CKey>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	struct TCRegistry;
 
 	enum ERegistryWhiteSpaceLocation
@@ -49,22 +61,12 @@ namespace NMib::NContainer
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	struct TCRegistry
 	{
 		using CLocation = NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>;
 
 	private:
-		static_assert(sizeof(typename t_CStr::CChar) == 1, "Only 8 bit string types supported");
-
-		static_assert
-			(
-			 	(t_Flags & (ERegistryFlag_PreserveWhitspace | ERegistryFlag_DuplicateKeys)) == ERegistryFlag_None
-			 	|| (t_Flags & (ERegistryFlag_PreserveWhitspace | ERegistryFlag_DuplicateKeys)) == ERegistryFlag_DuplicateKeys
-			 	|| (t_Flags & (ERegistryFlag_PreserveWhitspace | ERegistryFlag_DuplicateKeys)) == (ERegistryFlag_PreserveWhitspace | ERegistryFlag_DuplicateKeys)
-			 	, "Preserve whitespace can only be used together with duplicate keys"
-			)
-		;
-
 		using CChar = typename t_CStr::CChar;
 
 		using CRegistryKey = typename TCChooseType
@@ -90,6 +92,7 @@ namespace NMib::NContainer
 		friend struct TCRegistryKeyStrPreserve;
 
 		template <typename t_CKey2, typename t_CData2, ERegistryFlag t_Flags2, typename t_CStr2>
+			requires cCompatibleRegistryFlags<t_CStr2, t_Flags2>
 		friend struct TCRegistry;
 
 		template <typename t_CStream2, typename t_CData2>

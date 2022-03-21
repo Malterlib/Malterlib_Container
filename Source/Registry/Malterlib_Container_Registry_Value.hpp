@@ -6,24 +6,28 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetThisValue() const
 	{
 		return mp_Data;
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CData &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetThisValue()
 	{
 		return mp_Data;
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetThisValue(const t_CData &_Data)
 	{
 		mp_Data = _Data;
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValue(t_CStr _Str, const t_CData &_Default) const
 	{
 
@@ -37,6 +41,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValue(t_CStr const &_Str) const
 	{
 		t_CStr Str = _Str;
@@ -50,6 +55,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CData TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueMove(t_CStr const &_Str)
 	{
 		t_CStr Str = _Str;
@@ -63,6 +69,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueNoPath(t_CKey const &_Name) const
 	{
 		TCRegistry const *pRegistry = CRegistryKey::fs_FindEqual(*this, _Name);
@@ -75,6 +82,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CData TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueNoPathMove(t_CKey const &_Name)
 	{
 		TCRegistry *pRegistry = CRegistryKey::fs_FindEqual(*this, _Name);
@@ -87,6 +95,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueNoPath(t_CKey const &_Name, const t_CData &_Default) const
 	{
 		TCRegistry const *pRegistry = CRegistryKey::fs_FindEqual(*this, _Name);
@@ -99,6 +108,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueIfExists(t_CStr _Str, t_CData & _OutValue) const
 	{
 		TCRegistry const *pRegistry = fp_GetChildParse(_Str, fg_NullPtr<t_CStr>());
@@ -112,6 +122,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetValue(t_CStr _Name, const t_CData &_Data) -> TCRegistry *
 	{
 		t_CStr NotFound;
@@ -134,6 +145,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetValueNoPath(t_CKey const &_Name, const t_CData &_Data) -> TCRegistry *
 	{
 		TCRegistry *pChild = CRegistryKey::fs_FindEqual(*this, _Name);

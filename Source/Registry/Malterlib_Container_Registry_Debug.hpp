@@ -6,6 +6,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_DebugIsValid() const
 	{
 		auto Iter = mp_Children.f_GetIterator();
@@ -23,6 +24,7 @@ namespace NMib::NContainer
 
 #ifdef DMibDebug
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	inline_never ch16 const *TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_Debug_GetUTF16() const
 	{
 		NMib::NStr::g_DebugOutputTemp16 = f_GenerateStr();
@@ -30,6 +32,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_DebugTraceTree() const
 	{
 		NStr::CStr Temp = f_GenerateStr<NStr::CStr, mc_bSupportLocation, 1>();
@@ -38,6 +41,7 @@ namespace NMib::NContainer
 #endif
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_DebugIsValid(bool _bIsRoot) const
 	{
 		if (_bIsRoot && mp_pParent != nullptr)

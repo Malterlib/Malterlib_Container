@@ -6,6 +6,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CStr>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_ReplaceWithWhitespace(tf_CStr &o_Str)
 	{
@@ -17,6 +18,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bEscapeNewLines, typename tf_CStr>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_GetEscapedStrAppend(const t_CStr &_Str, tf_CStr &_Dest, bool _bForceEscape, const t_CStr &_PreData, ch8 const *_pNewLine)
 	{
@@ -84,6 +86,7 @@ namespace NMib::NContainer
 	}
 	
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bIncludeFileLine, bool tf_bEscapeNewLines, typename tf_CStr>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fspr_GenerateStr(tf_CStr &_Stream, mint _Level, const TCRegistry *_pReg, ch8 const *_pNewLine)
 	{
@@ -257,6 +260,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CStr, bool tf_bIncludeFileLine, bool tf_bEscapeNewLines>
 	tf_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GenerateStr(ch8 const *_pNewLine) const
 	{
@@ -271,12 +275,14 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GenerateStr(ch8 const *_pNewLine) const
 	{
 		return f_GenerateStr<t_CStr, 0, 1>(_pNewLine);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GenerateStrLax(ch8 const *_pNewLine) const
 	{
 		return f_GenerateStr<t_CStr, 0, 0>(_pNewLine);

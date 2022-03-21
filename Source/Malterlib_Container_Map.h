@@ -655,8 +655,8 @@ namespace NMib::NContainer
 
 			template <typename tf_CKey>
 			TCIterator(CMapQualified &_Map, const tf_CKey &_Key)
+				requires (!t_bReverse) // Not supported for reverse iterators
 			{
-				static_assert(!t_bReverse, "Not supported for reverse iterators");
 				mp_pMap = &_Map;
 				mp_Iter.f_InitForSearch(_Map.mp_Data.m_Tree);
 				mp_Iter.f_FindEqualForward(fg_Forward<tf_CKey>(_Key));
@@ -696,9 +696,8 @@ namespace NMib::NContainer
 				}
 			}
 			inline_medium void f_Prev()
+				requires (t_bBidirectional) // Only available when bidirectional
 			{
-				static_assert(t_bBidirectional, "Only available when bidirectional");
-
 				if constexpr (t_bReverse)
 					mp_Iter.f_NextBidirectional();
 				else
@@ -740,8 +739,8 @@ namespace NMib::NContainer
 			}
 
 			inline_small void operator --()
+				requires (t_bBidirectional) // Only available when bidirectional
 			{
-				static_assert(t_bBidirectional, "Only available when bidirectional");
 				f_Prev();
 			}
 
@@ -1228,24 +1227,24 @@ namespace NMib::NContainer
 
 
 		static const t_CKey &fs_GetKey(const CUserData * _pData)
+			requires (!NTraits::TCIsReference<t_CData>::mc_Value) //This function is not supported when mapping reference types
 		{
-			static_assert(!NTraits::TCIsReference<t_CData>::mc_Value, "This function is not supported when mapping reference types");
 			mint Offset = CMapTreeMember::fs_GetOffset();
 			const CMapTreeMember *pMember = (const CMapTreeMember *)(((uint8 *)_pData) - Offset);
 			return pMember->f_GetKey();
 		}
 
 		static const t_CKey &fs_GetKey(const CUserData &_Data)
+			requires (!NTraits::TCIsReference<t_CData>::mc_Value) //This function is not supported when mapping reference types
 		{
-			static_assert(!NTraits::TCIsReference<t_CData>::mc_Value, "This function is not supported when mapping reference types");
 			mint Offset = CMapTreeMember::fs_GetOffset();
 			const CMapTreeMember *pMember = (const CMapTreeMember *)(((uint8 *)(&_Data)) - Offset);;
 			return pMember->f_GetKey();
 		}
 
 		void f_Remove(CUserData * _pData)
+			requires (!NTraits::TCIsReference<t_CData>::mc_Value) //This function is not supported when mapping reference types
 		{
-			static_assert(!NTraits::TCIsReference<t_CData>::mc_Value, "This function is not supported when mapping reference types");
 			mint Offset = CMapTreeMember::fs_GetOffset();
 			CMapTreeMember *pMember = (CMapTreeMember *)(((uint8 *)_pData) - Offset);
 			mp_Data.m_Tree.f_Remove(pMember);
@@ -1254,8 +1253,8 @@ namespace NMib::NContainer
 
 		// This only makes sense when the actual pointer of the node is used for comparion
 		bool f_TryRemovePointerBasedComparison(CUserData * _pData)
+			requires (!NTraits::TCIsReference<t_CData>::mc_Value) //This function is not supported when mapping reference types
 		{
-			static_assert(!NTraits::TCIsReference<t_CData>::mc_Value, "This function is not supported when mapping reference types");
 			mint Offset = CMapTreeMember::fs_GetOffset();
 			CMapTreeMember *pMember = (CMapTreeMember *)(((uint8 *)_pData) - Offset);
 			if (!mp_Data.m_Tree.f_FindEqual(pMember->f_GetData()))
@@ -1267,8 +1266,8 @@ namespace NMib::NContainer
 		}
 
 		void f_ExtractAndInsert(TCMap &_Map, CUserData *_pData)
+			requires (!NTraits::TCIsReference<t_CData>::mc_Value) //This function is not supported when mapping reference types
 		{
-			static_assert(!NTraits::TCIsReference<t_CData>::mc_Value, "This function is not supported when mapping reference types");
 			mint Offset = CMapTreeMember::fs_GetOffset();
 			CMapTreeMember *pMember = (CMapTreeMember *)(((uint8 *)_pData) - Offset);
 			_Map.mp_Data.m_Tree.f_Remove(pMember);

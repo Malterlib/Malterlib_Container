@@ -6,6 +6,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::TCRegistry()
 		: mp_Key((TCRegistry *)nullptr) // No parent
 		, mp_pParent (nullptr)
@@ -14,6 +15,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::~TCRegistry()
 	{
 		if (mp_pParent && mp_ChildLink.f_IsInTree())
@@ -28,6 +30,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::TCRegistry(TCRegistry *_pParent)
 		: mp_Key(_pParent)
 	{
@@ -35,6 +38,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Clear()
 	{
 		mp_Children.m_Tree.f_DeleteAllDefiniteType();
@@ -42,12 +46,14 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CKey const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetName() const
 	{
 		return mp_Key.f_GetName();
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetName(t_CKey const &_Name)
 	{
 		if (mp_pParent && mp_ChildLink.f_IsInTree())

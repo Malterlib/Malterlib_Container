@@ -6,6 +6,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bAllowLineBreakInEscapedString>
 	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fs_ParseIdentifierStr(ch8 const * &o_pParse, CParseContext &_ParseContext, bool &_bWasEscaped)
 	{
@@ -128,6 +129,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CParseContext>
 	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_ParseToEndOfLine(ch8 const * &o_pParse, tf_CParseContext &_ParseContext)
 	{
@@ -154,6 +156,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CParseContext>
 	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_ParseToEndOfComment(ch8 const * &o_pParse, tf_CParseContext &_ParseContext)
 	{
@@ -184,6 +187,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bAllowLineBreakInEscapedString>
 	ch8 const *TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_Parse(ch8 const *_pParse, CParseContext &_ParseContext)
 	{
@@ -511,6 +515,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bAllowLineBreakInEscapedString>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_Parse(ch8 const *_pParse, CParseContext &_ParseContext)
 	{
@@ -549,6 +554,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ParseStr(t_CStr const &_Text, t_CStr const &_File)
 	{
 		// Remove anything existing
@@ -569,6 +575,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Parse(NStream::CBinaryStream &_Stream, t_CStr const &_File)
 	{
 		f_ParseStr(t_CStr::fs_ReadTextStream(_Stream), _File);
@@ -576,6 +583,7 @@ namespace NMib::NContainer
 
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ParseLaxStr(t_CStr const &_Text, t_CStr const &_File)
 	{
 		// Remove anything existing
@@ -596,6 +604,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ParseLax(NStream::CBinaryStream &_Stream, t_CStr const &_File)
 	{
 		f_ParseLaxStr(t_CStr::fs_ReadTextStream(_Stream), _File);

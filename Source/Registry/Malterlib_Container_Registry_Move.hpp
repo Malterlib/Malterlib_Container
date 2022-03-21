@@ -6,6 +6,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::TCRegistry(TCRegistry &&_Source)
 		: mp_Key((TCRegistry *)nullptr)
 		, mp_Data(fg_Move(_Source.mp_Data))
@@ -25,6 +26,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::operator = (TCRegistry &&_Source) -> TCRegistry &
 	{
 		if (mp_pParent && mp_ChildLink.f_IsInTree())
@@ -54,6 +56,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetContents(TCRegistry &&_Source) -> TCRegistry &
 	{
 		mp_Data = fg_Move(_Source.mp_Data);

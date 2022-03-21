@@ -6,6 +6,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CStr>
 	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_OnlyWhiteSpace(tf_CStr const &_Str)
 	{
@@ -18,6 +19,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str)
 	{
 		if constexpr (mc_bSupportWhiteSpace)
@@ -29,6 +31,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation _Location)
 	{
 		if constexpr (mc_bSupportWhiteSpace)
@@ -38,6 +41,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bSupportLocation>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetLocation(CLocation const &_Location) -> TCEnableIfType<tf_bSupportLocation>
 	{
@@ -45,6 +49,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bSupportLocation>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetValueLocation(NStr::TCParseLocation<t_CStr, true> const &_Location) -> TCEnableIfType<tf_bSupportLocation>
 	{
@@ -52,6 +57,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bSupportLocation>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetLocation() const -> TCEnableIfType<tf_bSupportLocation, CLocation> const &
 	{
@@ -59,6 +65,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bSupportLocation>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueLocation() const -> TCEnableIfType<tf_bSupportLocation, NStr::TCParseLocation<t_CStr, true>> const &
 	{
@@ -66,6 +73,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bSupportWhiteSpace>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetForceEscapedKey() const -> TCEnableIfType<tf_bSupportWhiteSpace, bool>
 	{
@@ -73,6 +81,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bSupportWhiteSpace>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetForceEscapedValue() const -> TCEnableIfType<tf_bSupportWhiteSpace, bool>
 	{
@@ -80,6 +89,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bSupportWhiteSpace>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetForceEscapedKey(bool _bForced) -> TCEnableIfType<tf_bSupportWhiteSpace>
 	{
@@ -87,6 +97,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bSupportWhiteSpace>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetForceEscapedValue(bool _bForced) -> TCEnableIfType<tf_bSupportWhiteSpace>
 	{
@@ -94,6 +105,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CStr, bool tf_bSupportWhiteSpace>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation _Location, tf_CStr const &_Str) -> TCEnableIfType<tf_bSupportWhiteSpace, bool>
 	{
@@ -167,6 +179,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bSupportWhiteSpace>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str) -> TCEnableIfType<tf_bSupportWhiteSpace>
 	{
@@ -175,6 +188,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_HasScope() const
 	{
 		if (!mp_Children.m_Tree.f_IsEmpty())
@@ -194,6 +208,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bSupportWhiteSpace>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const -> TCEnableIfType<tf_bSupportWhiteSpace, NStr::CStr>
 	{

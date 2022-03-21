@@ -6,6 +6,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_AppendPath(const t_CStr &_Path, const t_CStr &_Append)
 	{
 		if (_Path.f_IsEmpty())
@@ -15,6 +16,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_GetChildParse
 		(
 		 	t_CStr &_Str
@@ -60,6 +62,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_GetChildParse(t_CStr &_Str, t_CStr *_pNotFound, TCRegistry **_pPrev) -> TCRegistry *
 	{
 		TCRegistry *pCurrent = this;
@@ -99,18 +102,21 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetParent() -> TCRegistry *
 	{
 		return mp_pParent;
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetParent() const -> TCRegistry const *
 	{
 		return mp_pParent;
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetPath() const
 	{
 		auto Ret = fg_RegistryNameStringForPath(f_GetName());

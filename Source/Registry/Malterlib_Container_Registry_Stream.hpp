@@ -6,6 +6,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_FixChildren()
 	{
 		auto Iter = mp_Children.f_GetIterator();
@@ -17,6 +18,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CStream>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Feed(tf_CStream &_Stream) const
 	{
@@ -26,6 +28,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CStream>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Consume(tf_CStream &_Stream)
 	{
@@ -36,6 +39,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CStream, typename tf_CIndex>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Feed(tf_CStream &_Stream, TCRegistryStringTable<t_CStr, tf_CIndex> &_StringTable) const
 	{
@@ -53,6 +57,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CStream, typename tf_CIndex>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Consume(tf_CStream &_Stream, TCRegistryStringTable<t_CStr, tf_CIndex> const &_StringTable)
 	{
@@ -77,6 +82,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CStream>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FeedWithStringTable(tf_CStream &_Stream) const
 	{
@@ -93,6 +99,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CStream>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FeedWithStringTable(tf_CStream &_Stream)
 	{
