@@ -329,8 +329,8 @@ namespace NMib::NContainer
 		{
 			return fg_MaxConstexpr
 				(
-					NTraits::TCAlignmentOf<t_CData>::mc_Value
-					, NTraits::TCAlignmentOf<mint>::mc_Value
+					alignof(t_CData)
+					, alignof(mint)
 				)
 			;
 		}
@@ -349,11 +349,10 @@ namespace NMib::NContainer
 			}
 		};
 #else
-		static constexpr mint mcp_Alignment =
-			fg_MaxConstexpr
+		static constexpr mint mcp_Alignment = fg_MaxConstexpr
 			(
-				NTraits::TCAlignmentOf<t_CData>::mc_Value
-				, NTraits::TCAlignmentOf<mint>::mc_Value
+				alignof(t_CData)
+				, alignof(mint)
 			)
 		;
 

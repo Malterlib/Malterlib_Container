@@ -126,7 +126,7 @@ namespace NMib::NContainer
 		CMember *fp_Create(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams)
 		{
 			static_assert(NTraits::TCIsSame<tf_CType, t_CData>::mc_Value || NTraits::TCIsVoid<tf_CType>::mc_Value, "Cannot override creation type");
-			auto Memory = m_Data.f_AllocSafe(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+			auto Memory = m_Data.f_AllocSafe(sizeof(CMember), alignof(CMember));
 			CMember * pData = (CMember *)Memory.m_pMemory;
 			new((void *)pData) CMember(fg_Move(_CreateParams));
 			Memory.f_Claim();
@@ -135,7 +135,7 @@ namespace NMib::NContainer
 
 		CMember *fp_Create(t_CData &_ToInsert)
 		{
-			auto Memory = m_Data.f_AllocSafe(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+			auto Memory = m_Data.f_AllocSafe(sizeof(CMember), alignof(CMember));
 			CMember * pData = (CMember *)Memory.m_pMemory;
 			new((void *)pData) CMember(_ToInsert);
 			Memory.f_Claim();
@@ -144,7 +144,7 @@ namespace NMib::NContainer
 
 		CMember *fp_Create(t_CData &&_ToInsert)
 		{
-			auto Memory = m_Data.f_AllocSafe(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+			auto Memory = m_Data.f_AllocSafe(sizeof(CMember), alignof(CMember));
 			CMember * pData = (CMember *)Memory.m_pMemory;
 			new((void *)pData) CMember(fg_Move(_ToInsert));
 			Memory.f_Claim();
@@ -153,7 +153,7 @@ namespace NMib::NContainer
 
 		CMember *fp_Create(const t_CData &_ToInsert)
 		{
-			auto Memory = m_Data.f_AllocSafe(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+			auto Memory = m_Data.f_AllocSafe(sizeof(CMember), alignof(CMember));
 			CMember * pData = (CMember *)Memory.m_pMemory;
 			new((void *)pData) CMember(_ToInsert);
 			Memory.f_Claim();
@@ -162,7 +162,7 @@ namespace NMib::NContainer
 
 		CMember *fp_Create()
 		{
-			auto Memory = m_Data.f_AllocSafe(sizeof(CMember), NTraits::TCAlignmentOf<CMember>::mc_Value);
+			auto Memory = m_Data.f_AllocSafe(sizeof(CMember), alignof(CMember));
 			CMember * pData = (CMember *)Memory.m_pMemory;
 			new((void *)pData) CMember();
 			Memory.f_Claim();
@@ -198,7 +198,7 @@ namespace NMib::NContainer
 			m_Data.f_AllocBatch
 				(
 					sizeof(CMember)
-					, NTraits::TCAlignmentOf<CMember>::mc_Value
+					, alignof(CMember)
 					, [&](void * _pData, mint _Size) -> bool
 					{
 						CMember * pData = new(_pData) CMember(*iSource);

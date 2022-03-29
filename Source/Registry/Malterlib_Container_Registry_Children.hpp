@@ -126,15 +126,12 @@ namespace NMib::NContainer
 			TCRegistry *pPrev = this;
 			TCRegistry *pChild = pPrev->fp_GetChildParse(_Name, &NotFound, &pPrev);
 
-			bool bCreated = false;
-
 			while (!pChild)
 			{
 				pChild = DMibNew TCRegistry(pPrev);
 				pChild->mp_Key.f_Set(NotFound);
 				pPrev->mp_Children.f_Insert(pChild);
 				pPrev = pChild;
-				bCreated = true;
 				if (_Name.f_IsEmpty())
 					break;
 				pChild = pPrev->fp_GetChildParse(_Name, &NotFound, &pPrev);

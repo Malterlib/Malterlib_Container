@@ -342,7 +342,7 @@ namespace NMib::NContainer
 				_Map.mp_Data.f_AllocBatch
 					(
 						sizeof(CMapTreeMember)
-						, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
+						, alignof(CMapTreeMember)
 						, [&](void * _pAlloc, mint _Size) -> bool
 						{
 							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
@@ -368,7 +368,7 @@ namespace NMib::NContainer
 				_Map.mp_Data.f_AllocBatch
 					(
 						sizeof(CMapTreeMember)
-						, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
+						, alignof(CMapTreeMember)
 						, [&](void * _pAlloc, mint _Size) -> bool
 						{
 							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
@@ -402,7 +402,7 @@ namespace NMib::NContainer
 				_Map.mp_Data.f_AllocBatch
 					(
 						sizeof(CMapTreeMember)
-						, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
+						, alignof(CMapTreeMember)
 						, [&](void * _pAlloc, mint _Size) -> bool
 						{
 							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
@@ -446,7 +446,7 @@ namespace NMib::NContainer
 				_Map.mp_Data.f_AllocBatch
 					(
 						sizeof(CMapTreeMember)
-						, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
+						, alignof(CMapTreeMember)
 						, [&](void * _pAlloc, mint _Size) -> bool
 						{
 							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
@@ -488,7 +488,7 @@ namespace NMib::NContainer
 				_Map.mp_Data.f_AllocBatch
 					(
 						sizeof(CMapTreeMember)
-						, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
+						, alignof(CMapTreeMember)
 						, [&](void * _pAlloc, mint _Size) -> bool
 						{
 							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
@@ -522,7 +522,7 @@ namespace NMib::NContainer
 				_Map.mp_Data.f_AllocBatch
 					(
 						sizeof(CMapTreeMember)
-						, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
+						, alignof(CMapTreeMember)
 						, [&](void * _pAlloc, mint _Size) -> bool
 						{
 							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
@@ -944,7 +944,7 @@ namespace NMib::NContainer
 			CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
 			if (!pData)
 			{
-				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
 				pData = (CMapTreeMember *)Memory.m_pMemory;
 				new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key));
 				Memory.f_Claim();
@@ -982,7 +982,7 @@ namespace NMib::NContainer
 			CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
 			if (!pData)
 			{
-				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
 				pData = (CMapTreeMember *)Memory.m_pMemory;
 				new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key));
 				Memory.f_Claim();
@@ -998,7 +998,7 @@ namespace NMib::NContainer
 			if (!pData)
 			{
 				_bCreated = true;
-				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
 				pData = (CMapTreeMember *)Memory.m_pMemory;
 				new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CArgs>(p_Args)...);
 				Memory.f_Claim();
@@ -1017,7 +1017,7 @@ namespace NMib::NContainer
 			if (!pData)
 			{
 				bWasCreated = true;
-				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
 				pData = (CMapTreeMember *)Memory.m_pMemory;
 				new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
 				Memory.f_Claim();
@@ -1032,7 +1032,7 @@ namespace NMib::NContainer
 			mp_Data.f_AllocBatch
 				(
 					sizeof(CMapTreeMember)
-					, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
+					, alignof(CMapTreeMember)
 					, [&](void * _pAlloc, mint _Size) -> bool
 					{
 						auto Cleanup = mp_Data.f_MakeSafe(_pAlloc, _Size);
@@ -1053,7 +1053,7 @@ namespace NMib::NContainer
 			mp_Data.f_AllocBatch
 				(
 					sizeof(CMapTreeMember)
-					, NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value
+					, alignof(CMapTreeMember)
 					, [&](void * _pAlloc, mint _Size) -> bool
 					{
 						auto Cleanup = mp_Data.f_MakeSafe(_pAlloc, _Size);
@@ -1474,7 +1474,7 @@ namespace NMib::NContainer
 
 			while (nItems)
 			{
-				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), NTraits::TCAlignmentOf<CMapTreeMember>::mc_Value);
+				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
 				CMapTreeMember *pData = (CMapTreeMember *)Memory.m_pMemory;
 				pData = new((void *)pData) CMapTreeMember();
 				Memory.f_Claim();
