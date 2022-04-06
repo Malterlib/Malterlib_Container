@@ -29,7 +29,7 @@ namespace NMib::NContainer
 		t_CData *pArray = fp_MakeRoomMiddle(_Position, 1);
 
 #if DMibEnableSafeCheck > 0
-		auto Cleanup = g_OnScopeExit > [&]
+		auto Cleanup = g_OnScopeExit / [&]
 			{
 				DMibFastCheck(false); // Move should not throw
 			}

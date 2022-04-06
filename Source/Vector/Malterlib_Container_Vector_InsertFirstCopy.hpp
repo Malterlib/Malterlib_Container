@@ -17,7 +17,7 @@ namespace NMib::NContainer
 
 		mint nCopied = 0;
 
-		auto Cleanup = g_OnScopeExit > [&]
+		auto Cleanup = g_OnScopeExit / [&]
 			{
 				if (nCopied)
 					NPrivate::fg_DestroyArray(pArray, nCopied, nCopied);
@@ -48,7 +48,7 @@ namespace NMib::NContainer
 
 		mint nCopied = 0;
 
-		auto Cleanup = g_OnScopeExit > [&]
+		auto Cleanup = g_OnScopeExit / [&]
 			{
 				if (nCopied)
 					NPrivate::fg_DestroyArray(pArray, nCopied, nCopied);

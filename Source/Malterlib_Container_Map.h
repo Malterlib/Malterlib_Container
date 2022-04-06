@@ -785,7 +785,7 @@ namespace NMib::NContainer
 
 		TCMap(const TCMap &_Other)
 		{
-			auto Cleanup = g_OnScopeExit > [&]
+			auto Cleanup = g_OnScopeExit / [&]
 				{
 					f_Clear();
 				}
@@ -798,7 +798,7 @@ namespace NMib::NContainer
 
 		TCMap(TCMap &_Other)
 		{
-			auto Cleanup = g_OnScopeExit > [&]
+			auto Cleanup = g_OnScopeExit / [&]
 				{
 					f_Clear();
 				}
@@ -811,7 +811,7 @@ namespace NMib::NContainer
 
 		TCMap(TCInitializerList<CMapTreeMember> const &_Values)
 		{
-			auto Cleanup = g_OnScopeExit > [&]
+			auto Cleanup = g_OnScopeExit / [&]
 				{
 					f_Clear();
 				}
@@ -833,7 +833,7 @@ namespace NMib::NContainer
 		template <typename tf_CKey, typename tf_CData, typename tf_CCompare, typename tf_CAllocator>
 		TCMap(const TCMap<tf_CKey, tf_CData, tf_CCompare, tf_CAllocator> &_Other)
 		{
-			auto Cleanup = g_OnScopeExit > [&]
+			auto Cleanup = g_OnScopeExit / [&]
 				{
 					f_Clear();
 				}
@@ -855,7 +855,7 @@ namespace NMib::NContainer
 		template <typename tf_CKey, typename tf_CData, typename tf_CCompare, typename tf_CAllocator>
 		TCMap(TCMap<tf_CKey, tf_CData, tf_CCompare, tf_CAllocator> &_Other)
 		{
-			auto Cleanup = g_OnScopeExit > [&]
+			auto Cleanup = g_OnScopeExit / [&]
 				{
 					f_Clear();
 				}
@@ -877,7 +877,7 @@ namespace NMib::NContainer
 		template <typename tf_CKey, typename tf_CData, typename tf_CCompare, typename tf_CAllocator>
 		TCMap(TCMap<tf_CKey, tf_CData, tf_CCompare, tf_CAllocator> &&_Other)
 		{
-			auto Cleanup = g_OnScopeExit > [&]
+			auto Cleanup = g_OnScopeExit / [&]
 				{
 					f_Clear();
 				}
@@ -1477,7 +1477,7 @@ namespace NMib::NContainer
 				CMapTreeMember *pData = (CMapTreeMember *)Memory.m_pMemory;
 				pData = new((void *)pData) CMapTreeMember();
 				Memory.f_Claim();
-				auto Cleanup = g_OnScopeExit > [&]
+				auto Cleanup = g_OnScopeExit / [&]
 					{
 						fg_DeleteObjectDefiniteType(mp_Data, pData);
 					}

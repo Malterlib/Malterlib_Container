@@ -12,7 +12,7 @@ namespace NMib::NContainer
 		{
 			if (_Source.fp_Allocator().f_IsStatic(_Source.mp_StaticData.m_pData))
 			{
-				auto Cleanup = g_OnScopeExit > [&]
+				auto Cleanup = g_OnScopeExit / [&]
 					{
 						f_Clear();
 					}
@@ -39,7 +39,7 @@ namespace NMib::NContainer
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 	TCVector<t_CData, t_CAllocator, t_COptions>::TCVector(TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Source)
 	{
-		auto Cleanup = g_OnScopeExit > [&]
+		auto Cleanup = g_OnScopeExit / [&]
 			{
 				f_Clear();
 			}

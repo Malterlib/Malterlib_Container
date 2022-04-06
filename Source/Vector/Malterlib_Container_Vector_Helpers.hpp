@@ -44,7 +44,7 @@ namespace NMib::NContainer::NPrivate
 		else
 		{
 #if DMibEnableSafeCheck > 0
-			auto Cleanup = g_OnScopeExit > [&]
+			auto Cleanup = g_OnScopeExit / [&]
 				{
 					DMibFastCheck(false); // Destructor should not throw
 				}
@@ -74,7 +74,7 @@ namespace NMib::NContainer::NPrivate
 		else
 		{
 #if DMibEnableSafeCheck > 0
-			auto Cleanup = g_OnScopeExit > [&]
+			auto Cleanup = g_OnScopeExit / [&]
 				{
 					DMibFastCheck(false); // Move should not throw
 				}
@@ -94,7 +94,7 @@ namespace NMib::NContainer::NPrivate
 	static void fg_MoveArray(t_CData0 *_pDest, t_CData1 *_pSrc, mint _Len)
 	{
 #if DMibEnableSafeCheck > 0
-		auto Cleanup = g_OnScopeExit > [&]
+		auto Cleanup = g_OnScopeExit / [&]
 			{
 				DMibFastCheck(false); // Move should not throw
 			}
@@ -161,7 +161,7 @@ namespace NMib::NContainer::NPrivate
 	static void fg_MoveDestroyOverlappingArrayReverse(t_CData *_pDest, t_CData *_pSrc, mint _Len)
 	{
 #if DMibEnableSafeCheck > 0
-		auto Cleanup = g_OnScopeExit > [&]
+		auto Cleanup = g_OnScopeExit / [&]
 			{
 				DMibFastCheck(false); // Move or destructor should not throw
 			}
@@ -212,7 +212,7 @@ namespace NMib::NContainer::NPrivate
 	static void fg_MoveDestroyOverlappingArray(t_CData *_pDest, t_CData *_pSrc, mint _Len)
 	{
 #if DMibEnableSafeCheck > 0
-		auto Cleanup = g_OnScopeExit > [&]
+		auto Cleanup = g_OnScopeExit / [&]
 			{
 				DMibFastCheck(false); // Move or destructor should not throw
 			}
@@ -266,7 +266,7 @@ namespace NMib::NContainer::NPrivate
 			else
 			{
 #if DMibEnableSafeCheck > 0
-				auto Cleanup = g_OnScopeExit > [&]
+				auto Cleanup = g_OnScopeExit / [&]
 					{
 						DMibFastCheck(false); // Destructor should not throw
 					}
@@ -291,7 +291,7 @@ namespace NMib::NContainer::NPrivate
 			else
 			{
 #if DMibEnableSafeCheck > 0
-				auto Cleanup = g_OnScopeExit > [&]
+				auto Cleanup = g_OnScopeExit / [&]
 					{
 						DMibFastCheck(false); // Destructor, or move should not throw
 					}

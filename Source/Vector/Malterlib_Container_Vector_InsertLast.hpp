@@ -65,7 +65,7 @@ namespace NMib::NContainer
 		t_CData *pArray = fp_MakeRoom(PrevLen + _Size);
 		mint nAdded = 0;
 
-		auto Cleanup = g_OnScopeExit > [&]
+		auto Cleanup = g_OnScopeExit / [&]
 			{
 				if (nAdded)
 					NPrivate::fg_DestroyArray(pArray + PrevLen, nAdded, nAdded);

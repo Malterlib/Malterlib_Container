@@ -19,7 +19,7 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	TCVector<t_CData, t_CAllocator, t_COptions>::TCVector(TCVector const &_Source)
 	{
-		auto Cleanup = g_OnScopeExit > [&]
+		auto Cleanup = g_OnScopeExit / [&]
 			{
 				f_Clear();
 			}
@@ -40,7 +40,7 @@ namespace NMib::NContainer
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 	TCVector<t_CData, t_CAllocator, t_COptions>::TCVector(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Source)
 	{
-		auto Cleanup = g_OnScopeExit > [&]
+		auto Cleanup = g_OnScopeExit / [&]
 			{
 				f_Clear();
 			}

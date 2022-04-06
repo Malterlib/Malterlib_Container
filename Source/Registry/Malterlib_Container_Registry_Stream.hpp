@@ -69,7 +69,7 @@ namespace NMib::NContainer
 		while (nItems)
 		{
 			TCRegistry *pChild = DMibNew TCRegistry(this);
-			auto Cleanup = g_OnScopeExit > [&]
+			auto Cleanup = g_OnScopeExit / [&]
 				{
 					delete pChild;
 				}

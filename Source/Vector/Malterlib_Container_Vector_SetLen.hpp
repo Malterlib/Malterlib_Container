@@ -113,7 +113,7 @@ namespace NMib::NContainer
 
 			mint nConstructed = 0;
 
-			auto Cleanup = g_OnScopeExit > [&]
+			auto Cleanup = g_OnScopeExit / [&]
 				{
 					if (nConstructed)
 						NPrivate::fg_DestroyArray(pNewArray + OldRemainingCells, nConstructed, nConstructed);
