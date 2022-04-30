@@ -595,7 +595,7 @@ namespace
 						{
 							DMibTestPath(Category);
 							CRegistryPreserveWhitespace Registry;
-							DMibTest(DMibExpr(fg_ThrowsException(DMibErrorInstance(Exception))) == DMibLExpr(Registry.f_ParseStr(_String)));
+							DMibExpectException(Registry.f_ParseStr(_String), DMibErrorInstance(Exception));
 						};
 					};
 
