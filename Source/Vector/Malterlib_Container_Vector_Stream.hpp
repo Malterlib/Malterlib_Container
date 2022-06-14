@@ -15,8 +15,8 @@ namespace NMib::NStream
 
 			fg_FeedLenToStream(_Stream, nItems);
 
-			for (mint i = 0; i < nItems; ++i)
-				_Stream << _Data[i];
+			for (auto &Item : _Data)
+				_Stream << Item;
 		}
 
 		static void fs_Feed(t_CStream &_Stream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> &&_Data)
@@ -25,8 +25,8 @@ namespace NMib::NStream
 
 			fg_FeedLenToStream(_Stream, nItems);
 
-			for (mint i = 0; i < nItems; ++i)
-				_Stream << fg_Move(_Data[i]);
+			for (auto &Item : _Data)
+				_Stream << fg_Move(Item);
 		}
 
 		static void fs_Consume(t_CStream &_Stream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> &_Data)
@@ -36,8 +36,8 @@ namespace NMib::NStream
 			fg_CheckLengthLimit(_Stream, nItems);
 			_Data.f_SetLen(nItems);
 
-			for (mint i = 0; i < nItems; ++i)
-				_Stream >> _Data[i];
+			for (auto &Item : _Data)
+				_Stream >> Item;
 		}
 	};
 
