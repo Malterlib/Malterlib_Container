@@ -839,7 +839,10 @@ namespace NMib::NContainer
 				}
 			;
 
-			fp_CopyAll(_Other);
+			if constexpr(NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+				fp_CopyAll(_Other);
+			else
+				fp_CopyAddAll(_Other);
 
 			Cleanup.f_Clear();
 		}
@@ -848,7 +851,10 @@ namespace NMib::NContainer
 		TCMap &operator = (const TCMap<tf_CKey, tf_CData, tf_CCompare, tf_CAllocator> &_Other)
 		{
 			f_Clear();
-			fp_CopyAll(_Other);
+			if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+				fp_CopyAll(_Other);
+			else
+				fp_CopyAddAll(_Other);
 			return *this;
 		}
 
@@ -861,7 +867,10 @@ namespace NMib::NContainer
 				}
 			;
 
-			fp_CopyAll(_Other);
+			if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+				fp_CopyAll(_Other);
+			else
+				fp_CopyAddAll(_Other);
 
 			Cleanup.f_Clear();
 		}
@@ -870,7 +879,10 @@ namespace NMib::NContainer
 		TCMap &operator = (TCMap<tf_CKey, tf_CData, tf_CCompare, tf_CAllocator> &_Other)
 		{
 			f_Clear();
-			fp_CopyAll(_Other);
+			if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+				fp_CopyAll(_Other);
+			else
+				fp_CopyAddAll(_Other);
 			return *this;
 		}
 
@@ -883,7 +895,10 @@ namespace NMib::NContainer
 				}
 			;
 
-			fp_MoveAll(_Other);
+			if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+				fp_MoveAll(_Other);
+			else
+				fp_MoveAddAll(_Other);
 
 			Cleanup.f_Clear();
 		}
@@ -892,7 +907,10 @@ namespace NMib::NContainer
 		TCMap &operator = (TCMap<tf_CKey, tf_CData, tf_CCompare, tf_CAllocator> &&_Other)
 		{
 			f_Clear();
-			fp_MoveAll(_Other);
+			if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+				fp_MoveAll(_Other);
+			else
+				fp_MoveAddAll(_Other);
 			return *this;
 		}
 
