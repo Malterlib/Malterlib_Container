@@ -586,40 +586,53 @@ namespace NMib::NContainer
 
 		struct CMapper
 		{
-			void *m_pMemory;
 			CMapper(void * _pMemory)
 				: m_pMemory(_pMemory)
 			{
 			}
+
 			template <typename tf_CKey, typename... tfp_CArg>
 			CUserData &operator ()(tf_CKey &&_Key, tfp_CArg && ... p_Args)
 			{
 				return (new(m_pMemory) CMapTreeMember(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CArg>(p_Args)...))->f_GetData();
 			}
+
+			void *m_pMemory;
 		};
 
 		struct CConditionalMapper
 		{
-			void *m_pMemory;
-			TCMap & m_Map;
-			bool m_bAddFailed;
 			CConditionalMapper(void * _pMemory, TCMap & _Map)
 				: m_pMemory(_pMemory)
 				, m_Map(_Map)
 				, m_bAddFailed(false)
 			{
 			}
+
 			template <typename tf_CKey, typename... tfp_CArg>
 			TCMapResult<CUserData &> operator ()(tf_CKey &&_Key, tfp_CArg && ... p_Args)
 			{
-				if (auto pOld = m_Map.f_FindEqual(fg_Forward<tf_CKey>(_Key)))
-				{
-					m_bAddFailed = true;
-					return TCMapResult<CUserData &>(*pOld, false);
-				}
-				m_bAddFailed = false;
-				return TCMapResult<CUserData &>((new(m_pMemory) CMapTreeMember(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CArg>(p_Args)...))->f_GetData(), true);
+				m_bAddFailed = true;
+				auto pData = m_Map.mp_Data.m_Tree.f_FindEqualOrInsert
+					(
+						_Key
+						, [&]() -> CMapTreeMember *
+						{
+							m_bAddFailed = false;
+
+							auto pData = (new(m_pMemory) CMapTreeMember(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CArg>(p_Args)...));
+
+							return pData;
+						}
+					)
+				;
+
+				return TCMapResult<CUserData &>(pData->f_GetData(), !m_bAddFailed);
 			}
+
+			void *m_pMemory;
+			TCMap &m_Map;
+			bool m_bAddFailed;
 		};
 
 		template <bool t_bReverse, bool t_bConst, bool t_bBidirectional>
@@ -957,16 +970,19 @@ namespace NMib::NContainer
 		template <typename tf_CKey>
 		CUserData& operator[] (tf_CKey &&_Key)
 		{
-			CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
-			if (!pData)
-			{
-				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
-				pData = (CMapTreeMember *)Memory.m_pMemory;
-				new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key));
-				Memory.f_Claim();
-				mp_Data.m_Tree.f_Insert(pData);
-			}
-			return pData->f_GetData();
+			return mp_Data.m_Tree.f_FindEqualOrInsert
+				(
+					_Key
+					, [&]() -> CMapTreeMember *
+					{
+						auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
+						auto pData = (CMapTreeMember *)Memory.m_pMemory;
+						new ((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key));
+						Memory.f_Claim();
+						return pData;
+					}
+				)->f_GetData()
+			;
 		}
 
 		template <typename tf_CKey>
@@ -993,52 +1009,61 @@ namespace NMib::NContainer
 		}
 
 		template <typename tf_CKey>
-		CUserData& f_Map (tf_CKey &&_Key)
+		CUserData &f_Map(tf_CKey &&_Key)
 		{
-			CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
-			if (!pData)
-			{
-				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
-				pData = (CMapTreeMember *)Memory.m_pMemory;
-				new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key));
-				Memory.f_Claim();
-				mp_Data.m_Tree.f_Insert(pData);
-			}
-			return pData->f_GetData();
+			return mp_Data.m_Tree.f_FindEqualOrInsert
+				(
+					_Key
+					, [&]() -> CMapTreeMember *
+					{
+						auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
+						auto pData = (CMapTreeMember *)Memory.m_pMemory;
+						new ((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key));
+						Memory.f_Claim();
+						return pData;
+					}
+				)->f_GetData()
+			;
 		}
 
 		template <typename tf_CKey, typename... tfp_CArgs>
-		CUserData& f_Map (tf_CKey &&_Key, bool &_bCreated, tfp_CArgs && ... p_Args)
+		CUserData &f_Map(tf_CKey &&_Key, bool &_bCreated, tfp_CArgs && ... p_Args)
 		{
-			CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
-			if (!pData)
-			{
-				_bCreated = true;
-				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
-				pData = (CMapTreeMember *)Memory.m_pMemory;
-				new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CArgs>(p_Args)...);
-				Memory.f_Claim();
-				mp_Data.m_Tree.f_Insert(pData);
-			}
-			else
-				_bCreated = false;
-			return pData->f_GetData();
+			_bCreated = false;
+			return mp_Data.m_Tree.f_FindEqualOrInsert
+				(
+					_Key
+					, [&]() -> CMapTreeMember *
+					{
+						_bCreated = true;
+						auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
+						auto pData = (CMapTreeMember *)Memory.m_pMemory;
+						new ((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CArgs>(p_Args)...);
+						Memory.f_Claim();
+						return pData;
+					}
+				)->f_GetData()
+			;
 		}
 
 		template <typename tf_CKey, typename... tfp_CParam>
 		TCMapResult<CUserData &> operator () (tf_CKey &&_Key, tfp_CParam && ... p_Params)
 		{
-			CMapTreeMember *pData = mp_Data.m_Tree.f_FindEqual(_Key);
 			bool bWasCreated = false;
-			if (!pData)
-			{
-				bWasCreated = true;
-				auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
-				pData = (CMapTreeMember *)Memory.m_pMemory;
-				new((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
-				Memory.f_Claim();
-				mp_Data.m_Tree.f_Insert(pData);
-			}
+			auto pData = mp_Data.m_Tree.f_FindEqualOrInsert
+				(
+					_Key
+					, [&]() -> CMapTreeMember *
+					{
+						bWasCreated = true;
+						auto Memory = mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
+						auto pData = (CMapTreeMember *)Memory.m_pMemory;
+						new ((void *)pData) CMapTreeMember(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
+						Memory.f_Claim();
+						return pData;
+					}
+				)
+			;
 			return TCMapResult<CUserData &>(pData->f_GetData(), bWasCreated);
 		}
 
@@ -1076,7 +1101,6 @@ namespace NMib::NContainer
 
 						CConditionalMapper Mapper(_pAlloc, *this);
 						bool bRet = _Functor(Mapper);
-						auto pData = (CMapTreeMember *)_pAlloc;
 						while (Mapper.m_bAddFailed)
 						{
 							if (!bRet)
@@ -1084,7 +1108,6 @@ namespace NMib::NContainer
 							bRet = _Functor(Mapper);
 						}
 						Cleanup.f_Claim();
-						mp_Data.m_Tree.f_Insert(pData);
 						return bRet;
 					}
 				)
@@ -1500,15 +1523,22 @@ namespace NMib::NContainer
 					}
 				;
 				pData->f_Consume(_Stream);
-				if (mp_Data.m_Tree.f_FindEqual(pData->f_GetKey()))
-				{
-					DMibError("TCMap stream contained a duplicate key");
-				}
-				else
-				{
+
+				auto pFoundData = mp_Data.m_Tree.f_FindEqualOrInsert
+					(
+						pData->f_GetKey()
+						, [&]() -> CMapTreeMember *
+						{
+							return pData;
+						}
+					)
+				;
+
+				if (pFoundData == pData)
 					Cleanup.f_Clear();
-					mp_Data.m_Tree.f_Insert(pData);
-				}
+				else
+					DMibError("TCMap stream contained a duplicate key");
+
 				--nItems;
 			}
 		}
