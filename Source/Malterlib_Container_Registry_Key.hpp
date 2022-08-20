@@ -20,16 +20,16 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CStr>
-	auto TCRegistryKeyStr<t_CKey, t_CStr>::f_CompareKey(TCRegistryKeyStr const &_Right) const -> CRet
+	COrdering_Partial TCRegistryKeyStr<t_CKey, t_CStr>::operator <=> (TCRegistryKeyStr const &_Right) const
 	{
-		return m_Name.f_Cmp(_Right.m_Name);
+		return m_Name <=> _Right.m_Name;
 	}
 
 	template <typename t_CKey, typename t_CStr>
 	template <typename tf_CKey>
-	auto TCRegistryKeyStr<t_CKey, t_CStr>::f_Compare(tf_CKey const &_Right) const -> CRet
+	COrdering_Partial TCRegistryKeyStr<t_CKey, t_CStr>::operator <=> (tf_CKey const &_Right) const
 	{
-		return m_Name.f_Cmp(_Right);
+		return m_Name <=> _Right;
 	}
 
 	template <typename t_CKey, typename t_CStr>
@@ -118,32 +118,25 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CStr>
-	auto TCRegistryKeyStrMulti<t_CKey, t_CStr>::f_CompareKey(TCRegistryKeyStrMulti const &_Right) const -> CRet
+	COrdering_Partial TCRegistryKeyStrMulti<t_CKey, t_CStr>::operator <=> (TCRegistryKeyStrMulti const &_Right) const
 	{
-		CRet Ret = m_Name.f_Cmp(_Right.m_Name);
-		if (Ret)
-			return Ret;
+		if (auto Result = m_Name <=> _Right.m_Name; Result != 0)
+			return Result;
 
-		if (m_Sequence > _Right.m_Sequence)
-			return 1;
-		else if (m_Sequence < _Right.m_Sequence)
-			return -1;
-		return 0;
+		return m_Sequence <=> _Right.m_Sequence;
 	}
 
 	template <typename t_CKey, typename t_CStr>
 	template <typename tf_CKey>
-	auto TCRegistryKeyStrMulti<t_CKey, t_CStr>::f_Compare(tf_CKey const &_Right) const -> CRet
+	COrdering_Partial TCRegistryKeyStrMulti<t_CKey, t_CStr>::operator <=> (tf_CKey const &_Right) const
 	{
-		CRet Ret = m_Name.f_Cmp(_Right);
-		if (Ret)
-			return Ret;
+		if (auto Result = m_Name <=> _Right; Result != 0)
+			return Result;
 
 		if (m_Sequence > 0)
-			return 1;
-/*				else if (m_Sequence < 0)
-			return -1;*/
-		return 0;
+			return COrdering_Partial::greater;
+
+		return COrdering_Partial::equivalent;
 	}
 
 	template <typename t_CKey, typename t_CStr>
@@ -257,31 +250,24 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>
 	template <typename tf_CKey>
-	auto TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::f_Compare(tf_CKey const &_Right) const -> CRet
+	COrdering_Partial TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::operator <=> (tf_CKey const &_Right) const
 	{
-		CRet Ret = m_Name.f_Cmp(_Right);
-		if (Ret)
-			return Ret;
+		if (auto Result = m_Name <=> _Right; Result != 0)
+			return Result;
 
 		if (m_Sequence > 0)
-			return 1;
-/*				else if (m_Sequence < 0)
-			return -1;*/
-		return 0;
+			return COrdering_Partial::greater;
+
+		return COrdering_Partial::equivalent;
 	}
 
 	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>
-	auto TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::f_CompareKey(TCRegistryKeyStrPreserve const &_Right) const -> CRet
+	COrdering_Partial TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::operator <=> (TCRegistryKeyStrPreserve const &_Right) const
 	{
-		CRet Ret = m_Name.f_Cmp(_Right.m_Name);
-		if (Ret)
-			return Ret;
+		if (auto Result = m_Name <=> _Right.m_Name; Result != 0)
+			return Result;
 
-		if (m_Sequence > _Right.m_Sequence)
-			return 1;
-		else if (m_Sequence < _Right.m_Sequence)
-			return -1;
-		return 0;
+		return m_Sequence <=> _Right.m_Sequence;
 	}
 
 	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>

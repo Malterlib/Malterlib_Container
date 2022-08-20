@@ -445,14 +445,14 @@ namespace NMib::NContainer
 			return *this;
 		}
 
-		template <typename t_CFunctor>
-		void f_Sort(t_CFunctor &&_fCompare)
+		template <typename tf_CCompare>
+		void f_Sort(tf_CCompare &&_fCompare)
 		{
 			m_Data.m_List.f_Sort
 				(
-					[&](auto *_pLeft, auto *_pRight)
+					[&](auto &&_Left, auto &&_Right)
 					{
-						return _fCompare(_pLeft->m_Object, _pRight->m_Object);
+						return _fCompare(_Left.m_Object, _Right.m_Object);
 					}
 				)
 			;

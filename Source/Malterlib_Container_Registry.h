@@ -102,14 +102,11 @@ namespace NMib::NContainer
 		{
 			inline_small CRegistryKey const &operator () (TCRegistry const &_Left) const;
 			inline_small CRegistryKey &operator () (TCRegistry &_Left) const;
-			inline_small bool operator () (CRegistryKey const &_Left, CRegistryKey const &_Right) const;
-			inline_small bool operator () (CRegistryKey &_Left, CRegistryKey const &_Right) const;
-			inline_small bool operator () (CRegistryKey const &_Left, CRegistryKey &_Right) const;
-			inline_small bool operator () (CRegistryKey &_Left, CRegistryKey &_Right) const;
+			inline_small COrdering_Partial operator () (CRegistryKey const &_Left, CRegistryKey const &_Right) const;
 			template <typename tf_CKey>
-			inline_small bool operator ()(CRegistryKey const &_Left, tf_CKey const &_Right) const;
+			inline_small COrdering_Partial operator ()(CRegistryKey const &_Left, tf_CKey const &_Right) const;
 			template <typename tf_CKey>
-			inline_small bool operator ()(tf_CKey const &_Left, CRegistryKey const &_Right) const;
+			inline_small COrdering_Partial operator ()(tf_CKey const &_Left, CRegistryKey const &_Right) const;
 		};
 
 		NIntrusive::TCAVLLink<> mp_ChildLink;

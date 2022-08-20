@@ -280,30 +280,30 @@ namespace NMib::NContainer
 		void f_DeleteAllDeleter();
 		void f_DeleteAllDeleter();
 
-		template <typename tf_CSorter>
-		void f_Sort(tf_CSorter &&_Sorter);
+		template <typename tf_CCompare>
+		void f_Sort(tf_CCompare &&_fCompare);
 		void f_Sort();
-		template <typename tf_CSorter>
-		bool f_IsSorted(tf_CSorter &&_Sorter) const;
+		template <typename tf_CCompare>
+		bool f_IsSorted(tf_CCompare &&_fCompare) const;
 		bool f_IsAdjacentUnique() const;
-		template <typename tf_CSorter>
-		bool f_IsSortedNoDuplicates(tf_CSorter &&_Sorter) const;
+		template <typename tf_CCompare>
+		bool f_IsSortedNoDuplicates(tf_CCompare &&_fCompare) const;
 		bool f_IsSortedNoDuplicates() const;
 
-		template <typename tf_CSorter>
-		void f_UniqueIfSorted(tf_CSorter &&_Sorter);
+		template <typename tf_CCompare>
+		void f_UniqueIfSorted(tf_CCompare &&_fCompare);
 		void f_UniqueIfSorted();
 
 		template <typename tf_CType>
 		aint f_Contains(tf_CType const &_Data) const;
 		template <typename tf_FUnaryPredicate>
 		aint f_ContainsIf(tf_FUnaryPredicate &&_fPredicate) const;
-		template <typename tf_CSorter, typename t_CFind>
-		aint f_BinarySearch(tf_CSorter &&_Sorter, t_CFind const &_ToFind, aint _nMax = -1) const;
+		template <typename tf_CCompare, typename t_CFind>
+		aint f_BinarySearch(tf_CCompare &&_fCompare, t_CFind const &_ToFind, aint _nMax = -1) const;
 		template <typename tf_CFind>
 		aint f_BinarySearch(tf_CFind const &_ToFind) const;
-		template <typename tf_CSorter, typename tf_CFind>
-		aint f_BinarySearchLowerBound(tf_CSorter &&_Sorter, tf_CFind const &_ToFind) const;
+		template <typename tf_CCompare, typename tf_CFind>
+		aint f_BinarySearchLowerBound(tf_CCompare &&_fCompare, tf_CFind const &_ToFind) const;
 
 		mint f_Grow(mint _MinLen);
 		void f_Reserve(mint _Space);
@@ -391,12 +391,12 @@ namespace NMib::NContainer
 		static inline_small bool fsp_NeedReallocGrow(mint _NeededSize, const CVectorData *_pExtraData);
 		static inline_small bool fsp_CanGrow(mint _NeededSize, const CVectorData *_pExtraData);
 
-		template <typename tf_CSorter>
-		void fp_InsertSort(t_CData *_pArray, aint _Low, aint _High, tf_CSorter &&_Sorter);
-		template <typename tf_CSorter>
-		aint fp_Partition(t_CData *_pArray, aint _Low, aint _High, tf_CSorter &&_Sorter);
-		template <typename tf_CSorter>
-		void fpr_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_CSorter &&_Sorter);
+		template <typename tf_CCompare>
+		void fp_InsertSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare);
+		template <typename tf_CCompare>
+		aint fp_Partition(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare);
+		template <typename tf_CCompare>
+		void fpr_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare);
 
 
 		t_CData *fp_MakeRoomBegin(mint _Len);

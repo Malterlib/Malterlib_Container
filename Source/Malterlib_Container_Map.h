@@ -262,25 +262,24 @@ namespace NMib::NContainer
 		class CMapTreeMemberCompare
 		{
 		public:
-
-			bool operator () (CMapTreeMember const &_Left, CMapTreeMember const &_Right) const
+			auto operator () (CMapTreeMember const &_Left, CMapTreeMember const &_Right) const
 			{
 				return t_CCompare()(_Left.m_Key, _Right.m_Key);
 			}
 
-			bool operator () (CMapTreeMember &_Left, CMapTreeMember &_Right) const
+			auto operator () (CMapTreeMember &_Left, CMapTreeMember &_Right) const
 			{
 				return t_CCompare()(_Left.m_Key, _Right.m_Key);
 			}
 
 			template <typename tf_CKey>
-			bool operator () (CMapTreeMember const &_Left, tf_CKey const &_Right) const
+			auto operator () (CMapTreeMember const &_Left, tf_CKey const &_Right) const
 			{
 				return t_CCompare()(_Left.m_Key, _Right);
 			}
 
 			template <typename tf_CKey>
-			bool operator () (tf_CKey const &_Left, CMapTreeMember const &_Right) const
+			auto operator () (tf_CKey const &_Left, CMapTreeMember const &_Right) const
 			{
 				return t_CCompare()(_Left, _Right.m_Key);
 			}

@@ -6,10 +6,10 @@
 namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CSorter>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Sort(tf_CSorter &&_Sorter)
+	template <typename tf_CCompare>
+	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Sort(tf_CCompare &&_fCompare)
 	{
-		fpr_QuickSort(f_GetArray(), 0, f_GetLen()-1, fg_Forward<tf_CSorter>(_Sorter));
+		fpr_QuickSort(f_GetArray(), 0, f_GetLen() - 1, _fCompare);
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
@@ -19,16 +19,21 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CSorter>
-	bool TCVector<t_CData, t_CAllocator, t_COptions>::f_IsSorted(tf_CSorter &&_Sorter) const
+	template <typename tf_CCompare>
+	bool TCVector<t_CData, t_CAllocator, t_COptions>::f_IsSorted(tf_CCompare &&_fCompare) const
 	{
-		aint len = f_GetLen();
-		if(len<2) return 1;
-		t_CData const*pArray = f_GetArray();
-		for(aint i=0,j=1;j!=len;++i,++j)
-			if(fg_Forward<tf_CSorter>(_Sorter)(pArray[j], pArray[i]))
-				return 0;
-		return 1;
+		aint Length = f_GetLen();
+		if (Length < 2)
+			return true;
+
+		t_CData const *pArray = f_GetArray();
+		for (mint i = 0, j = 1; j != Length; ++i, ++j)
+		{
+			if (COrdering_Partial(_fCompare(pArray[j], pArray[i])) < 0)
+				return false;
+		}
+
+		return true;
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
@@ -38,16 +43,22 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CSorter>
-	bool TCVector<t_CData, t_CAllocator, t_COptions>::f_IsSortedNoDuplicates(tf_CSorter &&_Sorter) const
+	template <typename tf_CCompare>
+	bool TCVector<t_CData, t_CAllocator, t_COptions>::f_IsSortedNoDuplicates(tf_CCompare &&_fCompare) const
 	{
-		aint len = f_GetLen();
-		if(len<2) return 1;
-		t_CData const*pArray = f_GetArray();
-		for(aint i=0,j=1;j!=len;++i,++j)
-			if(!fg_Forward<tf_CSorter>(_Sorter)(pArray[i],pArray[j]))
-				return 0;
-		return 1;
+		aint Length = f_GetLen();
+		if (Length < 2)
+			return true;
+
+		t_CData const *pArray = f_GetArray();
+
+		for (mint i = 0, j = 1; j != Length; ++i, ++j)
+		{
+			if (COrdering_Partial(_fCompare(pArray[i], pArray[j])) <= 0)
+				return false;
+		}
+
+		return true;
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
@@ -57,20 +68,20 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CSorter>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::f_UniqueIfSorted(tf_CSorter &&_Sorter)
+	template <typename tf_CCompare>
+	void TCVector<t_CData, t_CAllocator, t_COptions>::f_UniqueIfSorted(tf_CCompare &&_fCompare)
 	{
 		if (f_GetLen() <= 1)
 			return;
 
-		DMibSafeCheck(f_IsSorted(fg_Forward<tf_CSorter>(_Sorter)), "Vector must be sorted");
+		DMibSafeCheck(f_IsSorted(_fCompare), "Vector must be sorted");
 
 		auto iUniqueFinish = f_GetIterator();
 		auto iData = iUniqueFinish;
 
 		while (++iData)
 		{
-			if (fg_Forward<tf_CSorter>(_Sorter)(*iUniqueFinish, *iData) && (++iUniqueFinish != iData))
+			if (COrdering_Partial(_fCompare(*iUniqueFinish, *iData)) < 0 && (++iUniqueFinish != iData))
 				*iUniqueFinish = fg_Move(*iData);
 		}
 		++iUniqueFinish;
@@ -86,8 +97,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CSorter>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::fp_InsertSort(t_CData *_pArray, aint _Low, aint _High, tf_CSorter &&_Sorter)
+	template <typename tf_CCompare>
+	void TCVector<t_CData, t_CAllocator, t_COptions>::fp_InsertSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare)
 	{
 		t_CData Temp;
 		aint i, j;
@@ -96,7 +107,7 @@ namespace NMib::NContainer
 		{
 			Temp = fg_Move(_pArray[i]);
 
-			for (j = i-1; j >= _Low && fg_Forward<tf_CSorter>(_Sorter)(Temp, _pArray[j]); j--)
+			for (j = i-1; j >= _Low && COrdering_Partial(_fCompare(Temp, _pArray[j])) < 0; j--)
 				_pArray[j+1] = fg_Move(_pArray[j]);
 
 			_pArray[j+1] = fg_Move(Temp);
@@ -104,8 +115,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CSorter>
-	aint TCVector<t_CData, t_CAllocator, t_COptions>::fp_Partition(t_CData *_pArray, aint _Low, aint _High, tf_CSorter &&_Sorter)
+	template <typename tf_CCompare>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::fp_Partition(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare)
 	{
 		t_CData Temp, Pivot;
 		aint i, j, p;
@@ -118,9 +129,9 @@ namespace NMib::NContainer
 		j = _High;
 		while (1)
 		{
-			while (i < j && fg_Forward<tf_CSorter>(_Sorter)(_pArray[i], Pivot))
+			while (i < j && COrdering_Partial(_fCompare(_pArray[i], Pivot)) < 0)
 				i++;
-			while (j >= i && fg_Forward<tf_CSorter>(_Sorter)(Pivot, _pArray[j]))
+			while (j >= i && COrdering_Partial(_fCompare(Pivot, _pArray[j])) < 0)
 				j--;
 			if (i >= j)
 				break;
@@ -138,8 +149,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CSorter>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::fpr_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_CSorter &&_Sorter)
+	template <typename tf_CCompare>
+	void TCVector<t_CData, t_CAllocator, t_COptions>::fpr_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare)
 	{
 		aint m;
 
@@ -148,20 +159,20 @@ namespace NMib::NContainer
 
 			if (_High - _Low <= 12)
 			{
-				fp_InsertSort(_pArray, _Low, _High, _Sorter);
+				fp_InsertSort(_pArray, _Low, _High, _fCompare);
 				return;
 			}
 
-			m = fp_Partition(_pArray, _Low, _High, _Sorter);
+			m = fp_Partition(_pArray, _Low, _High, _fCompare);
 
 			if (m - _Low <= _High - m)
 			{
-				fpr_QuickSort(_pArray, _Low, m - 1, _Sorter);
+				fpr_QuickSort(_pArray, _Low, m - 1, _fCompare);
 				_Low = m + 1;
 			}
 			else
 			{
-				fpr_QuickSort(_pArray, m + 1, _High, _Sorter);
+				fpr_QuickSort(_pArray, m + 1, _High, _fCompare);
 				_High = m - 1;
 			}
 		}

@@ -25,46 +25,25 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	inline_small bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator () (CRegistryKey const &_Left, CRegistryKey const &_Right) const
+	inline_small COrdering_Partial TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator () (CRegistryKey const &_Left, CRegistryKey const &_Right) const
 	{
-		return _Left.f_CompareKey(_Right) < 0;
-	}
-
-	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
-		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	inline_small bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator () (CRegistryKey &_Left, CRegistryKey const &_Right) const
-	{
-		return _Left.f_CompareKey(_Right) < 0;
-	}
-
-	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
-		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	inline_small bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator () (CRegistryKey const &_Left, CRegistryKey &_Right) const
-	{
-		return _Left.f_CompareKey(_Right) < 0;
-	}
-
-	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
-		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	inline_small bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator () (CRegistryKey &_Left, CRegistryKey &_Right) const
-	{
-		return _Left.f_CompareKey(_Right) < 0;
+		return _Left <=> _Right;
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CKey>
-	inline_small bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator ()(CRegistryKey const &_Left, const tf_CKey &_Right) const
+	inline_small COrdering_Partial TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator ()(CRegistryKey const &_Left, const tf_CKey &_Right) const
 	{
-		return _Left.f_Compare(_Right) < 0;
+		return _Left <=> _Right;
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CKey>
-	inline_small bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator ()(tf_CKey const &_Left, CRegistryKey const &_Right) const
+	inline_small COrdering_Partial TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator ()(tf_CKey const &_Left, CRegistryKey const &_Right) const
 	{
-		return _Right.f_Compare(_Left) > 0;
+		return _Left <=> _Right;
 	}
 
 	//

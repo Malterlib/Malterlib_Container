@@ -17,13 +17,13 @@ namespace NMib
 	{
 
 		template <typename tf_CIterator, typename tf_CCompare>
-		bool fg_IsReverseSorted(tf_CIterator _iFirst, tf_CIterator _iLast, tf_CCompare &&_Compare)
+		bool fg_IsReverseSorted(tf_CIterator _iFirst, tf_CIterator _iLast, tf_CCompare &&_fCompare)
 		{
 			if (_iFirst != _iLast)
 			{
 				for (tf_CIterator iNext = _iFirst; ++iNext != _iLast; ++_iFirst)
 				{
-					if (_Compare(*_iFirst, *iNext))
+					if (COrdering_Partial(_fCompare(*_iFirst, *iNext)) < 0)
 						return false;
 				}
 			}
@@ -37,13 +37,13 @@ namespace NMib
 		}
 
 		template <typename tf_CIterator, typename tf_CCompare>
-		bool fg_IsSorted(tf_CIterator _iFirst, tf_CIterator _iLast, tf_CCompare &&_Compare)
+		bool fg_IsSorted(tf_CIterator _iFirst, tf_CIterator _iLast, tf_CCompare &&_fCompare)
 		{
 			if (_iFirst != _iLast)
 			{
 				for (tf_CIterator iNext = _iFirst; ++iNext != _iLast; ++_iFirst)
 				{
-					if (_Compare(*iNext, *_iFirst))
+					if (COrdering_Partial(_fCompare(*iNext, *_iFirst)) < 0)
 						return false;
 				}
 			}
@@ -63,13 +63,13 @@ namespace NMib
 				fg_Swap(*_iFirst, *_iLast);
 		}
 
-		template <typename tf_CData, typename tf_CSorter>
-		void fg_InplaceMergeLists(tf_CData *_pBegin, tf_CData *_pMiddle, tf_CData *_pEnd, tf_CSorter &&_Sorter)
+		template <typename tf_CData, typename tf_CCompare>
+		void fg_InplaceMergeLists(tf_CData *_pBegin, tf_CData *_pMiddle, tf_CData *_pEnd, tf_CCompare &&_fCompare)
 		{
-			std::inplace_merge(_pBegin, _pMiddle, _pEnd, _Sorter);
-/*			if (fg_Forward<t_CSorter>(_Sorter)(*_pBegin, *_pMiddle))
+			std::inplace_merge(_pBegin, _pMiddle, _pEnd, _fCompare);
+/*			if (COrdering_Partial(_fCompare(*_pBegin, *_pMiddle)) < 0)
 			{
-				while (fg_Forward<t_CSorter>(_Sorter)(*_pBegin, *_pMiddle) && _pBegin < _pEnd)
+				while (COrdering_Partial(_fCompare(*_pBegin, *_pMiddle)) < 0 && _pBegin < _pEnd)
 					++_pBegin;
 
 				if (_pBegin == _pEnd)
@@ -78,7 +78,7 @@ namespace NMib
 
 			while (1)
 			{
-				while (fg_Forward<t_CSorter>(_Sorter)(*_pBegin, *_pBegin2))
+				while (COrdering_Partial(_fCompare(*_pBegin, *_pBegin2)) < 0)
 				{
 
 				}
@@ -89,8 +89,8 @@ namespace NMib
 		{
 			EInsertSortTryMaxSwaps = 16
 		};
-		template <typename t_CData, typename t_CSorter>
-		inline_always t_CData *fg_InsertSortTryReverse(t_CData *_pLow, t_CData *_pHigh, t_CSorter &&_Sorter)
+		template <typename t_CData, typename tf_CType>
+		inline_always t_CData *fg_InsertSortTryReverse(t_CData *_pLow, t_CData *_pHigh, tf_CType &&_fCompare)
 		{
 			//return _pHigh;
 			mint Swaps = 0;
@@ -99,7 +99,7 @@ namespace NMib
 			{
 				t_CData *pJ = pI + 1;
 
-				if (_Sorter(*pI, *pJ))
+				if (COrdering_Partial(_fCompare(*pI, *pJ)) < 0)
 				{
 					if (Swaps >= mint(_pHigh - pI))
 						break; // Brake if we are above n*2
@@ -108,7 +108,7 @@ namespace NMib
 					pJ++;
 					mint SwapsBefore = Swaps;
 					++Swaps;
-					for (; pJ < _pHigh && _Sorter(Temp, *pJ); pJ++)
+					for (; pJ < _pHigh && COrdering_Partial(_fCompare(Temp, *pJ)) < 0; pJ++)
 					{
 						++Swaps;
 						if (Swaps - SwapsBefore >= EInsertSortTryMaxSwaps)
@@ -128,8 +128,8 @@ namespace NMib
 			return pI + 1;
 		}
 
-		template <typename t_CSorter, typename t_CData>
-		inline_always t_CData *fg_InsertSortTry(t_CData *_pLow, t_CData *_pHigh, t_CSorter &&_Sorter)
+		template <typename tf_CType, typename t_CData>
+		inline_always t_CData *fg_InsertSortTry(t_CData *_pLow, t_CData *_pHigh, tf_CType &&_fCompare)
 		{
 			//return _pLow;
 			mint Swaps = 0;
@@ -151,7 +151,7 @@ namespace NMib
 
 					++Swaps;
 
-					for (; pJ >= _pLow && _Sorter(Temp, *pJ); pJ--)
+					for (; pJ >= _pLow && COrdering_Partial(_fCompare(Temp, *pJ)) < 0; pJ--)
 					{
 						++Swaps;
 						if (Swaps - SwapsBefore >= EInsertSortTryMaxSwaps)
@@ -171,7 +171,7 @@ namespace NMib
 
 			for (; pL < pEnd; ++pL)
 			{
-				if (_Sorter(pL[1], *pL))
+				if (COrdering_Partial(_fCompare(pL[1], *pL)) < 0)
 				{
 					if (fl_Swap(pL))
 						break;
@@ -181,21 +181,21 @@ namespace NMib
 			return pL + 1;
 		}
 
-		template <typename t_CSorter, typename t_CData>
-		inline_always void fg_InsertSort(t_CData *_pLow, t_CData *_pHigh, t_CSorter &&_Sorter)
+		template <typename tf_CType, typename t_CData>
+		inline_always void fg_InsertSort(t_CData *_pLow, t_CData *_pHigh, tf_CType &&_fCompare)
 		{
 			t_CData *pI = _pLow + 1;
 			for (; pI < _pHigh; pI++)
 			{
 				t_CData *pJ = pI - 1;
 
-				if (fg_Forward<t_CSorter>(_Sorter)(*pI, *pJ))
+				if (COrdering_Partial(_fCompare(*pI, *pJ)) < 0)
 				{
 					t_CData Temp(fg_Move(*pI));
 					pJ[1] = fg_Move(*pJ);
 					pJ--;
 
-					for (; pJ >= _pLow && _Sorter(Temp, *pJ); pJ--)
+					for (; pJ >= _pLow && COrdering_Partial(_fCompare(Temp, *pJ)) < 0; pJ--)
 						pJ[1] = fg_Move(*pJ);
 
 					pJ[1] = fg_Move(Temp);
@@ -204,15 +204,15 @@ namespace NMib
 		}
 
 		template <typename tf_CParam0, typename tf_CParam1, typename tf_CParam2, typename tf_CCompare>
-		inline_always void fg_Sort3(tf_CParam0 &_0, tf_CParam1 &_1, tf_CParam2 &_2, tf_CCompare &&_Compare)
+		inline_always void fg_Sort3(tf_CParam0 &_0, tf_CParam1 &_1, tf_CParam2 &_2, tf_CCompare &&_fCompare)
 		{
-			if (_Compare(_1, _0))
+			if (COrdering_Partial(_fCompare(_1, _0)) < 0)
 			{
 				auto Temp = fg_Move(_0);
-				if (_Compare(_1, _2))
+				if (COrdering_Partial(_fCompare(_1, _2)) < 0)
 				{
 					_0 = fg_Move(_1);
-					if (_Compare(_2, Temp))
+					if (COrdering_Partial(_fCompare(_2, Temp)) < 0)
 					{
 						_1 = fg_Move(_2);
 						_2 = fg_Move(Temp);
@@ -228,9 +228,9 @@ namespace NMib
 			}
 			else
 			{
-				if (_Compare(_2, _1))
+				if (COrdering_Partial(_fCompare(_2, _1)) < 0)
 				{
-					if (_Compare(_2, _0))
+					if (COrdering_Partial(_fCompare(_2, _0)) < 0)
 					{
 						auto Temp = fg_Move(_0);
 						_0 = fg_Move(_2);
@@ -270,12 +270,12 @@ namespace NMib
 					while (iFirst != iLast)
 					{
 						++iFirst;
-						if (_Comp(*iFirst, *iMiddle))
+						if (COrdering_Partial(_Comp(*iFirst, *iMiddle)) < 0)
 						{
 							iMiddle = iFirst;
 						}
 					}
-					if (_Comp(*iMiddle, *_Iterator))
+					if (COrdering_Partial(_Comp(*iMiddle, *_Iterator)) < 0)
 					{
 						NMib::fg_Swap(*_Iterator, *iMiddle);
 					}
@@ -283,7 +283,7 @@ namespace NMib
 					while (_Iterator != iLast)
 					{
 						iFirst = _Iterator++;
-						if (_Comp(*_Iterator, *iFirst))
+						if (COrdering_Partial(_Comp(*_Iterator, *iFirst)) < 0)
 						{
 							iMiddle = _Iterator;
 							auto temp = *iMiddle;
@@ -291,7 +291,7 @@ namespace NMib
 							{
 								*(iMiddle--) = *(iFirst--);
 							}
-							while (_Comp(temp, *iFirst));
+							while (COrdering_Partial(_Comp(temp, *iFirst)) < 0);
 							*iMiddle = temp;
 						}
 					}
@@ -307,11 +307,11 @@ namespace NMib
 
 				while(_n - p > p)
 				{
-					if (_Comp(*(_Iterator + c), *(_Iterator + c + 1)))
+					if (COrdering_Partial(_Comp(*(_Iterator + c), *(_Iterator + c + 1))) < 0)
 					{
 						++c;
 					}
-					if (_Comp(temp, *(_Iterator + c)))
+					if (COrdering_Partial(_Comp(temp, *(_Iterator + c))) < 0)
 					{
 						_Iterator[p] = _Iterator[c];
 						p = c;
@@ -320,7 +320,7 @@ namespace NMib
 					else
 						break;
 				}
-				if ((_n == c) && _Comp(temp, *(_Iterator + c)))
+				if ((_n == c) && COrdering_Partial(_Comp(temp, *(_Iterator + c))) < 0)
 				{
 					_Iterator[p] = _Iterator[c];
 					p = c;
@@ -374,13 +374,13 @@ namespace NMib
 					{
 						++iFirst;
 					}
-					while (_Comp(*iFirst, *_Iterator));
+					while (COrdering_Partial(_Comp(*iFirst, *_Iterator)) < 0);
 
 					do
 					{
 						--iLast;
 					}
-					while (_Comp(*_Iterator, *iLast));
+					while (COrdering_Partial(_Comp(*_Iterator, *iLast)) < 0);
 
 					while (iLast > iFirst)
 					{
@@ -389,13 +389,13 @@ namespace NMib
 						{
 							++iFirst;
 						}
-						while(_Comp(*iFirst, *_Iterator));
+						while (COrdering_Partial(_Comp(*iFirst, *_Iterator)) < 0);
 
 						do
 						{
 							--iLast;
 						}
-						while(_Comp(*_Iterator, *iLast));
+						while (COrdering_Partial(_Comp(*_Iterator, *iLast)) < 0);
 					}
 					NMib::fg_Swap(*_Iterator, *iLast);
 					_Random = fg_TI7Loop(iLast + 1, _Length + (_Iterator - iLast), _DepthLeft, _Random, _Comp);
@@ -470,13 +470,13 @@ namespace NMib
 						{
 							++iFirst;
 						}
-						while (_Comp(*iFirst, *_Iterator));
+						while (COrdering_Partial(_Comp(*iFirst, *_Iterator)) < 0);
 
 						do
 						{
 							--iLast;
 						}
-						while (_Comp(*_Iterator, *iLast));
+						while (COrdering_Partial(_Comp(*_Iterator, *iLast)) < 0);
 
 						while (iLast > iFirst)
 						{
@@ -485,13 +485,13 @@ namespace NMib
 							{
 								++iFirst;
 							}
-							while(_Comp(*iFirst, *_Iterator));
+							while(COrdering_Partial(_Comp(*iFirst, *_Iterator)) < 0);
 
 							do
 							{
 								--iLast;
 							}
-							while(_Comp(*_Iterator, *iLast));
+							while (COrdering_Partial(_Comp(*_Iterator, *iLast)) < 0);
 						}
 						NMib::fg_Swap(*_Iterator, *iLast);
 						_Random = fg_IntrospectiveLoop(iLast + 1, _Length + (_Iterator - iLast), _DepthLeft, _Random, _Comp);
@@ -1048,9 +1048,9 @@ namespace NMib
 
 							lVec[9] = CThing(0);
 
-							lVec.f_Sort([](CThing const& _A, CThing const& _B) -> bool
+							lVec.f_Sort([](CThing const& _A, CThing const& _B)
 							{
-								return _A.m_Val < _B.m_Val;
+								return _A.m_Val <=> _B.m_Val;
 							} );
 
 							for (int32 i = 1; i< 19; ++i)
