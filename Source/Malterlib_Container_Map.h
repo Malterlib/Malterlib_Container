@@ -1356,6 +1356,11 @@ namespace NMib::NContainer
 			return mp_Data.m_Tree.f_HasOneMember();
 		}
 
+		bool f_HasMoreThanOneMember() const
+		{
+			return !mp_Data.m_Tree.f_IsEmpty() && !mp_Data.m_Tree.f_HasOneMember();
+		}
+
 		mint f_GetLen() const
 		{
 			CIteratorConst Iter = *this;
