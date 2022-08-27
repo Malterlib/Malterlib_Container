@@ -1369,87 +1369,55 @@ namespace NMib::NContainer
 
 		CIteratorConst f_GetIterator() const
 		{
-			CIteratorConst Iterator;
-			Iterator.mp_pMap = this;
-			Iterator.mp_Iter = mp_Data.m_Tree;
-			return Iterator;
+			return *this;
 		}
 
 		CIterator f_GetIterator()
 		{
-			CIterator Iterator;
-			Iterator.mp_pMap = this;
-			Iterator.mp_Iter = mp_Data.m_Tree;
-			return Iterator;
+			return *this;
 		}
 
 		CIteratorReverseConst f_GetIteratorReverse() const
 		{
-			CIteratorReverseConst Iterator;
-			Iterator.mp_pMap = this;
-			Iterator.mp_Iter.f_StartBackward(mp_Data.m_Tree);
-			return Iterator;
+			return *this;
 		}
 
 		CIteratorReverse f_GetIteratorReverse()
 		{
-			CIteratorReverse Iterator;
-			Iterator.mp_pMap = this;
-			Iterator.mp_Iter.f_StartBackward(mp_Data.m_Tree);
-			return Iterator;
+			return *this;
 		}
 
 		CIteratorBidirectionalConst f_GetIteratorBidirectional() const
 		{
-			CIteratorBidirectionalConst Iterator;
-			Iterator.mp_pMap = this;
-			Iterator.mp_Iter = mp_Data.m_Tree;
-			return Iterator;
+			return *this;
 		}
 
 		CIteratorBidirectional f_GetIteratorBidirectional()
 		{
-			CIteratorBidirectional Iterator;
-			Iterator.mp_pMap = this;
-			Iterator.mp_Iter = mp_Data.m_Tree;
-			return Iterator;
+			return *this;
 		}
 
 		CIteratorBidirectionalReverseConst f_GetIteratorBidirectionalReverse() const
 		{
-			CIteratorBidirectionalReverseConst Iterator;
-			Iterator.mp_pMap = this;
-			Iterator.mp_Iter.f_StartBackward(mp_Data.m_Tree);
-			return Iterator;
+			return *this;
 		}
 
 		CIteratorBidirectionalReverse f_GetIteratorBidirectionalReverse()
 		{
-			CIteratorBidirectionalReverse Iterator;
-			Iterator.mp_pMap = this;
-			Iterator.mp_Iter.f_StartBackward(mp_Data.m_Tree);
-			return Iterator;
+			return *this;
 		}
 
 
 		template <typename tf_CKey>
 		CIterator f_GetIterator(tf_CKey &&_Key)
 		{
-			CIterator Iterator;
-			Iterator.mp_pMap = this;
-			Iterator.mp_Iter.f_InitForSearch(mp_Data.m_Tree);
-			Iterator.mp_Iter.f_FindEqualForward(fg_Forward<tf_CKey>(_Key));
-			return Iterator;
+			return {*this, fg_Forward<tf_CKey>(_Key)};
 		}
 
 		template <typename tf_CKey>
 		CIteratorConst f_GetIterator(tf_CKey &&_Key) const
 		{
-			CIteratorConst Iterator;
-			Iterator.mp_pMap = this;
-			Iterator.mp_Iter.f_InitForSearch(mp_Data.m_Tree);
-			Iterator.mp_Iter.f_FindEqualForward(fg_Forward<tf_CKey>(_Key));
-			return Iterator;
+			return {*this, fg_Forward<tf_CKey>(_Key)};
 		}
 
 		template <typename tf_CKey>
