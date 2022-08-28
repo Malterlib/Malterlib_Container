@@ -1292,11 +1292,12 @@ namespace NMib::NContainer
 		{
 			mint Offset = CMapTreeMember::fs_GetOffset();
 			CMapTreeMember *pMember = (CMapTreeMember *)(((uint8 *)_pData) - Offset);
-			if (!mp_Data.m_Tree.f_FindEqual(pMember->f_GetData()))
+			auto *pRemoved = mp_Data.m_Tree.f_FindEqualAndRemove(pMember->f_GetData());
+			if (!pRemoved)
 				return false;
-			mp_Data.m_Tree.f_Remove(pMember);
+			DMibFastCheck(pRemoved == pMember);
 			DMibFastCheck(!mp_Data.m_Tree.f_FindEqual(pMember->f_GetData()));
-			fg_DeleteObjectDefiniteType(mp_Data, pMember);
+			fg_DeleteObjectDefiniteType(mp_Data, pRemoved);
 			return true;
 		}
 
@@ -1331,10 +1332,9 @@ namespace NMib::NContainer
 		template <typename tf_CKey>
 		bool f_Remove(tf_CKey &&_Key)
 		{
-			CMapTreeMember *pMember = mp_Data.m_Tree.f_FindEqual(_Key);
+			CMapTreeMember *pMember = mp_Data.m_Tree.f_FindEqualAndRemove(_Key);
 			if (pMember)
 			{
-				mp_Data.m_Tree.f_Remove(pMember);
 				fg_DeleteObjectDefiniteType(mp_Data, pMember);
 				return true;
 			}
