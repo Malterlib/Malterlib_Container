@@ -248,8 +248,231 @@ namespace NMib::NContainer
 		{
 			return mp_Return;
 		}
-
 	};
+
+	namespace NPrivate
+	{
+		template <typename t_CDestination, bool t_bIsRef>
+		struct TCMapCopy
+		{
+			using CMapTreeMember = typename t_CDestination::CMapTreeMember;
+
+			template <typename tf_CSource>
+			static void fs_CopyAll(t_CDestination &_Map, tf_CSource &&_Other)
+			{
+				if (_Other.f_IsEmpty())
+					return;
+
+				_Map.mp_Data.m_Tree.f_CopyTree
+					(
+						_Other.mp_Data.m_Tree
+						, [&](auto const &_Other) -> CMapTreeMember *
+						{
+							auto Allocation = _Map.mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
+							auto *pReturn = new(Allocation.m_pMemory) CMapTreeMember(_Other.m_Key, _Other.f_GetData());
+							Allocation.f_Claim();
+							return pReturn;
+						}
+					)
+				;
+			}
+
+			template <typename tf_CSource>
+			static void fs_MoveAll(t_CDestination &_Map, tf_CSource && _Other)
+			{
+				if (_Other.f_IsEmpty())
+					return;
+
+				_Map.mp_Data.m_Tree.f_MoveTree
+					(
+						_Other.mp_Data.m_Tree
+						, [&](auto *_pOther) -> CMapTreeMember *
+						{
+							auto Allocation = _Map.mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
+							auto *pReturn = new(Allocation.m_pMemory) CMapTreeMember(fg_Move(_pOther->m_Key), fg_Move(_pOther->f_GetData()));
+							Allocation.f_Claim();
+
+							fg_DeleteObjectDefiniteType(_Map.mp_Data, _pOther);
+							
+							return pReturn;
+						}
+					)
+				;
+			}
+
+			template <typename tf_CSource>
+			static void fs_CopyAddAll(t_CDestination &_Map, tf_CSource && _Other)
+			{
+				auto iSource = _Other.f_GetIterator();
+				while (iSource)
+				{
+					if (_Map.mp_Data.m_Tree.f_FindEqual(iSource.f_GetKey()))
+					{
+						++iSource;
+						continue;
+					}
+					break;
+				}
+				if (!iSource)
+					return;
+
+				_Map.mp_Data.f_AllocBatch
+					(
+						sizeof(CMapTreeMember)
+						, alignof(CMapTreeMember)
+						, [&](void * _pAlloc, mint _Size) -> bool
+						{
+							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
+							auto pData = (CMapTreeMember *)_pAlloc;
+							new((void *)pData) CMapTreeMember(iSource.f_GetKey(), *iSource);
+							Cleanup.f_Claim();
+							_Map.mp_Data.m_Tree.f_Insert(pData);
+
+							++iSource;
+							while (iSource)
+							{
+								if (_Map.mp_Data.m_Tree.f_FindEqual(iSource.f_GetKey()))
+								{
+									++iSource;
+									continue;
+								}
+								break;
+							}
+							return iSource;
+						}
+					)
+				;
+			}
+
+			template <typename tf_CSource>
+			static void fs_MoveAddAll(t_CDestination &_Map, tf_CSource && _Other)
+			{
+				auto iSource = _Other.f_GetIterator();
+				while (iSource)
+				{
+					if (_Map.mp_Data.m_Tree.f_FindEqual(iSource.f_GetKey()))
+					{
+						++iSource;
+						continue;
+					}
+					break;
+				}
+				if (!iSource)
+					return;
+
+				_Map.mp_Data.f_AllocBatch
+					(
+						sizeof(CMapTreeMember)
+						, alignof(CMapTreeMember)
+						, [&](void * _pAlloc, mint _Size) -> bool
+						{
+							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
+							auto pData = (CMapTreeMember *)_pAlloc;
+							new((void *)pData) CMapTreeMember(iSource.f_GetKey(), fg_Move(*iSource));
+							Cleanup.f_Claim();
+							_Map.mp_Data.m_Tree.f_Insert(pData);
+
+							++iSource;
+							while (iSource)
+							{
+								if (_Map.mp_Data.m_Tree.f_FindEqual(iSource.f_GetKey()))
+								{
+									++iSource;
+									continue;
+								}
+								break;
+							}
+							return iSource;
+						}
+					)
+				;
+			}
+
+		};
+
+		template <typename t_CDestination>
+		struct TCMapCopy<t_CDestination, true>
+		{
+			using CMapTreeMember = typename t_CDestination::CMapTreeMember;
+
+			template <typename tf_CSource>
+			static void fs_CopyAll(t_CDestination &_Map, tf_CSource && _Other)
+			{
+				if (_Other.f_IsEmpty())
+					return;
+
+				_Map.mp_Data.m_Tree.f_CopyTree
+					(
+						_Other.mp_Data.m_Tree
+						, [&](auto const &_Other) -> CMapTreeMember *
+						{
+							auto Allocation = _Map.mp_Data.f_AllocSafe(sizeof(CMapTreeMember), alignof(CMapTreeMember));
+							auto *pReturn = new(Allocation.m_pMemory) CMapTreeMember(_Other.m_Key, fg_AutoConstCast(_Other.f_GetData()));
+							Allocation.f_Claim();
+							return pReturn;
+						}
+					)
+				;
+			}
+
+			template <typename tf_CSource>
+			static void fs_CopyAddAll(t_CDestination &_Map, tf_CSource && _Other)
+			{
+				auto iSource = _Other.f_GetIterator();
+				while (iSource)
+				{
+					if (_Map.mp_Data.m_Tree.f_FindEqual(iSource.f_GetKey()))
+					{
+						++iSource;
+						continue;
+					}
+					break;
+				}
+				if (!iSource)
+					return;
+
+				_Map.mp_Data.f_AllocBatch
+					(
+						sizeof(CMapTreeMember)
+						, alignof(CMapTreeMember)
+						, [&](void * _pAlloc, mint _Size) -> bool
+						{
+							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
+							auto pData = (CMapTreeMember *)_pAlloc;
+							new((void *)pData) CMapTreeMember(iSource.f_GetKey(), fg_AutoConstCast(*iSource));
+							Cleanup.f_Claim();
+							_Map.mp_Data.m_Tree.f_Insert(pData);
+
+							++iSource;
+							while (iSource)
+							{
+								if (_Map.mp_Data.m_Tree.f_FindEqual(iSource.f_GetKey()))
+								{
+									++iSource;
+									continue;
+								}
+								break;
+							}
+							return iSource;
+						}
+					)
+				;
+			}
+
+			template <typename tf_CSource>
+			static void fs_MoveAll(t_CDestination &_Map, tf_CSource && _Other)
+			{
+				return fs_CopyAll(_Map, fg_Forward<tf_CSource>(_Other));
+			}
+
+			template <typename tf_CSource>
+			static void fs_MoveAddAll(t_CDestination &_Map, tf_CSource && _Other)
+			{
+				return fs_CopyAddAll(_Map, fg_Forward<tf_CSource>(_Other));
+			}
+		};
+	}
+
 
 	template <typename t_CKey, typename t_CData, typename t_CCompare, typename t_CAllocator>
 	class TCMap
@@ -257,6 +480,10 @@ namespace NMib::NContainer
 	public:
 		typedef typename NTraits::TCRemoveReference<t_CData>::CType CData;
 		typedef TCMapTreeMember<t_CKey, t_CData> CMapTreeMember; // This needs to be public until we have C++14 usable for generic lambdas
+
+		template <typename t_CDestination2, bool t_bIsRef2>
+		friend struct NPrivate::TCMapCopy;
+
 	private:
 
 		class CMapTreeMemberCompare
@@ -326,260 +553,28 @@ namespace NMib::NContainer
 
 		CLocalData mp_Data;
 
-		template <bool t_bIsRef, typename t_CDummy = int>
-		class TCMapCopy
-		{
-		public:
-			template <typename tf_CSource>
-			static void fs_CopyAll(TCMap &_Map, tf_CSource && _Other)
-			{
-				if (_Other.f_IsEmpty())
-					return;
-
-				auto iSource = _Other.f_GetIterator();
-
-				_Map.mp_Data.f_AllocBatch
-					(
-						sizeof(CMapTreeMember)
-						, alignof(CMapTreeMember)
-						, [&](void * _pAlloc, mint _Size) -> bool
-						{
-							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
-							auto pData = (CMapTreeMember *)_pAlloc;
-							new((void *)pData) CMapTreeMember(iSource.f_GetKey(), *iSource);
-							Cleanup.f_Claim();
-							_Map.mp_Data.m_Tree.f_Insert(pData);
-							++iSource;
-							return iSource;
-						}
-					)
-				;
-			}
-
-			template <typename tf_CSource>
-			static void fs_MoveAll(TCMap &_Map, tf_CSource && _Other)
-			{
-				if (_Other.f_IsEmpty())
-					return;
-
-				auto iSource = _Other.f_GetIterator();
-
-				_Map.mp_Data.f_AllocBatch
-					(
-						sizeof(CMapTreeMember)
-						, alignof(CMapTreeMember)
-						, [&](void * _pAlloc, mint _Size) -> bool
-						{
-							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
-							auto pData = (CMapTreeMember *)_pAlloc;
-							new((void *)pData) CMapTreeMember(iSource.f_GetKey(), fg_Move(*iSource));
-							Cleanup.f_Claim();
-							_Map.mp_Data.m_Tree.f_Insert(pData);
-							++iSource;
-							return iSource;
-						}
-					)
-				;
-			}
-
-			template <typename tf_CSource>
-			static void fs_CopyAddAll(TCMap &_Map, tf_CSource && _Other)
-			{
-				auto iSource = _Other.f_GetIterator();
-				while (iSource)
-				{
-					if (_Map.mp_Data.m_Tree.f_FindEqual(iSource.f_GetKey()))
-					{
-						++iSource;
-						continue;
-					}
-					break;
-				}
-				if (!iSource)
-					return;
-
-				_Map.mp_Data.f_AllocBatch
-					(
-						sizeof(CMapTreeMember)
-						, alignof(CMapTreeMember)
-						, [&](void * _pAlloc, mint _Size) -> bool
-						{
-							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
-							auto pData = (CMapTreeMember *)_pAlloc;
-							new((void *)pData) CMapTreeMember(iSource.f_GetKey(), *iSource);
-							Cleanup.f_Claim();
-							_Map.mp_Data.m_Tree.f_Insert(pData);
-
-							++iSource;
-							while (iSource)
-							{
-								if (_Map.mp_Data.m_Tree.f_FindEqual(iSource.f_GetKey()))
-								{
-									++iSource;
-									continue;
-								}
-								break;
-							}
-							return iSource;
-						}
-					)
-				;
-			}
-
-			template <typename tf_CSource>
-			static void fs_MoveAddAll(TCMap &_Map, tf_CSource && _Other)
-			{
-				auto iSource = _Other.f_GetIterator();
-				while (iSource)
-				{
-					if (_Map.mp_Data.m_Tree.f_FindEqual(iSource.f_GetKey()))
-					{
-						++iSource;
-						continue;
-					}
-					break;
-				}
-				if (!iSource)
-					return;
-
-				_Map.mp_Data.f_AllocBatch
-					(
-						sizeof(CMapTreeMember)
-						, alignof(CMapTreeMember)
-						, [&](void * _pAlloc, mint _Size) -> bool
-						{
-							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
-							auto pData = (CMapTreeMember *)_pAlloc;
-							new((void *)pData) CMapTreeMember(iSource.f_GetKey(), fg_Move(*iSource));
-							Cleanup.f_Claim();
-							_Map.mp_Data.m_Tree.f_Insert(pData);
-
-							++iSource;
-							while (iSource)
-							{
-								if (_Map.mp_Data.m_Tree.f_FindEqual(iSource.f_GetKey()))
-								{
-									++iSource;
-									continue;
-								}
-								break;
-							}
-							return iSource;
-						}
-					)
-				;
-			}
-
-		};
-
-		template <typename t_CDummy>
-		class TCMapCopy<true, t_CDummy>
-		{
-		public:
-			template <typename tf_CSource>
-			static void fs_CopyAll(TCMap &_Map, tf_CSource && _Other)
-			{
-				if (_Other.f_IsEmpty())
-					return;
-
-				auto iSource = _Other.f_GetIterator();
-
-				_Map.mp_Data.f_AllocBatch
-					(
-						sizeof(CMapTreeMember)
-						, alignof(CMapTreeMember)
-						, [&](void * _pAlloc, mint _Size) -> bool
-						{
-							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
-							auto pData = (CMapTreeMember *)_pAlloc;
-							new((void *)pData) CMapTreeMember(iSource.f_GetKey(), *const_cast<CData *>(&*iSource));
-							Cleanup.f_Claim();
-							_Map.mp_Data.m_Tree.f_Insert(pData);
-							++iSource;
-							return iSource;
-						}
-					)
-				;
-			}
-
-			template <typename tf_CSource>
-			static void fs_CopyAddAll(TCMap &_Map, tf_CSource && _Other)
-			{
-				auto iSource = _Other.f_GetIterator();
-				while (iSource)
-				{
-					if (_Map.mp_Data.m_Tree.f_FindEqual(iSource.f_GetKey()))
-					{
-						++iSource;
-						continue;
-					}
-					break;
-				}
-				if (!iSource)
-					return;
-
-				_Map.mp_Data.f_AllocBatch
-					(
-						sizeof(CMapTreeMember)
-						, alignof(CMapTreeMember)
-						, [&](void * _pAlloc, mint _Size) -> bool
-						{
-							auto Cleanup = _Map.mp_Data.f_MakeSafe(_pAlloc, _Size);
-							auto pData = (CMapTreeMember *)_pAlloc;
-							new((void *)pData) CMapTreeMember(iSource.f_GetKey(), *const_cast<CData *>(&*iSource));
-							Cleanup.f_Claim();
-							_Map.mp_Data.m_Tree.f_Insert(pData);
-
-							++iSource;
-							while (iSource)
-							{
-								if (_Map.mp_Data.m_Tree.f_FindEqual(iSource.f_GetKey()))
-								{
-									++iSource;
-									continue;
-								}
-								break;
-							}
-							return iSource;
-						}
-					)
-				;
-			}
-
-			template <typename tf_CSource>
-			static void fs_MoveAll(TCMap &_Map, tf_CSource && _Other)
-			{
-				return fs_CopyAll(_Map, fg_Forward<tf_CSource>(_Other));
-			}
-
-			template <typename tf_CSource>
-			static void fs_MoveAddAll(TCMap &_Map, tf_CSource && _Other)
-			{
-				return fs_CopyAddAll(_Map, fg_Forward<tf_CSource>(_Other));
-			}
-		};
 
 		template <typename tf_CSource>
 		inline_always void fp_CopyAll(tf_CSource && _Other)
 		{
-			return TCMapCopy<mcp_bIsReference && !NTraits::TCIsConst<CData>::mc_Value>::fs_CopyAll(*this, fg_Forward<tf_CSource>(_Other));
+			return NPrivate::TCMapCopy<TCMap, mcp_bIsReference && !NTraits::TCIsConst<CData>::mc_Value>::fs_CopyAll(*this, fg_Forward<tf_CSource>(_Other));
 		}
 
 		template <typename tf_CSource>
 		inline_always void fp_MoveAll(tf_CSource && _Other)
 		{
-			return TCMapCopy<mcp_bIsReference && !NTraits::TCIsConst<CData>::mc_Value>::fs_MoveAll(*this, fg_Forward<tf_CSource>(_Other));
+			return NPrivate::TCMapCopy<TCMap, mcp_bIsReference && !NTraits::TCIsConst<CData>::mc_Value>::fs_MoveAll(*this, fg_Forward<tf_CSource>(_Other));
 		}
 
 		template <typename tf_CSource>
 		inline_always void fp_CopyAddAll(tf_CSource && _Other)
 		{
-			return TCMapCopy<mcp_bIsReference && !NTraits::TCIsConst<CData>::mc_Value>::fs_CopyAddAll(*this, fg_Forward<tf_CSource>(_Other));
+			return NPrivate::TCMapCopy<TCMap, mcp_bIsReference && !NTraits::TCIsConst<CData>::mc_Value>::fs_CopyAddAll(*this, fg_Forward<tf_CSource>(_Other));
 		}
 		template <typename tf_CSource>
 		inline_always void fp_MoveAddAll(tf_CSource && _Other)
 		{
-			return TCMapCopy<mcp_bIsReference && !NTraits::TCIsConst<CData>::mc_Value>::fs_MoveAddAll(*this, fg_Forward<tf_CSource>(_Other));
+			return NPrivate::TCMapCopy<TCMap, mcp_bIsReference && !NTraits::TCIsConst<CData>::mc_Value>::fs_MoveAddAll(*this, fg_Forward<tf_CSource>(_Other));
 		}
 
 	public:
@@ -1516,6 +1511,28 @@ namespace NMib::NContainer
 			}
 		}
 
+		template <typename tf_CKey, typename tf_CData, typename tf_CCompare, typename tf_CAllocator>
+		bool operator == (TCMap<tf_CKey, tf_CData, tf_CCompare, tf_CAllocator> const &_Other) const
+		{
+			CIteratorConst Iter0 = *this;
+			auto Iter1 = _Other.f_GetIterator();
+			while (Iter0 && Iter1)
+			{
+				if (!(Iter0.f_GetKey() == Iter1.f_GetKey()))
+					return false;
+				if (!(*Iter0 == *Iter1))
+					return false;
+
+				++Iter0;
+				++Iter1;
+			}
+
+			if (!!Iter0 != !!Iter1)
+				return false;
+
+			return true;
+		}
+
 		bool operator == (const TCMap &_Other) const
 		{
 			CIteratorConst Iter0 = *this;
@@ -1535,6 +1552,38 @@ namespace NMib::NContainer
 				return false;
 
 			return true;
+		}
+
+		template <typename tf_CKey, typename tf_CData, typename tf_CCompare, typename tf_CAllocator>
+		auto operator <=> (TCMap<tf_CKey, tf_CData, tf_CCompare, tf_CAllocator> const &_Other) const
+		{
+			using COrdering = TCCommonOrderingType
+				<
+					decltype(fg_GetType<t_CKey const &>() <=> fg_GetType<t_CKey const &>())
+					, decltype(fg_GetType<t_CData const &>() <=> fg_GetType<t_CData const &>())
+				>
+			;
+
+			CIteratorConst Iter0 = *this;
+			auto Iter1 = _Other.f_GetIterator();
+			while (Iter0 && Iter1)
+			{
+				if (auto Result = Iter0.f_GetKey() <=> Iter1.f_GetKey(); Result != 0)
+					return COrdering(Result);
+
+				if (auto Result = *Iter0 <=> *Iter1; Result != 0)
+					return COrdering(Result);
+
+				++Iter0;
+				++Iter1;
+			}
+
+			if (!Iter0 && Iter1)
+				return COrdering::less;
+			else if (Iter0 && !Iter1)
+				return COrdering::greater;
+
+			return COrdering::equivalent;
 		}
 
 		auto operator <=> (const TCMap &_Other) const

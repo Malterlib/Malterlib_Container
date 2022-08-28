@@ -60,7 +60,6 @@ namespace
 
 			DMibTestSuite("Misc")
 			{
-
 				NMib::NContainer::TCSet<int> Testing;
 
 				Testing[2];
@@ -71,6 +70,50 @@ namespace
 				Testing2[3];
 
 				Testing2 = fg_Move(Testing);
+			};
+
+			DMibTestSuite("Copy Set")
+			{
+				NMib::NContainer::TCSet<int32> Source;
+
+				for (int32 i = 0; i < 50; ++i)
+					Source[i];
+
+				NMib::NContainer::TCSet<int32> Copied = Source;
+				DMibExpect(Copied, ==, Source);
+
+				NMib::NContainer::TCSet<int32> Moved = fg_Move(Copied);
+				DMibExpect(Moved, ==, Source);
+
+				NMib::NContainer::TCSet<int64> CopiedOtherType = Source;
+				DMibExpect(CopiedOtherType, ==, Source);
+			};
+			DMibTestSuite("Copy Map")
+			{
+				NMib::NContainer::TCMap<int32, int32> Source;
+
+				for (int32 i = 0; i < 50; ++i)
+					Source[i] = i;
+
+				NMib::NContainer::TCMap<int32, int32> Copied = Source;
+				DMibExpect(Copied, ==, Source);
+
+				NMib::NContainer::TCMap<int32, int32> Moved = fg_Move(Copied);
+				DMibExpect(Moved, ==, Source);
+
+				NMib::NContainer::TCMap<int32, int64> CopiedOtherType = Source;
+				DMibExpect(CopiedOtherType, ==, Source);
+
+				for (int32 i = 50; i < 100; ++i)
+				{
+					Source[i] = i;
+					CopiedOtherType[i] = i;
+				}
+
+				{
+					DMibTestPath("After addition");
+					DMibExpect(CopiedOtherType, ==, Source);
+				}
 			};
 
 			DMibTestSuite("Iterator")
