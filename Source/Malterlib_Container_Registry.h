@@ -307,6 +307,8 @@ namespace NMib::NContainer
 
 		TCRegistry &f_SetContents(TCRegistry &&_Source);
 
+		template <typename tf_CParseContext>
+		void f_ParseStrWithContext(tf_CParseContext &_ParseContext, t_CStr const &_Text, t_CStr const &_File = t_CStr());
 		void f_ParseStr(t_CStr const &_Text, t_CStr const &_File = t_CStr());
 		void f_Parse(NStream::CBinaryStream &_Stream, t_CStr const &_File = t_CStr());
 		void f_ParseLaxStr(t_CStr const &_Text, t_CStr const &_File = t_CStr());
@@ -411,10 +413,10 @@ namespace NMib::NContainer
 		bool fsp_ParseToEndOfLine(ch8 const * &o_pParse, tf_CParseContext &_ParseContext);
 		template <typename tf_CParseContext>
 		bool fsp_ParseToEndOfComment(ch8 const * &o_pParse, tf_CParseContext &_ParseContext);
-		template <bool tf_bAllowLineBreakInEscapedString>
-		ch8 const *fpr_Parse(ch8 const *_pParse, CParseContext &_ParseContext);
-		template <bool tf_bAllowLineBreakInEscapedString>
-		void fp_Parse(ch8 const *_pParse, CParseContext &_ParseContext);
+		template <bool tf_bAllowLineBreakInEscapedString, typename tf_CParseContext>
+		ch8 const *fpr_Parse(ch8 const *_pParse, tf_CParseContext &_ParseContext);
+		template <bool tf_bAllowLineBreakInEscapedString, typename tf_CParseContext>
+		void fp_Parse(ch8 const *_pParse, tf_CParseContext &_ParseContext);
 		template <bool tf_bEscapeNewLines, typename tf_CStr>
 		static void fsp_GetEscapedStrAppend(t_CStr const &_Str, tf_CStr &_Dest, bool _bForceEscape, t_CStr const &_PreData, ch8 const *_pNewLine);
 		template <typename tf_CStr>

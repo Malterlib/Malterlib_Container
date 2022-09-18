@@ -188,8 +188,8 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	template <bool tf_bAllowLineBreakInEscapedString>
-	ch8 const *TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_Parse(ch8 const *_pParse, CParseContext &_ParseContext)
+	template <bool tf_bAllowLineBreakInEscapedString, typename tf_CParseContext>
+	ch8 const *TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_Parse(ch8 const *_pParse, tf_CParseContext &_ParseContext)
 	{
 		ch8 const *pParse = _pParse;
 		auto Current = *pParse;
@@ -516,8 +516,8 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	template <bool tf_bAllowLineBreakInEscapedString>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_Parse(ch8 const *_pParse, CParseContext &_ParseContext)
+	template <bool tf_bAllowLineBreakInEscapedString, typename tf_CParseContext>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_Parse(ch8 const *_pParse, tf_CParseContext &_ParseContext)
 	{
 		ch8 const *pParse = fpr_Parse<tf_bAllowLineBreakInEscapedString>(_pParse, _ParseContext);
 		if (*pParse == '}')
@@ -553,25 +553,33 @@ namespace NMib::NContainer
 		}
 	}
 
+
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ParseStr(t_CStr const &_Text, t_CStr const &_File)
+	template <typename tf_CParseContext>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ParseStrWithContext(tf_CParseContext &_ParseContext, t_CStr const &_Text, t_CStr const &_File)
 	{
 		// Remove anything existing
 		mp_Children.m_Tree.f_DeleteAllDefiniteType();
 
-		CParseContext Context;
-
 		if constexpr (mc_bSupportLocation || mc_bSupportWhiteSpace)
 		{
-			Context.f_SetFile(_File);
-			Context.f_SetStartParse(_Text.f_GetStr());
+			_ParseContext.f_SetFile(_File);
+			_ParseContext.f_SetStartParse(_Text.f_GetStr());
 			mp_Key.f_SetLocation(CLocation{_File});
 			if constexpr ((t_Flags & ERegistryFlag_FullLocation) != 0)
 				mp_Key.f_SetValueLocation(NStr::TCParseLocation<t_CStr, true>{_File});
 		}
 
-		fp_Parse<false>(_Text.f_GetStr(), Context);
+		fp_Parse<false>(_Text.f_GetStr(), _ParseContext);
+	}
+
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ParseStr(t_CStr const &_Text, t_CStr const &_File)
+	{
+		CParseContext Context;
+		f_ParseStrWithContext(Context, _Text, _File);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
