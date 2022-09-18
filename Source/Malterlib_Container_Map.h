@@ -1306,6 +1306,11 @@ namespace NMib::NContainer
 			return Iter.f_GetLen();
 		}
 
+		mint f_GetDepth() const
+		{
+			return mp_Data.m_Tree.f_GetDepth();
+		}
+
 		CIteratorConst f_GetIterator() const
 		{
 			return *this;
