@@ -36,8 +36,8 @@ namespace NMib::NContainer
 		{
 		}
 
-		t_CKey m_Key;
-		t_CData m_Data;
+		DMibNoUniqueAddress t_CKey m_Key;
+		DMibNoUniqueAddress t_CData m_Data;
 
 		inline_small static mint fs_GetOffset()
 		{
@@ -102,7 +102,7 @@ namespace NMib::NContainer
 			return DMibPOffsetOf(TCMapTreeMember, m_Key);
 		}
 
-		t_CKey m_Key;
+		DMibNoUniqueAddress t_CKey m_Key;
 
 		template <typename tf_CStream>
 		void f_Feed(tf_CStream &_Stream) const
