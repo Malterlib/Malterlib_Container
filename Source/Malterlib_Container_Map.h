@@ -30,7 +30,7 @@ namespace NMib::NContainer
 		{
 		}
 		template <typename tf_CKey, typename... tfp_CArg>
-		inline_small TCMapTreeMember(tf_CKey &&_Key, tfp_CArg && ... p_Args)
+		explicit inline_small TCMapTreeMember(tf_CKey &&_Key, tfp_CArg && ... p_Args)
 			: m_Key(fg_Forward<tf_CKey>(_Key))
 			, m_Data(fg_Forward<tfp_CArg>(p_Args)...)
 		{
@@ -86,13 +86,13 @@ namespace NMib::NContainer
 		{
 		}
 		template <typename tf_CKey>
-		inline_small TCMapTreeMember(tf_CKey &&_Key)
+		explicit inline_small TCMapTreeMember(tf_CKey &&_Key)
 			: m_Key(fg_Forward<tf_CKey>(_Key))
 		{
 		}
 
 		template <typename tf_CKey, typename tf_CArg0>
-		inline_small TCMapTreeMember(tf_CKey &&_Key, tf_CArg0 &&_Arg0)
+		explicit inline_small TCMapTreeMember(tf_CKey &&_Key, tf_CArg0 &&_Arg0)
 			: m_Key(fg_Forward<tf_CKey>(_Key))
 		{
 		}
@@ -421,9 +421,8 @@ namespace NMib::NContainer
 
 	private:
 
-		class CMapTreeMemberCompare
+		struct CMapTreeMemberCompare_Custom
 		{
-		public:
 			auto operator () (CMapTreeMember const &_Left, CMapTreeMember const &_Right) const
 			{
 				return t_CCompare()(_Left.m_Key, _Right.m_Key);
@@ -446,6 +445,16 @@ namespace NMib::NContainer
 				return t_CCompare()(_Left, _Right.m_Key);
 			}
 		};
+
+		struct CMapTreeMemberCompare_Default
+		{
+			t_CKey const &operator () (CMapTreeMember const &_Left) const
+			{
+				return _Left.m_Key;
+			}
+		};
+
+		using CMapTreeMemberCompare = typename TCChooseType<NTraits::TCIsSame<t_CCompare, NMib::CSort_Default>::mc_Value, CMapTreeMemberCompare_Default, CMapTreeMemberCompare_Custom>::CType;
 
 		typedef typename NTraits::TCRemoveReference<typename TCChooseType<NTraits::TCIsSame<CMapSet, t_CData>::mc_Value, t_CKey, t_CData>::CType>::CType CUserData;
 
@@ -751,7 +760,7 @@ namespace NMib::NContainer
 			Cleanup.f_Clear();
 		}
 
-		TCMap(TCInitializerList<CMapTreeMember> const &_Values)
+		TCMap(TCInitializerList<NStorage::TCTuple<t_CKey, t_CData>> const &_Values)
 		{
 			auto Cleanup = g_OnScopeExit / [&]
 				{
@@ -760,7 +769,7 @@ namespace NMib::NContainer
 			;
 
 			for (auto &Value : _Values)
-				(*this)(Value.m_Key, Value.m_Data);
+				(*this)(fg_Get<0>(Value), fg_Get<1>(Value));
 
 			Cleanup.f_Clear();
 		}
