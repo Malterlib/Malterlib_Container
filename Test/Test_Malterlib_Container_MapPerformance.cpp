@@ -1,8 +1,9 @@
-﻿// Copyright © 2015 Hansoft AB
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #include <Mib/Core/Core>
 #include <Mib/Test/Test>
+#include <Mib/Test/Performance>
 
 #include "../../Core/Source/Malterlib_Core_Misc.h"
 #include <map>
@@ -11,285 +12,876 @@
 #include <unordered_map>
 #include <vector>
 
-// This is disabled for GCC & clang due to a lookup issue with
-// boost declaring std::pair and the compiler not finding the definition from <utlity>
-#if !defined(DMibCompiler_GCC) && !defined(DCompiler_clang)
-
-namespace NMib
+namespace NMib::NMisc
 {
-	namespace NMisc
+	static constexpr mint mc_nItemsToTest = 5'000'000;
+	static constexpr double mc_AllowedPerformance = 0.95;
+
+	namespace
 	{
+		using namespace NMib::NTime;
+		using namespace NMib::NContainer;
 
-		namespace Tests {
-			using namespace NMib::NTime;
-			using namespace NMib::NContainer;
-			typedef CTimerMin TestTimer;
-			class MapTester
+		struct CMapTester
+		{
+		private: // Measure
+			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+			inline_never void f_MeasureForAllKeysRandomSorted(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, mint _nTries) const
 			{
-				int m_nItems;
-				bool m_bRandom;
-				std::vector<std::pair<int,int>> m_Key_Data;
-			private: // Measure
-				template <typename Op>
-				inline_never void MeasureForAllKeys(CTimerMin& Time,Op op) const
-				{
-					Time.f_Start();
-					for(int i=0;i<10000;++i) { op(m_Key_Data[i].first); }
-					Time.f_Stop();
-				}
-				template <typename Op>
-				inline_never void MeasureForAllKeyValues(CTimerMin& Time,Op op) const
-				{
-					Time.f_Start();
-					for(int i=0;i<10000;++i) { op(m_Key_Data[i].first,m_Key_Data[i].second); }
-					Time.f_Stop();
-				}
-			private: // Generate test data
-				template <class Map>
-				Map getFilledMap() const
-				{
-					Map map;
-					for(int i=0;i<10000;++i) { map[m_Key_Data[i].first] = m_Key_Data[i].second; }
-					return map;
-				}
-				template <class Set>
-				Set getFilledSet() const
-				{
-					Set set;
-					for(int i=0;i<10000;++i) { set.insert(m_Key_Data[i].first); }
-					return set;
-				}
-				template <>
-				TCMap<int,int> getFilledMap<TCMap<int,int>>() const
-				{
-					TCMap<int,int> map;
-					for(int i=0;i<10000;++i) { map[m_Key_Data[i].first] = m_Key_Data[i].second; }
-					return map;
-				}
-				template <>
-				TCMap<int> getFilledSet<TCMap<int>>() const
-				{
-					TCMap<int> set;
-					for(int i=0;i<10000;++i) { set[m_Key_Data[i].first]; }
-					return set;
-				}
-			private: // Operations
-				template <class Set>
-				void insertInSet(CTimerMin const& MalterlibTime) {
-					fp_CheckInit();
-					Set set;
-					TestTimer Time;
-					MeasureForAllKeys(Time,[&](int key) { set.insert(key); });
-					DMibTest(DMibExpr( Time / MalterlibTime) > DMibExpr(1.0));
-				}
-				template <class Map>
-				void insertInMap(CTimerMin const& MalterlibTime) {
-					fp_CheckInit();
-					Map set2;
-					TestTimer Time;
-					MeasureForAllKeyValues(Time,[&](int key,int value) { set2[key] = value; });
-					DMibTest(DMibExpr( Time / MalterlibTime) > DMibExpr(1.0));
-				}
-				template <class Set>
-				void accessInSet(CTimerMin const& MalterlibTime) {
-					fp_CheckInit();
-					Set set2 = getFilledSet<Set>();
-					TestTimer Time;
-
-					bool found = true; // To prevent loop from being optimized away
-					MeasureForAllKeys(Time,[&](int key) { found = found && (set2.find(key) != set2.end()); });
-					DMibTest(DMibExpr( Time / MalterlibTime) > DMibExpr(1.0));
-				};
-				template <class Map>
-				void accessInMap(CTimerMin const& MalterlibTime) {
-					fp_CheckInit();
-					Map set = getFilledMap<Map>();
-					int found = 0; // To prevent loop from being optimized away
-					TestTimer Time;
-					MeasureForAllKeys(Time,[&](int key) { found += set[key]; });
-					DMibTest(DMibExpr( Time / MalterlibTime) > DMibExpr(1.0));
-				};
-				template <class Set>
-				void eraseInSet(CTimerMin const& MalterlibTime) {
-					fp_CheckInit();
-					Set set = getFilledSet<Set>();
-					TestTimer Time;
-					MeasureForAllKeys(Time,[&](int key) { set.erase(key); });
-					DMibTest(DMibExpr( Time / MalterlibTime) > DMibExpr(1.0));
-				}
-				template <class Map>
-				void eraseInMap(CTimerMin const& MalterlibTime) {
-					fp_CheckInit();
-					Map set = getFilledMap<Map>();
-					TestTimer Time;
-					MeasureForAllKeys(Time,[&](int key) { set.erase(key); });
-					DMibTest(DMibExpr( Time / MalterlibTime) > DMibExpr(1.0));
-				}
-
-				void fp_CheckInit()
-				{
-					if (m_Key_Data.empty())
+				auto pDataStart = m_Key_DataSorted.f_GetArray();
+				auto pDataEnd = pDataStart + mc_nItemsToTest;
+				auto fMeasure = [_fOperation, pDataStart, pDataEnd]() inline_never
 					{
-						m_Key_Data.reserve(m_nItems);
-						if (!m_bRandom)
-						{
-							for(int i=0;i<m_nItems;++i) { m_Key_Data.push_back(std::make_pair(i,i)); }
-						}
-						else
-						{
-							NMisc::CRandomShiftRNG RandomRng;
-							for(int i = 0; i < m_nItems; ++i)
-								m_Key_Data.push_back(std::make_pair(1 + (RandomRng.f_GetValue<int>() % (10000000-1)),1 + (RandomRng.f_GetValue<int>() % (10000000-1))));
-						}
+						for (auto *pData = pDataStart; pData != pDataEnd; ++pData)
+							_fOperation(pData->m_Key);
 					}
+				;
+				for (mint i = 0; i < _nTries; ++i)
+				{
+					_fInit();
+					{
+						DMibTestScopeMeasure(_PerformanceMeasure, mc_nItemsToTest);
+						fMeasure();
+					}
+					_fDestruct();
 				}
+			}
 
-			public: // Test cases
-				MapTester(int num_items,bool random)
-					: m_nItems(num_items)
-					, m_bRandom(random)
-				{
-				}
-				void insert_id_in_set()
-				{
-					TestTimer MalterlibTime;
-					DMibTestSuite("Malterlib")
-					{
-						fp_CheckInit();
-						TCMap<int> set1;
-						bool created;
-						MeasureForAllKeys(MalterlibTime,[&](int key) { set1.f_Map(key,created); });
-					};
-					DMibTestSuite("std::set")           { this->insertInSet<std::set<int>>(MalterlibTime); };
-					//DMibTestSuite("std::unordered_set") { this->insertInSet<std::unordered_set<int>>(MalterlibTime); };
-					//DMibTestSuite("boost::flat_set")    { this->insertInSet<boost::interprocess::flat_set<int>>(MalterlibTime); };
-				}
-				void insert_id_in_map()
-				{
-					TestTimer MalterlibTime;
-					DMibTestSuite("Malterlib")
-					{
-						fp_CheckInit();
-						TCMap<int,int> set1;
-						MeasureForAllKeyValues(MalterlibTime,[&](int key,int value) { set1[key] = value; });
-                    };
-					DMibTestSuite("std::map")           { this->insertInMap<std::map<int,int>>(MalterlibTime); };
-					//DMibTestSuite("std::unordered_map") { this->insertInMap<std::tr1::unordered_map<int,int>>(MalterlibTime); };
-					//DMibTestSuite("boost::flat_map")    { this->insertInMap<boost::interprocess::flat_map<int,int>>(MalterlibTime); };
-				}
-				void access_id_in_map()
-				{
-					TestTimer MalterlibTime;
-					DMibTestSuite("Malterlib")
-					{
-						fp_CheckInit();
-						auto set = this->getFilledMap<TCMap<int,int>>();
-						int found = 0;
-						MeasureForAllKeys(MalterlibTime,[&](int key) {  found += set[key]; });
-					};
-					DMibTestSuite("std::map")           { this->accessInMap<std::map<int,int>>(MalterlibTime); };
-					//DMibTestSuite("std::unordered_map") { this->accessInMap<std::unordered_map<int,int>>(MalterlibTime); };
-					//DMibTestSuite("boost::flat_map")    { this->accessInMap<boost::interprocess::flat_map<int,int>>(MalterlibTime); };
-				}
-				void access_id_in_set()
-				{
-					TestTimer MalterlibTime;
-					DMibTestSuite("Malterlib")
-					{
-						fp_CheckInit();
-						TCMap<int> set1;
-						for(int i=0;i<10000;++i) { set1[m_Key_Data[i].first]; }
-
-						bool found = true;
-						MeasureForAllKeys(MalterlibTime,[&](int key) { found = found && !!set1.f_Exists(key); });
-					};
-					DMibTestSuite("std::set")           { this->accessInSet<std::set<int>>(MalterlibTime); };
-					//DMibTestSuite("boost::flat_set")    { this->accessInSet<boost::interprocess::flat_set<int>>(MalterlibTime); };
-					//DMibTestSuite("std::unordered_set") { this->accessInSet<std::tr1::unordered_set<int>>(MalterlibTime); };
-				}
-				void erase_id_in_set()
-				{
-					TestTimer MalterlibTime;
-					DMibTestSuite("Malterlib")
-					{
-						fp_CheckInit();
-						auto set = this->getFilledSet<TCMap<int>>();
-						MeasureForAllKeys(MalterlibTime,[&](int key) { set.f_Remove(key); });
-					};
-					DMibTestSuite("std::set")           { this->eraseInSet<std::set<int>>(MalterlibTime); };
-					//DMibTestSuite("std::unordered_set") { this->eraseInSet<std::tr1::unordered_set<int>>(MalterlibTime); };
-					//DMibTestSuite("boost::flat_set")    { this->eraseInSet<boost::interprocess::flat_set<int>>(MalterlibTime); };
-				}
-				void erase_id_in_map()
-				{
-					TestTimer MalterlibTime;
-					DMibTestSuite("Malterlib")
-					{
-						fp_CheckInit();
-						auto set = this->getFilledMap<TCMap<int,int>>();
-						MeasureForAllKeys(MalterlibTime,[&](int key) { set.f_Remove(key); });
-					};
-					DMibTestSuite("std::map")           { this->eraseInMap<std::map<int,int>>(MalterlibTime); };
-					//DMibTestSuite("std::unordered_map") { this->eraseInMap<std::unordered_map<int,int>>(MalterlibTime); };
-					//DMibTestSuite("boost::flat_map")    { this->eraseInMap<boost::interprocess::flat_map<int,int>>(MalterlibTime); };
-				}
-			};
-			class CMapPerformance_Tests : public CTest
+			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+			inline_never void f_MeasureForAllKeysSorted(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, mint _nTries = 5) const
 			{
+				if (m_bRandom)
+					f_MeasureForAllKeysRandomSorted(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
+				else
+					f_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
+			}
 
-			public: // Define test suites
-				void f_Suite(MapTester&& mt)
+			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+			inline_never void f_MeasureForAllKeysRandom(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, mint _nTries) const
+			{
+				auto pDataStart = m_Key_Data.f_GetArray();
+				auto pDataEnd = pDataStart + mc_nItemsToTest;
+				auto fMeasure = [_fOperation, pDataStart, pDataEnd]() inline_never
+					{
+						for (auto *pData = pDataStart; pData != pDataEnd; ++pData)
+							_fOperation(pData->m_Key);
+					}
+				;
+				for (mint i = 0; i < _nTries; ++i)
 				{
-					DMibTestCategory("Set")
+					_fInit();
 					{
-						DMibTestCategory("Insert")
-						{
-							mt.insert_id_in_set();
-						};
-						DMibTestCategory("Access")
-						{
-							mt.access_id_in_set();
-						};
-						DMibTestCategory("Erase")
-						{
-							mt.erase_id_in_set();
-						};
-					};
-					DMibTestCategory("Map")
-					{
-						DMibTestCategory("Insert")
-						{
-							mt.insert_id_in_map();
-						};
-						DMibTestCategory("Access")
-						{
-							mt.access_id_in_map();
-						};
-						DMibTestCategory("Erase")
-						{
-							mt.erase_id_in_map();
-						};
-					};
+						DMibTestScopeMeasure(_PerformanceMeasure, mc_nItemsToTest);
+						fMeasure();
+					}
+					_fDestruct();
 				}
-				void f_DoTests()
+			}
+
+			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+			inline_never void f_MeasureForAllKeysLinear(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, mint _nTries) const
+			{
+				auto fMeasure = [_fOperation]() inline_never
+					{
+						for (mint i = 0; i < mc_nItemsToTest; ++i)
+							_fOperation(i);
+					}
+				;
+				for (mint i = 0; i < _nTries; ++i)
 				{
-					DMibTestCategory(CTestCategory("Performace") << CTestGroup("Performance"))
+					_fInit();
 					{
-						DMibTestCategory("Random Input")
-						{
-							f_Suite(MapTester(100000,true));
-						};
-						DMibTestCategory("Linear input")
-						{
-							f_Suite(MapTester(100000,false));
-						};
-					};
+						DMibTestScopeMeasure(_PerformanceMeasure, mc_nItemsToTest);
+						fMeasure();
+					}
+					_fDestruct();
 				}
+			}
+
+			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+			inline_never void f_MeasureForAllKeys(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, mint _nTries = 5) const
+			{
+				if (m_bRandom)
+					f_MeasureForAllKeysRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
+				else
+					f_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
+			}
+
+			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+			inline_never void f_MeasureForAllKeyValuesRandom(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, mint _nTries) const
+			{
+				auto pDataStart = m_Key_Data.f_GetArray();
+				auto pDataEnd = pDataStart + mc_nItemsToTest;
+				auto fMeasure = [_fOperation, pDataStart, pDataEnd]() inline_never
+					{
+						for (auto *pData = pDataStart; pData != pDataEnd; ++pData)
+							_fOperation(pData->m_Key, pData->m_Value);
+					}
+				;
+				for (mint i = 0; i < _nTries; ++i)
+				{
+					_fInit();
+					{
+						DMibTestScopeMeasure(_PerformanceMeasure, mc_nItemsToTest);
+						fMeasure();
+					}
+					_fDestruct();
+				}
+			}
+
+			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+			inline_never void f_MeasureForAllKeyValuesLinear(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, mint _nTries) const
+			{
+				auto fMeasure = [_fOperation]() inline_never
+					{
+						for (mint i = 0; i < mc_nItemsToTest; ++i)
+							_fOperation(i, i);
+					}
+				;
+				for (mint i = 0; i < _nTries; ++i)
+				{
+					_fInit();
+					{
+						DMibTestScopeMeasure(_PerformanceMeasure, mc_nItemsToTest);
+						fMeasure();
+					}
+					_fDestruct();
+				}
+			}
+
+			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+			inline_never void f_MeasureForAllKeyValues(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, mint _nTries = 5) const
+			{
+				if (m_bRandom)
+					f_MeasureForAllKeyValuesRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
+				else
+					f_MeasureForAllKeyValuesLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
+			}
+
+		private: // Generate test data
+			template <typename tf_CMap>
+			tf_CMap f_GetFilledMap() const
+			{
+				if (m_bRandom)
+				{
+					tf_CMap Map;
+					for (auto &Source : m_Key_Data)
+						Map[Source.m_Key] = Source.m_Value;
+					return Map;
+				}
+				else
+				{
+					tf_CMap Map;
+					for (mint i = 0; i < mc_nItemsToTest; ++i)
+						Map[i] = i;
+					return Map;
+				}
+			}
+
+			template <typename tf_CSet>
+			tf_CSet f_GetFilledSet() const
+			{
+				if (m_bRandom)
+				{
+					tf_CSet Set;
+					for (auto &Source : m_Key_Data)
+						Set.insert(Source.m_Key);
+					return Set;
+				}
+				else
+				{
+					tf_CSet Set;
+					for (mint i = 0; i < mc_nItemsToTest; ++i)
+						Set.insert(i);
+					return Set;
+				}
+			}
+
+			template <>
+			TCMap<mint, mint> f_GetFilledMap<TCMap<mint, mint>>() const
+			{
+				if (m_bRandom)
+				{
+					TCMap<mint, mint> Map;
+					for (auto &Source : m_Key_Data)
+						Map[Source.m_Key] = Source.m_Value;
+					return Map;
+				}
+				else
+				{
+					TCMap<mint, mint> Map;
+					for (mint i = 0; i < mc_nItemsToTest; ++i)
+						Map[i] = i;
+					return Map;
+				}
+			}
+
+			template <>
+			TCSet<mint> f_GetFilledSet<TCSet<mint>>() const
+			{
+				if (m_bRandom)
+				{
+					TCSet<mint> Set;
+					for (auto &Source : m_Key_Data)
+						Set[Source.m_Key];
+					return Set;
+				}
+				else
+				{
+					TCSet<mint> Set;
+					for (mint i = 0; i < mc_nItemsToTest; ++i)
+						Set[i];
+					return Set;
+				}
+			}
+
+		private: // Operations
+			void fp_CheckInit()
+			{
+				if (!m_bRandom)
+					return;
+
+				if (m_Key_Data.f_IsEmpty())
+				{
+					m_Key_Data.f_Reserve(mc_nItemsToTest);
+					NMisc::CRandomShiftRNG RandomRng;
+					for (mint i = 0; i < mc_nItemsToTest; ++i)
+						m_Key_Data.f_Insert({RandomRng.f_GetValue<mint>(), RandomRng.f_GetValue<mint>()});
+
+					m_Key_DataSorted = m_Key_Data;
+					m_Key_DataSorted.f_Sort();
+				}
+			}
+
+		public: // Test cases
+			CMapTester(bool random)
+				: m_bRandom(random)
+			{
+			}
+
+			void f_InsertSet()
+			{
+				DMibTestSuite("Insert")
+				{
+					fp_CheckInit();
+					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
+
+					auto PrecachSet = f_GetFilledSet<TCSet<mint>>();
+
+					TCSet<mint> Set;
+					f_MeasureForAllKeys
+						(
+							MalterlibMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								Set[_Key];
+							}
+							, []{}
+							, [&]
+							{
+								Set.f_Clear();
+							}
+						)
+					;
+					PerfTest.f_Add(MalterlibMeasure);
+
+					CTestPerformanceMeasure StdMeasure("std");
+					std::set<mint> Set2;
+					f_MeasureForAllKeys
+						(
+							StdMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								Set2.insert(_Key);
+							}
+							, []{}
+							, [&]
+							{
+								Set2.clear();
+							}
+						)
+					;
+					PerfTest.f_AddReference(StdMeasure);
+					DMibExpectTrue(PerfTest);
+				};
+			}
+
+			void f_InsertMap()
+			{
+				DMibTestSuite("Insert")
+				{
+					fp_CheckInit();
+					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
+
+					TCMap<mint, mint> Map;
+					f_MeasureForAllKeyValues
+						(
+							MalterlibMeasure
+							, [&](mint _Key, mint _Value) inline_always_lambda
+							{
+								Map[_Key] = _Value;
+							}
+							, []{}
+							, [&]
+							{
+								Map.f_Clear();
+							}
+						)
+					;
+					PerfTest.f_Add(MalterlibMeasure);
+
+					CTestPerformanceMeasure StdMeasure("std");
+					std::map<mint, mint> Map2;
+					f_MeasureForAllKeyValues
+						(
+							StdMeasure
+							, [&](mint _Key, mint _Value) inline_always_lambda
+							{
+								Map2[_Key] = _Value;
+							}
+							, []{}
+							, [&]
+							{
+								Map2.clear();
+							}
+						)
+					;
+					PerfTest.f_AddReference(StdMeasure);
+					DMibExpectTrue(PerfTest);
+				};
+			}
+
+			struct CIntrusiveSetNode
+			{
+				mint m_Value;
+				NIntrusive::TCAVLLink<> m_Link;
+
+				struct CCompare
+				{
+					auto &operator ()(CIntrusiveSetNode &_Node)
+					{
+						return _Node.m_Value;
+					}
+				};
 			};
-			DMibTestRegister(CMapPerformance_Tests, Malterlib::Container);
-		}
+
+			void f_AccessSet()
+			{
+				DMibTestSuite("Access")
+				{
+					fp_CheckInit();
+					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
+					auto Set = f_GetFilledSet<TCSet<mint>>();
+					mint nFoundMalterlib = 0;
+					f_MeasureForAllKeys
+						(
+							MalterlibMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								if (Set.f_FindEqual(_Key))
+									++nFoundMalterlib;
+							}
+							, []{}
+							, []{}
+							, 5
+						)
+					;
+					PerfTest.f_Add(MalterlibMeasure);
+
+					CTestPerformanceMeasure StdMeasure("std");
+					auto Set2 = f_GetFilledSet<std::set<mint>>();
+					mint nFound = 0;
+					f_MeasureForAllKeys
+						(
+							StdMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								if (Set2.find(_Key) != Set2.end())
+									++nFound;
+							}
+							, []{}
+							, []{}
+							, 5
+						)
+					;
+					PerfTest.f_AddReference(StdMeasure);
+
+					CTestPerformanceMeasure IntrusiveMeasure("IntrusiveVector");
+					mint nFoundIntrusive = 0;
+					{
+						NContainer::TCVector<CIntrusiveSetNode> SetVector3(mc_nItemsToTest * 2);
+						CIntrusiveSetNode *pNode = SetVector3.f_GetArray();
+						CIntrusiveSetNode *pStartArray = pNode;
+						mint CacheConflictPreventionSize = 16 * 1024;
+						NIntrusive::TCAVLTree<&CIntrusiveSetNode::m_Link, CIntrusiveSetNode::CCompare> Set3;
+						mint i = 0;
+
+						for (auto &Source : Set)
+						{
+							if ((((uint8 *)pNode - (uint8 *)pStartArray) % CacheConflictPreventionSize) == 0)
+								++pNode;
+
+							pNode->m_Value = Source;
+							Set3.f_FindEqualOrInsert
+								(
+									Source
+									, [&]() -> CIntrusiveSetNode *
+									{
+										return pNode;
+									}
+								)
+							;
+							++pNode;
+							++i;
+						}
+						f_MeasureForAllKeys
+							(
+								IntrusiveMeasure
+								, [&](mint _Key) inline_always_lambda
+								{
+									if (Set3.f_FindEqual(_Key))
+										++nFoundIntrusive;
+								}
+								, []{}
+								, []{}
+								, 5
+							)
+						;
+					}
+
+					PerfTest.f_AddBaseline(IntrusiveMeasure);
+					DMibExpect(nFoundMalterlib, ==, mc_nItemsToTest * 5);
+					DMibExpect(nFoundIntrusive, ==, mc_nItemsToTest * 5);
+					DMibExpect(nFound, ==, mc_nItemsToTest * 5);
+					DMibExpectTrue(PerfTest);
+				};
+			}
+
+			void f_CopySet()
+			{
+				DMibTestSuite("Copy")
+				{
+					fp_CheckInit();
+					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
+
+					auto Set = f_GetFilledSet<TCSet<mint>>();
+					TCSet<mint> SetCopy;
+					for (mint i = 0; i < 5; ++i)
+					{
+						[&]() inline_never
+							{
+								DMibTestScopeMeasure(MalterlibMeasure, mc_nItemsToTest);
+								SetCopy = Set;
+							}
+							()
+						;
+						SetCopy.f_Clear();
+					}
+
+					PerfTest.f_Add(MalterlibMeasure);
+					CTestPerformanceMeasure StdMeasure("std");
+					auto Set2 = f_GetFilledSet<std::set<mint>>();
+
+					std::set<mint> Set2Copy;
+					for (mint i = 0; i < 5; ++i)
+					{
+						[&]() inline_never
+							{
+								DMibTestScopeMeasure(StdMeasure, mc_nItemsToTest);
+								Set2Copy = Set2;
+							}
+							()
+						;
+						Set2Copy.clear();
+					}
+
+					PerfTest.f_AddReference(StdMeasure);
+					DMibExpectTrue(PerfTest);
+				};
+			}
+
+			void f_ClearSet()
+			{
+				DMibTestSuite("Clear")
+				{
+					fp_CheckInit();
+					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
+
+					for (mint i = 0; i < 5; ++i)
+					{
+						auto Set = f_GetFilledSet<TCSet<mint>>();
+						[&]() inline_never
+							{
+								DMibTestScopeMeasure(MalterlibMeasure, mc_nItemsToTest);
+								Set.f_Clear();
+							}
+							()
+						;
+					}
+
+					PerfTest.f_Add(MalterlibMeasure);
+
+					CTestPerformanceMeasure StdMeasure("std");
 
 
+					std::set<mint> Set2Copy;
+					for (mint i = 0; i < 5; ++i)
+					{
+						auto Set2 = f_GetFilledSet<std::set<mint>>();
+						[&]() inline_never
+							{
+								DMibTestScopeMeasure(StdMeasure, mc_nItemsToTest);
+								Set2.clear();
+							}
+							()
+						;
+					}
+
+					PerfTest.f_AddReference(StdMeasure);
+					DMibExpectTrue(PerfTest);
+				};
+			}
+
+			void f_AccessAfterCopySet()
+			{
+				DMibTestSuite("AccessAfterCopy")
+				{
+					fp_CheckInit();
+					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
+					auto SetSource = f_GetFilledSet<TCSet<mint>>();
+					auto Set = SetSource;
+					mint nFoundMalterlib = 0;
+					f_MeasureForAllKeys
+						(
+							MalterlibMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								if (Set.f_FindEqual(_Key))
+									++nFoundMalterlib;
+							}
+							, []{}
+							, []{}
+							, 5
+						)
+					;
+					PerfTest.f_Add(MalterlibMeasure);
+
+					CTestPerformanceMeasure StdMeasure("std");
+					auto SetSource2 = f_GetFilledSet<std::set<mint>>();
+					auto Set2 = SetSource2;
+					mint nFound = 0;
+					f_MeasureForAllKeys
+						(
+							StdMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								if (Set2.find(_Key) != Set2.end())
+									++nFound;
+							}
+							, []{}
+							, []{}
+							, 5
+						)
+					;
+					PerfTest.f_AddReference(StdMeasure);
+
+					DMibExpect(nFoundMalterlib, ==, mc_nItemsToTest * 5);
+					DMibExpect(nFound, ==, mc_nItemsToTest * 5);
+					DMibExpectTrue(PerfTest);
+				};
+			}
+
+			void f_AccessAfterCopySortedSet()
+			{
+				DMibTestSuite("AccessAfterCopySorted")
+				{
+					fp_CheckInit();
+					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
+					auto SetSource = f_GetFilledSet<TCSet<mint>>();
+					auto Set = SetSource;
+					mint nFoundMalterlib = 0;
+					f_MeasureForAllKeysSorted
+						(
+							MalterlibMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								if (Set.f_FindEqual(_Key))
+									++nFoundMalterlib;
+							}
+							, []{}
+							, []{}
+							, 5
+						)
+					;
+					PerfTest.f_Add(MalterlibMeasure);
+
+					CTestPerformanceMeasure StdMeasure("std");
+					auto SetSource2 = f_GetFilledSet<std::set<mint>>();
+					auto Set2 = SetSource2;
+					mint nFound = 0;
+					f_MeasureForAllKeysSorted
+						(
+							StdMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								if (Set2.find(_Key) != Set2.end())
+									++nFound;
+							}
+							, []{}
+							, []{}
+							, 5
+						)
+					;
+					PerfTest.f_AddReference(StdMeasure);
+
+					DMibExpect(nFoundMalterlib, ==, mc_nItemsToTest * 5);
+					DMibExpect(nFound, ==, mc_nItemsToTest * 5);
+					DMibExpectTrue(PerfTest);
+				};
+			}
+
+			void f_AccessSortedSet()
+			{
+				DMibTestSuite("AccessSorted")
+				{
+					fp_CheckInit();
+					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
+					auto Set = f_GetFilledSet<TCSet<mint>>();
+					mint nFoundMalterlib = 0;
+					f_MeasureForAllKeysSorted
+						(
+							MalterlibMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								if (Set.f_FindEqual(_Key))
+									++nFoundMalterlib;
+							}
+							, []{}
+							, []{}
+							, 5
+						)
+					;
+					PerfTest.f_Add(MalterlibMeasure);
+
+					CTestPerformanceMeasure StdMeasure("std");
+					auto Set2 = f_GetFilledSet<std::set<mint>>();
+					mint nFound = 0;
+					f_MeasureForAllKeysSorted
+						(
+							StdMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								if (Set2.find(_Key) != Set2.end())
+									++nFound;
+							}
+							, []{}
+							, []{}
+							, 5
+						)
+					;
+					PerfTest.f_AddReference(StdMeasure);
+
+					DMibExpect(nFoundMalterlib, ==, mc_nItemsToTest * 5);
+					DMibExpect(nFound, ==, mc_nItemsToTest * 5);
+					DMibExpectTrue(PerfTest);
+				};
+			}
+
+			void f_AccessMap()
+			{
+				DMibTestSuite("Access")
+				{
+					fp_CheckInit();
+					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
+
+					auto Map = f_GetFilledMap<TCMap<mint, mint>>();
+					mint Found = 0;
+					f_MeasureForAllKeys
+						(
+							MalterlibMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								Found += fg_Const(Map)[_Key];
+							}
+							, []{}
+							, []{}
+							, 5
+						)
+					;
+					PerfTest.f_Add(MalterlibMeasure);
+
+					CTestPerformanceMeasure StdMeasure("std");
+					auto Map2 = f_GetFilledMap<std::map<mint, mint>>();
+					f_MeasureForAllKeys
+						(
+							StdMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								Found += fg_Const(Map2).find(_Key)->second;
+							}
+							, []{}
+							, []{}
+							, 5
+						)
+					;
+					PerfTest.f_AddReference(StdMeasure);
+					DMibExpectTrue(PerfTest);
+				};
+			}
+
+			void f_EraseSet()
+			{
+				DMibTestSuite("Erase")
+				{
+					fp_CheckInit();
+					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
+
+					TCSet<mint> Set;
+					f_MeasureForAllKeys
+						(
+							MalterlibMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								Set.f_Remove(_Key);
+							}
+							, [&]
+							{
+								Set = f_GetFilledSet<TCSet<mint>>();
+							}
+							, []{}
+						)
+					;
+					PerfTest.f_Add(MalterlibMeasure);
+
+					CTestPerformanceMeasure StdMeasure("std");
+					std::set<mint> Set2;
+					f_MeasureForAllKeys
+						(
+							StdMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								Set2.erase(_Key);
+							}
+							, [&]
+							{
+								Set2 = f_GetFilledSet<std::set<mint>>();
+							}
+							, []{}
+						)
+					;
+					PerfTest.f_AddReference(StdMeasure);
+					DMibExpectTrue(PerfTest);
+				};
+			}
+
+			void f_EraseMap()
+			{
+				DMibTestSuite("Erase")
+				{
+					fp_CheckInit();
+					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
+
+					TCMap<mint, mint> Map;
+					f_MeasureForAllKeys
+						(
+							MalterlibMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								Map.f_Remove(_Key);
+							}
+							, [&]
+							{
+								Map = f_GetFilledMap<TCMap<mint, mint>>();
+							}
+							, []{}
+						)
+					;
+					PerfTest.f_Add(MalterlibMeasure);
+
+					CTestPerformanceMeasure StdMeasure("std");
+					std::map<mint, mint> Map2;
+					f_MeasureForAllKeys
+						(
+							StdMeasure
+							, [&](mint _Key) inline_always_lambda
+							{
+								Map2.erase(_Key);
+							}
+							, [&]
+							{
+								Map2 = f_GetFilledMap<std::map<mint, mint>>();
+							}
+							, []{}
+						)
+					;
+					PerfTest.f_AddReference(StdMeasure);
+					DMibExpectTrue(PerfTest);
+				};
+			}
+
+			struct CKeyValue
+			{
+				mint m_Key = 0;
+				mint m_Value = 0;
+
+				auto operator <=> (CKeyValue const &_Right) const = default;
+			};
+
+			bool m_bRandom;
+			NContainer::TCVector<CKeyValue> m_Key_Data;
+			NContainer::TCVector<CKeyValue> m_Key_DataSorted;
+		};
+
+		struct CMapPerformance_Tests : public CTest
+		{
+			void f_Suite(CMapTester &&_Tester)
+			{
+				DMibTestCategory("Set")
+				{
+					_Tester.f_InsertSet();
+					_Tester.f_AccessSet();
+					_Tester.f_AccessSortedSet();
+					_Tester.f_EraseSet();
+					_Tester.f_ClearSet();
+					_Tester.f_CopySet();
+					_Tester.f_AccessAfterCopySet();
+					_Tester.f_AccessAfterCopySortedSet();
+				};
+				DMibTestCategory("Map")
+				{
+					_Tester.f_InsertMap();
+					_Tester.f_AccessMap();
+					_Tester.f_EraseMap();
+				};
+			}
+
+			void f_DoTests()
+			{
+				DMibTestCategory(CTestCategory("Performace") << CTestGroup("Performance"))
+				{
+					DMibTestCategory("Random Input")
+					{
+						f_Suite(CMapTester(true));
+					};
+					DMibTestCategory("Linear Input")
+					{
+						f_Suite(CMapTester(false));
+					};
+				};
+			}
+		};
+
+		DMibTestRegister(CMapPerformance_Tests, Malterlib::Container);
 	}
 }
-#endif
