@@ -7,12 +7,6 @@
 
 namespace NMib::NContainer
 {
-	class CMapNoData
-	{
-	public:
-		constexpr auto operator <=> (CMapNoData const &_Other) const = default;
-	};
-
 	class CMapSet
 	{
 	public:
@@ -84,65 +78,6 @@ namespace NMib::NContainer
 	};
 
 	template <typename t_CKey>
-	class TCMapTreeMember<t_CKey, CMapNoData> : public CMapTreeMemberBase
-	{
-	public:
-
-		inline_small TCMapTreeMember()
-		{
-		}
-		template <typename tf_CKey>
-		inline_small TCMapTreeMember(tf_CKey &&_Key)
-			: m_Key(fg_Forward<tf_CKey>(_Key))
-		{
-		}
-
-		template <typename tf_CKey, typename tf_CArg0>
-		inline_small TCMapTreeMember(tf_CKey &&_Key, tf_CArg0 &&_Arg0)
-			: m_Key(fg_Forward<tf_CKey>(_Key))
-		{
-		}
-
-		inline_small static mint fs_GetOffset()
-		{
-			return 0;
-		}
-
-		t_CKey m_Key;
-
-		template <typename tf_CStream>
-		void f_Feed(tf_CStream &_Stream) const
-		{
-			_Stream << m_Key;
-		}
-
-		template <typename tf_CStream>
-		void f_Consume(tf_CStream &_Stream)
-		{
-			_Stream >> m_Key;
-		}
-
-		inline_small CMapNoData &f_GetData()
-		{
-			return *((CMapNoData *)this);
-		}
-		inline_small const CMapNoData &f_GetData() const
-		{
-			return *((const CMapNoData *)this);
-		}
-
-		inline_small t_CKey &f_GetKey()
-		{
-			return m_Key;
-		}
-		inline_small const t_CKey &f_GetKey() const
-		{
-			return m_Key;
-		}
-
-	};
-
-	template <typename t_CKey>
 	class TCMapTreeMember<t_CKey, CMapSet> : public CMapTreeMemberBase
 	{
 	public:
@@ -201,7 +136,7 @@ namespace NMib::NContainer
 
 	};
 
-	template <typename t_CKey, typename t_CData = CMapNoData, typename t_CCompare = NMib::CSort_Default, typename t_CAllocator = NMib::NMemory::CAllocator_Heap >
+	template <typename t_CKey, typename t_CData, typename t_CCompare = NMib::CSort_Default, typename t_CAllocator = NMib::NMemory::CAllocator_Heap >
 	class TCMap;
 
 	class CMapWasCreated
@@ -1634,7 +1569,7 @@ namespace NMib::NContainer
 	template
 	<
 		typename t_CKey
-		, typename t_CData = CMapNoData
+		, typename t_CData
 		, typename t_CCompare = NMib::CSort_Default
 		, typename t_CAllocator = NMib::NMemory::CAllocator_Virtual
 		, mint t_GrowSize = 128

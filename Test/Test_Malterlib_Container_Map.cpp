@@ -44,12 +44,6 @@ namespace
 					auto &ToRemove = Testing[1];
 					Testing.f_Remove(&ToRemove);
 				};
-				DMibTestSuite("MapNoData")
-				{
-					NMib::NContainer::TCMap<int> Testing;
-					auto &ToRemove = Testing[1];
-					Testing.f_Remove(&ToRemove);
-				};
 				DMibTestSuite("Map")
 				{
 					NMib::NContainer::TCMap<int, int> Testing;
