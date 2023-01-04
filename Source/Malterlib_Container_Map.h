@@ -1140,7 +1140,16 @@ namespace NMib::NContainer
 				return nullptr;
 		}
 
-		CUserData * f_FindAny()
+		const CUserData * f_FindLargest() const
+		{
+			CMapTreeMember *pData = mp_Data.m_Tree.f_FindLargest();
+			if (pData)
+				return &pData->f_GetData();
+			else
+				return nullptr;
+		}
+
+		CUserData *f_FindAny()
 		{
 			CMapTreeMember *pData = mp_Data.m_Tree.f_GetRoot();
 			if (pData)
@@ -1149,9 +1158,9 @@ namespace NMib::NContainer
 				return nullptr;
 		}
 
-		const CUserData * f_FindLargest() const
+		CUserData const *f_FindAny() const
 		{
-			CMapTreeMember *pData = mp_Data.m_Tree.f_FindLargest();
+			CMapTreeMember *pData = mp_Data.m_Tree.f_GetRoot();
 			if (pData)
 				return &pData->f_GetData();
 			else
