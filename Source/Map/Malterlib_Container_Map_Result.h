@@ -1,0 +1,32 @@
+// Copyright © 2023 Favro Holding AB
+// Distributed under the MIT license, see license text in LICENSE.Malterlib
+
+#pragma once
+
+namespace NMib::NContainer
+{
+	template <typename t_CReturnType>
+	struct TCMapResult
+	{
+		inline_small bool f_WasCreated() const;
+		inline_small operator t_CReturnType ();
+		inline_small t_CReturnType f_GetResult();
+		inline_small t_CReturnType operator *();
+
+	private:
+		template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+		friend struct TCMap;
+
+		template <typename t_CNode>
+		friend struct NPrivate::TCMapMapper;
+
+		template <typename t_CMap>
+		friend struct NPrivate::TCMapConditionalMapper;
+
+
+		inline_small TCMapResult(t_CReturnType _Return, bool _bWasCreated);
+
+		t_CReturnType mp_Return;
+		bool mp_bWasCreated;
+	};
+}
