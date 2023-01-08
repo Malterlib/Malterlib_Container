@@ -51,6 +51,166 @@ namespace
 					Testing.f_Remove(&ToRemove);
 				};
 			};
+			DMibTestCategory("Extract")
+			{
+				DMibTestSuite("Map")
+				{
+					TCMap<CStr, CStr> Testing;
+
+					for (int i = 0; i < 10; ++i)
+						Testing[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+
+					TCMap<CStr, CStr> Testing2;
+					{
+						DMibTestPath("Non-existing");
+						auto Handle = Testing.f_Extract("Key 20");
+						DMibExpectFalse(Handle);
+					}
+					{
+						DMibTestPath("Remove");
+						TCMap<CStr, CStr>::CNodeHandle Handle;
+						DMibExpectFalse(Handle);
+
+						Handle = Testing.f_Extract("Key 9");
+						DMibExpectTrue(Handle);
+						DMibExpect(Testing.f_GetLen(), ==, 9);
+
+						Handle.f_Clear();
+					}
+					{
+						DMibTestPath("By key");
+						auto Handle = Testing.f_Extract("Key 5");
+						DMibExpectTrue(Handle);
+						DMibExpect(Testing.f_GetLen(), ==, 8);
+
+						DMibExpect(Handle.f_Key(), ==, CStr("Key 5"));
+						DMibExpect(Handle.f_Value(), ==, CStr("Value 5"));
+
+						Testing2.f_Insert(fg_Move(Handle));
+						DMibExpectFalse(Handle);
+						DMibExpect(Testing2.f_GetLen(), ==, 1);
+					}
+					{
+						DMibTestPath("By object");
+						auto *pValue = Testing.f_FindEqual("Key 7");
+						DMibAssertTrue(pValue);
+
+						auto Handle = Testing.f_Extract(pValue);
+						DMibExpectTrue(Handle);
+						DMibExpect(Testing.f_GetLen(), ==, 7);
+
+						Testing2.f_Insert(fg_Move(Handle));
+						DMibExpectFalse(Handle);
+						DMibExpect(Testing2.f_GetLen(), ==, 2);
+					}
+					{
+						DMibTestPath("Duplicate");
+						auto Handle = Testing.f_Extract("Key 4");
+						DMibExpectTrue(Handle);
+						DMibExpect(Testing.f_GetLen(), ==, 6);
+
+						auto &ExistingValue = (Testing2["Key 4"] = "Value 4");
+						auto &InsertedValue = Testing2.f_Insert(fg_Move(Handle));
+						DMibExpect(&ExistingValue, ==, &InsertedValue);
+						{
+							DMibTestPath("After insert");
+							DMibExpectTrue(Handle);
+						}
+					}
+					{
+						DMibTestPath("ExtractAll");
+						Testing.f_ExtractAll
+							(
+								[&](auto &&_Handle)
+								{
+									Testing2.f_Insert(fg_Move(_Handle));
+								}
+							)
+						;
+						DMibExpect(Testing.f_GetLen(), ==, 0);
+ 						DMibExpect(Testing2.f_GetLen(), ==, 9);
+					}
+				};
+				DMibTestSuite("Set")
+				{
+					TCSet<CStr> Testing;
+
+					for (int i = 0; i < 10; ++i)
+						Testing[CStr("Key {}"_f << i)];
+
+					TCSet<CStr> Testing2;
+					{
+						DMibTestPath("Non-existing");
+						auto Handle = Testing.f_Extract("Key 20");
+						DMibExpectFalse(Handle);
+					}
+					{
+						DMibTestPath("Remove");
+						TCSet<CStr>::CNodeHandle Handle;
+						DMibExpectFalse(Handle);
+
+						Handle = Testing.f_Extract("Key 9");
+						DMibExpectTrue(Handle);
+						DMibExpect(Testing.f_GetLen(), ==, 9);
+
+						Handle.f_Clear();
+					}
+					{
+						DMibTestPath("By key");
+						auto Handle = Testing.f_Extract("Key 5");
+						DMibExpectTrue(Handle);
+						DMibExpect(Testing.f_GetLen(), ==, 8);
+
+						DMibExpect(Handle.f_Key(), ==, CStr("Key 5"));
+						DMibExpect(Handle.f_Value(), ==, CStr("Key 5"));
+
+						Testing2.f_Insert(fg_Move(Handle));
+						DMibExpectFalse(Handle);
+						DMibExpect(Testing2.f_GetLen(), ==, 1);
+					}
+					{
+						DMibTestPath("By object");
+						auto *pValue = Testing.f_FindEqual("Key 7");
+						DMibAssertTrue(pValue);
+
+						auto Handle = Testing.f_Extract(pValue);
+						DMibExpectTrue(Handle);
+						DMibExpect(Testing.f_GetLen(), ==, 7);
+
+						Testing2.f_Insert(fg_Move(Handle));
+						DMibExpectFalse(Handle);
+						DMibExpect(Testing2.f_GetLen(), ==, 2);
+					}
+					{
+						DMibTestPath("Duplicate");
+
+						auto Handle = Testing.f_Extract("Key 4");
+						DMibExpectTrue(Handle);
+						DMibExpect(Testing.f_GetLen(), ==, 6);
+
+						auto &ExistingValue = Testing2["Key 4"];
+						auto &InsertedValue = Testing2.f_Insert(fg_Move(Handle));
+						DMibExpect(&ExistingValue, ==, &InsertedValue);
+						{
+							DMibTestPath("After insert");
+							DMibExpectTrue(Handle);
+						}
+					}
+					{
+						DMibTestPath("ExtractAll");
+						Testing.f_ExtractAll
+							(
+								[&](auto &&_Handle)
+								{
+									Testing2.f_Insert(fg_Move(_Handle));
+								}
+							)
+						;
+						DMibExpect(Testing.f_GetLen(), ==, 0);
+ 						DMibExpect(Testing2.f_GetLen(), ==, 9);
+					}
+				};
+			};
 			DMibTestSuite("Misc")
 			{
 				TCSet<int> Testing;

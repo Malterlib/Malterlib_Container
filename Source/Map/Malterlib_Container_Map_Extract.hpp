@@ -14,4 +14,35 @@ namespace NMib::NContainer
 		_Map.mp_Tree.f_Remove(pNode);
 		mp_Tree.f_Insert(pNode);
 	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	template <typename tf_CKey>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Extract(tf_CKey &&_Key) -> CNodeHandle
+	{
+		CNode *pNode = mp_Tree.f_FindEqualAndRemove(_Key);
+		return CNodeHandle(pNode, mp_Allocator);
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Extract(CUserData *_pData) -> CNodeHandle
+	{
+		mint Offset = CNode::fs_GetOffset();
+		CNode *pNode = (CNode *)(((uint8 *)_pData) - Offset);
+		mp_Tree.f_Remove(pNode);
+		return CNodeHandle(pNode, mp_Allocator);
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	template <typename tf_FOnNode>
+	void TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_ExtractAll(tf_FOnNode &&_fOnNode)
+	{
+		mp_Tree.f_DeleteAll
+			(
+				[&](CNode *_pNode)
+				{
+					_fOnNode(CNodeHandle(_pNode, mp_Allocator));
+				}
+			)
+		;
+	}
 }

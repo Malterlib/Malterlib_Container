@@ -25,6 +25,21 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Insert(CNodeHandle &&_Node) -> CUserData &
+	{
+		DMibFastCheck(!!_Node);
+		return mp_Tree.f_FindEqualOrInsert
+			(
+				*_Node.mp_pNode
+				, [&]() -> CNode *
+				{
+					return fg_Exchange(_Node.mp_pNode, nullptr);
+				}
+			)->f_Value()
+		;
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Insert(tf_CKey &&_Key) -> CUserData &
 	{

@@ -22,6 +22,7 @@ namespace NMib::NContainer
 		using CValue = t_CValue;
 		using CValueNoRef = typename NTraits::TCRemoveReference<t_CValue>::CType;
 		using CNode = TCMapNode<t_CKey, t_CValue>;
+		using CNodeHandle = TCMapNodeHandle<CNode, t_CAllocator>;
 
 		using CMapper = NPrivate::TCMapMapper<CNode>;
 		using CConditionalMapper = NPrivate::TCMapConditionalMapper<TCMap>;
@@ -108,8 +109,9 @@ namespace NMib::NContainer
 
 		template <typename tf_CKey>
 		CUserData &f_Insert(tf_CKey &&_Key);
-		template <typename tf_CKey>
-		CUserData const &f_Insert(tf_CKey &&_Key) const;
+		CUserData &f_Insert(CNodeHandle &&_Node);
+		CUserData &f_Insert(CNodeHandle const &_Node) = delete;
+		CUserData &f_Insert(CNodeHandle &_Node) = delete;
 
 		template <typename tf_CKey>
 		CUserData &f_Map(tf_CKey &&_Key);
@@ -172,6 +174,13 @@ namespace NMib::NContainer
 
 		template <typename tf_CKey>
 		bool f_Remove(tf_CKey &&_Key);
+
+		template <typename tf_CKey>
+		CNodeHandle f_Extract(tf_CKey &&_Key);
+		CNodeHandle f_Extract(CUserData *_pData);
+
+		template <typename tf_FOnNode>
+		void f_ExtractAll(tf_FOnNode &&_fOnNode);
 
 		void f_ExtractAndInsert(TCMap &_Map, CUserData *_pData)
 			requires (!NTraits::TCIsReference<t_CValue>::mc_Value) //This function is not supported when mapping reference types
