@@ -9,7 +9,7 @@ namespace NMib::NStream
 	class TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> >
 	{
 	public:
-		static void fs_Feed(t_CStream &_Stream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> const &_Data)
+		static constexpr void fs_Feed(t_CStream &_Stream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> const &_Data)
 		{
 			mint nItems = _Data.f_GetLen();
 
@@ -19,7 +19,7 @@ namespace NMib::NStream
 				_Stream << Item;
 		}
 
-		static void fs_Feed(t_CStream &_Stream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> &&_Data)
+		static constexpr void fs_Feed(t_CStream &_Stream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> &&_Data)
 		{
 			mint nItems = _Data.f_GetLen();
 
@@ -29,7 +29,7 @@ namespace NMib::NStream
 				_Stream << fg_Move(Item);
 		}
 
-		static void fs_Consume(t_CStream &_Stream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> &_Data)
+		static constexpr void fs_Consume(t_CStream &_Stream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> &_Data)
 		{
 			uint64 nItems;
 			fg_ConsumeLenFromStream(_Stream, nItems);
