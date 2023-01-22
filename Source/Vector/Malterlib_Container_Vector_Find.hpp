@@ -49,12 +49,12 @@ namespace NMib::NContainer
 		while(Low < High)
 		{
 			mint Mid = (Low + High) >> 1;
-			if (COrdering_Partial(_fCompare(pArray[Mid], _ToFind)) < 0)
+			if (fg_CheckOrdering(_fCompare(pArray[Mid], _ToFind)) < 0)
 				Low = Mid + 1;
 			else
 				High = Mid;
 		}
-		if(Low < Len && COrdering_Partial(_fCompare(pArray[Low], _ToFind)) == 0)
+		if(Low < Len && fg_CheckOrdering(_fCompare(pArray[Low], _ToFind)) == 0)
 			return Low;
 		else
 			return -1;
@@ -80,7 +80,7 @@ namespace NMib::NContainer
 		while(Low < High)
 		{
 			mint Mid = (Low + High) >> 1;
-			if(COrdering_Partial(_fCompare(operator[](Mid) , _ToFind)) < 0)
+			if (fg_CheckOrdering(_fCompare(operator[](Mid) , _ToFind)) < 0)
 				Low = Mid + 1;
 			else
 				High = Mid;

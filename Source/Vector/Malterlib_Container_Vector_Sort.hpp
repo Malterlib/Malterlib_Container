@@ -29,7 +29,7 @@ namespace NMib::NContainer
 		t_CData const *pArray = f_GetArray();
 		for (mint i = 0, j = 1; j != Length; ++i, ++j)
 		{
-			if (COrdering_Partial(_fCompare(pArray[j], pArray[i])) < 0)
+			if (fg_CheckOrdering(_fCompare(pArray[j], pArray[i])) < 0)
 				return false;
 		}
 
@@ -54,7 +54,7 @@ namespace NMib::NContainer
 
 		for (mint i = 0, j = 1; j != Length; ++i, ++j)
 		{
-			if (COrdering_Partial(_fCompare(pArray[i], pArray[j])) <= 0)
+			if (fg_CheckOrdering(_fCompare(pArray[i], pArray[j])) <= 0)
 				return false;
 		}
 
@@ -81,7 +81,7 @@ namespace NMib::NContainer
 
 		while (++iData)
 		{
-			if (COrdering_Partial(_fCompare(*iUniqueFinish, *iData)) < 0 && (++iUniqueFinish != iData))
+			if (fg_CheckOrdering(_fCompare(*iUniqueFinish, *iData)) < 0 && (++iUniqueFinish != iData))
 				*iUniqueFinish = fg_Move(*iData);
 		}
 		++iUniqueFinish;
@@ -107,7 +107,7 @@ namespace NMib::NContainer
 		{
 			Temp = fg_Move(_pArray[i]);
 
-			for (j = i-1; j >= _Low && COrdering_Partial(_fCompare(Temp, _pArray[j])) < 0; j--)
+			for (j = i-1; j >= _Low && fg_CheckOrdering(_fCompare(Temp, _pArray[j])) < 0; j--)
 				_pArray[j+1] = fg_Move(_pArray[j]);
 
 			_pArray[j+1] = fg_Move(Temp);
@@ -129,9 +129,9 @@ namespace NMib::NContainer
 		j = _High;
 		while (1)
 		{
-			while (i < j && COrdering_Partial(_fCompare(_pArray[i], Pivot)) < 0)
+			while (i < j && fg_CheckOrdering(_fCompare(_pArray[i], Pivot)) < 0)
 				i++;
-			while (j >= i && COrdering_Partial(_fCompare(Pivot, _pArray[j])) < 0)
+			while (j >= i && fg_CheckOrdering(_fCompare(Pivot, _pArray[j])) < 0)
 				j--;
 			if (i >= j)
 				break;
