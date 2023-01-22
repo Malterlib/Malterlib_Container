@@ -43,7 +43,7 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(mint _Position, const t_CData *_pData, mint _Len)
 	{
-		aint PrevLen = f_GetLen();
+		mint PrevLen = f_GetLen();
 		fsp_CheckBounds(PrevLen + 1, _Position);
 		t_CData *pArray = fp_MakeRoomMiddle(_Position, _Len);
 
@@ -74,7 +74,7 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(mint _Position, const t_CData &_Data)
 	{
-		aint PrevLen = f_GetLen();
+		mint PrevLen = f_GetLen();
 		fsp_CheckBounds(PrevLen + 1, _Position);
 		t_CData *pArray = fp_MakeRoomMiddle(_Position, 1);
 		try

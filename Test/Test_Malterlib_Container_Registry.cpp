@@ -25,11 +25,13 @@ namespace
 			{
 				DMibTestPath("Constructor");
 				t_CRegistry Registry2(fg_Move(Registry));
+				DMibMovedFromValid(Registry);
 				DMibTest(DMibExpr(Registry.f_GetValue("Test1", "")) == DMibExpr(""));
 				DMibTest(DMibExpr(Registry2.f_GetValue("Test1", "")) == DMibExpr("Test1"));
 				DMibTest(DMibExpr(Registry.f_DebugIsValid()) && DMibExpr("After move from"));
 				DMibTest(DMibExpr(Registry2.f_DebugIsValid()) && DMibExpr("After move to"));
 				Registry = fg_Move(Registry2);
+				DMibMovedFromValid(Registry2);
 				DMibTest(DMibExpr(Registry.f_GetValue("Test1", "")) == DMibExpr("Test1"));
 				DMibTest(DMibExpr(Registry2.f_GetValue("Test1", "")) == DMibExpr(""));
 				DMibTest(DMibExpr(Registry.f_DebugIsValid()) && DMibExpr("After move to"));
@@ -38,12 +40,14 @@ namespace
 			{
 				DMibTestPath("Constructor child");
 				t_CRegistry Registry2(fg_Move(*pChild));
+				DMibMovedFromValid(*pChild);
 				DMibTest(DMibExpr(Registry.f_GetValue("Test1", "")) == DMibExpr(""));
 				DMibTest(DMibExpr(Registry2.f_GetThisValue()) == DMibExpr("Test1"));
 				DMibTest(DMibExpr(Registry2.f_GetChildren().f_GetLen()) == DMibExpr(0u));
 				DMibTest(DMibExpr(Registry.f_DebugIsValid()) && DMibExpr("After move from"));
 				DMibTest(DMibExpr(Registry2.f_DebugIsValid()) && DMibExpr("After move to"));
 				*pChild = fg_Move(Registry2);
+				DMibMovedFromValid(Registry2);
 				DMibTest(DMibExpr(Registry2.f_GetThisValue()) == DMibExpr(""));
 				DMibTest(DMibExpr(Registry.f_GetValue("Test1", "")) == DMibExpr("Test1"));
 				DMibTest(DMibExpr(Registry.f_DebugIsValid()) && DMibExpr("After move to"));
@@ -53,12 +57,14 @@ namespace
 				DMibTestPath("Assign");
 				t_CRegistry Registry2;
 				Registry2 = fg_Move(Registry);
+				DMibMovedFromValid(Registry);
 				DMibTest(DMibExpr(Registry.f_GetValue("Test1", "")) == DMibExpr(""));
 				DMibTest(DMibExpr(Registry2.f_GetValue("Test1", "")) == DMibExpr("Test1"));
 				DMibTest(DMibExpr(Registry2.f_GetChildren().f_GetLen()) == DMibExpr(1u));
 				DMibTest(DMibExpr(Registry.f_DebugIsValid()) && DMibExpr("After move from"));
 				DMibTest(DMibExpr(Registry2.f_DebugIsValid()) && DMibExpr("After move to"));
 				Registry = fg_Move(Registry2);
+				DMibMovedFromValid(Registry2);
 				DMibTest(DMibExpr(Registry.f_GetValue("Test1", "")) == DMibExpr("Test1"));
 				DMibTest(DMibExpr(Registry2.f_GetValue("Test1", "")) == DMibExpr(""));
 				DMibTest(DMibExpr(Registry.f_DebugIsValid()) && DMibExpr("After move to"));

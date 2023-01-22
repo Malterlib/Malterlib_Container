@@ -125,8 +125,13 @@ namespace NMib::NContainer
 	{
 		TCVector Ret;
 		mint Len = f_GetLen();
+		if (!Len)
+			return Ret;
 
 		Ret.fp_MakeNewRoom(Len);
+
+		DMibFastCheck(Ret.mp_StaticData.m_pData);
+
 		auto pDst = Ret.f_GetArray();
 		auto pSrc = f_GetArray();
 

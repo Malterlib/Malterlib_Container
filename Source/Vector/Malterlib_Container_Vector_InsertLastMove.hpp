@@ -13,6 +13,8 @@ namespace NMib::NContainer
 		mint AddLen = _Vector.f_GetLen();
 		mint NewLen = PrevLen + AddLen;
 		t_CData *pArray = fp_MakeRoom(NewLen);
+		if (NewLen < PrevLen)
+			DMibErrorListBoundCheck("Vector length would have overflowed");
 		tf_CData *pSrcArray = _Vector.f_GetArray();
 
 		NPrivate::fg_MoveArray(pArray + PrevLen, pSrcArray, AddLen);
@@ -26,6 +28,7 @@ namespace NMib::NContainer
 	inline_never t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::fp_Insert(t_CData &&_Data)
 	{
 		mint PrevLen = f_GetLen();
+		DMibFastCheck(PrevLen < TCLimitsInt<mint>::mc_Max);
 		t_CData *pArray = fp_MakeRoom(PrevLen + 1) + PrevLen;
 		new((void *)(pArray)) t_CData(fg_Move(_Data));
 		++mp_StaticData.m_pData->m_Length;
@@ -39,6 +42,7 @@ namespace NMib::NContainer
 		auto pData = mp_StaticData.m_pData;
 		if (fsp_CanGrow(PrevLen + 1, pData))
 		{
+			DMibFastCheck(pData);
 			t_CData *pArray = pData->f_GetData() + PrevLen;
 			new((void *)(pArray)) t_CData(fg_Move(_Data));
 			++pData->m_Length;

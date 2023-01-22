@@ -39,7 +39,10 @@ namespace NMib::NContainer
 			}
 		}
 		else
+		{
+			DMibFastCheck(mp_StaticData.m_pData);
 			NewLen = (mp_StaticData.m_pData->m_AllocSize - sizeof(CVectorData)) / sizeof(t_CData);
+		}
 
 		if (NewLen > OldLen)
 			NPrivate::fg_ConstructArray(f_GetArray() + OldLen, NewLen - OldLen, mp_StaticData.m_pData->m_Length);

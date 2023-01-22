@@ -50,10 +50,12 @@ namespace NMib::NContainer::NPrivate
 				}
 			;
 #endif
+#ifndef DMibClangAnalyzerWorkaround
 			// Destroy all cells
 			auto pEnd = _pDest - 1;
 			for (auto pDest = _pDest + (_Len - 1); pDest != pEnd; --pDest, --o_Len)
 				pDest->~t_CData();
+#endif
 
 #if DMibEnableSafeCheck > 0
 			Cleanup.f_Clear();

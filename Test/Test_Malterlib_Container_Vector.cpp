@@ -46,9 +46,9 @@ namespace
 		}
 		void f_General()
 		{
-			TCVector<int32> List;
 			DMibTestSuite("Basic")
 			{
+				TCVector<int32> List;
 				// Test const insert
 				int32 Test(0);
 				List.f_Insert(Test);
@@ -254,6 +254,7 @@ namespace
 
 			DMibTestSuite("Exceptions")
 			{
+				TCVector<int32> List = fs_DefaultList();
 
 				DMibTest(DMibExpr(TCThrowsException<CException>()) == DMibLExpr(List[-1]));
 				DMibTest(DMibExpr(TCThrowsException<CException>()) == DMibLExpr(List[10]));
@@ -269,6 +270,9 @@ namespace
 				// Overlapping ranges
 				DMibTest(DMibExpr(TCThrowsException<CException>()) == DMibLExpr(List.f_Move(0, 2, 3)));
 				DMibTest(DMibExpr(TCThrowsException<CException>()) == DMibLExpr(List.f_Move(5, 2, 4)));
+
+				// Overflow
+				DMibExpectException(List.f_AddArrayAtEnd(NMib::TCLimitsInt<mint>::mc_Max), DMibErrorInstanceListBoundCheck("Vector length would have overflowed"));
 			};
 
 #if DMibConfig_Memory_Shims_EnableLocal

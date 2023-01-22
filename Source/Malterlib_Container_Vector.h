@@ -497,15 +497,17 @@ namespace NMib::NContainer
 	};
 
 	DMibImpErrorClassDefine(CExceptionList, NException::CException);
-#	define DMibErrorList(_Description) DMibImpError(NMib::NContainer::CExceptionList, _Description)
+#	define DMibErrorList(d_Description) DMibImpError(NMib::NContainer::CExceptionList, d_Description)
 #	ifndef DMibPNoShortCuts
-#		define DErrorList(_Description) DMibErrorList(_Description)
+#		define DErrorList(d_Description) DMibErrorList(d_Description)
 #	endif
 
 	DMibImpErrorClassDefine(CExceptionListBoundCheck, CExceptionList);
-#	define DMibErrorListBoundCheck(_Description) DMibImpError(NMib::NContainer::CExceptionListBoundCheck, _Description)
+#	define DMibErrorListBoundCheck(d_Description) DMibImpError(NMib::NContainer::CExceptionListBoundCheck, d_Description)
+#	define DMibErrorInstanceListBoundCheck(d_Description) DMibImpExceptionInstance(NMib::NContainer::CExceptionListBoundCheck, d_Description)
 #	ifndef DMibPNoShortCuts
-#		define DErrorListBoundCheck(_Description) DMibErrorListBoundCheck(_Description)
+#		define DErrorListBoundCheck(d_Description) DMibErrorListBoundCheck(d_Description)
+#		define DErrorInstanceListBoundCheck(d_Description) DMibErrorInstanceListBoundCheck(d_Description)
 #	endif
 }
 

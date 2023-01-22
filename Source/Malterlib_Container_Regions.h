@@ -279,27 +279,26 @@ namespace NMib::NContainer
 
 				auto pSlice = ProcessIter.f_GetCurrent();
 				if (pSlice)
-					++ProcessIter;
-
-				while (ProcessIter)
 				{
-					auto *pPrevSlice = pSlice;
-					pSlice = ProcessIter;
 					++ProcessIter;
-
-					if (pPrevSlice->f_Data() == pSlice->f_Data() && pPrevSlice->f_End() == pSlice->f_Start())
+					while (ProcessIter)
 					{
-//							DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Merge" DMibNewLine, pPrevSlice->m_TimeStart << pSlice->f_End() << iOper++);
-						// Merge
-						pPrevSlice->f_End() = pSlice->f_End();
-						m_Regions.f_Remove(pSlice);
-						pSlice = pPrevSlice;
+						auto *pPrevSlice = pSlice;
+						pSlice = ProcessIter;
+						++ProcessIter;
+
+						if (pPrevSlice->f_Data() == pSlice->f_Data() && pPrevSlice->f_End() == pSlice->f_Start())
+						{
+	//							DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Merge" DMibNewLine, pPrevSlice->m_TimeStart << pSlice->f_End() << iOper++);
+							// Merge
+							pPrevSlice->f_End() = pSlice->f_End();
+							m_Regions.f_Remove(pSlice);
+							pSlice = pPrevSlice;
+						}
 					}
 				}
 			}
-
 		}
-
 	};
 }
 

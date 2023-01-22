@@ -12,6 +12,9 @@ namespace NMib::NContainer
 			return nullptr;
 		mint OldLen = f_GetLen();
 		mint NewLen = OldLen + _Len;
+		if (NewLen < OldLen)
+			DMibErrorListBoundCheck("Vector length would have overflowed");
+
 		if (fsp_NeedReallocGrow(NewLen, mp_StaticData.m_pData))
 		{
 			CVectorData *pNewData = fp_AllocDataGrow(NewLen);
@@ -73,6 +76,9 @@ namespace NMib::NContainer
 			return nullptr;
 		mint OldLen = f_GetLen();
 		mint NewLen = OldLen + _Len;
+		if (NewLen < OldLen)
+			DMibErrorListBoundCheck("Vector length would have overflowed");
+
 		if (fsp_NeedReallocGrow(NewLen, mp_StaticData.m_pData))
 		{
 			CVectorData *pNewData = fp_AllocDataGrow(NewLen);
@@ -169,6 +175,8 @@ namespace NMib::NContainer
 			}
 			return pNewData->f_GetData();
 		}
+		else
+			DMibFastCheck(mp_StaticData.m_pData);
 		return mp_StaticData.m_pData->f_GetData();
 	}
 
