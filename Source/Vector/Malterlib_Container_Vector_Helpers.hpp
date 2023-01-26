@@ -292,30 +292,22 @@ namespace NMib::NContainer::NPrivate
 			}
 			else
 			{
-#if DMibEnableSafeCheck > 0
-				auto Cleanup = g_OnScopeExit / [&]
-					{
-						DMibFastCheck(false); // Destructor, or move should not throw
-					}
-				;
-#endif
 				for (mint i = 0; i < _Len; ++i)
 				{
-					auto Temp = fg_Move(_pDest[i]);
-					_pDest[i].~t_CData();
-					try
-					{
-						new((void *)(_pDest + i)) t_CData(_pSrc[i]);
-					}
-					catch (...)
-					{
-						new((void *)(_pDest + i)) t_CData(fg_Move(Temp));
-						throw;
-					}
+					auto *pDest = _pDest + i;
+					auto Temp = fg_Move(*pDest);
+					(*pDest).~t_CData();
+
+					auto Cleanup = g_OnScopeExit / [&]
+						{
+							new((void *)(pDest)) t_CData(fg_Move(Temp));
+						}
+					;
+
+					new((void *)(pDest)) t_CData(_pSrc[i]);
+					
+					Cleanup.f_Clear();
 				}
-#if DMibEnableSafeCheck > 0
-				Cleanup.f_Clear();
-#endif
 			}
 		}
 	}

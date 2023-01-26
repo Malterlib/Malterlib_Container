@@ -417,7 +417,6 @@ namespace NMib::NMisc
 						CIntrusiveSetNode *pStartArray = pNode;
 						mint CacheConflictPreventionSize = 16 * 1024;
 						NIntrusive::TCAVLTree<&CIntrusiveSetNode::m_Link, CIntrusiveSetNode::CCompare> Set3;
-						mint i = 0;
 
 						for (auto &Source : Set)
 						{
@@ -435,7 +434,6 @@ namespace NMib::NMisc
 								)
 							;
 							++pNode;
-							++i;
 						}
 						f_MeasureForAllKeys
 							(

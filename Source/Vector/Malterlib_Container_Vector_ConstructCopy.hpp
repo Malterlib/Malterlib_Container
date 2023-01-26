@@ -87,15 +87,16 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	auto TCVector<t_CData, t_CAllocator, t_COptions>::operator = (TCVector const &_Source) -> TCVector &
 	{
-		try
-		{
-			fp_Copy(_Source);
-		}
-		catch (...)
-		{
-			f_Clear();
-			throw;
-		}
+		auto Cleanup = g_OnScopeExit / [&]
+			{
+				f_Clear();
+			}
+		;
+
+		fp_Copy(_Source);
+
+		Cleanup.f_Clear();
+		
 		return *this;
 	}
 

@@ -11,15 +11,17 @@ namespace NMib::NContainer
 		//static_assert(NTraits::TCIsConstructorNothrowCallableWith<t_CData, void (t_CData &&)>::mc_Value, "For exception safety type must be noexcept movable");
 
 		t_CData *pArray = fp_MakeRoomBegin(1);
-		try
-		{
-			new((void *)(pArray)) t_CData();
-		}
-		catch (...)
-		{
-			fp_MakeRoomBeginUndo(1);
-			throw;
-		}
+
+		auto Cleanup = g_OnScopeExit / [&]
+			{
+				fp_MakeRoomBeginUndo(1);
+			}
+		;
+
+		new((void *)(pArray)) t_CData();
+
+		Cleanup.f_Clear();
+
 		return pArray[0];
 	}
 }

@@ -83,15 +83,15 @@ namespace NMib::NContainer
 		{
 			if (_Source.fp_Allocator().f_IsStatic(_Source.mp_StaticData.m_pData))
 			{
-				try
-				{
-					fp_Copy(_Source);
-				}
-				catch (...)
-				{
-					f_Clear();
-					throw;
-				}
+				auto Cleanup = g_OnScopeExit / [&]
+					{
+						f_Clear();
+					}
+				;
+
+				fp_Copy(_Source);
+
+				Cleanup.f_Clear();
 			}
 			else
 			{

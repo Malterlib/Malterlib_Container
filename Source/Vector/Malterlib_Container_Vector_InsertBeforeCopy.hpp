@@ -77,15 +77,17 @@ namespace NMib::NContainer
 		mint PrevLen = f_GetLen();
 		fsp_CheckBounds(PrevLen + 1, _Position);
 		t_CData *pArray = fp_MakeRoomMiddle(_Position, 1);
-		try
-		{
-			new((void *)(pArray + _Position)) t_CData(_Data);
-		}
-		catch (...)
-		{
-			fp_MakeRoomMiddleUndo(_Position, 1);
-			throw;
-		}
+
+		auto Cleanup = g_OnScopeExit / [&]
+			{
+				fp_MakeRoomMiddleUndo(_Position, 1);
+			}
+		;
+
+		new((void *)(pArray + _Position)) t_CData(_Data);
+
+		Cleanup.f_Clear();
+
 		return pArray[_Position];
 	}
 
