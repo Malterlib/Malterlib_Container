@@ -549,6 +549,12 @@ namespace NMib::NContainer
 #include "Vector/Malterlib_Container_Vector_Sort.hpp"
 #include "Vector/Malterlib_Container_Vector_Stream.hpp"
 
+namespace NMib::NContainer
+{
+	template <typename t_CType>
+	concept cIsVector = NPrivate::TCIsVector<t_CType>::mc_bValue;
+}
+
 #ifndef DMibPNoShortCuts
 	using namespace NMib::NContainer;
 #endif

@@ -187,4 +187,19 @@ namespace NMib::NContainer
 
 		return Return;
 	}
+
+	namespace NPrivate
+	{
+		template <typename t_CType>
+		struct TCIsVector
+		{
+			constexpr static bool mc_bValue = false;
+		};
+
+		template <typename t_CData, typename t_CAllocator, typename t_COptions>
+		struct TCIsVector<TCVector<t_CData, t_CAllocator, t_COptions>>
+		{
+			constexpr static bool mc_bValue = true;
+		};
+	}
 }
