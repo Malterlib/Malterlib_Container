@@ -11,7 +11,7 @@ namespace NMib::NContainer
 	{
 		mint PrevLen = f_GetLen();
 		fsp_CheckBounds(PrevLen + 1, _Position);
- 		mint AddLen = _Vector.f_GetLen();
+		mint AddLen = _Vector.f_GetLen();
 		t_CData *pArray = fp_MakeRoomMiddle(_Position, AddLen);
 		tf_CData *pSrcArray = _Vector.f_GetArray();
 

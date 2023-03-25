@@ -9,12 +9,12 @@ namespace NMib::NContainer
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_FindDiffs
 		(
-		 	t_CStr const &_Path
-		 	, TCRegistry const &_Original
-		 	, NContainer::TCVector<t_CStr> &_Changed
-		 	, NContainer::TCVector<t_CStr> &_Added
-		 	, NContainer::TCVector<t_CStr> &_Deleted
-		 	, bool _bRecursive
+			t_CStr const &_Path
+			, TCRegistry const &_Original
+			, NContainer::TCVector<t_CStr> &_Changed
+			, NContainer::TCVector<t_CStr> &_Added
+			, NContainer::TCVector<t_CStr> &_Deleted
+			, bool _bRecursive
 		) const
 	{
 		// Find deleted

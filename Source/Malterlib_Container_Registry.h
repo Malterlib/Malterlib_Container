@@ -279,11 +279,11 @@ namespace NMib::NContainer
 
 		void f_FindDiffs
 			(
-			 	TCRegistry const &_Original
-			 	, NContainer::TCVector<t_CStr> &_Changed
-			 	, NContainer::TCVector<t_CStr> &_Added
-			 	, NContainer::TCVector<t_CStr> &_Deleted
-			 	, bool _bRecursive = true
+				TCRegistry const &_Original
+				, NContainer::TCVector<t_CStr> &_Changed
+				, NContainer::TCVector<t_CStr> &_Added
+				, NContainer::TCVector<t_CStr> &_Deleted
+				, bool _bRecursive = true
 			)
 			const
 		;
@@ -391,12 +391,12 @@ namespace NMib::NContainer
 		void fpr_AddAllChildren(t_CStr const &_Path, NContainer::TCVector<t_CStr> &_Added) const;
 		void fpr_FindDiffs
 			(
-			 	t_CStr const &_Path
-			 	, TCRegistry const &_Original
-			 	, NContainer::TCVector<t_CStr> &_Changed
-			 	, NContainer::TCVector<t_CStr> &_Added
-			 	, NContainer::TCVector<t_CStr> &_Deleted
-			 	, bool _bRecursive
+				t_CStr const &_Path
+				, TCRegistry const &_Original
+				, NContainer::TCVector<t_CStr> &_Changed
+				, NContainer::TCVector<t_CStr> &_Added
+				, NContainer::TCVector<t_CStr> &_Deleted
+				, bool _bRecursive
 			)
 			const
 		;

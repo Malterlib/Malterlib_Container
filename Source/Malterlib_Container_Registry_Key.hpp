@@ -233,7 +233,7 @@ namespace NMib::NContainer
 	template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
 	TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::TCRegistryKeyStrPreserve
 		(
-		 	TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent
+			TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent
 		)
 		: m_Sequence(_pParent ? _pParent->mp_Key.m_GenSequence++ : 0)
 		, m_bForceEscapedKey(false)

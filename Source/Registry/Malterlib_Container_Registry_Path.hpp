@@ -19,9 +19,9 @@ namespace NMib::NContainer
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_GetChildParse
 		(
-		 	t_CStr &_Str
-		 	, t_CStr *_pNotFound
-		 	, TCRegistry const **_pPrev
+			t_CStr &_Str
+			, t_CStr *_pNotFound
+			, TCRegistry const **_pPrev
 		)
 		const -> TCRegistry const *
 	{

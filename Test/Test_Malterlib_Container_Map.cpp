@@ -128,7 +128,7 @@ namespace
 							)
 						;
 						DMibExpect(Testing.f_GetLen(), ==, 0);
- 						DMibExpect(Testing2.f_GetLen(), ==, 9);
+						DMibExpect(Testing2.f_GetLen(), ==, 9);
 					}
 				};
 				DMibTestSuite("Set")
@@ -207,7 +207,7 @@ namespace
 							)
 						;
 						DMibExpect(Testing.f_GetLen(), ==, 0);
- 						DMibExpect(Testing2.f_GetLen(), ==, 9);
+						DMibExpect(Testing2.f_GetLen(), ==, 9);
 					}
 				};
 			};
