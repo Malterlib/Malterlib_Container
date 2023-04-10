@@ -24,8 +24,34 @@ namespace NMib::NContainer
 		template <typename tf_COther>
 		TCSet &operator = (tf_COther &&_Other);
 
-		template <typename tf_CContainer, TCEnableIfType<!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value> * = nullptr>
-		TCSet &f_AddContainer(tf_CContainer &&_Container);
+#ifdef DCompiler_MSVC_Workaround
+		template <typename tf_CContainer>
+		TCSet & f_AddContainer(tf_CContainer &&_Container)
+			requires (!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value)
+		{
+			for (auto &Value : _Container)
+				(*this)[Value];
+			return *this;
+		}
+
+		template <typename tf_CContainer>
+		static TCSet fs_FromContainer(tf_CContainer &&_Container)
+			requires (!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value)
+		{
+			TCSet Return;
+			Return.f_AddContainer(fg_Forward<tf_CContainer>(_Container));
+			return Return;
+		}
+#else
+		template <typename tf_CContainer>
+		TCSet &f_AddContainer(tf_CContainer &&_Container)
+			requires (!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value)
+		;
+		template <typename tf_CContainer>
+		static TCSet fs_FromContainer(tf_CContainer &&_Container)
+			requires (!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value)
+		;
+#endif
 
 		TCSet f_Or(TCSet const &_Other) const;
 		TCSet operator | (TCSet const &_Right) const;

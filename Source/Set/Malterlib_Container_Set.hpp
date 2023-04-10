@@ -69,14 +69,27 @@ namespace NMib::NContainer
 		return Return;
 	}
 
+#ifndef DCompiler_MSVC_Workaround
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename tf_CContainer, TCEnableIfType<!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value> *>
+	template <typename tf_CContainer>
 	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_AddContainer(tf_CContainer &&_Container) -> TCSet &
+		requires (!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value)
 	{
 		for (auto &Value : _Container)
 			(*this)[Value];
 		return *this;
 	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename tf_CContainer>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::fs_FromContainer(tf_CContainer &&_Container) -> TCSet
+		requires (!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value)
+	{
+		TCSet Return;
+		Return.f_AddContainer(fg_Forward<tf_CContainer>(_Container));
+		return Return;
+	}
+#endif
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
 	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Or(TCSet const &_Other) const -> TCSet 
