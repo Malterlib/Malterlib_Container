@@ -16,7 +16,7 @@ namespace NMib::NContainer
 		TCSet();
 		TCSet(TCSet &&_Other);
 		TCSet(TCSet const &_Other);
-		TCSet(TCInitializerList<t_CKey> const &_Values);
+		TCSet(std::initializer_list<t_CKey> const &_Values);
 		template <typename tf_COther>
 		TCSet(tf_COther &&_Other);
 		TCSet &operator = (TCSet &&_Other);

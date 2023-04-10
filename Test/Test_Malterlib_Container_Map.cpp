@@ -2,6 +2,7 @@
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #include <set>
+
 namespace
 {
 	using namespace NMib;
@@ -485,6 +486,22 @@ namespace
 					++IterCopy;
 					DMibTest(DMibExpr(!IterCopy));
 				}
+			};
+			DMibTestSuite("CTAD Map")
+			{
+				TCMap Map0{std::tuple{1, 2}, {3 ,4}, {5, 6}};
+				static_assert(NMib::NTraits::TCIsSame<decltype(Map0), TCMap<int, int>>::mc_Value);
+				DMibExpect(Map0, ==, (TCMap<int, int>({{1, 2}, {3 ,4}, {5, 6}})));
+			};
+			DMibTestSuite("CTAD Set")
+			{
+				TCSet Set0 = {1, 2, 3};
+				static_assert(NMib::NTraits::TCIsSame<decltype(Set0), TCSet<int>>::mc_Value);
+				DMibExpect(Set0, ==, TCSet<int>({1, 2, 3}));
+
+				TCSet Set1{1, 2, 3};
+				static_assert(NMib::NTraits::TCIsSame<decltype(Set1), TCSet<int>>::mc_Value);
+				DMibExpect(Set1, ==, TCSet<int>({1, 2, 3}));
 			};
 		}
 	};

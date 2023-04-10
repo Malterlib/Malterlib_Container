@@ -23,7 +23,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	TCSet<t_CKey, t_CCompare, t_CAllocator>::TCSet(TCInitializerList<t_CKey> const &_Values)
+	TCSet<t_CKey, t_CCompare, t_CAllocator>::TCSet(std::initializer_list<t_CKey> const &_Values)
 	{
 		for (auto &Value : _Values)
 			(*this)[Value];

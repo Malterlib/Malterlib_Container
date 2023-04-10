@@ -420,7 +420,7 @@ namespace NMib::NContainer
 		{
 		}
 
-		TCLinkedList(TCInitializerList<t_CData> const &_Values)
+		TCLinkedList(std::initializer_list<t_CData> const &_Values)
 		{
 			for (auto &Value : _Values)
 				f_Insert(Value);

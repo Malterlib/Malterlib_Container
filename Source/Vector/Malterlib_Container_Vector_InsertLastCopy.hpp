@@ -6,7 +6,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(TCInitializerList<t_CData> const &_Elements)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(std::initializer_list<t_CData> const &_Elements)
 	{
 		mint iFirstElement = f_GetLen();
 		for (auto &Element : _Elements)

@@ -38,7 +38,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::TCMap(TCInitializerList<NStorage::TCTuple<t_CKey, t_CValue>> const &_Values)
+	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::TCMap(std::initializer_list<NStorage::TCTuple<t_CKey, t_CValue>> const &_Values)
 	{
 		auto Cleanup = g_OnScopeExit / [&]
 			{

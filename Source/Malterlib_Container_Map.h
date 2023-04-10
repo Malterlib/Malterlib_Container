@@ -72,7 +72,7 @@ namespace NMib::NContainer
 
 		TCMap(TCMap &&_Other) = default;
 		TCMap(TCMap const &_Other);
-		TCMap(TCInitializerList<NStorage::TCTuple<t_CKey, t_CValue>> const &_Values);
+		TCMap(std::initializer_list<NStorage::TCTuple<t_CKey, t_CValue>> const &_Values);
 
 		template <typename... tfp_CParams>
 		TCMap(NMemory::CAllocatorConstructTag const &_Allocator, tfp_CParams && ...p_Params);

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015 Hansoft AB
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 /*************************************************************************************************\
@@ -497,6 +497,17 @@ namespace
 			DMibTestSuite("Dynamic")
 			{
 				this->f_Dynamic();
+			};
+
+			DMibTestSuite("CTAD")
+			{
+				NMib::NContainer::TCLinkedList List0 = {1, 2, 3};
+				static_assert(NMib::NTraits::TCIsSame<decltype(List0), NMib::NContainer::TCLinkedList<int>>::mc_Value);
+				DMibExpect(List0, ==, (NMib::NContainer::TCLinkedList<int>({1, 2, 3})));
+
+				NMib::NContainer::TCLinkedList List1{1, 2, 3};
+				static_assert(NMib::NTraits::TCIsSame<decltype(List1), NMib::NContainer::TCLinkedList<int>>::mc_Value);
+				DMibExpect(List1, ==, (NMib::NContainer::TCLinkedList<int>({1, 2, 3})));
 			};
 		}
 	};

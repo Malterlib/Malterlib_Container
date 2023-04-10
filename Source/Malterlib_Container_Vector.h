@@ -41,7 +41,7 @@ namespace NMib::NContainer
 		TCVector(TCVector &_Source);
 		TCVector(TCVector &&_Source);
 
-		TCVector(TCInitializerList<t_CData> const &_Values);
+		TCVector(std::initializer_list<t_CData> const &_Values);
 		TCVector(t_CData const *_pItems, mint _nItems);
 		TCVector(mint _nItems);
 
@@ -126,7 +126,7 @@ namespace NMib::NContainer
 		template <typename tf_CType, typename... tfp_CParams>
 		t_CData &f_Insert(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams);
 
-		t_CData *f_Insert(TCInitializerList<t_CData> const &_Elements);
+		t_CData *f_Insert(std::initializer_list<t_CData> const &_Elements);
 
 		t_CData *f_Insert(const t_CData *_pData, mint _Len = 1);
 		t_CData *f_Insert(t_CData *_pData, mint _Len = 1);
