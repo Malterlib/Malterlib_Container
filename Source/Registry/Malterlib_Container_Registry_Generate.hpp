@@ -287,4 +287,12 @@ namespace NMib::NContainer
 	{
 		return f_GenerateStr<t_CStr, 0, 0>(_pNewLine);
 	}
+
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
+	template <typename tf_CStr>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Format(tf_CStr &o_Str) const
+	{
+		o_Str += f_GenerateStr();
+	}
 }

@@ -378,6 +378,9 @@ namespace NMib::NContainer
 		TCRegistry *f_SetValue(t_CStr _Name, t_CData const &_Data);
 		TCRegistry *f_SetValueNoPath(t_CKey const &_Name, t_CData const &_Data);
 
+		template <typename tf_CStr>
+		void f_Format(tf_CStr &o_Str) const;
+
 		template <bool tf_bAllowLineBreakInEscapedString>
 		static t_CStr fs_ParseIdentifierStr(ch8 const * &o_pParse, CParseContext &_ParseContext, bool &_bWasEscaped);
 
