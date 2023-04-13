@@ -58,6 +58,6 @@ namespace NMib::NContainer
 		if (!IterOther && Iter)
 			return COrdering::less;
 
-		return false;
+		return COrdering::equivalent;
 	}
 }
