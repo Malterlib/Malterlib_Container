@@ -138,7 +138,7 @@ namespace NMib::NContainer::NPrivate
 	{
 		mp_pMap = &_Map;
 		mp_Iter.f_InitForSearch(_Map.mp_Tree);
-		mp_Iter.f_FindEqualForward(fg_Forward<tf_CKey>(_Key));
+		mp_Iter.f_FindEqualForward(_Key);
 	}
 
 	template <typename t_CMap, bool t_bReverse, bool t_bConst, bool t_bBidirectional>
