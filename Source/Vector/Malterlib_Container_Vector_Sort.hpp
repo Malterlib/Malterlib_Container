@@ -54,7 +54,7 @@ namespace NMib::NContainer
 
 		for (mint i = 0, j = 1; j != Length; ++i, ++j)
 		{
-			if (fg_CheckOrdering(_fCompare(pArray[i], pArray[j])) <= 0)
+			if (fg_CheckOrdering(_fCompare(pArray[i], pArray[j])) >= 0)
 				return false;
 		}
 
