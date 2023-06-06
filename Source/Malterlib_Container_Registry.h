@@ -91,10 +91,6 @@ namespace NMib::NContainer
 		template <typename t_CKey2, typename t_CStr2, ERegistryFlag t_Flags2>
 		friend struct TCRegistryKeyStrPreserve;
 
-		template <typename t_CKey2, typename t_CData2, ERegistryFlag t_Flags2, typename t_CStr2>
-			requires cCompatibleRegistryFlags<t_CStr2, t_Flags2>
-		friend struct TCRegistry;
-
 		template <typename t_CStream2, typename t_CData2>
 		friend class NMib::NStream::TCBinaryStreamTypeReference;
 
