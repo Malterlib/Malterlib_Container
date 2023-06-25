@@ -77,7 +77,7 @@ namespace NMib::NContainer
 			}
 		}
 
-		for (auto iChild = _Source.mp_Children.f_GetIterator(); iChild; ++iChild)
+		for (auto iChild = _Source.f_GetChildIterator(); iChild; ++iChild)
 		{
 			auto pChild = f_CreateChildNoPath(iChild->f_GetName());
 			pChild->fp_Copy(*iChild);
