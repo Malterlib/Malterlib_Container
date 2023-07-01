@@ -10,6 +10,13 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
 	struct TCSet;
+
+	enum EMapIteratorAccess
+	{
+		EMapIteratorAccess_Value = 0
+		, EMapIteratorAccess_Key
+		, EMapIteratorAccess_KeyValue
+	};
 }
 
 namespace NMib::NContainer::NPrivate
@@ -32,7 +39,7 @@ namespace NMib::NContainer::NPrivate
 		using CType = t_CValue;
 	};
 
-	template <typename t_CMap, bool t_bReverse, bool t_bConst, bool t_bBidirectional>
+	template <typename t_CMap, EMapIteratorAccess t_Access, bool t_bReverse, bool t_bConst, bool t_bBidirectional>
 	struct TCMapIterator;
 
 	template <typename t_CNode>

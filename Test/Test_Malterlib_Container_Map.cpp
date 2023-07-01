@@ -269,7 +269,6 @@ namespace
 			};
 			DMibTestSuite("Iterator")
 			{
-
 				TCSet<int> Testing;
 				for (int i = 0; i < 10; ++i)
 					Testing[i];
@@ -502,6 +501,66 @@ namespace
 				TCSet Set1{1, 2, 3};
 				static_assert(NMib::NTraits::TCIsSame<decltype(Set1), TCSet<int>>::mc_Value);
 				DMibExpect(Set1, ==, TCSet<int>({1, 2, 3}));
+			};
+			DMibTestSuite("Key Iterator")
+			{
+				{
+					DMibTestPath("Set");
+					TCSet<int> Testing;
+					for (int i = 0; i < 10; ++i)
+						Testing[i];
+
+					int iTest = 0;
+					for (auto &Key : Testing.f_Keys())
+					{
+						DMibExpect(Key, ==, iTest)(ETestFlag_Aggregated);
+						++iTest;
+					}
+				}
+				{
+					DMibTestPath("Map");
+					TCMap<int, CStr> Testing;
+					for (int i = 0; i < 10; ++i)
+						Testing(i, CStr::fs_ToStr(i));
+
+					int iTest = 0;
+					for (auto &Key : Testing.f_Keys())
+					{
+						DMibExpect(Key, ==, iTest)(ETestFlag_Aggregated);
+						++iTest;
+					}
+				}
+			};
+			DMibTestSuite("Entries Iterator")
+			{
+				{
+					DMibTestPath("Set");
+					TCSet<int> Testing;
+					for (int i = 0; i < 10; ++i)
+						Testing[i];
+
+					int iTest = 0;
+					for (auto &Key : Testing.f_Entries())
+					{
+						DMibExpect(Key.f_Key(), ==, iTest)(ETestFlag_Aggregated);
+						DMibExpect(Key.f_Value(), ==, iTest)(ETestFlag_Aggregated);
+						++iTest;
+					}
+				}
+				{
+					DMibTestPath("Map");
+					TCMap<int, CStr> Testing;
+					for (int i = 0; i < 10; ++i)
+						Testing(i, CStr::fs_ToStr(i));
+
+					int iTest = 0;
+					for (auto &Key : Testing.f_Entries())
+					{
+						DMibExpect(Key.f_Key(), ==, iTest)(ETestFlag_Aggregated);
+						DMibExpect(Key.f_Value(), ==, CStr::fs_ToStr(iTest))(ETestFlag_Aggregated);
+						++iTest;
+					}
+				}
 			};
 		}
 	};

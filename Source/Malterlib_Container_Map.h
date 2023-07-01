@@ -27,14 +27,140 @@ namespace NMib::NContainer
 		using CMapper = NPrivate::TCMapMapper<CNode>;
 		using CConditionalMapper = NPrivate::TCMapConditionalMapper<TCMap>;
 
-		using CIterator = NPrivate::TCMapIterator<TCMap, false, false, false>;
-		using CIteratorConst = NPrivate::TCMapIterator<TCMap, false, true, false>;
-		using CIteratorReverse = NPrivate::TCMapIterator<TCMap, true, false, false>;
-		using CIteratorReverseConst = NPrivate::TCMapIterator<TCMap, true, true, false>;
-		using CIteratorBidirectional = NPrivate::TCMapIterator<TCMap, false, false, true>;
-		using CIteratorBidirectionalConst = NPrivate::TCMapIterator<TCMap, false, true, true>;
-		using CIteratorBidirectionalReverse = NPrivate::TCMapIterator<TCMap, true, false, true>;
-		using CIteratorBidirectionalReverseConst = NPrivate::TCMapIterator<TCMap, true, true, true>;
+		using CIterator = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, false, false, false>;
+		using CIteratorConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, false, true, false>;
+		using CIteratorReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, true, false, false>;
+		using CIteratorReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, true, true, false>;
+		using CIteratorBidirectional = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, false, false, true>;
+		using CIteratorBidirectionalConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, false, true, true>;
+		using CIteratorBidirectionalReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, true, false, true>;
+		using CIteratorBidirectionalReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, true, true, true>;
+
+		using CKeyIterator = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, false, false, false>;
+		using CKeyIteratorConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, false, true, false>;
+		using CKeyIteratorReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, true, false, false>;
+		using CKeyIteratorReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, true, true, false>;
+		using CKeyIteratorBidirectional = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, false, false, true>;
+		using CKeyIteratorBidirectionalConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, false, true, true>;
+		using CKeyIteratorBidirectionalReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, true, false, true>;
+		using CKeyIteratorBidirectionalReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, true, true, true>;
+
+		using CKeyValueIterator = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, false, false, false>;
+		using CKeyValueIteratorConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, false, true, false>;
+		using CKeyValueIteratorReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, true, false, false>;
+		using CKeyValueIteratorReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, true, true, false>;
+		using CKeyValueIteratorBidirectional = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, false, false, true>;
+		using CKeyValueIteratorBidirectionalConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, false, true, true>;
+		using CKeyValueIteratorBidirectionalReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, true, false, true>;
+		using CKeyValueIteratorBidirectionalReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, true, true, true>;
+
+		struct CKeys
+		{
+			CKeys(TCMap &_Map);
+
+			CKeyIterator f_GetIterator();
+			CKeyIteratorReverse f_GetIteratorReverse();
+			CKeyIteratorBidirectional f_GetIteratorBidirectional();
+			CKeyIteratorBidirectionalReverse f_GetIteratorBidirectionalReverse();
+
+			template <typename tf_CKey>
+			CKeyIterator f_GetIterator(tf_CKey &&_Key);
+			template <typename tf_CKey>
+			CKeyIterator f_GetIterator_SmallestGreaterThanEqual(tf_CKey &&_Key);
+			template <typename tf_CKey>
+			CKeyIterator f_GetIterator_LargestLessThanEqual(tf_CKey &&_Key);
+
+			template <typename tf_CKey>
+			CKeyIteratorBidirectional f_GetIteratorBidirectional(tf_CKey &&_Key);
+			template <typename tf_CKey>
+			CKeyIteratorBidirectional f_GetIteratorBidirectional_SmallestGreaterThanEqual(tf_CKey &&_Key);
+			template <typename tf_CKey>
+			CKeyIteratorBidirectional f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key);
+
+		private:
+			TCMap &mp_Map;
+		};
+
+		struct CKeysConst
+		{
+			CKeysConst(TCMap const &_Map);
+
+			CKeyIteratorConst f_GetIterator() const;
+			CKeyIteratorReverseConst f_GetIteratorReverse() const;
+			CKeyIteratorBidirectionalConst f_GetIteratorBidirectional() const;
+			CKeyIteratorBidirectionalReverseConst f_GetIteratorBidirectionalReverse() const;
+
+			template <typename tf_CKey>
+			CKeyIteratorConst f_GetIterator(tf_CKey &&_Key) const;
+			template <typename tf_CKey>
+			CKeyIteratorConst f_GetIterator_SmallestGreaterThanEqual(tf_CKey &&_Key) const;
+			template <typename tf_CKey>
+			CKeyIteratorConst f_GetIterator_LargestLessThanEqual(tf_CKey &&_Key) const;
+
+			template <typename tf_CKey>
+			CKeyIteratorBidirectionalConst f_GetIteratorBidirectional(tf_CKey &&_Key) const;
+			template <typename tf_CKey>
+			CKeyIteratorBidirectionalConst f_GetIteratorBidirectional_SmallestGreaterThanEqual(tf_CKey &&_Key) const;
+			template <typename tf_CKey>
+			CKeyIteratorBidirectionalConst f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key) const;
+
+		private:
+			TCMap const &mp_Map;
+		};
+
+		struct CEntries
+		{
+			CEntries(TCMap &_Map);
+
+			CKeyValueIterator f_GetIterator();
+			CKeyValueIteratorReverse f_GetIteratorReverse();
+			CKeyValueIteratorBidirectional f_GetIteratorBidirectional();
+			CKeyValueIteratorBidirectionalReverse f_GetIteratorBidirectionalReverse();
+
+			template <typename tf_CKey>
+			CKeyValueIterator f_GetIterator(tf_CKey &&_Key);
+			template <typename tf_CKey>
+			CKeyValueIterator f_GetIterator_SmallestGreaterThanEqual(tf_CKey &&_Key);
+			template <typename tf_CKey>
+			CKeyValueIterator f_GetIterator_LargestLessThanEqual(tf_CKey &&_Key);
+
+			template <typename tf_CKey>
+			CKeyValueIteratorBidirectional f_GetIteratorBidirectional(tf_CKey &&_Key);
+			template <typename tf_CKey>
+			CKeyValueIteratorBidirectional f_GetIteratorBidirectional_SmallestGreaterThanEqual(tf_CKey &&_Key);
+			template <typename tf_CKey>
+			CKeyValueIteratorBidirectional f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key);
+
+		private:
+			TCMap &mp_Map;
+		};
+
+		struct CEntriesConst
+		{
+			CEntriesConst(TCMap const &_Map);
+
+			CKeyValueIteratorConst f_GetIterator() const;
+			CKeyValueIteratorReverseConst f_GetIteratorReverse() const;
+			CKeyValueIteratorBidirectionalConst f_GetIteratorBidirectional() const;
+			CKeyValueIteratorBidirectionalReverseConst f_GetIteratorBidirectionalReverse() const;
+
+			template <typename tf_CKey>
+			CKeyValueIteratorConst f_GetIterator(tf_CKey &&_Key) const;
+			template <typename tf_CKey>
+			CKeyValueIteratorConst f_GetIterator_SmallestGreaterThanEqual(tf_CKey &&_Key) const;
+			template <typename tf_CKey>
+			CKeyValueIteratorConst f_GetIterator_LargestLessThanEqual(tf_CKey &&_Key) const;
+
+			template <typename tf_CKey>
+			CKeyValueIteratorBidirectionalConst f_GetIteratorBidirectional(tf_CKey &&_Key) const;
+			template <typename tf_CKey>
+			CKeyValueIteratorBidirectionalConst f_GetIteratorBidirectional_SmallestGreaterThanEqual(tf_CKey &&_Key) const;
+			template <typename tf_CKey>
+			CKeyValueIteratorBidirectionalConst f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key) const;
+
+		private:
+			TCMap const &mp_Map;
+		};
 
 		struct CFormatOptions
 		{
@@ -56,6 +182,9 @@ namespace NMib::NContainer
 		friend CMapper;
 		friend CConditionalMapper;
 
+		template <typename t_CMap2, EMapIteratorAccess t_Access2, bool t_bReverse2, bool t_bConst2, bool t_bBidirectional2>
+		friend struct NPrivate::TCMapIterator;
+		
 		using CNodeCompare = typename TCChooseType
 			<
 				NTraits::TCIsSame<t_CCompare, NMib::CSort_Default>::mc_Value
@@ -192,6 +321,12 @@ namespace NMib::NContainer
 		mint f_GetLen() const;
 		mint f_GetDepth() const;
 
+		CEntries f_Entries();
+		CEntriesConst f_Entries() const;
+
+		CKeys f_Keys();
+		CKeysConst f_Keys() const;
+
 		CIteratorConst f_GetIterator() const;
 		CIterator f_GetIterator();
 		CIteratorReverseConst f_GetIteratorReverse() const;
@@ -213,6 +348,19 @@ namespace NMib::NContainer
 		CIterator f_GetIterator_LargestLessThanEqual(tf_CKey &&_Key);
 		template <typename tf_CKey>
 		CIteratorConst f_GetIterator_LargestLessThanEqual(tf_CKey &&_Key) const;
+
+		template <typename tf_CKey>
+		CIteratorBidirectional f_GetIteratorBidirectional(tf_CKey &&_Key);
+		template <typename tf_CKey>
+		CIteratorBidirectionalConst f_GetIteratorBidirectional(tf_CKey &&_Key) const;
+		template <typename tf_CKey>
+		CIteratorBidirectional f_GetIteratorBidirectional_SmallestGreaterThanEqual(tf_CKey &&_Key);
+		template <typename tf_CKey>
+		CIteratorBidirectionalConst f_GetIteratorBidirectional_SmallestGreaterThanEqual(tf_CKey &&_Key) const;
+		template <typename tf_CKey>
+		CIteratorBidirectional f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key);
+		template <typename tf_CKey>
+		CIteratorBidirectionalConst f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key) const;
 
 		template <typename tf_CStream>
 		void f_Feed(tf_CStream &_Stream) const;
@@ -272,3 +420,4 @@ namespace NMib::NContainer
 #include "Map/Malterlib_Container_Map_Operations.hpp"
 #include "Map/Malterlib_Container_Map_Occupancy.hpp"
 #include "Map/Malterlib_Container_Map_Extract.hpp"
+#include "Map/Malterlib_Container_Map_KeyValues.hpp"

@@ -11,7 +11,7 @@ namespace NMib::NContainer::NPrivate
 	template <typename t_CNode, typename t_CCompare>
 	struct TCMapNodeCompare_Custom;
 
-	template <typename t_CMap, bool t_bReverse, bool t_bConst, bool t_bBidirectional>
+	template <typename t_CMap, EMapIteratorAccess t_Access, bool t_bReverse, bool t_bConst, bool t_bBidirectional>
 	struct TCMapIterator;
 
 	template <typename t_CDestination, bool t_bIsRef>
@@ -64,7 +64,7 @@ namespace NMib::NContainer
 		template <typename t_CNode2, typename t_CCompare2>
 		friend struct NPrivate::TCMapNodeCompare_Custom;
 
-		template <typename t_CMap2, bool t_bReverse2, bool t_bConst2, bool t_bBidirectional2>
+		template <typename t_CMap2, EMapIteratorAccess t_Access2, bool t_bReverse2, bool t_bConst2, bool t_bBidirectional2>
 		friend struct NPrivate::TCMapIterator;
 
 		template <typename t_CDestination2, bool t_bIsRef2>

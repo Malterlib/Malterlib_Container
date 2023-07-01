@@ -5,7 +5,7 @@
 
 namespace NMib::NContainer::NPrivate
 {
-	template <typename t_CMap, bool t_bReverse, bool t_bConst, bool t_bBidirectional>
+	template <typename t_CMap, EMapIteratorAccess t_Access, bool t_bReverse, bool t_bConst, bool t_bBidirectional>
 	struct TCMapIterator
 	{
 		using CMap = t_CMap;
@@ -13,13 +13,24 @@ namespace NMib::NContainer::NPrivate
 	private:
 		friend t_CMap;
 
+		using CNode = typename t_CMap::CNode;
 		using CKey = typename t_CMap::CKey;
-		using CUserData = typename t_CMap::CUserData;
+		using CUserData = typename TCChooseType
+			<
+				t_Access == EMapIteratorAccess_Value
+				, typename t_CMap::CUserData
+				, typename TCChooseType
+				<
+					t_Access == EMapIteratorAccess_Key
+					, CKey const
+					, CNode
+				>::CType
+			>::CType
+		;
 		using CAVLTree = typename t_CMap::CAVLTree;
 		using CMapQualified = typename NTraits::TCSetConst<t_CMap, t_bConst>::CType;
 		using CUserDataQualified = typename TCChooseType<t_bConst, typename NTraits::TCAddConst<CUserData>::CType, CUserData>::CType;
 		using CNodeCompare = typename t_CMap::CNodeCompare;
-		using CNode = typename t_CMap::CNode;
 
 	public:
 		TCMapIterator();
@@ -38,7 +49,9 @@ namespace NMib::NContainer::NPrivate
 		;
 		void f_Remove();
 
-		CKey const &f_GetKey() const;
+		CKey const &f_GetKey() const
+			requires (t_Access == EMapIteratorAccess_Value)
+		;
 
 		explicit operator bool () const;
 
