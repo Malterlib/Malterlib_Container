@@ -11,7 +11,7 @@ namespace NMib::NContainer
 	{
 		mint Offset = CNode::fs_GetOffset();
 		const CNode *pNode = (const CNode *)(((uint8 *)_pData) - Offset);
-		return pNode->m_Key;
+		return pNode->mp_Key;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
@@ -20,6 +20,6 @@ namespace NMib::NContainer
 	{
 		mint Offset = CNode::fs_GetOffset();
 		const CNode *pNode = (const CNode *)(((uint8 *)(&_Data)) - Offset);;
-		return pNode->m_Key;
+		return pNode->mp_Key;
 	}
 }

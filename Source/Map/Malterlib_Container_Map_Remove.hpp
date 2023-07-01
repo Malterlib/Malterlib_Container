@@ -21,11 +21,11 @@ namespace NMib::NContainer
 	{
 		mint Offset = CNode::fs_GetOffset();
 		CNode *pNode = (CNode *)(((uint8 *)_pData) - Offset);
-		auto *pRemoved = mp_Tree.f_FindEqualAndRemove(pNode->f_Value());
+		auto *pRemoved = mp_Tree.f_FindEqualAndRemove(pNode->mp_Key);
 		if (!pRemoved)
 			return false;
 		DMibFastCheck(pRemoved == pNode);
-		DMibFastCheck(!mp_Tree.f_FindEqual(pNode->f_Value()));
+		DMibFastCheck(!mp_Tree.f_FindEqual(pNode->mp_Key));
 		fg_DeleteObjectDefiniteType(mp_Allocator, pRemoved);
 		return true;
 	}

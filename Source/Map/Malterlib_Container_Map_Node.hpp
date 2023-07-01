@@ -8,42 +8,54 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CValue>
 	template <typename tf_CKey, typename... tfp_CArg>
 	inline_small TCMapNode<t_CKey, t_CValue>::TCMapNode(tf_CKey &&_Key, tfp_CArg && ... p_Args)
-		: m_Key(fg_Forward<tf_CKey>(_Key))
-		, m_Value(fg_Forward<tfp_CArg>(p_Args)...)
+		: mp_Key(fg_Forward<tf_CKey>(_Key))
+		, mp_Value(fg_Forward<tfp_CArg>(p_Args)...)
 	{
 	}
 
 	template <typename t_CKey, typename t_CValue>
 	inline_small mint TCMapNode<t_CKey, t_CValue>::fs_GetOffset()
 	{
-		return DMibPOffsetOf(TCMapNode, m_Value);
+		return DMibPOffsetOf(TCMapNode, mp_Value);
 	}
 
 	template <typename t_CKey, typename t_CValue>
 	template <typename tf_CStream>
 	void TCMapNode<t_CKey, t_CValue>::f_Feed(tf_CStream &_Stream) const
 	{
-		_Stream << m_Key;
-		_Stream << m_Value;
+		_Stream << mp_Key;
+		_Stream << mp_Value;
 	}
 
 	template <typename t_CKey, typename t_CValue>
 	template <typename tf_CStream>
 	void TCMapNode<t_CKey, t_CValue>::f_Consume(tf_CStream &_Stream)
 	{
-		_Stream >> m_Key;
-		_Stream >> m_Value;
+		_Stream >> mp_Key;
+		_Stream >> mp_Value;
 	}
 
 	template <typename t_CKey, typename t_CValue>
-	inline_small auto TCMapNode<t_CKey, t_CValue>::f_Value() -> t_CValue &
+	inline_small auto TCMapNode<t_CKey, t_CValue>::f_Key() const -> const t_CKey &
 	{
-		return m_Value;
+		return mp_Key;
 	}
 
 	template <typename t_CKey, typename t_CValue>
-	inline_small auto TCMapNode<t_CKey, t_CValue>::f_Value() const -> const t_CValue &
+	inline_small auto TCMapNode<t_CKey, t_CValue>::f_Value() & -> t_CValue &
 	{
-		return m_Value;
+		return mp_Value;
+	}
+
+	template <typename t_CKey, typename t_CValue>
+	inline_small auto TCMapNode<t_CKey, t_CValue>::f_Value() && -> t_CValue &&
+	{
+		return fg_Move(mp_Value);
+	}
+
+	template <typename t_CKey, typename t_CValue>
+	inline_small auto TCMapNode<t_CKey, t_CValue>::f_Value() const & -> const t_CValue &
+	{
+		return mp_Value;
 	}
 }

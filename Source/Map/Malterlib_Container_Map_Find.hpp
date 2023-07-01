@@ -155,7 +155,7 @@ namespace NMib::NContainer
 	{
 		CNode *pData = mp_Tree.f_FindSmallest();
 		if (pData)
-			return &pData->m_Key;
+			return &pData->mp_Key;
 		else
 			return nullptr;
 	}
@@ -165,7 +165,7 @@ namespace NMib::NContainer
 	{
 		CNode *pData = mp_Tree.f_FindSmallest();
 		if (pData)
-			return &pData->m_Key;
+			return &pData->mp_Key;
 		else
 			return nullptr;
 	}
@@ -175,7 +175,7 @@ namespace NMib::NContainer
 	{
 		CNode *pData = mp_Tree.f_FindLargest();
 		if (pData)
-			return &pData->m_Key;
+			return &pData->mp_Key;
 		else
 			return nullptr;
 	}
@@ -185,7 +185,7 @@ namespace NMib::NContainer
 	{
 		CNode *pData = mp_Tree.f_GetRoot();
 		if (pData)
-			return &pData->m_Key;
+			return &pData->mp_Key;
 		else
 			return nullptr;
 	}
@@ -195,7 +195,7 @@ namespace NMib::NContainer
 	{
 		CNode *pData = mp_Tree.f_FindLargest();
 		if (pData)
-			return &pData->m_Key;
+			return &pData->mp_Key;
 		else
 			return nullptr;
 	}

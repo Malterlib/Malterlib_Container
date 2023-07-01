@@ -46,7 +46,7 @@ namespace NMib::NContainer
 
 			auto pFoundData = mp_Tree.f_FindEqualOrInsert
 				(
-					pData->m_Key
+					pData->mp_Key
 					, [&]() -> CNode *
 					{
 						return pData;

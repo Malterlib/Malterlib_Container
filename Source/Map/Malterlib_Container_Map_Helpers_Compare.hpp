@@ -10,7 +10,7 @@ namespace NMib::NContainer::NPrivate
 	{
 		t_CKey const &operator () (t_CNode const &_Left) const
 		{
-			return _Left.m_Key;
+			return _Left.mp_Key;
 		}
 	};
 
@@ -19,24 +19,24 @@ namespace NMib::NContainer::NPrivate
 	{
 		auto operator () (t_CNode const &_Left, t_CNode const &_Right) const
 		{
-			return t_CCompare()(_Left.m_Key, _Right.m_Key);
+			return t_CCompare()(_Left.mp_Key, _Right.mp_Key);
 		}
 
 		auto operator () (t_CNode &_Left, t_CNode &_Right) const
 		{
-			return t_CCompare()(_Left.m_Key, _Right.m_Key);
+			return t_CCompare()(_Left.mp_Key, _Right.mp_Key);
 		}
 
 		template <typename tf_CKey>
 		auto operator () (t_CNode const &_Left, tf_CKey const &_Right) const
 		{
-			return t_CCompare()(_Left.m_Key, _Right);
+			return t_CCompare()(_Left.mp_Key, _Right);
 		}
 
 		template <typename tf_CKey>
 		auto operator () (tf_CKey const &_Left, t_CNode const &_Right) const
 		{
-			return t_CCompare()(_Left, _Right.m_Key);
+			return t_CCompare()(_Left, _Right.mp_Key);
 		}
 	};
 }

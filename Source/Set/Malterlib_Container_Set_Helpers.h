@@ -11,17 +11,10 @@ namespace NMib::NContainer
 	};
 
 	template <typename t_CKey>
-	struct TCMapNode<t_CKey, CMapSet> : public CMapNodeBase
+	struct TCMapNode<t_CKey, CMapSet> : private CMapNodeBase
 	{
 		using CKey = t_CKey;
 		using CValue = t_CKey;
-
-		inline_small TCMapNode() = default;
-
-		template <typename tf_CKey>
-		explicit inline_small TCMapNode(tf_CKey &&_Key);
-		template <typename tf_CKey, typename tf_CArg0>
-		explicit inline_small TCMapNode(tf_CKey &&_Key, tf_CArg0 &&_Arg0);
 
 		inline_small static mint fs_GetOffset();
 
@@ -30,21 +23,68 @@ namespace NMib::NContainer
 		template <typename tf_CStream>
 		void f_Consume(tf_CStream &_Stream);
 
-		inline_small t_CKey &f_Value();
+		inline_small const t_CKey &f_Key() const;
 		inline_small const t_CKey &f_Value() const;
 
 		constexpr static bool mc_bHasValue = false;
 
-		DMibNoUniqueAddress t_CKey m_Key;
+	private:
+		template <typename t_CNode2, typename t_CKey2>
+		friend struct NPrivate::TCMapNodeCompare_Default;
+
+		template <typename t_CNode2, typename t_CCompare2>
+		friend struct NPrivate::TCMapNodeCompare_Custom;
+
+		template <typename t_CMap2, bool t_bReverse2, bool t_bConst2, bool t_bBidirectional2>
+		friend struct NPrivate::TCMapIterator;
+
+		template <typename t_CDestination2, bool t_bIsRef2>
+		friend struct NPrivate::TCMapCopy;
+
+		template <typename t_CNode>
+		friend struct NPrivate::TCMapMapper;
+
+		template <typename t_CMap>
+		friend struct NPrivate::TCMapConditionalMapper;
+
+		template <typename t_CNode2, typename t_CAllocator2>
+		friend struct TCMapNodeHandle;
+		
+		template <typename t_CKey2, typename t_CValue2, typename t_CCompare2, typename t_CAllocator2>
+		friend struct TCMap;
+
+		template <auto t_pLinkMember2, typename t_CCompare2, typename t_CAllocator2, typename t_COverrideNodeType2>
+		friend class NIntrusive::TCAVLTreeAggregate;
+
+		inline_small TCMapNode() = default;
+
+		template <typename tf_CKey>
+		explicit inline_small TCMapNode(tf_CKey &&_Key);
+		template <typename tf_CKey, typename tf_CArg0>
+		explicit inline_small TCMapNode(tf_CKey &&_Key, tf_CArg0 &&_Arg0);
+
+		DMibNoUniqueAddress t_CKey mp_Key;
 	};
 }
 
 namespace NMib::NContainer::NPrivate
 {
+	template <typename t_CType>
+	struct TCIsSet
+	{
+		static constexpr bool mc_bValue = false;
+	};
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	struct TCIsSet<TCSet<t_CKey, t_CCompare, t_CAllocator>>
+	{
+		static constexpr bool mc_bValue = true;
+	};
+
 	template <typename t_CKey>
 	struct TCMapUserData<t_CKey, NContainer::CMapSet>
 	{
-		using CType = t_CKey;
+		using CType = t_CKey const;
 	};
 }
 

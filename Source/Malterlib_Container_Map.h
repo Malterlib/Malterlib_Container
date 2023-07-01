@@ -249,6 +249,9 @@ namespace NMib::NContainer
 		DMibNoUniqueAddress t_CAllocator mp_Allocator;
 		DMibNoUniqueAddress CAVLTree mp_Tree;
 	};
+
+	template <typename t_CType>
+	concept cIsMap = NPrivate::TCIsMap<typename NTraits::TCRemoveReferenceAndQualifiers<t_CType>::CType>::mc_bValue;
 }
 
 #ifndef DMibPNoShortCuts

@@ -182,8 +182,35 @@ namespace NMib::NContainer
 	{
 		TCVector Return;
 
-		for (auto &Value : _Container)
-			Return.f_Insert(fg_ForwardAs<tf_CContainer>(Value));
+		if constexpr (cIsSet<tf_CContainer>)
+		{
+			if constexpr (NTraits::TCIsRValueReference<tf_CContainer &&>::mc_Value)
+			{
+				_Container.f_ExtractAll
+					(
+						[&](auto &&_Handle)
+						{
+							Return.f_Insert(fg_Move(_Handle.f_Key()));
+						}
+					)
+				;
+			}
+			else
+			{
+				for (auto &Value : _Container)
+					Return.f_Insert(Value);
+			}
+		}
+		else if constexpr (NTraits::TCIsRValueReference<tf_CContainer &&>::mc_Value)
+		{
+			for (auto &Value : _Container)
+				Return.f_Insert(fg_Move(Value));
+		}
+		else
+		{
+			for (auto &Value : _Container)
+				Return.f_Insert(Value);
+		}
 
 		return Return;
 	}

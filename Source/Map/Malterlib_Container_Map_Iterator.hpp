@@ -206,7 +206,7 @@ namespace NMib::NContainer::NPrivate
 	template <typename t_CMap, bool t_bReverse, bool t_bConst, bool t_bBidirectional>
 	auto TCMapIterator<t_CMap, t_bReverse, t_bConst, t_bBidirectional>::f_GetKey() const -> CKey const &
 	{
-		return mp_Iter->m_Key;
+		return mp_Iter->mp_Key;
 	}
 
 	template <typename t_CMap, bool t_bReverse, bool t_bConst, bool t_bBidirectional>

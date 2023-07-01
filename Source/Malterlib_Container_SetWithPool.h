@@ -46,6 +46,15 @@ namespace NMib::NContainer
 	};
 }
 
+namespace NMib::NContainer::NPrivate
+{
+	template <typename t_CKey, typename t_CCompare>
+	struct TCIsSet<TCSetWithPool<t_CKey, t_CCompare>>
+	{
+		static constexpr bool mc_bValue = true;
+	};
+}
+
 #ifndef DMibPNoShortCuts
 	using namespace NMib::NContainer;
 #endif

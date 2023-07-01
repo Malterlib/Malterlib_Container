@@ -14,6 +14,18 @@ namespace NMib::NContainer
 
 namespace NMib::NContainer::NPrivate
 {
+	template <typename t_CType>
+	struct TCIsMap
+	{
+		static constexpr bool mc_bValue = false;
+	};
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	struct TCIsMap<TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>>
+	{
+		static constexpr bool mc_bValue = true;
+	};
+	
 	template <typename t_CKey, typename t_CValue>
 	struct TCMapUserData
 	{
@@ -46,7 +58,7 @@ namespace NMib::NContainer::NPrivate
 					, [&](auto const &_Other) -> CNode *
 					{
 						auto Allocation = _Map.mp_Allocator.f_AllocSafe(sizeof(CNode), alignof(CNode));
-						auto *pReturn = new(Allocation.m_pMemory) CNode(_Other.m_Key, _Other.f_Value());
+						auto *pReturn = new(Allocation.m_pMemory) CNode(_Other.mp_Key, _Other.f_Value());
 						Allocation.f_Claim();
 						return pReturn;
 					}
@@ -55,7 +67,7 @@ namespace NMib::NContainer::NPrivate
 		}
 
 		template <typename tf_CSource>
-		static void fs_MoveAll(t_CDestination &_Map, tf_CSource && _Other)
+		static void fs_MoveAll(t_CDestination &_Map, tf_CSource &&_Other)
 		{
 			if (_Other.f_IsEmpty())
 				return;
@@ -66,7 +78,7 @@ namespace NMib::NContainer::NPrivate
 					, [&](auto *_pOther) -> CNode *
 					{
 						auto Allocation = _Map.mp_Allocator.f_AllocSafe(sizeof(CNode), alignof(CNode));
-						auto *pReturn = new(Allocation.m_pMemory) CNode(fg_Move(_pOther->m_Key), fg_Move(_pOther->f_Value()));
+						auto *pReturn = new(Allocation.m_pMemory) CNode(fg_Move(_pOther->mp_Key), fg_Move(_pOther->f_Value()));
 						Allocation.f_Claim();
 
 						fg_DeleteObjectDefiniteType(_Map.mp_Allocator, _pOther);
@@ -78,7 +90,7 @@ namespace NMib::NContainer::NPrivate
 		}
 
 		template <typename tf_CSource>
-		static void fs_CopyAddAll(t_CDestination &_Map, tf_CSource && _Other)
+		static void fs_CopyAddAll(t_CDestination &_Map, tf_CSource &&_Other)
 		{
 			auto iSource = _Other.f_GetIterator();
 			while (iSource)
@@ -122,49 +134,23 @@ namespace NMib::NContainer::NPrivate
 		}
 
 		template <typename tf_CSource>
-		static void fs_MoveAddAll(t_CDestination &_Map, tf_CSource && _Other)
+		static void fs_MoveAddAll(t_CDestination &_Map, tf_CSource &&_Other)
 		{
-			auto iSource = _Other.f_GetIterator();
-			while (iSource)
-			{
-				if (_Map.mp_Tree.f_FindEqual(iSource.f_GetKey()))
-				{
-					++iSource;
-					continue;
-				}
-				break;
-			}
-			if (!iSource)
-				return;
-
-			_Map.mp_Allocator.f_AllocBatch
+			_Other.f_ExtractAll
 				(
-					sizeof(CNode)
-					, alignof(CNode)
-					, [&](void * _pAlloc, mint _Size) -> bool
+					[&](auto &&_Handle)
 					{
-						auto Cleanup = _Map.mp_Allocator.f_MakeSafe(_pAlloc, _Size);
-						auto pData = (CNode *)_pAlloc;
-						new((void *)pData) CNode(iSource.f_GetKey(), fg_Move(*iSource));
-						Cleanup.f_Claim();
-						_Map.mp_Tree.f_Insert(pData);
+						if (_Map.mp_Tree.f_FindEqual(_Handle.f_Key()))
+							return;
 
-						++iSource;
-						while (iSource)
-						{
-							if (_Map.mp_Tree.f_FindEqual(iSource.f_GetKey()))
-							{
-								++iSource;
-								continue;
-							}
-							break;
-						}
-						return iSource;
+						auto Allocation = _Map.mp_Allocator.f_AllocSafe(sizeof(CNode), alignof(CNode));
+						auto *pData = new(Allocation.m_pMemory) CNode(fg_Move(_Handle.f_Key()), fg_Move(_Handle.f_Value()));
+						Allocation.f_Claim();
+						_Map.mp_Tree.f_Insert(pData);
 					}
 				)
 			;
 		}
-
 	};
 
 	template <typename t_CDestination>
@@ -173,7 +159,7 @@ namespace NMib::NContainer::NPrivate
 		using CNode = typename t_CDestination::CNode;
 
 		template <typename tf_CSource>
-		static void fs_CopyAll(t_CDestination &_Map, tf_CSource && _Other)
+		static void fs_CopyAll(t_CDestination &_Map, tf_CSource &&_Other)
 		{
 			if (_Other.f_IsEmpty())
 				return;
@@ -184,7 +170,7 @@ namespace NMib::NContainer::NPrivate
 					, [&](auto const &_Other) -> CNode *
 					{
 						auto Allocation = _Map.mp_Allocator.f_AllocSafe(sizeof(CNode), alignof(CNode));
-						auto *pReturn = new(Allocation.m_pMemory) CNode(_Other.m_Key, fg_AutoConstCast(_Other.f_Value()));
+						auto *pReturn = new(Allocation.m_pMemory) CNode(_Other.mp_Key, fg_AutoConstCast(_Other.f_Value()));
 						Allocation.f_Claim();
 						return pReturn;
 					}
@@ -193,7 +179,7 @@ namespace NMib::NContainer::NPrivate
 		}
 
 		template <typename tf_CSource>
-		static void fs_CopyAddAll(t_CDestination &_Map, tf_CSource && _Other)
+		static void fs_CopyAddAll(t_CDestination &_Map, tf_CSource &&_Other)
 		{
 			auto iSource = _Other.f_GetIterator();
 			while (iSource)
@@ -237,13 +223,13 @@ namespace NMib::NContainer::NPrivate
 		}
 
 		template <typename tf_CSource>
-		static void fs_MoveAll(t_CDestination &_Map, tf_CSource && _Other)
+		static void fs_MoveAll(t_CDestination &_Map, tf_CSource &&_Other)
 		{
 			return fs_CopyAll(_Map, fg_Forward<tf_CSource>(_Other));
 		}
 
 		template <typename tf_CSource>
-		static void fs_MoveAddAll(t_CDestination &_Map, tf_CSource && _Other)
+		static void fs_MoveAddAll(t_CDestination &_Map, tf_CSource &&_Other)
 		{
 			return fs_CopyAddAll(_Map, fg_Forward<tf_CSource>(_Other));
 		}

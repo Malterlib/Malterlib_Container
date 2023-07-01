@@ -69,6 +69,9 @@ namespace NMib::NContainer
 
 	template <typename tf_CReturn, typename... tf_CParams>
 	TCSet<tf_CReturn> fg_CreateSet(tf_CParams && ...p_Params);
+
+	template <typename t_CType>
+	concept cIsSet = NPrivate::TCIsSet<typename NTraits::TCRemoveReferenceAndQualifiers<t_CType>::CType>::mc_bValue;
 }
 
 #include "Set/Malterlib_Container_Set.hpp"

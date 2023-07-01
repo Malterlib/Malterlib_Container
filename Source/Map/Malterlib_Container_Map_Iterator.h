@@ -16,7 +16,7 @@ namespace NMib::NContainer::NPrivate
 		using CKey = typename t_CMap::CKey;
 		using CUserData = typename t_CMap::CUserData;
 		using CAVLTree = typename t_CMap::CAVLTree;
-		using CMapQualified = typename NTraits::TCSetConst<t_CMap, t_bConst>::CType ;
+		using CMapQualified = typename NTraits::TCSetConst<t_CMap, t_bConst>::CType;
 		using CUserDataQualified = typename TCChooseType<t_bConst, typename NTraits::TCAddConst<CUserData>::CType, CUserData>::CType;
 		using CNodeCompare = typename t_CMap::CNodeCompare;
 		using CNode = typename t_CMap::CNode;
