@@ -211,8 +211,6 @@ namespace NMib::NContainer
 		}
 
 	public:
-
-
 		class CIterator
 		{
 			friend class TCLinkedList;
@@ -224,7 +222,6 @@ namespace NMib::NContainer
 			static TCLinkedList *fs_Debug_List();
 			static CList *fs_Debug_IntrusiveList();
 #endif
-
 			CIterator()
 			{
 				m_pLinkedList = nullptr;
@@ -241,6 +238,14 @@ namespace NMib::NContainer
 				static_assert(TCInstantiateValue<&fs_Debug_List>::mc_Value);
 				static_assert(TCInstantiateValue<&fs_Debug_IntrusiveList>::mc_Value);
 #endif
+			}
+
+			CIterator f_GetIterator() const
+			{
+				CIterator Iterator;
+				Iterator.m_Iter = m_Iter;
+				Iterator.m_pLinkedList = m_pLinkedList;
+				return Iterator;
 			}
 
 			CIterator &operator = (TCLinkedList &_Map)
@@ -324,6 +329,13 @@ namespace NMib::NContainer
 				static_assert(TCInstantiateValue<&fs_Debug_List>::mc_Value);
 				static_assert(TCInstantiateValue<&fs_Debug_IntrusiveList>::mc_Value);
 #endif
+			}
+
+			CIteratorConst f_GetIterator() const
+			{
+				CIteratorConst Iterator;
+				Iterator.m_Iter = m_Iter;
+				return Iterator;
 			}
 
 			CIteratorConst &operator = (const TCLinkedList &_Map)

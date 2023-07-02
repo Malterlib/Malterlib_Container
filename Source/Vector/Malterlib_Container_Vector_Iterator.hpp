@@ -39,6 +39,12 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CIteratorData>
+	inline_small auto TCVectorIterator<t_CIteratorData>::f_GetIterator() const -> TCVectorIterator
+	{
+		return *this;
+	}
+
+	template <typename t_CIteratorData>
 	inline_small auto TCVectorIterator<t_CIteratorData>::operator =(TCVectorIterator const& _ToCopy) -> TCVectorIterator &
 	{
 		m_pBegin = _ToCopy.m_pBegin;

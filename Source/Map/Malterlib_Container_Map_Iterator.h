@@ -40,6 +40,14 @@ namespace NMib::NContainer::NPrivate
 			requires (!t_bReverse) // Not supported for reverse iterators
 		;
 
+		TCMapIterator f_GetIterator() const
+		{
+			TCMapIterator Iterator;
+			Iterator.mp_Iter = mp_Iter;
+			Iterator.mp_pMap = mp_pMap;
+			return Iterator;
+		}
+
 		TCMapIterator &operator = (CMapQualified &_Map);
 
 		inline_medium mint f_GetLen() const;
