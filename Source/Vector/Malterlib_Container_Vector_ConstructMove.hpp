@@ -63,14 +63,33 @@ namespace NMib::NContainer
 	auto TCVector<t_CData, t_CAllocator, t_COptions>::operator = (TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Source) -> TCVector &
 	{
 		mint nSource = _Source.f_GetLen();
-		fp_MakeNewRoom(nSource);
+		mint nDestination = f_GetLen();
+		if (nSource && nSource <= nDestination)
+		{
+			NPrivate::fg_MoveOverArray(f_GetArray(), _Source.f_GetArray(), nSource);
 
-		auto pArray = f_GetArray();
-		auto pSrcArray = _Source.f_GetArray();
+			mint nToDestroy = nDestination - nSource;
+			if (nToDestroy)
+			{
+				auto Cleanup = g_OnScopeExit / [&]
+					{
+						mp_StaticData.m_pData->m_Length = nSource + nToDestroy;
+					}
+				;
+				NPrivate::fg_DestroyArray(f_GetArray() + nSource, nToDestroy, nToDestroy);
+			}
+		}
+		else
+		{
+			fp_MakeNewRoom(nSource);
 
-		NPrivate::fg_MoveArray(pArray, pSrcArray, nSource);
-		if (nSource)
-			mp_StaticData.m_pData->m_Length += nSource;
+			auto pArray = f_GetArray();
+			auto pSrcArray = _Source.f_GetArray();
+
+			NPrivate::fg_MoveArray(pArray, pSrcArray, nSource);
+			if (nSource)
+				mp_StaticData.m_pData->m_Length += nSource;
+		}
 		return *this;
 	}
 

@@ -9,11 +9,30 @@ namespace NMib::NContainer
 	void TCVector<t_CData, t_CAllocator, t_COptions>::fp_Copy(TCVector const &_Source)
 	{
 		mint nSource = _Source.f_GetLen();
-		fp_MakeNewRoom(nSource);
-		auto pSrc = _Source.f_GetArray();
-		auto pDst = f_GetArray();
-		if (nSource)
-			NPrivate::fg_CopyArray(pDst, pSrc, nSource, mp_StaticData.m_pData->m_Length);
+		mint nDestination = f_GetLen();
+		if (nSource && nSource <= nDestination)
+		{
+			NPrivate::fg_CopyOverArray(f_GetArray(), _Source.f_GetArray(), nSource);
+
+			mint nToDestroy = nDestination - nSource;
+			if (nToDestroy)
+			{
+				auto Cleanup = g_OnScopeExit / [&]
+					{
+						mp_StaticData.m_pData->m_Length = nSource + nToDestroy;
+					}
+				;
+				NPrivate::fg_DestroyArray(f_GetArray() + nSource, nToDestroy, nToDestroy);
+			}
+		}
+		else
+		{
+			fp_MakeNewRoom(nSource);
+			auto pSrc = _Source.f_GetArray();
+			auto pDst = f_GetArray();
+			if (nSource)
+				NPrivate::fg_CopyArray(pDst, pSrc, nSource, mp_StaticData.m_pData->m_Length);
+		}
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
@@ -68,12 +87,30 @@ namespace NMib::NContainer
 	auto TCVector<t_CData, t_CAllocator, t_COptions>::operator = (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Source) -> TCVector &
 	{
 		mint nSource = _Source.f_GetLen();
-		fp_MakeNewRoom(nSource);
-		auto pArray = f_GetArray();
-		auto pSrcArray = _Source.f_GetArray();
+		mint nDestination = f_GetLen();
+		if (nSource && nSource <= nDestination)
+		{
+			NPrivate::fg_CopyOverArray(f_GetArray(), _Source.f_GetArray(), nSource);
+			mint nToDestroy = nDestination - nSource;
+			if (nToDestroy)
+			{
+				auto Cleanup = g_OnScopeExit / [&]
+					{
+						mp_StaticData.m_pData->m_Length = nSource + nToDestroy;
+					}
+				;
+				NPrivate::fg_DestroyArray(f_GetArray() + nSource, nToDestroy, nToDestroy);
+			}
+		}
+		else
+		{
+			fp_MakeNewRoom(nSource);
+			auto pArray = f_GetArray();
+			auto pSrcArray = _Source.f_GetArray();
 
-		if (nSource)
-			NPrivate::fg_CopyArray(pArray, pSrcArray, nSource, mp_StaticData.m_pData->m_Length);
+			if (nSource)
+				NPrivate::fg_CopyArray(pArray, pSrcArray, nSource, mp_StaticData.m_pData->m_Length);
+		}
 		return *this;
 	}
 

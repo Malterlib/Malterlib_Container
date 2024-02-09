@@ -91,7 +91,7 @@ namespace NMib::NContainer
 
 			DMibSafeCheck((_StartInList + NewLen) == f_GetLen(), "Must align");
 
-			fg_DestroyCopyArray(pOldArray + _StartInList, pSourceArray + _StartInSource - _StartInList, Len);
+			fg_CopyOverArray(pOldArray + _StartInList, pSourceArray + _StartInSource - _StartInList, Len);
 		}
 	}
 }
