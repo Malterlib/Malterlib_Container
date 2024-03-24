@@ -73,7 +73,9 @@ namespace NMib::NContainer
 	template <typename t_CIteratorData>
 	inline_small auto TCVectorIterator<t_CIteratorData>::operator ++() -> TCVectorIterator &
 	{
-		m_pBegin = fp_GetNext(m_pBegin);
+		m_pBegin = m_pBegin + 1;
+		DMibFastCheck(m_pBegin <= m_pEnd);
+		
 		return *this;
 	}
 
@@ -82,9 +84,6 @@ namespace NMib::NContainer
 	{
 		m_pBegin = m_pBegin + _Offset;
 		DMibFastCheck(m_pBegin <= m_pEnd);
-
-		if (m_pBegin == m_pEnd)
-			m_pBegin = nullptr;
 
 		return *this;
 	}
@@ -95,15 +94,6 @@ namespace NMib::NContainer
 		return m_pEnd - m_pBegin;
 	}
 	
-	template <typename t_CIteratorData>
-	t_CIteratorData *TCVectorIterator<t_CIteratorData>::fp_GetNext(t_CIteratorData *_pCurrent) const
-	{
-		if (m_pBegin != m_pEnd)
-			return m_pBegin+1;
-		else
-			return nullptr;
-	}
-
 	template <typename t_CIteratorData>
 	inline_small t_CIteratorData *TCVectorIterator<t_CIteratorData>::fp_GetCurrent() const
 	{

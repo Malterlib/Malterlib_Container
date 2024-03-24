@@ -23,7 +23,6 @@ namespace NMib::NContainer
 		inline_small TCVectorIterator f_GetIterator() const;
 
 	private:
-		t_CIteratorData *fp_GetNext(t_CIteratorData *_pCurrent) const;
 		inline_small t_CIteratorData *fp_GetCurrent() const;
 
 		t_CIteratorData *m_pBegin;
