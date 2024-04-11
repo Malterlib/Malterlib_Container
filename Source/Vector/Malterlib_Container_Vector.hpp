@@ -121,7 +121,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	auto TCVector<t_CData, t_CAllocator, t_COptions>::f_Reverse() const -> TCVector
+	auto TCVector<t_CData, t_CAllocator, t_COptions>::f_Reverse() const & -> TCVector
 	{
 		TCVector Ret;
 		mint Len = f_GetLen();
@@ -139,6 +139,32 @@ namespace NMib::NContainer
 		for (mint i = 0; i < Len; ++i)
 		{
 			new((void *)(pDst + i)) t_CData(pSrc[Len - i - 1]);
+			++NewLen;
+		}
+
+		return Ret;
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	auto TCVector<t_CData, t_CAllocator, t_COptions>::f_Reverse() && -> TCVector
+	{
+		mint Len = f_GetLen();
+		if (Len <= 1)
+			return fg_Move(*this);
+
+		TCVector Ret;
+
+		Ret.fp_MakeNewRoom(Len);
+
+		DMibFastCheck(Ret.mp_StaticData.m_pData);
+
+		auto pDst = Ret.f_GetArray();
+		auto pSrc = f_GetArray();
+
+		auto &NewLen = Ret.mp_StaticData.m_pData->m_Length;
+		for (mint i = 0; i < Len; ++i)
+		{
+			new((void *)(pDst + i)) t_CData(fg_Move(pSrc[Len - i - 1]));
 			++NewLen;
 		}
 

@@ -310,7 +310,8 @@ namespace NMib::NContainer
 		void f_SetLen(mint _Len, bool _bTrim = true);
 		void f_SetAtLeastLen(mint _Len, mint _Grow = 4096);
 
-		TCVector f_Reverse() const;
+		TCVector f_Reverse() const &;
+		TCVector f_Reverse() &&;
 
 		struct CFormatOptions
 		{
