@@ -146,6 +146,7 @@ namespace NMib::NContainer
 		NStream::CFilePos f_GetLength() const;
 		mint f_ContainerLengthLimit() const;
 		void f_SetLength(NStream::CFilePos _Length);
+		void f_SetCacheSize(mint _CacheSize);
 
 	protected:
 		void fp_SetPositionInternal(NStream::CFilePos _Pos);

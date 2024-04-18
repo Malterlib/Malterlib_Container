@@ -312,4 +312,9 @@ namespace NMib::NContainer
 	{
 		DMibPDebugBreak; // Not supported
 	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVector<t_CInherit>::f_SetCacheSize(mint _CacheSize)
+	{
+	}
 }
