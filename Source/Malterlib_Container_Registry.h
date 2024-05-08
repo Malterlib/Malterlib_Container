@@ -60,9 +60,14 @@ namespace NMib::NContainer
 
 namespace NMib::NContainer
 {
+	struct CRegistryLinks
+	{
+		NIntrusive::TCAVLLink<> mp_ChildLink;
+	};
+
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	struct TCRegistry
+	struct TCRegistry : public CRegistryLinks
 	{
 		using CLocation = NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>;
 
@@ -105,9 +110,7 @@ namespace NMib::NContainer
 			inline_small COrdering_Partial operator ()(tf_CKey const &_Left, CRegistryKey const &_Right) const;
 		};
 
-		NIntrusive::TCAVLLink<> mp_ChildLink;
-
-		using CTree = NIntrusive::TCAVLTree<&TCRegistry::mp_ChildLink, CAVLCompare_TCRegistry>;
+		using CTree = NIntrusive::TCAVLTree<&CRegistryLinks::mp_ChildLink, CAVLCompare_TCRegistry, NMib::NMemory::CDefaultAllocator, TCRegistry>;
 
 		struct CChildren_Sorted
 		{
