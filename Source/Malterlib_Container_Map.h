@@ -16,6 +16,9 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CValue, typename t_CCompare = NMib::CSort_Default, typename t_CAllocator = NMib::NMemory::CAllocator_Heap>
+	struct TCMap;
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	struct TCMap
 	{
 		using CKey = t_CKey;
@@ -169,6 +172,9 @@ namespace NMib::NContainer
 		};
 
 	private:
+		template <typename t_CKey2, typename t_CValue2, typename t_CCompare2, typename t_CAllocator2>
+		friend struct TCMap;
+		
 		template <typename t_CDestination, bool t_bIsRef>
 		friend struct NPrivate::TCMapCopy;
 		friend CIterator;
@@ -193,7 +199,7 @@ namespace NMib::NContainer
 			>::CType
 		;
 		using CUserData = typename NTraits::TCRemoveReference<typename NPrivate::TCMapUserData<t_CKey, t_CValue>::CType>::CType;
-		using CAVLTree = NIntrusive::TCAVLTree<&CMapNodeBase::m_Link, CNodeCompare, NMemory::CAllocator_Base, CNode>;
+		using CAVLTree = NIntrusive::TCAVLTree<&CMapNodeBase::m_Link, void, NMemory::CAllocator_Base, CNode>;
 
 	public:
 		~TCMap();
@@ -204,7 +210,21 @@ namespace NMib::NContainer
 		TCMap(std::initializer_list<NStorage::TCTuple<t_CKey, t_CValue>> const &_Values);
 
 		template <typename... tfp_CParams>
-		TCMap(NMemory::CAllocatorConstructTag const &_Allocator, tfp_CParams && ...p_Params);
+		TCMap(CAllocatorConstructTag const &, tfp_CParams && ...p_Params);
+		
+		template <typename... tfp_CParams>
+		TCMap(CCompareConstructTag const &, tfp_CParams && ...p_Params);
+
+		template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams>
+		TCMap
+			(
+				CAllocatorConstructTag &&
+				, CCompareConstructTag &&
+				, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
+				, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
+			)
+		;
+
 		template <typename tf_CKey, typename tf_CValue, typename tf_CCompare, typename tf_CAllocator>
 		TCMap(TCMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator> const &_Other);
 		template <typename tf_CKey, typename tf_CValue, typename tf_CCompare, typename tf_CAllocator>
@@ -392,9 +412,22 @@ namespace NMib::NContainer
 		template <typename tf_CSource>
 		inline_always void fp_MoveAddAll(tf_CSource && _Other);
 
+		template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams, mint... tp_IndicesAllocator, mint... tp_IndicesCompare>
+		TCMap
+			(
+				NMeta::TCIndices<tp_IndicesAllocator...> const &_IndexSequenceAllocator
+				, NMeta::TCIndices<tp_IndicesCompare...> const &_IndexSequuenceCompare
+				, CAllocatorConstructTag &&
+				, CCompareConstructTag &&
+				, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
+				, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
+			)
+		;
+
 		constexpr static bool mcp_bIsReference = NTraits::TCIsReference<t_CValue>::mc_Value;
 
 		DMibNoUniqueAddress t_CAllocator mp_Allocator;
+		DMibNoUniqueAddress CNodeCompare mp_Compare;
 		DMibNoUniqueAddress CAVLTree mp_Tree;
 	};
 

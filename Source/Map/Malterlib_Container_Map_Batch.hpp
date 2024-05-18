@@ -52,6 +52,7 @@ namespace NMib::NContainer
 
 							return pData;
 						}
+						, m_Map.mp_Compare
 					)
 				;
 
@@ -79,7 +80,7 @@ namespace NMib::NContainer
 					bool bRet = _fDoInsert(Mapper);
 					Cleanup.f_Claim();
 					auto pData = (CNode *)_pAlloc;
-					mp_Tree.f_Insert(pData);
+					mp_Tree.f_Insert(pData, mp_Compare);
 					return bRet;
 				}
 			)

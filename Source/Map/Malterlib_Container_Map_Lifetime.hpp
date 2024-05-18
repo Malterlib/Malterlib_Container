@@ -25,6 +25,7 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::TCMap(TCMap const &_Other)
+		: mp_Compare(_Other.mp_Compare)
 	{
 		auto Cleanup = g_OnScopeExit / [&]
 			{
@@ -54,8 +55,53 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename... tfp_CParams>
-	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::TCMap(NMemory::CAllocatorConstructTag const &_Allocator, tfp_CParams && ...p_Params)
+	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::TCMap(CAllocatorConstructTag const &_Allocator, tfp_CParams && ...p_Params)
 		: mp_Allocator(fg_Forward<tfp_CParams>(p_Params)...)
+	{
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	template <typename... tfp_CParams>
+	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::TCMap(CCompareConstructTag const &, tfp_CParams && ...p_Params)
+		: mp_Compare(fg_Forward<tfp_CParams>(p_Params)...)
+	{
+	}
+
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams>
+	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::TCMap
+		(
+			CAllocatorConstructTag &&_AlloctatorTag
+			, CCompareConstructTag &&_CompareTag
+			, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
+			, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
+		)
+		: TCMap
+		(
+			typename NMeta::TCMakeConsecutiveIndices<sizeof...(tfp_CAllocatorParams)>::CType()
+			, typename NMeta::TCMakeConsecutiveIndices<sizeof...(tfp_CCompareParams)>::CType()
+			, fg_Move(_AlloctatorTag)
+			, fg_Move(_CompareTag)
+			, fg_Move(_ConstructAllocator)
+			, fg_Move(_ConstructCompare)
+		)
+	{
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams, mint... tp_IndicesAllocator, mint... tp_IndicesCompare>
+	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::TCMap
+		(
+			NMeta::TCIndices<tp_IndicesAllocator...> const &_IndexSequenceAllocator
+			, NMeta::TCIndices<tp_IndicesCompare...> const &_IndexSequuenceCompare
+			, CAllocatorConstructTag &&
+			, CCompareConstructTag &&
+			, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
+			, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
+		)
+		: mp_Allocator(fg_Forward<tfp_CAllocatorParams>(fg_Get<tp_IndicesAllocator>(_ConstructAllocator.m_Params))...)
+		, mp_Compare(fg_Forward<tfp_CCompareParams>(fg_Get<tp_IndicesCompare>(_ConstructCompare.m_Params))...)
 	{
 	}
 
@@ -70,9 +116,21 @@ namespace NMib::NContainer
 		;
 
 		if constexpr(NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+		{
+			mp_Compare = _Other.mp_Compare;
 			fp_CopyAll(_Other);
+		}
 		else
+		{
+			if constexpr
+			(
+				NTraits::cIsAssignable<t_CCompare, tf_CCompare const &>
+			)
+			{
+				mp_Compare = _Other.mp_Compare;
+			}
 			fp_CopyAddAll(_Other);
+		}
 
 		Cleanup.f_Clear();
 	}
@@ -88,9 +146,21 @@ namespace NMib::NContainer
 		;
 
 		if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+		{
+			mp_Compare = _Other.mp_Compare;
 			fp_CopyAll(_Other);
+		}
 		else
+		{
+			if constexpr
+			(
+				NTraits::cIsAssignable<t_CCompare, tf_CCompare const &>
+			)
+			{
+				mp_Compare = _Other.mp_Compare;
+			}
 			fp_CopyAddAll(_Other);
+		}
 
 		Cleanup.f_Clear();
 	}
@@ -106,9 +176,21 @@ namespace NMib::NContainer
 		;
 
 		if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+		{
+			mp_Compare = fg_Move(_Other.mp_Compare);
 			fp_MoveAll(_Other);
+		}
 		else
+		{
+			if constexpr
+			(
+				NTraits::cIsAssignable<t_CCompare, tf_CCompare &&>
+			)
+			{
+				mp_Compare = fg_Move(_Other.mp_Compare);
+			}
 			fp_MoveAddAll(_Other);
+		}
 
 		Cleanup.f_Clear();
 	}
@@ -118,6 +200,8 @@ namespace NMib::NContainer
 	{
 		DMibSafeCheck(this != &_Other, "Must not copy same object to itself");
 		f_Clear();
+
+		mp_Compare = _Other.mp_Compare;
 		fp_CopyAll(_Other);
 
 		return *this;
@@ -128,10 +212,24 @@ namespace NMib::NContainer
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator = (const TCMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator> &_Other) -> TCMap &
 	{
 		f_Clear();
+
 		if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+		{
+			mp_Compare = _Other.mp_Compare;
 			fp_CopyAll(_Other);
+		}
 		else
+		{
+			if constexpr
+			(
+				NTraits::cIsAssignable<t_CCompare, tf_CCompare const &>
+			)
+			{
+				mp_Compare = _Other.mp_Compare;
+			}
 			fp_CopyAddAll(_Other);
+		}
+
 		return *this;
 	}
 
@@ -140,10 +238,24 @@ namespace NMib::NContainer
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator = (TCMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator> &_Other) -> TCMap &
 	{
 		f_Clear();
+
 		if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+		{
+			mp_Compare = _Other.mp_Compare;
 			fp_CopyAll(_Other);
+		}
 		else
+		{
+			if constexpr
+			(
+				NTraits::cIsAssignable<t_CCompare, tf_CCompare const &>
+			)
+			{
+				mp_Compare = _Other.mp_Compare;
+			}
 			fp_CopyAddAll(_Other);
+		}
+
 		return *this;
 	}
 
@@ -152,10 +264,23 @@ namespace NMib::NContainer
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator = (TCMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator> &&_Other) -> TCMap &
 	{
 		f_Clear();
+
 		if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+		{
+			mp_Compare = fg_Move(_Other.mp_Compare);
 			fp_MoveAll(_Other);
+		}
 		else
+		{
+			if constexpr
+			(
+				NTraits::cIsAssignable<t_CCompare, tf_CCompare &&>
+			)
+			{
+				mp_Compare = fg_Move(_Other.mp_Compare);
+			}
 			fp_MoveAddAll(_Other);
+		}
 		return *this;
 	}
 
@@ -163,8 +288,11 @@ namespace NMib::NContainer
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator = (TCMap &&_Other) -> TCMap &
 	{
 		f_Clear();
+
 		mp_Tree = fg_Move(_Other.mp_Tree);
 		mp_Allocator = fg_Move(_Other.mp_Allocator);
+		mp_Compare = fg_Move(_Other.mp_Compare);
+
 		return *this;
 	}
 

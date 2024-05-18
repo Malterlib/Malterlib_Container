@@ -11,15 +11,15 @@ namespace NMib::NContainer
 	{
 		mint Offset = CNode::fs_GetOffset();
 		CNode *pNode = (CNode *)(((uint8 *)_pData) - Offset);
-		_Map.mp_Tree.f_Remove(pNode);
-		mp_Tree.f_Insert(pNode);
+		_Map.mp_Tree.f_Remove(pNode, _Map.mp_Compare);
+		mp_Tree.f_Insert(pNode, mp_Compare);
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Extract(tf_CKey &&_Key) -> CNodeHandle
 	{
-		CNode *pNode = mp_Tree.f_FindEqualAndRemove(_Key);
+		CNode *pNode = mp_Tree.f_FindEqualAndRemove(_Key, mp_Compare);
 		return CNodeHandle(pNode, mp_Allocator);
 	}
 
@@ -28,7 +28,7 @@ namespace NMib::NContainer
 	{
 		mint Offset = CNode::fs_GetOffset();
 		CNode *pNode = (CNode *)(((uint8 *)_pData) - Offset);
-		mp_Tree.f_Remove(pNode);
+		mp_Tree.f_Remove(pNode, mp_Compare);
 		return CNodeHandle(pNode, mp_Allocator);
 	}
 

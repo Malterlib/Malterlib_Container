@@ -102,7 +102,7 @@ namespace NMib::NContainer::NPrivate
 			auto iSource = _Other.f_GetIterator();
 			while (iSource)
 			{
-				if (_Map.mp_Tree.f_FindEqual(iSource.f_GetKey()))
+				if (_Map.mp_Tree.f_FindEqual(iSource.f_GetKey(), _Map.mp_Compare))
 				{
 					++iSource;
 					continue;
@@ -122,12 +122,12 @@ namespace NMib::NContainer::NPrivate
 						auto pData = (CNode *)_pAlloc;
 						new((void *)pData) CNode(iSource.f_GetKey(), *iSource);
 						Cleanup.f_Claim();
-						_Map.mp_Tree.f_Insert(pData);
+						_Map.mp_Tree.f_Insert(pData, _Map.mp_Compare);
 
 						++iSource;
 						while (iSource)
 						{
-							if (_Map.mp_Tree.f_FindEqual(iSource.f_GetKey()))
+							if (_Map.mp_Tree.f_FindEqual(iSource.f_GetKey(), _Map.mp_Compare))
 							{
 								++iSource;
 								continue;
@@ -147,13 +147,13 @@ namespace NMib::NContainer::NPrivate
 				(
 					[&](auto &&_Handle)
 					{
-						if (_Map.mp_Tree.f_FindEqual(_Handle.f_Key()))
+						if (_Map.mp_Tree.f_FindEqual(_Handle.f_Key(), _Map.mp_Compare))
 							return;
 
 						auto Allocation = _Map.mp_Allocator.f_AllocSafe(sizeof(CNode), alignof(CNode));
 						auto *pData = new(Allocation.m_pMemory) CNode(fg_Move(_Handle.f_Key()), fg_Move(_Handle.f_Value()));
 						Allocation.f_Claim();
-						_Map.mp_Tree.f_Insert(pData);
+						_Map.mp_Tree.f_Insert(pData, _Map.mp_Compare);
 					}
 				)
 			;
@@ -191,7 +191,7 @@ namespace NMib::NContainer::NPrivate
 			auto iSource = _Other.f_GetIterator();
 			while (iSource)
 			{
-				if (_Map.mp_Tree.f_FindEqual(iSource.f_GetKey()))
+				if (_Map.mp_Tree.f_FindEqual(iSource.f_GetKey(), _Map.mp_Compare))
 				{
 					++iSource;
 					continue;
@@ -211,12 +211,12 @@ namespace NMib::NContainer::NPrivate
 						auto pData = (CNode *)_pAlloc;
 						new((void *)pData) CNode(iSource.f_GetKey(), fg_AutoConstCast(*iSource));
 						Cleanup.f_Claim();
-						_Map.mp_Tree.f_Insert(pData);
+						_Map.mp_Tree.f_Insert(pData, _Map.mp_Compare);
 
 						++iSource;
 						while (iSource)
 						{
-							if (_Map.mp_Tree.f_FindEqual(iSource.f_GetKey()))
+							if (_Map.mp_Tree.f_FindEqual(iSource.f_GetKey(), _Map.mp_Compare))
 							{
 								++iSource;
 								continue;

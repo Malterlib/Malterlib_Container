@@ -9,14 +9,14 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	bool TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Exists(tf_CKey &&_Key) const
 	{
-		return mp_Tree.f_FindEqual(_Key) != nullptr;
+		return mp_Tree.f_FindEqual(_Key, mp_Compare) != nullptr;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator[] (tf_CKey&& _Key) const -> CUserData const &
 	{
-		const CNode *pData = mp_Tree.f_FindEqual(_Key);
+		const CNode *pData = mp_Tree.f_FindEqual(_Key, mp_Compare);
 		// Will return a null ref if data does not exist (is this valid in C++?)
 		if (pData)
 			return pData->f_Value();
@@ -28,7 +28,7 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_FindEqual(tf_CKey &&_Key) const -> CUserData const *
 	{
-		const CNode *pData = mp_Tree.f_FindEqual(_Key);
+		const CNode *pData = mp_Tree.f_FindEqual(_Key, mp_Compare);
 		if (pData)
 			return &pData->f_Value();
 		else
@@ -39,7 +39,7 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_FindEqual(tf_CKey &&_Key) -> CUserData *
 	{
-		CNode *pData = mp_Tree.f_FindEqual(_Key);
+		CNode *pData = mp_Tree.f_FindEqual(_Key, mp_Compare);
 		if (pData)
 			return &pData->f_Value();
 		else
@@ -50,7 +50,7 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_FindSmallestGreaterThanEqual(tf_CKey &&_Key) -> CUserData *
 	{
-		CNode *pData = mp_Tree.f_FindSmallestGreaterThanEqual(fg_Forward<tf_CKey>(_Key));
+		CNode *pData = mp_Tree.f_FindSmallestGreaterThanEqual(fg_Forward<tf_CKey>(_Key), mp_Compare);
 		if (pData)
 			return &pData->f_Value();
 		else
@@ -61,7 +61,7 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_FindSmallestGreaterThanEqual(tf_CKey &&_Key) const -> CUserData const *
 	{
-		const CNode *pData = mp_Tree.f_FindSmallestGreaterThanEqual(fg_Forward<tf_CKey>(_Key));
+		const CNode *pData = mp_Tree.f_FindSmallestGreaterThanEqual(fg_Forward<tf_CKey>(_Key), mp_Compare);
 		if (pData)
 			return &pData->f_Value();
 		else
@@ -72,7 +72,7 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_FindLargestLessThanEqual(tf_CKey &&_Key) -> CUserData *
 	{
-		CNode *pData = mp_Tree.f_FindLargestLessThanEqual(fg_Forward<tf_CKey>(_Key));
+		CNode *pData = mp_Tree.f_FindLargestLessThanEqual(fg_Forward<tf_CKey>(_Key), mp_Compare);
 		if (pData)
 			return &pData->f_Value();
 		else
@@ -83,7 +83,7 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_FindLargestLessThanEqual(tf_CKey &&_Key) const -> CUserData const *
 	{
-		const CNode *pData = mp_Tree.f_FindLargestLessThanEqual(fg_Forward<tf_CKey>(_Key));
+		const CNode *pData = mp_Tree.f_FindLargestLessThanEqual(fg_Forward<tf_CKey>(_Key), mp_Compare);
 		if (pData)
 			return &pData->f_Value();
 		else

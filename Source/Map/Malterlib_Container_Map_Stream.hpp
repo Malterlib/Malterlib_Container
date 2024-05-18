@@ -51,6 +51,7 @@ namespace NMib::NContainer
 					{
 						return pData;
 					}
+					, mp_Compare
 				)
 			;
 
