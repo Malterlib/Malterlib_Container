@@ -32,7 +32,14 @@ namespace NMib::NContainer
 		template <typename t_CNode2, typename t_CKey2>
 		friend struct NPrivate::TCMapNodeCompare_Default;
 
-		template <typename t_CNode2, typename t_CCompare2>
+		template 
+		<
+			typename t_CNode2
+			, typename t_CCompare2
+#if defined(DCompiler_MSVC) || defined(DCompiler_clang_cl)
+			, bool t_bIsEmpty
+#endif
+		>
 		friend struct NPrivate::TCMapNodeCompare_Custom;
 
 		template <typename t_CMap2, EMapIteratorAccess t_Access, bool t_bReverse2, bool t_bConst2, bool t_bBidirectional2>

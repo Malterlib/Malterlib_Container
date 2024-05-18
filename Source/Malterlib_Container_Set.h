@@ -17,6 +17,23 @@ namespace NMib::NContainer
 		TCSet(TCSet &&_Other);
 		TCSet(TCSet const &_Other);
 		TCSet(std::initializer_list<t_CKey> const &_Values);
+
+		template <typename... tfp_CParams>
+		TCSet(CAllocatorConstructTag const &, tfp_CParams && ...p_Params);
+		
+		template <typename... tfp_CParams>
+		TCSet(CCompareConstructTag const &, tfp_CParams && ...p_Params);
+
+		template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams>
+		TCSet
+			(
+				CAllocatorConstructTag &&
+				, CCompareConstructTag &&
+				, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
+				, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
+			)
+		;
+		
 		template <typename tf_COther>
 		TCSet(tf_COther &&_Other);
 		TCSet &operator = (TCSet &&_Other);

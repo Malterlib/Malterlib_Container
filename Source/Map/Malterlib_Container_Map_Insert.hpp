@@ -20,6 +20,7 @@ namespace NMib::NContainer
 					Memory.f_Claim();
 					return pData;
 				}
+				, mp_Compare
 			)->f_Value()
 		;
 	}
@@ -35,6 +36,7 @@ namespace NMib::NContainer
 				{
 					return fg_Exchange(_Node.mp_pNode, nullptr);
 				}
+				, mp_Compare
 			)->f_Value()
 		;
 	}
@@ -61,6 +63,7 @@ namespace NMib::NContainer
 					Memory.f_Claim();
 					return pData;
 				}
+				, mp_Compare
 			)->f_Value()
 		;
 	}
@@ -82,6 +85,7 @@ namespace NMib::NContainer
 					Memory.f_Claim();
 					return pData;
 				}
+				, mp_Compare
 			)->f_Value()
 		;
 	}
@@ -103,6 +107,7 @@ namespace NMib::NContainer
 					Memory.f_Claim();
 					return pData;
 				}
+				, mp_Compare
 			)
 		;
 		return TCMapResult<CUserData &>(pData->f_Value(), bWasCreated);

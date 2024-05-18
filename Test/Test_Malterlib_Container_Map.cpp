@@ -1,11 +1,12 @@
 // Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
-#include <set>
+#include <Mib/Memory/MemoryManager>
 
 namespace
 {
 	using namespace NMib;
+	using namespace NMib::NTraits;
 	using namespace NMib::NStr;
 	using namespace NMib::NContainer;
 
@@ -42,12 +43,16 @@ namespace
 				DMibTestSuite("Set")
 				{
 					TCSet<int> Testing;
+					static_assert(sizeof(Testing) == sizeof(void *));
+
 					auto &ToRemove = Testing[1];
 					Testing.f_Remove(&ToRemove);
 				};
 				DMibTestSuite("Map")
 				{
 					TCMap<int, int> Testing;
+					static_assert(sizeof(Testing) == sizeof(void *));
+
 					auto &ToRemove = Testing[1];
 					Testing.f_Remove(&ToRemove);
 				};
@@ -57,6 +62,7 @@ namespace
 				DMibTestSuite("Map")
 				{
 					TCMap<CStr, CStr> Testing;
+					static_assert(sizeof(Testing) == sizeof(void *));
 
 					for (int i = 0; i < 10; ++i)
 						Testing[CStr("Key {}"_f << i)] = "Value {}"_f << i;
@@ -135,6 +141,7 @@ namespace
 				DMibTestSuite("Set")
 				{
 					TCSet<CStr> Testing;
+					static_assert(sizeof(Testing) == sizeof(void *));
 
 					for (int i = 0; i < 10; ++i)
 						Testing[CStr("Key {}"_f << i)];
@@ -215,6 +222,7 @@ namespace
 			DMibTestSuite("Misc")
 			{
 				TCSet<int> Testing;
+				static_assert(sizeof(Testing) == sizeof(void *));
 
 				Testing[2];
 				Testing[3];
@@ -270,6 +278,8 @@ namespace
 			DMibTestSuite("Iterator")
 			{
 				TCSet<int> Testing;
+				static_assert(sizeof(Testing) == sizeof(void *));
+
 				for (int i = 0; i < 10; ++i)
 					Testing[i];
 
@@ -304,6 +314,8 @@ namespace
 			{
 
 				TCSet<int> Testing;
+
+				static_assert(sizeof(Testing) == sizeof(void *));
 				for (int i = 0; i < 10; ++i)
 					Testing[i];
 
@@ -361,6 +373,8 @@ namespace
 			{
 
 				TCSet<int> Testing;
+				static_assert(sizeof(Testing) == sizeof(void *));
+
 				for (int i = 0; i < 10; ++i)
 					Testing[i];
 
@@ -395,6 +409,8 @@ namespace
 			{
 
 				TCSet<int> Testing;
+				static_assert(sizeof(Testing) == sizeof(void *));
+
 				for (int i = 0; i < 10; ++i)
 					Testing[i];
 
@@ -454,6 +470,7 @@ namespace
 				int Values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 				TCMap<int, int const &> Testing;
+				static_assert(sizeof(Testing) == sizeof(void *));
 
 				bool bCreated;
 				for (int i = 0; i < 10; ++i)
@@ -489,17 +506,17 @@ namespace
 			DMibTestSuite("CTAD Map")
 			{
 				TCMap Map0{std::tuple{1, 2}, {3 ,4}, {5, 6}};
-				static_assert(NMib::NTraits::TCIsSame<decltype(Map0), TCMap<int, int>>::mc_Value);
+				static_assert(TCIsSame<decltype(Map0), TCMap<int, int>>::mc_Value);
 				DMibExpect(Map0, ==, (TCMap<int, int>({{1, 2}, {3 ,4}, {5, 6}})));
 			};
 			DMibTestSuite("CTAD Set")
 			{
 				TCSet Set0 = {1, 2, 3};
-				static_assert(NMib::NTraits::TCIsSame<decltype(Set0), TCSet<int>>::mc_Value);
+				static_assert(TCIsSame<decltype(Set0), TCSet<int>>::mc_Value);
 				DMibExpect(Set0, ==, TCSet<int>({1, 2, 3}));
 
 				TCSet Set1{1, 2, 3};
-				static_assert(NMib::NTraits::TCIsSame<decltype(Set1), TCSet<int>>::mc_Value);
+				static_assert(TCIsSame<decltype(Set1), TCSet<int>>::mc_Value);
 				DMibExpect(Set1, ==, TCSet<int>({1, 2, 3}));
 			};
 			DMibTestSuite("Key Iterator")
@@ -507,6 +524,8 @@ namespace
 				{
 					DMibTestPath("Set");
 					TCSet<int> Testing;
+					static_assert(sizeof(Testing) == sizeof(void *));
+
 					for (int i = 0; i < 10; ++i)
 						Testing[i];
 
@@ -520,6 +539,8 @@ namespace
 				{
 					DMibTestPath("Map");
 					TCMap<int, CStr> Testing;
+					static_assert(sizeof(Testing) == sizeof(void *));
+
 					for (int i = 0; i < 10; ++i)
 						Testing(i, CStr::fs_ToStr(i));
 
@@ -536,6 +557,8 @@ namespace
 				{
 					DMibTestPath("Set");
 					TCSet<int> Testing;
+					static_assert(sizeof(Testing) == sizeof(void *));
+
 					for (int i = 0; i < 10; ++i)
 						Testing[i];
 
@@ -550,6 +573,8 @@ namespace
 				{
 					DMibTestPath("Map");
 					TCMap<int, CStr> Testing;
+					static_assert(sizeof(Testing) == sizeof(void *));
+
 					for (int i = 0; i < 10; ++i)
 						Testing(i, CStr::fs_ToStr(i));
 
@@ -559,6 +584,606 @@ namespace
 						DMibExpect(Key.f_Key(), ==, iTest)(ETestFlag_Aggregated);
 						DMibExpect(Key.f_Value(), ==, CStr::fs_ToStr(iTest))(ETestFlag_Aggregated);
 						++iTest;
+					}
+				}
+			};
+			DMibTestSuite("Custom Compare")
+			{
+				{
+					DMibTestPath("Static");
+					struct CCompare
+					{
+						auto operator ()(int const &_Left, int const &_Right) const
+						{
+							return _Right <=> _Left;
+						}
+					};
+
+					{
+						DMibTestPath("Set");
+						TCSet<int, CCompare> Testing;
+						static_assert(sizeof(Testing) == sizeof(void *));
+						for (int i = 0; i < 10; ++i)
+							Testing[i];
+
+						int iTest = 9;
+						for (auto &Key : Testing.f_Entries())
+						{
+							DMibExpect(Key.f_Key(), ==, iTest)(ETestFlag_Aggregated);
+							DMibExpect(Key.f_Value(), ==, iTest)(ETestFlag_Aggregated);
+							--iTest;
+						}
+					}
+					{
+						DMibTestPath("Map");
+						TCMap<int, CStr, CCompare> Testing;
+						static_assert(sizeof(Testing) == sizeof(void *));
+						for (int i = 0; i < 10; ++i)
+							Testing(i, CStr::fs_ToStr(i));
+
+						int iTest = 9;
+						for (auto &Key : Testing.f_Entries())
+						{
+							DMibExpect(Key.f_Key(), ==, iTest)(ETestFlag_Aggregated);
+							DMibExpect(Key.f_Value(), ==, CStr::fs_ToStr(iTest))(ETestFlag_Aggregated);
+							--iTest;
+						}
+					}
+				}
+
+				auto fInitSet = []<mint tf_ExpectedSize = sizeof(void *) * 2>(auto &_Set, TCCompileTimeConstant<mint, tf_ExpectedSize> _x = TCCompileTimeConstant<mint, sizeof(void *) * 2>())
+					{
+						static_assert(sizeof(_Set) == tf_ExpectedSize);
+
+						for (int i = 0; i < 10; ++i)
+							_Set[i];
+					}
+				;
+				auto fInitMap = []<mint tf_ExpectedSize = sizeof(void *) * 2>(auto &_Map, TCCompileTimeConstant<mint, tf_ExpectedSize> _x = TCCompileTimeConstant<mint, sizeof(void *) * 2>())
+					{
+						static_assert(sizeof(_Map) == tf_ExpectedSize);
+
+						for (int i = 0; i < 10; ++i)
+							_Map(i, CStr::fs_ToStr(i));
+					}
+				;
+
+				auto fCheckSet = [](auto &_Set)
+					{
+						int iTest = 0;
+						for (auto &Key : _Set.f_Entries())
+						{
+							DMibExpect(Key.f_Key(), ==, iTest)(ETestFlag_Aggregated);
+							DMibExpect(Key.f_Value(), ==, iTest)(ETestFlag_Aggregated);
+							++iTest;
+						}
+					}
+				;
+				auto fCheckMap = [](auto &_Map)
+					{
+						int iTest = 0;
+						for (auto &Key : _Map.f_Entries())
+						{
+							DMibExpect(Key.f_Key(), ==, iTest)(ETestFlag_Aggregated);
+							DMibExpect(Key.f_Value(), ==, CStr::fs_ToStr(iTest))(ETestFlag_Aggregated);
+							++iTest;
+						}
+					}
+				;
+
+				auto fCheckSetReverse = [](auto &_Set)
+					{
+						int iTest = 9;
+						for (auto &Key : _Set.f_Entries())
+						{
+							DMibExpect(Key.f_Key(), ==, iTest)(ETestFlag_Aggregated);
+							DMibExpect(Key.f_Value(), ==, iTest)(ETestFlag_Aggregated);
+							--iTest;
+						}
+					}
+				;
+				auto fCheckMapReverse = [](auto &_Map)
+					{
+						int iTest = 9;
+						for (auto &Key : _Map.f_Entries())
+						{
+							DMibExpect(Key.f_Key(), ==, iTest)(ETestFlag_Aggregated);
+							DMibExpect(Key.f_Value(), ==, CStr::fs_ToStr(iTest))(ETestFlag_Aggregated);
+							--iTest;
+						}
+					}
+				;
+				{
+					DMibTestPath("Stateful");
+					struct CCompare
+					{
+						auto operator ()(int const &_Left, int const &_Right) const
+						{
+							if (m_bReverse)
+								return _Right <=> _Left;
+							else
+								return _Left <=> _Right;
+						}
+
+						bool m_bReverse = false;
+					};
+
+					struct CCompareParam
+					{
+						CCompareParam(bool _bReverse)
+							: m_bReverse(_bReverse)
+						{
+						}
+
+						auto operator ()(int const &_Left, int const &_Right) const
+						{
+							if (m_bReverse)
+								return _Right <=> _Left;
+							else
+								return _Left <=> _Right;
+						}
+
+						bool m_bReverse = false;
+					};
+
+					{
+						DMibTestPath("Default");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompare> Testing;
+							fInitSet(Testing);
+							fCheckSet(Testing);
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompare> Testing;
+							fInitMap(Testing);
+							fCheckMap(Testing);
+						}
+					}
+					{
+						DMibTestPath("Explicit");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompare> Testing(CCompareConstructTag(), CCompare{.m_bReverse = false});
+							fInitSet(Testing);
+							fCheckSet(Testing);
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompare> Testing{CCompareConstructTag(), CCompare{.m_bReverse = false}};
+							fInitMap(Testing);
+
+							int iTest = 0;
+							for (auto &Key : Testing.f_Entries())
+							{
+								DMibExpect(Key.f_Key(), ==, iTest)(ETestFlag_Aggregated);
+								DMibExpect(Key.f_Value(), ==, CStr::fs_ToStr(iTest))(ETestFlag_Aggregated);
+								++iTest;
+							}
+						}
+					}
+					{
+						DMibTestPath("Reversed");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompare> Testing(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							fInitSet(Testing);
+							fCheckSetReverse(Testing);
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompare> Testing(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							fInitMap(Testing);
+							fCheckMapReverse(Testing);
+						}
+					}
+					{
+						DMibTestPath("ReversedParam");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompareParam> Testing(CCompareConstructTag(), true);
+							fInitSet(Testing);
+							fCheckSetReverse(Testing);
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompareParam> Testing(CCompareConstructTag(), true);
+							fInitMap(Testing);
+							fCheckMapReverse(Testing);
+						}
+					}
+					{
+						DMibTestPath("ReversedCopy");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCSet<int, CCompare> Testing(TestingSource);
+							fInitSet(Testing);
+							fCheckSetReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCSet<int, CCompare> TestingPost(TestingSource);
+								fCheckSetReverse(TestingPost);
+							}
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCMap<int, CStr, CCompare> Testing(TestingSource);
+							fInitMap(Testing);
+							fCheckMapReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCMap<int, CStr, CCompare> TestingPost(TestingSource);
+								fCheckMapReverse(TestingPost);
+							}
+						}
+					}
+					{
+						DMibTestPath("ReversedMove");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCSet<int, CCompare> Testing(fg_Move(TestingSource));
+							fInitSet(Testing);
+							fCheckSetReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCSet<int, CCompare> TestingPost(fg_Move(TestingSource));
+								fCheckSetReverse(TestingPost);
+							}
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCMap<int, CStr, CCompare> Testing(fg_Move(TestingSource));
+							fInitMap(Testing);
+							fCheckMapReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCMap<int, CStr, CCompare> TestingPost(fg_Move(TestingSource));
+								fCheckMapReverse(TestingPost);
+							}
+						}
+					}
+					{
+						DMibTestPath("ReversedAssign");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCSet<int, CCompare> Testing;
+							Testing = TestingSource;
+							fInitSet(Testing);
+							fCheckSetReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCSet<int, CCompare> TestingPost;
+								TestingPost = TestingSource;
+								fCheckSetReverse(TestingPost);
+							}
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCMap<int, CStr, CCompare> Testing;
+							Testing = TestingSource;
+							fInitMap(Testing);
+							fCheckMapReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCMap<int, CStr, CCompare> TestingPost;
+								TestingPost = TestingSource;
+								fCheckMapReverse(TestingPost);
+							}
+						}
+					}
+					{
+						DMibTestPath("ReversedMoveAssign");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCSet<int, CCompare> Testing;
+							Testing = fg_Move(TestingSource);
+							fInitSet(Testing);
+							fCheckSetReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCSet<int, CCompare> TestingPost;
+								TestingPost = fg_Move(TestingSource);
+								fCheckSetReverse(TestingPost);
+							}
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCMap<int, CStr, CCompare> Testing;
+							Testing = fg_Move(TestingSource);
+							fInitMap(Testing);
+							fCheckMapReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCMap<int, CStr, CCompare> TestingPost;
+								TestingPost = fg_Move(TestingSource);
+								fCheckMapReverse(TestingPost);
+							}
+						}
+					}
+
+					using CDiffAllocator = NMemory::CAllocator_Virtual;
+					{
+						DMibTestPath("DiffAllocReversedCopy");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCSet<int, CCompare, CDiffAllocator> Testing(TestingSource);
+							fInitSet(Testing);
+							fCheckSetReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCSet<int, CCompare, CDiffAllocator> TestingPost(TestingSource);
+								fCheckSetReverse(TestingPost);
+							}
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCMap<int, CStr, CCompare, CDiffAllocator> Testing(TestingSource);
+							fInitMap(Testing);
+							fCheckMapReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCMap<int, CStr, CCompare, CDiffAllocator> TestingPost(TestingSource);
+								fCheckMapReverse(TestingPost);
+							}
+						}
+					}
+					{
+						DMibTestPath("DiffAllocReversedMove");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCSet<int, CCompare, CDiffAllocator> Testing(fg_Move(TestingSource));
+							fInitSet(Testing);
+							fCheckSetReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCSet<int, CCompare, CDiffAllocator> TestingPost(fg_Move(TestingSource));
+								fCheckSetReverse(TestingPost);
+							}
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCMap<int, CStr, CCompare, CDiffAllocator> Testing(fg_Move(TestingSource));
+							fInitMap(Testing);
+							fCheckMapReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCMap<int, CStr, CCompare, CDiffAllocator> TestingPost(fg_Move(TestingSource));
+								fCheckMapReverse(TestingPost);
+							}
+						}
+					}
+					{
+						DMibTestPath("DiffAllocReversedAssign");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCSet<int, CCompare, CDiffAllocator> Testing;
+							Testing = TestingSource;
+							fInitSet(Testing);
+							fCheckSetReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCSet<int, CCompare, CDiffAllocator> TestingPost;
+								TestingPost = TestingSource;
+								fCheckSetReverse(TestingPost);
+							}
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCMap<int, CStr, CCompare, CDiffAllocator> Testing;
+							Testing = TestingSource;
+							fInitMap(Testing);
+							fCheckMapReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCMap<int, CStr, CCompare, CDiffAllocator> TestingPost;
+								TestingPost = TestingSource;
+								fCheckMapReverse(TestingPost);
+							}
+						}
+					}
+					{
+						DMibTestPath("DiffAllocReversedMoveAssign");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCSet<int, CCompare, CDiffAllocator> Testing;
+							Testing = fg_Move(TestingSource);
+							fInitSet(Testing);
+							fCheckSetReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCSet<int, CCompare, CDiffAllocator> TestingPost;
+								TestingPost = fg_Move(TestingSource);
+								fCheckSetReverse(TestingPost);
+							}
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+							TCMap<int, CStr, CCompare, CDiffAllocator> Testing;
+							Testing = fg_Move(TestingSource);
+							fInitMap(Testing);
+							fCheckMapReverse(Testing);
+							{
+								DMibTestPath("Post");
+								TestingSource = Testing;
+								TCMap<int, CStr, CCompare, CDiffAllocator> TestingPost;
+								TestingPost = fg_Move(TestingSource);
+								fCheckMapReverse(TestingPost);
+							}
+						}
+					}
+					{
+						using CMemoryManagerParams = NMemory::TCMemoryManagerParams<>;
+						using CMemoryManager = NMemory::TCMemoryManager<CMemoryManagerParams>;
+						CMemoryManager MemoryManager{NMemory::CMemoryManagerConfig()};
+						using CDiffAllocator = NMemory::TCAllocator_MemoryManager<CMemoryManagerParams>;
+						DMibTestPath("StatefulAllocator");
+						{
+							DMibTestPath("Set");
+							TCSet<int, CCompare, CDiffAllocator> Testing
+								(
+									CAllocatorConstructTag()
+									, CCompareConstructTag()
+									, fg_Construct(&MemoryManager)
+									, fg_Construct(CCompare{.m_bReverse = true})
+								)
+							;
+							fInitSet(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+							fCheckSetReverse(Testing);
+						}
+						{
+							DMibTestPath("Map");
+							TCMap<int, CStr, CCompare, CDiffAllocator> Testing
+								(
+									CAllocatorConstructTag()
+									, CCompareConstructTag()
+									, fg_Construct(&MemoryManager)
+									, fg_Construct(CCompare{.m_bReverse = true})
+								)
+							;
+							fInitMap(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+							fCheckMapReverse(Testing);
+						}
+						{
+							DMibTestPath("DiffAllocReversedMove");
+							{
+								DMibTestPath("Set");
+								TCSet<int, CCompare, CDiffAllocator> TestingSource
+									(
+										CAllocatorConstructTag()
+										, CCompareConstructTag()
+										, fg_Construct(&MemoryManager)
+										, fg_Construct(CCompare{.m_bReverse = true})
+									)
+								;
+								TCSet<int, CCompare, CDiffAllocator> Testing(fg_Move(TestingSource));
+								fInitSet(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+								fCheckSetReverse(Testing);
+								{
+									DMibTestPath("Post");
+									TestingSource = Testing;
+									TCSet<int, CCompare, CDiffAllocator> TestingPost(fg_Move(TestingSource));
+									fCheckSetReverse(TestingPost);
+								}
+							}
+							{
+								DMibTestPath("Map");
+								TCMap<int, CStr, CCompare, CDiffAllocator> TestingSource
+									(
+										CAllocatorConstructTag()
+										, CCompareConstructTag()
+										, fg_Construct(&MemoryManager)
+										, fg_Construct(CCompare{.m_bReverse = true})
+									)
+								;
+								TCMap<int, CStr, CCompare, CDiffAllocator> Testing(fg_Move(TestingSource));
+								fInitMap(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+								fCheckMapReverse(Testing);
+								{
+									DMibTestPath("Post");
+									TestingSource = Testing;
+									TCMap<int, CStr, CCompare, CDiffAllocator> TestingPost(fg_Move(TestingSource));
+									fCheckMapReverse(TestingPost);
+								}
+							}
+						}
+						{
+							DMibTestPath("DiffAllocReversedAssign");
+							{
+								DMibTestPath("Set");
+								TCSet<int, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+								TCSet<int, CCompare, CDiffAllocator> Testing(CAllocatorConstructTag(), &MemoryManager);
+								Testing = TestingSource;
+								fInitSet(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+								fCheckSetReverse(Testing);
+								{
+									DMibTestPath("Post");
+									TestingSource = Testing;
+									TCSet<int, CCompare, CDiffAllocator> TestingPost(CAllocatorConstructTag(), &MemoryManager);
+									TestingPost = TestingSource;
+									fCheckSetReverse(TestingPost);
+								}
+							}
+							{
+								DMibTestPath("Map");
+								TCMap<int, CStr, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+								TCMap<int, CStr, CCompare, CDiffAllocator> Testing(CAllocatorConstructTag(), &MemoryManager);
+								Testing = TestingSource;
+								fInitMap(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+								fCheckMapReverse(Testing);
+								{
+									DMibTestPath("Post");
+									TestingSource = Testing;
+									TCMap<int, CStr, CCompare, CDiffAllocator> TestingPost(CAllocatorConstructTag(), &MemoryManager);
+									TestingPost = TestingSource;
+									fCheckMapReverse(TestingPost);
+								}
+							}
+						}
+						{
+							DMibTestPath("DiffAllocReversedMoveAssign");
+							{
+								DMibTestPath("Set");
+								TCSet<int, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+								TCSet<int, CCompare, CDiffAllocator> Testing(CAllocatorConstructTag(), &MemoryManager);
+								Testing = fg_Move(TestingSource);
+								fInitSet(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+								fCheckSetReverse(Testing);
+								{
+									DMibTestPath("Post");
+									TestingSource = Testing;
+									TCSet<int, CCompare, CDiffAllocator> TestingPost(CAllocatorConstructTag(), &MemoryManager);
+									TestingPost = fg_Move(TestingSource);
+									fCheckSetReverse(TestingPost);
+								}
+							}
+							{
+								DMibTestPath("Map");
+								TCMap<int, CStr, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
+								TCMap<int, CStr, CCompare, CDiffAllocator> Testing(CAllocatorConstructTag(), &MemoryManager);
+								Testing = fg_Move(TestingSource);
+								fInitMap(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+								fCheckMapReverse(Testing);
+								{
+									DMibTestPath("Post");
+									TestingSource = Testing;
+									TCMap<int, CStr, CCompare, CDiffAllocator> TestingPost(CAllocatorConstructTag(), &MemoryManager);
+									TestingPost = fg_Move(TestingSource);
+									fCheckMapReverse(TestingPost);
+								}
+							}
+						}
 					}
 				}
 			};

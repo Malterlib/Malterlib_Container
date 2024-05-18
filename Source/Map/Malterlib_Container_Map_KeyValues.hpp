@@ -91,7 +91,7 @@ namespace NMib::NContainer
 		CKeyIterator Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -102,7 +102,7 @@ namespace NMib::NContainer
 		CKeyIterator Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -120,7 +120,7 @@ namespace NMib::NContainer
 		CKeyIteratorBidirectional Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -131,7 +131,7 @@ namespace NMib::NContainer
 		CKeyIteratorBidirectional Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -174,7 +174,7 @@ namespace NMib::NContainer
 		CKeyIteratorConst Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -185,7 +185,7 @@ namespace NMib::NContainer
 		CKeyIteratorConst Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -203,7 +203,7 @@ namespace NMib::NContainer
 		CKeyIteratorBidirectionalConst Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -214,7 +214,7 @@ namespace NMib::NContainer
 		CKeyIteratorBidirectionalConst Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -256,7 +256,7 @@ namespace NMib::NContainer
 		CKeyValueIterator Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -267,7 +267,7 @@ namespace NMib::NContainer
 		CKeyValueIterator Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -285,7 +285,7 @@ namespace NMib::NContainer
 		CKeyValueIteratorBidirectional Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -296,7 +296,7 @@ namespace NMib::NContainer
 		CKeyValueIteratorBidirectional Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -338,7 +338,7 @@ namespace NMib::NContainer
 		CKeyValueIteratorConst Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -349,7 +349,7 @@ namespace NMib::NContainer
 		CKeyValueIteratorConst Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -367,7 +367,7 @@ namespace NMib::NContainer
 		CKeyValueIteratorBidirectionalConst Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 
@@ -378,7 +378,7 @@ namespace NMib::NContainer
 		CKeyValueIteratorBidirectionalConst Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key));
+		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
 	}
 }

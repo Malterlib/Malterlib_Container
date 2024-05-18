@@ -29,6 +29,34 @@ namespace NMib::NContainer
 			(*this)[Value];
 	}
 
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename... tfp_CParams>
+	TCSet<t_CKey, t_CCompare, t_CAllocator>::TCSet(CAllocatorConstructTag const &_Tag, tfp_CParams && ...p_Params)
+		: CMap(_Tag, fg_Forward<tfp_CParams>(p_Params)...)
+	{
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename... tfp_CParams>
+	TCSet<t_CKey, t_CCompare, t_CAllocator>::TCSet(CCompareConstructTag const &_Tag, tfp_CParams && ...p_Params)
+		: CMap(_Tag, fg_Forward<tfp_CParams>(p_Params)...)
+	{
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams>
+	TCSet<t_CKey, t_CCompare, t_CAllocator>::TCSet
+		(
+			CAllocatorConstructTag &&_AllocatorTag
+			, CCompareConstructTag &&_CompareTag
+			, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
+			, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
+		)
+		: CMap(fg_Move(_AllocatorTag), fg_Move(_CompareTag), fg_Move(_ConstructAllocator), fg_Move(_ConstructCompare))
+	{
+	}
+
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_COther>
 	TCSet<t_CKey, t_CCompare, t_CAllocator>::TCSet(tf_COther &&_Other)
