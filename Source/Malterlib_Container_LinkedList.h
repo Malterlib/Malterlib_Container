@@ -112,7 +112,7 @@ namespace NMib::NContainer
 			}
 
 			template <typename... tfp_CParams>
-			CLocalData(NMemory::CAllocatorConstructTag const &_Allocator, tfp_CParams && ...p_Params)
+			CLocalData(CAllocatorConstructTag const &_Allocator, tfp_CParams && ...p_Params)
 				: t_CAllocator(fg_Forward<tfp_CParams>(p_Params)...)
 			{
 			}
@@ -422,7 +422,7 @@ namespace NMib::NContainer
 		}
 
 		template <typename... tfp_CParams>
-		TCLinkedList(NMemory::CAllocatorConstructTag const &_Allocator, tfp_CParams && ...p_Params)
+		TCLinkedList(CAllocatorConstructTag const &_Allocator, tfp_CParams && ...p_Params)
 			: m_Data(_Allocator, fg_Forward<tfp_CParams>(p_Params)...)
 		{
 		}
