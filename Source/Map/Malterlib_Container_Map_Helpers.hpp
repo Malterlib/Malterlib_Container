@@ -85,10 +85,10 @@ namespace NMib::NContainer::NPrivate
 					, [&](auto *_pOther) -> CNode *
 					{
 						auto Allocation = _Map.mp_Allocator.f_AllocSafe(sizeof(CNode), alignof(CNode));
-						auto *pReturn = new(Allocation.m_pMemory) CNode(fg_Move(_pOther->mp_Key), fg_Move(_pOther->f_Value()));
+						auto *pReturn = new(Allocation.m_pMemory) CNode(fg_Move(_pOther->mp_Key), fg_Move(*_pOther).f_Value());
 						Allocation.f_Claim();
 
-						fg_DeleteObjectDefiniteType(_Map.mp_Allocator, _pOther);
+						fg_DeleteObjectDefiniteType(_Other.mp_Allocator, _pOther);
 
 						return pReturn;
 					}
