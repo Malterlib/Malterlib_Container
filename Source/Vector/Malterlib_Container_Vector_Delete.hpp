@@ -12,7 +12,7 @@ namespace NMib::NContainer
 		t_CData *pArray = f_GetArray();
 		for (smint i = Len - 1; i >= 0; --i)
 		{
-			delete pArray[i];
+			fg_DeleteObject(NMemory::CDefaultAllocator(), pArray[i]);
 			--mp_StaticData.m_pData->m_Length;
 		}
 

@@ -113,7 +113,7 @@ namespace NMib::NContainer
 				pChild = pPrev->fp_GetChildParse(_Name, &NotFound, &pPrev);
 				while (!pChild)
 				{
-					pChild = DMibNew TCRegistry(pPrev);
+					pChild = fg_ConstructObject<TCRegistry>(NMemory::CDefaultAllocator(), pPrev);
 					pChild->mp_Key.f_Set(NotFound);
 					pPrev->mp_Children.f_Insert(pChild);
 					pPrev = pChild;
@@ -122,7 +122,7 @@ namespace NMib::NContainer
 					pChild = pPrev->fp_GetChildParse(_Name, &NotFound, &pPrev);
 				}
 			}
-			pChild = DMibNew TCRegistry(pPrev);
+			pChild = fg_ConstructObject<TCRegistry>(NMemory::CDefaultAllocator(), pPrev);
 			pChild->mp_Key.f_Set(_Name);
 			pPrev->mp_Children.f_Insert(pChild);
 			return pChild;
@@ -135,7 +135,7 @@ namespace NMib::NContainer
 
 			while (!pChild)
 			{
-				pChild = DMibNew TCRegistry(pPrev);
+				pChild = fg_ConstructObject<TCRegistry>(NMemory::CDefaultAllocator(), pPrev);
 				pChild->mp_Key.f_Set(NotFound);
 				pPrev->mp_Children.f_Insert(pChild);
 				pPrev = pChild;
@@ -156,7 +156,7 @@ namespace NMib::NContainer
 
 		if (_bForceCreate)
 		{
-			TCRegistry *pChild = DMibNew TCRegistry(this);
+			TCRegistry *pChild = fg_ConstructObject<TCRegistry>(NMemory::CDefaultAllocator(), this);
 			pChild->mp_Key.f_Set(_Name);
 			mp_Children.f_Insert(pChild);
 			return pChild;
@@ -167,7 +167,7 @@ namespace NMib::NContainer
 
 			if (!pChild)
 			{
-				pChild = DMibNew TCRegistry(this);
+				pChild = fg_ConstructObject<TCRegistry>(NMemory::CDefaultAllocator(), this);
 				pChild->mp_Key.f_Set(_Name);
 				mp_Children.f_Insert(pChild);
 			}
@@ -214,7 +214,7 @@ namespace NMib::NContainer
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_DeleteChild(TCRegistry *_pChild)
 	{
-		delete _pChild;
+		fg_DeleteObject(NMemory::CDefaultAllocator(), _pChild);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
@@ -225,7 +225,7 @@ namespace NMib::NContainer
 
 		if (pChild)
 		{
-			delete pChild;
+			f_DeleteChild(pChild);
 			if (_bDeleteEmptyParentDirs)
 			{
 				TCRegistry *pParent = this;
@@ -235,7 +235,7 @@ namespace NMib::NContainer
 					pParent = pParent->mp_pParent;
 					if (pParent)
 					{
-						delete pToDelete;
+						f_DeleteChild(pToDelete);
 					}
 				}
 			}
@@ -253,7 +253,7 @@ namespace NMib::NContainer
 
 		if (pChild)
 		{
-			delete pChild;
+			f_DeleteChild(pChild);
 			if (_bDeleteEmptyParentDirs)
 			{
 				TCRegistry *pParent = this;
@@ -263,7 +263,7 @@ namespace NMib::NContainer
 					pParent = pParent->mp_pParent;
 					if (pParent)
 					{
-						delete pToDelete;
+						f_DeleteChild(pToDelete);
 					}
 				}
 			}

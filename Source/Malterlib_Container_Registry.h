@@ -99,6 +99,9 @@ namespace NMib::NContainer
 		template <typename t_CStream2, typename t_CData2>
 		friend class NMib::NStream::TCBinaryStreamTypeReference;
 
+		template <typename tf_CObjectType, typename tf_CAllocator, typename... tfp_CParams>
+		friend tf_CObjectType *NMib::fg_ConstructObject(tf_CAllocator &&_Allocator, tfp_CParams &&...p_Params);
+
 		struct CAVLCompare_TCRegistry
 		{
 			inline_small CRegistryKey const &operator () (TCRegistry const &_Left) const;

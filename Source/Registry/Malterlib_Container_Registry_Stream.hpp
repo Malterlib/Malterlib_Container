@@ -68,10 +68,10 @@ namespace NMib::NContainer
 		fg_CheckLengthLimit(_Stream, nItems);
 		while (nItems)
 		{
-			TCRegistry *pChild = DMibNew TCRegistry(this);
+			TCRegistry *pChild = fg_ConstructObject<TCRegistry>(NMemory::CDefaultAllocator(), this);
 			auto Cleanup = g_OnScopeExit / [&]
 				{
-					delete pChild;
+					f_DeleteChild(pChild);
 				}
 			;
 			pChild->f_Consume(_Stream, _StringTable);

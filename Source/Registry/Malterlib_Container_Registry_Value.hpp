@@ -131,7 +131,7 @@ namespace NMib::NContainer
 
 		while (!pChild)
 		{
-			pChild = DMibNew TCRegistry(pPrev);
+			pChild = fg_ConstructObject<TCRegistry>(NMemory::CDefaultAllocator(), pPrev);
 			pChild->mp_Key.f_Set(NotFound);
 			pPrev->mp_Children.f_Insert(pChild);
 			pPrev = pChild;
@@ -152,7 +152,7 @@ namespace NMib::NContainer
 
 		if (!pChild)
 		{
-			pChild = DMibNew TCRegistry(this);
+			pChild = fg_ConstructObject<TCRegistry>(NMemory::CDefaultAllocator(), this);
 			pChild->mp_Key.f_Set(_Name);
 			mp_Children.f_Insert(pChild);
 		}

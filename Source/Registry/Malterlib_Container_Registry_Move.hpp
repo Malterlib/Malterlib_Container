@@ -41,7 +41,7 @@ namespace NMib::NContainer
 		{
 			TCRegistry *pOldChild = mp_pParent->mp_Children.m_Tree.f_FindEqual(mp_Key);
 			if (pOldChild)
-				delete pOldChild;
+				f_DeleteChild(pOldChild);
 			mp_pParent->mp_Children.f_Insert(this);
 		}
 
