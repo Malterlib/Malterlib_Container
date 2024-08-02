@@ -5,16 +5,16 @@
 
 namespace NMib::NContainer::NPrivate
 {
-	template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal, bool t_bLast = (t_nBitsInternal <= 1)>
-	struct TCBitArrayHierarchicalInternalArray : public TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>
+	template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal, bool t_bLast = (t_nBitsInternal == 0)>
+	struct TCBitArrayHierarchicalInternalArray : public TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>
 	{
 		enum
 		{
 			mc_bIsRoot = (t_nBitsInternal <= t_nBitsPerEntry)
 			, mc_bIsFirstLevel = t_nBitsInternal == t_nBits
-			, mc_nSuperBits = ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)
+			, mc_nSuperBits = t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)
 		};
-		typedef TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)> CSuper;
+		typedef TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)> CSuper;
 		TCBitArray<t_nBitsInternal> m_Bits;
 
 		constexpr TCBitArrayHierarchicalInternalArray(bool _bInitValues);

@@ -5,7 +5,7 @@
 
 namespace NMib::NContainer::NPrivate
 {
-	template <mint t_nBits, mint t_nBitsInternal, mint t_nLevel, template <mint t_nBits2> class t_TCBitArray, mint t_nMaxLevels, bool t_bLast = (t_nBitsInternal <= 1 || t_nLevel == t_nMaxLevels)>
+	template <mint t_nBits, mint t_nBitsInternal, mint t_nLevel, template <mint t_nBits2> class t_TCBitArray, mint t_nMaxLevels, bool t_bLast = (t_nBitsInternal == 0 || t_nLevel == t_nMaxLevels)>
 	struct TCBitArrayPowerTwoInternalArray : public TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>
 	{
 		enum
