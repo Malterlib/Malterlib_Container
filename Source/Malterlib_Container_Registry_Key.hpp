@@ -337,7 +337,7 @@ namespace NMib::NContainer
 			_Stream >> m_Location;
 			_Stream >> m_ValueLocation;
 
-			uint8 Flags;
+			uint32 Flags;
 			_Stream >> Flags;
 			m_bForceEscapedKey = Flags & 1u;
 			m_bForceEscapedValue = (Flags >> 1u) & 1u;
