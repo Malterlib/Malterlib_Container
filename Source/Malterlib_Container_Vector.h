@@ -130,6 +130,7 @@ namespace NMib::NContainer
 
 		t_CData *f_Insert(const t_CData *_pData, mint _Len = 1);
 		t_CData *f_Insert(t_CData *_pData, mint _Len = 1);
+		t_CData *f_InsertMove(t_CData *_pData, mint _Len = 1);
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 		t_CData *f_Insert(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector);
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
@@ -147,6 +148,7 @@ namespace NMib::NContainer
 
 		t_CData *f_InsertLast(const t_CData *_pData, mint _Len = 1);
 		t_CData *f_InsertLast(t_CData *_pData, mint _Len = 1);
+		t_CData *f_InsertLastMove(t_CData *_pData, mint _Len = 1);
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 		t_CData *f_InsertLast(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector);
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
@@ -165,6 +167,7 @@ namespace NMib::NContainer
 
 		t_CData *f_InsertFirst(const t_CData *_pData, mint _Len = 1);
 		t_CData *f_InsertFirst(t_CData *_pData, mint _Len = 1);
+		t_CData *f_InsertFirstMove(t_CData *_pData, mint _Len = 1);
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 		t_CData *f_InsertFirst(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector);
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
@@ -179,6 +182,7 @@ namespace NMib::NContainer
 
 		t_CData *f_Push(const t_CData *_pData, mint _Len = 1);
 		t_CData *f_Push(t_CData *_pData, mint _Len = 1);
+		t_CData *f_PushMove(t_CData *_pData, mint _Len = 1);
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 		t_CData *f_Push(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector);
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
@@ -196,6 +200,7 @@ namespace NMib::NContainer
 		t_CData *f_InsertBefore(mint _Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Vector);
 		t_CData *f_InsertBefore(mint _Position, const t_CData *_pData, mint _Len = 1);
 		t_CData *f_InsertBefore(mint _Position, t_CData *_pData, mint _Len = 1);
+		t_CData *f_InsertBeforeMove(mint _Position, t_CData *_pData, mint _Len = 1);
 		t_CData &f_InsertBefore(mint _Position, const t_CData &_Data);
 		t_CData &f_InsertBefore(mint _Position, t_CData &_Data);
 		t_CData &f_InsertBefore(mint _Position, t_CData &&_Data);
@@ -211,6 +216,8 @@ namespace NMib::NContainer
 		t_CData *f_InsertBefore(TCVectorIterator<t_CIterator> const &_Position, const t_CData *_pData, mint _Len = 1);
 		template <typename t_CIterator>
 		t_CData *f_InsertBefore(TCVectorIterator<t_CIterator> const &_Position, t_CData *_pData, mint _Len = 1);
+		template <typename t_CIterator>
+		t_CData *f_InsertBeforeMove(TCVectorIterator<t_CIterator> const &_Position, t_CData *_pData, mint _Len = 1);
 		template <typename t_CIterator>
 		t_CData &f_InsertBefore(TCVectorIterator<t_CIterator> const &_Position, const t_CData &_Data);
 		template <typename t_CIterator>
@@ -230,6 +237,7 @@ namespace NMib::NContainer
 		t_CData *f_InsertAfter(mint _Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Vector);
 		t_CData *f_InsertAfter(mint _Position, const t_CData *_pData, mint _Len = 1);
 		t_CData *f_InsertAfter(mint _Position, t_CData *_pData, mint _Len = 1);
+		t_CData *f_InsertAfterMove(mint _Position, t_CData *_pData, mint _Len = 1);
 		t_CData &f_InsertAfter(mint _Position, const t_CData &_Data);
 		t_CData &f_InsertAfter(mint _Position, t_CData &_Data);
 		t_CData &f_InsertAfter(mint _Position, t_CData &&_Data);
@@ -245,6 +253,8 @@ namespace NMib::NContainer
 		t_CData *f_InsertAfter(TCVectorIterator<tf_CIterator> const &_Position, const t_CData *_pData, mint _Len = 1);
 		template <typename tf_CIterator>
 		t_CData *f_InsertAfter(TCVectorIterator<tf_CIterator> const &_Position, t_CData *_pData, mint _Len = 1);
+		template <typename tf_CIterator>
+		t_CData *f_InsertAfterMove(TCVectorIterator<tf_CIterator> const &_Position, t_CData *_pData, mint _Len = 1);
 		template <typename tf_CIterator>
 		t_CData &f_InsertAfter(TCVectorIterator<tf_CIterator> const &_Position, const t_CData &_Data);
 		template <typename tf_CIterator>

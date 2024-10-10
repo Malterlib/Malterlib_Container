@@ -39,6 +39,12 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_PushMove(t_CData *_pData, mint _Len)
+	{
+		return f_InsertFirstMove(_pData, _Len);
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_Push(const t_CData &_Data)
 	{
 		return f_InsertFirst(_Data);

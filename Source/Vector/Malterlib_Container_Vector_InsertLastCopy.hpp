@@ -81,6 +81,23 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertMove(t_CData *_pData, mint _Len)
+	{
+		mint PrevLen = f_GetLen();
+		mint NewLen = PrevLen + _Len;
+		if (NewLen < PrevLen)
+			DMibErrorListBoundCheck("Vector length would have overflowed");
+		t_CData *pArray = fp_MakeRoom(NewLen);
+
+		NPrivate::fg_MoveArray(pArray + PrevLen, _pData, _Len);
+
+		if (mp_StaticData.m_pData)
+			mp_StaticData.m_pData->m_Length = NewLen;
+
+		return pArray + PrevLen;
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(t_CData *_pData, mint _Len)
 	{
 		return f_Insert((t_CData const *)_pData, _Len);

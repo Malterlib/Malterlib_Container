@@ -65,6 +65,16 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirstMove(t_CData *_pData, mint _Len)
+	{
+		t_CData *pArray = fp_MakeRoomBegin(_Len);
+
+		NPrivate::fg_MoveArray(pArray, _pData, _Len);
+
+		return pArray;
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirst(t_CData *_pData, mint _Len)
 	{
 		return f_InsertFirst((t_CData const *)_pData, _Len);
