@@ -16,9 +16,51 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData TCVector<t_CData, t_CAllocator, t_COptions>::f_PopBack()
 	{
-		aint iLast = f_GetLen() - 1;
-		t_CData Temp = fg_Move(f_GetArray()[iLast]);
-		f_Remove(iLast);
+		mint CurrentLen = f_GetLen();
+		mint NewLen = CurrentLen - 1;
+		fsp_CheckBounds(CurrentLen, NewLen);
+
+		t_CData *pOldArray = f_GetArray();
+		t_CData Temp = fg_Move(pOldArray[NewLen]);
+
+		if constexpr (t_COptions::mc_bShrink)
+		{
+			if (NewLen == 0)
+			{
+				f_Clear();
+				return Temp;
+			}
+		}
+
+		if (fsp_NeedRealloc(NewLen, mp_StaticData.m_pData)) [[unlikely]]
+		{
+			auto *pNewData = fp_AllocDataGrow(NewLen);
+
+			t_CData *pOldArray = f_GetArray();
+			t_CData *pNewArray = pNewData->f_GetData();
+
+			NPrivate::fg_MoveArray(pNewArray, pOldArray, NewLen);
+
+			DMibFastCheck(!mp_StaticData.m_pData || pNewData->m_AllocSize != mp_StaticData.m_pData->m_AllocSize || !fp_Allocator().f_DeterministicSize());
+			auto pOldData = mp_StaticData.m_pData;
+			pNewData->m_Length = NewLen;
+			mp_StaticData.m_pData = pNewData;
+
+			if (pOldData)
+			{
+#if DMibEnableSafeCheck > 0
+				if (!pOldData->m_bReserved || CurrentLen)
+#endif
+					NPrivate::fg_DestroyArray(pOldArray, CurrentLen, CurrentLen);
+				fp_FreeData(pOldData);
+			}
+		}
+		else
+		{
+			NPrivate::fg_DestroyArray(pOldArray + NewLen, 1, CurrentLen);
+			mp_StaticData.m_pData->m_Length = NewLen;
+		}
+
 		return Temp;
 	}
 
