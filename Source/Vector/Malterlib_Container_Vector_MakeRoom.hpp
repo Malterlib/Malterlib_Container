@@ -140,11 +140,15 @@ namespace NMib::NContainer
 	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::fp_MakeRoom(mint _Len)
 	{
 		mint NewLen = _Len;
-		if (NewLen == 0)
+		if constexpr (t_COptions::mc_bShrink)
 		{
-			f_Clear();
-			return nullptr;
+			if (NewLen == 0)
+			{
+				f_Clear();
+				return nullptr;
+			}
 		}
+
 		mint OldLen = f_GetLen();
 		if (fsp_NeedRealloc(NewLen, mp_StaticData.m_pData))
 		{
@@ -184,11 +188,15 @@ namespace NMib::NContainer
 	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::fp_MakeNewRoom(mint _Len)
 	{
 		mint NewLen = _Len;
-		if (NewLen == 0)
+		if constexpr (t_COptions::mc_bShrink)
 		{
-			f_Clear();
-			return nullptr;
+			if (NewLen == 0)
+			{
+				f_Clear();
+				return nullptr;
+			}
 		}
+		
 		mint OldLen = f_GetLen();
 		if (fsp_NeedRealloc(NewLen, mp_StaticData.m_pData))
 		{

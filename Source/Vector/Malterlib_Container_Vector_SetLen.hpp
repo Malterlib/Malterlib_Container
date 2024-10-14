@@ -99,8 +99,11 @@ namespace NMib::NContainer
 
 		mint NewLen = _Len;
 
-		if (NewLen == 0)
-			return f_Clear();
+		if constexpr (t_COptions::mc_bShrink)
+		{
+			if (NewLen == 0)
+				return f_Clear();
+		}
 
 		if (_bTrim || fsp_NeedRealloc(NewLen, mp_StaticData.m_pData))
 		{

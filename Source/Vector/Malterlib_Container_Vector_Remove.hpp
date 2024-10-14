@@ -36,16 +36,18 @@ namespace NMib::NContainer
 		_Len = fg_Min(CurrentLen - _Start, _Len);
 
 		mint NewLen = CurrentLen-_Len;
-		if (NewLen == 0)
-			return f_Clear();
+		if constexpr (t_COptions::mc_bShrink)
+		{
+			if (NewLen == 0)
+				return f_Clear();
+		}
 
-		CVectorData *pNewData;
 		if (NewLen != CurrentLen)
 		{
 			if (fsp_NeedRealloc(NewLen, mp_StaticData.m_pData))
 			{
 				// New list
-				pNewData = fp_AllocDataGrow(NewLen);
+				auto *pNewData = fp_AllocDataGrow(NewLen);
 
 				t_CData *pOldArray = f_GetArray();
 				t_CData *pNewArray = pNewData->f_GetData();
