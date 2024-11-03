@@ -14,7 +14,11 @@
 
 namespace NMib::NMisc
 {
+#if defined(DMibDebug) || defined(DMibSanitizerEnabled)
+	static constexpr mint mc_nItemsToTest = 100'000;
+#else
 	static constexpr mint mc_nItemsToTest = 5'000'000;
+#endif
 	static constexpr double mc_AllowedPerformance = 0.95;
 
 	namespace
