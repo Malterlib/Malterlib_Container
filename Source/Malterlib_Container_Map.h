@@ -428,7 +428,7 @@ namespace NMib::NContainer
 
 		DMibNoUniqueAddress t_CAllocator mp_Allocator;
 		DMibNoUniqueAddress CNodeCompare mp_Compare;
-		DMibNoUniqueAddress CAVLTree mp_Tree;
+		CAVLTree mp_Tree;
 	};
 
 	template <typename t_CType>

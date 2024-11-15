@@ -193,7 +193,7 @@ namespace NMib::NContainer
 		{
 		}
 
-		DMibNoUniqueAddress t_CNode *mp_pNode = nullptr;
+		t_CNode *mp_pNode = nullptr;
 		DMibNoUniqueAddress t_CAllocator mp_Allocator;
 	};
 }

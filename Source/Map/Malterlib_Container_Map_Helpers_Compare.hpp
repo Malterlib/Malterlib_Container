@@ -117,7 +117,10 @@ namespace NMib::NContainer::NPrivate
 		}
 
 	private:
-		DMibNoUniqueAddress t_CCompare mp_Compare;
+#if !defined(DCompiler_MSVC) && !defined(DCompiler_clang_cl)
+		DMibNoUniqueAddress 
+#endif
+		t_CCompare mp_Compare;
 	};
 
 #if defined(DCompiler_MSVC) || defined(DCompiler_clang_cl)
