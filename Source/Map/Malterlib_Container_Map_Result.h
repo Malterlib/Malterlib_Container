@@ -8,10 +8,10 @@ namespace NMib::NContainer
 	template <typename t_CReturnType>
 	struct TCMapResult
 	{
-		inline_small bool f_WasCreated() const;
-		inline_small operator t_CReturnType ();
-		inline_small t_CReturnType f_GetResult();
-		inline_small t_CReturnType operator *();
+		mark_nodebug inline_small bool f_WasCreated() const;
+		mark_nodebug inline_small operator t_CReturnType ();
+		mark_nodebug inline_small t_CReturnType f_GetResult();
+		mark_nodebug inline_small t_CReturnType operator *();
 
 	private:
 		template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
