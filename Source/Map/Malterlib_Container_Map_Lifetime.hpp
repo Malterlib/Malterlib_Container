@@ -79,8 +79,8 @@ namespace NMib::NContainer
 		)
 		: TCMap
 		(
-			typename NMeta::TCMakeConsecutiveIndices<sizeof...(tfp_CAllocatorParams)>::CType()
-			, typename NMeta::TCMakeConsecutiveIndices<sizeof...(tfp_CCompareParams)>::CType()
+			NMeta::TCConsecutiveIndices<sizeof...(tfp_CAllocatorParams)>()
+			, NMeta::TCConsecutiveIndices<sizeof...(tfp_CCompareParams)>()
 			, fg_Move(_AlloctatorTag)
 			, fg_Move(_CompareTag)
 			, fg_Move(_ConstructAllocator)

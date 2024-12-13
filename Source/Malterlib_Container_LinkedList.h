@@ -58,7 +58,7 @@ namespace NMib::NContainer
 
 		template <typename tf_CType, typename... tfp_CParams>
 		TCLinkedListMember(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams)
-			: TCLinkedListMember(fg_Move(_CreateParams), typename NMeta::TCMakeConsecutiveIndices<TCConstruct<tf_CType, tfp_CParams...>::mc_nParams>::CType())
+			: TCLinkedListMember(fg_Move(_CreateParams), NMeta::TCConsecutiveIndices<TCConstruct<tf_CType, tfp_CParams...>::mc_nParams>())
 		{
 		}
 
