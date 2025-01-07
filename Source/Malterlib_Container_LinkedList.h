@@ -869,14 +869,29 @@ namespace NMib::NContainer
 			fg_DeleteObjectDefiniteType(m_Data, pMember);
 		}
 
-		t_CData f_Pop()
+		t_CData f_PopFirst()
 		{
-			CMember *pMember = m_Data.m_List.f_Pop();
+			CMember *pMember = m_Data.m_List.f_GetFirst();
 			DMibSafeCheck(pMember, "You cannot pop from an empty list");
 			m_Data.m_List.f_Remove(pMember);
 			t_CData ToReturn = fg_Move(pMember->m_Object);
 			fg_DeleteObjectDefiniteType(m_Data, pMember);
 			return fg_Move(ToReturn);
+		}
+
+		t_CData f_PopLast()
+		{
+			CMember *pMember = m_Data.m_List.f_GetLast();
+			DMibSafeCheck(pMember, "You cannot pop from an empty list");
+			m_Data.m_List.f_Remove(pMember);
+			t_CData ToReturn = fg_Move(pMember->m_Object);
+			fg_DeleteObjectDefiniteType(m_Data, pMember);
+			return fg_Move(ToReturn);
+		}
+
+		t_CData f_Pop()
+		{
+			return f_PopFirst();
 		}
 
 		t_CData &f_GetFirst()
