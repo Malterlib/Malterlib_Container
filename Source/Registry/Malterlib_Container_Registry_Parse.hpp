@@ -586,7 +586,7 @@ namespace NMib::NContainer
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Parse(NStream::CBinaryStream &_Stream, t_CStr const &_File)
 	{
-		f_ParseStr(t_CStr::fs_ReadTextStream(_Stream), _File);
+		f_ParseStr(t_CStr::fs_ReadTextStream(_Stream, true), _File);
 	}
 
 
@@ -615,6 +615,6 @@ namespace NMib::NContainer
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ParseLax(NStream::CBinaryStream &_Stream, t_CStr const &_File)
 	{
-		f_ParseLaxStr(t_CStr::fs_ReadTextStream(_Stream), _File);
+		f_ParseLaxStr(t_CStr::fs_ReadTextStream(_Stream, true), _File);
 	}
 }
