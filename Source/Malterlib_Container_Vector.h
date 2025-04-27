@@ -478,8 +478,13 @@ namespace NMib::NContainer
 		CByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> const &) = delete;
 
 		CSecureByteVector f_ToSecure() const; // Accept the risk of this
+		CByteVector const &f_ToInsecure() const &;
+		CByteVector &&f_ToInsecure() &&;
 		NStr::CStr f_ToString() const;
 		static CByteVector fs_FromString(NStr::CStr const &_String);
+		static CByteVector &&fs_AllowInsecureConversion(CByteVector &&_Other);
+		static CByteVector fs_AllowInsecureConversion(CByteVector const &_Other);
+		static CByteVector fs_AllowInsecureConversion(CSecureByteVector const &_Other);
 	};
 
 	struct CSecureByteVector : public TCVector<uint8, NMemory::CAllocator_HeapSecure>
@@ -503,8 +508,13 @@ namespace NMib::NContainer
 		CSecureByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> const &) = delete;
 
 		CByteVector f_ToInsecure() const; // Accept the risk of this
+		CSecureByteVector const &f_ToSecure() const &;
+		CSecureByteVector &&f_ToSecure() &&;
 		NStr::CStrSecure f_ToString() const;
 		static CSecureByteVector fs_FromString(NStr::CStrSecure const &_String);
+		static CSecureByteVector &&fs_AllowInsecureConversion(CSecureByteVector &&_Other);
+		static CSecureByteVector fs_AllowInsecureConversion(CSecureByteVector const &_Other);
+		static CSecureByteVector fs_AllowInsecureConversion(CByteVector const &_Other);
 	};
 
 	DMibImpErrorClassDefine(CExceptionList, NException::CException);
