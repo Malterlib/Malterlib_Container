@@ -74,7 +74,7 @@ namespace NMib::NContainer
 		class TCSizeHelper<true, t_CDummy>
 		{
 		public:
-			typedef typename NTraits::TCUnsigned<typename NTraits::TCIntFromSizeLarger<(t_nBits + 7) / 8, true>::CType>::CType CType;
+			using CType = NTraits::TCUnsigned<NTraits::TCIntFromSizeLarger<(t_nBits + 7) / 8, true>>;
 		};
 
 	public:

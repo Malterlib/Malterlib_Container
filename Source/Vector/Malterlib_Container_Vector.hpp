@@ -219,7 +219,7 @@ namespace NMib::NContainer
 
 		if constexpr (cIsSet<tf_CContainer>)
 		{
-			if constexpr (NTraits::TCIsRValueReference<tf_CContainer &&>::mc_Value)
+			if constexpr (NTraits::cIsRValueReference<tf_CContainer &&>)
 			{
 				_Container.f_ExtractAll
 					(
@@ -236,7 +236,7 @@ namespace NMib::NContainer
 					Return.f_Insert(Value);
 			}
 		}
-		else if constexpr (NTraits::TCIsRValueReference<tf_CContainer &&>::mc_Value)
+		else if constexpr (NTraits::cIsRValueReference<tf_CContainer &&>)
 		{
 			for (auto &Value : _Container)
 				Return.f_Insert(fg_Move(Value));

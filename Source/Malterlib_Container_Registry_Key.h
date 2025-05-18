@@ -123,7 +123,7 @@ namespace NMib::NContainer
 			uint32 m_Sequence;
 		};
 
-		using CValueLocation = typename TCChooseType<(t_Flags & ERegistryFlag_FullLocation) != 0, NStr::TCParseLocation<t_CStr, true>, uint8>::CType;
+		using CValueLocation = TCConditional<(t_Flags & ERegistryFlag_FullLocation) != 0, NStr::TCParseLocation<t_CStr, true>, uint8>;
 		using CLocation = NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>;
 
 		void f_Move(TCRegistryKeyStrPreserve &&_Other);

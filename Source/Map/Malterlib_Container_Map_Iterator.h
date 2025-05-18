@@ -15,21 +15,21 @@ namespace NMib::NContainer::NPrivate
 
 		using CNode = typename t_CMap::CNode;
 		using CKey = typename t_CMap::CKey;
-		using CUserData = typename TCChooseType
+		using CUserData = TCConditional
 			<
 				t_Access == EMapIteratorAccess_Value
 				, typename t_CMap::CUserData
-				, typename TCChooseType
+				, TCConditional
 				<
 					t_Access == EMapIteratorAccess_Key
 					, CKey const
 					, CNode
-				>::CType
-			>::CType
+				>
+			>
 		;
 		using CAVLTree = typename t_CMap::CAVLTree;
-		using CMapQualified = typename NTraits::TCSetConst<t_CMap, t_bConst>::CType;
-		using CUserDataQualified = typename TCChooseType<t_bConst, typename NTraits::TCAddConst<CUserData>::CType, CUserData>::CType;
+		using CMapQualified = NTraits::TCSetConst<t_CMap, t_bConst>;
+		using CUserDataQualified = TCConditional<t_bConst, NTraits::TCAddConst<CUserData>, CUserData>;
 		using CNodeCompare = typename t_CMap::CNodeCompare;
 
 	public:

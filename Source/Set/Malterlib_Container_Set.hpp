@@ -101,7 +101,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CContainer>
 	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_AddContainer(tf_CContainer &&_Container) -> TCSet &
-		requires (!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value)
+		requires (!NTraits::cIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>)
 	{
 		for (auto &Value : _Container)
 			(*this)[Value];
@@ -111,7 +111,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CContainer>
 	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::fs_FromContainer(tf_CContainer &&_Container) -> TCSet
-		requires (!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value)
+		requires (!NTraits::cIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>)
 	{
 		TCSet Return;
 		Return.f_AddContainer(fg_Forward<tf_CContainer>(_Container));
@@ -244,10 +244,10 @@ namespace NMib::NContainer
 	}
 
 	template <typename tf_CFirst, typename... tf_CParams>
-	TCSet<typename NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>::CType> fg_CreateSet(tf_CFirst &&_First, tf_CParams && ...p_Params)
+	TCSet<NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>> fg_CreateSet(tf_CFirst &&_First, tf_CParams && ...p_Params)
 	{
-		TCSet<typename NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>::CType> Return;
-		fg_CreateSetHelper<typename NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>::CType>(Return, fg_Forward<tf_CFirst>(_First), fg_Forward<tf_CParams>(p_Params)...);
+		TCSet<NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>> Return;
+		fg_CreateSetHelper<NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>>(Return, fg_Forward<tf_CFirst>(_First), fg_Forward<tf_CParams>(p_Params)...);
 		return Return;
 	}
 

@@ -74,17 +74,17 @@ namespace NMib::NContainer
 	private:
 		using CChar = typename t_CStr::CChar;
 
-		using CRegistryKey = typename TCChooseType
+		using CRegistryKey = TCConditional
 			<
 				(t_Flags & ERegistryFlag_DuplicateKeys) != 0
-				, typename TCChooseType
+				, TCConditional
 				<
 					(t_Flags & ERegistryFlag_PreserveWhitspace) != 0
 					, TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>
 					, TCRegistryKeyStrMulti<t_CKey, t_CStr>
-				>::CType
+				>
 				, TCRegistryKeyStr<t_CKey, t_CStr>
-			>::CType
+			>
 		;
 
 		template <typename t_CKey2, typename t_CStr2>
@@ -225,12 +225,12 @@ namespace NMib::NContainer
 		static constexpr bool mc_bSupportWhiteSpace = CRegistryKey::mc_bSupportWhiteSpace;
 		static constexpr bool mc_bSupportLocation = CRegistryKey::mc_bSupportLocation;
 
-		using CChildren = typename TCChooseType<(t_Flags & ERegistryFlag_PreserveOrder) != 0, CChildren_PreserveOrder, CChildren_Sorted>::CType;
+		using CChildren = TCConditional<(t_Flags & ERegistryFlag_PreserveOrder) != 0, CChildren_PreserveOrder, CChildren_Sorted>;
 		using CKey = t_CKey;
 		using CStr = t_CStr;
 		using CData = t_CData;
 		using CIterator = typename CChildren::CIterator;
-		using CParseContext = typename TCChooseType<mc_bSupportLocation || mc_bSupportWhiteSpace, CPreserveParseContext, CEmptyParseContext>::CType;
+		using CParseContext = TCConditional<mc_bSupportLocation || mc_bSupportWhiteSpace, CPreserveParseContext, CEmptyParseContext>;
 
 		TCRegistry();
 		TCRegistry(TCRegistry &&_Source);
@@ -321,29 +321,29 @@ namespace NMib::NContainer
 		t_CStr f_GetPath() const;
 
 		template <bool tf_bSupportLocation = mc_bSupportLocation>
-		auto f_GetLocation() const -> TCEnableIfType<tf_bSupportLocation, CLocation> const &;
+		auto f_GetLocation() const -> TCEnableIf<tf_bSupportLocation, CLocation> const &;
 		template <bool tf_bSupportLocation = mc_bSupportLocation>
-		auto f_SetLocation(CLocation const &_Location) -> TCEnableIfType<tf_bSupportLocation>;
+		auto f_SetLocation(CLocation const &_Location) -> TCEnableIf<tf_bSupportLocation>;
 		template <bool tf_bSupportLocation = mc_bSupportLocation && (t_Flags & ERegistryFlag_FullLocation) != 0>
-		auto f_GetValueLocation() const -> TCEnableIfType<tf_bSupportLocation, NStr::TCParseLocation<t_CStr, true>> const &;
+		auto f_GetValueLocation() const -> TCEnableIf<tf_bSupportLocation, NStr::TCParseLocation<t_CStr, true>> const &;
 		template <bool tf_bSupportLocation = mc_bSupportLocation && (t_Flags & ERegistryFlag_FullLocation) != 0>
-		auto f_SetValueLocation(NStr::TCParseLocation<t_CStr, true> const &_Location) -> TCEnableIfType<tf_bSupportLocation>;
+		auto f_SetValueLocation(NStr::TCParseLocation<t_CStr, true> const &_Location) -> TCEnableIf<tf_bSupportLocation>;
 
 		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
-		auto f_GetForceEscapedKey() const -> TCEnableIfType<tf_bSupportWhiteSpace, bool>;
+		auto f_GetForceEscapedKey() const -> TCEnableIf<tf_bSupportWhiteSpace, bool>;
 		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
-		auto f_GetForceEscapedValue() const -> TCEnableIfType<tf_bSupportWhiteSpace, bool>;
+		auto f_GetForceEscapedValue() const -> TCEnableIf<tf_bSupportWhiteSpace, bool>;
 		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
-		auto f_SetForceEscapedKey(bool _bForced) -> TCEnableIfType<tf_bSupportWhiteSpace>;
+		auto f_SetForceEscapedKey(bool _bForced) -> TCEnableIf<tf_bSupportWhiteSpace>;
 		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
-		auto f_SetForceEscapedValue(bool _bForced) -> TCEnableIfType<tf_bSupportWhiteSpace>;
+		auto f_SetForceEscapedValue(bool _bForced) -> TCEnableIf<tf_bSupportWhiteSpace>;
 
 		template <typename tf_CStr, bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
-		auto f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation _Location, tf_CStr const &_Str) -> TCEnableIfType<tf_bSupportWhiteSpace, bool>;
+		auto f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation _Location, tf_CStr const &_Str) -> TCEnableIf<tf_bSupportWhiteSpace, bool>;
 		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
-		auto f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str) -> TCEnableIfType<tf_bSupportWhiteSpace>;
+		auto f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str) -> TCEnableIf<tf_bSupportWhiteSpace>;
 		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
-		auto f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const  -> TCEnableIfType<tf_bSupportWhiteSpace, NStr::CStr>;
+		auto f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const  -> TCEnableIf<tf_bSupportWhiteSpace, NStr::CStr>;
 
 		bool f_HasScope() const;
 

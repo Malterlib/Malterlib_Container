@@ -278,16 +278,16 @@ namespace
 			DMibTestSuite("CTAD")
 			{
 				TCVector Vector0 = {1, 2, 3};
-				static_assert(NMib::NTraits::TCIsSame<decltype(Vector0), TCVector<int>>::mc_Value);
+				static_assert(NMib::NTraits::cIsSame<decltype(Vector0), TCVector<int>>);
 				DMibExpect(Vector0, ==, TCVector<int>({1, 2, 3}));
 
 				TCVector Vector1{1, 2, 3};
-				static_assert(NMib::NTraits::TCIsSame<decltype(Vector1), TCVector<int>>::mc_Value);
+				static_assert(NMib::NTraits::cIsSame<decltype(Vector1), TCVector<int>>);
 				DMibExpect(Vector1, ==, TCVector<int>({1, 2, 3}));
 
 				uint32 Array[3] = {1, 2, 3};
 				TCVector Vector2(Array, 3);
-				static_assert(NMib::NTraits::TCIsSame<decltype(Vector2), TCVector<uint32>>::mc_Value);
+				static_assert(NMib::NTraits::cIsSame<decltype(Vector2), TCVector<uint32>>);
 				DMibExpect(Vector2, ==, TCVector<uint32>({1, 2, 3}));
 			};
 

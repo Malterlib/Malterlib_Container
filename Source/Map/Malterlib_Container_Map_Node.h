@@ -13,7 +13,7 @@ namespace NMib::NContainer::NPrivate
 		typename t_CNode
 		, typename t_CCompare
 #if defined(DCompiler_MSVC) || defined(DCompiler_clang_cl)
-		, bool t_bIsEmpty = NTraits::TCIsEmpty<t_CCompare>::mc_Value
+		, bool t_bIsEmpty = NTraits::cIsEmpty<t_CCompare>
 #endif
 	>
 	struct TCMapNodeCompare_Custom;

@@ -44,7 +44,7 @@ namespace NMib::NContainer
 #ifdef DCompiler_MSVC_Workaround
 		template <typename tf_CContainer>
 		TCSet & f_AddContainer(tf_CContainer &&_Container)
-			requires (!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value)
+			requires (!NTraits::cIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>)
 		{
 			for (auto &Value : _Container)
 				(*this)[Value];
@@ -53,7 +53,7 @@ namespace NMib::NContainer
 
 		template <typename tf_CContainer>
 		static TCSet fs_FromContainer(tf_CContainer &&_Container)
-			requires (!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value)
+			requires (!NTraits::cIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>)
 		{
 			TCSet Return;
 			Return.f_AddContainer(fg_Forward<tf_CContainer>(_Container));
@@ -62,11 +62,11 @@ namespace NMib::NContainer
 #else
 		template <typename tf_CContainer>
 		TCSet &f_AddContainer(tf_CContainer &&_Container)
-			requires (!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value)
+			requires (!NTraits::cIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>)
 		;
 		template <typename tf_CContainer>
 		static TCSet fs_FromContainer(tf_CContainer &&_Container)
-			requires (!NTraits::TCIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>::mc_Value)
+			requires (!NTraits::cIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>)
 		;
 #endif
 
@@ -88,7 +88,7 @@ namespace NMib::NContainer
 	TCSet<tf_CReturn> fg_CreateSet(tf_CParams && ...p_Params);
 
 	template <typename t_CType>
-	concept cIsSet = NPrivate::TCIsSet<typename NTraits::TCRemoveReferenceAndQualifiers<t_CType>::CType>::mc_bValue;
+	concept cIsSet = NPrivate::TCIsSet<NTraits::TCRemoveReferenceAndQualifiers<t_CType>>::mc_bValue;
 }
 
 #include "Set/Malterlib_Container_Set.hpp"

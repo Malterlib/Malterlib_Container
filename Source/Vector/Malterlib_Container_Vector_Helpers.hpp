@@ -8,7 +8,7 @@ namespace NMib::NContainer::NPrivate
 	template <typename t_CData>
 	static void fg_ConstructArray(t_CData *_pDest, mint _Len, mint &o_Len)
 	{
-		if constexpr (NTraits::TCHasTrivialDefaultConstructor<t_CData>::mc_Value)
+		if constexpr (NTraits::cIsTrivialllyDefaultConstructible<t_CData>)
 		{
 			o_Len += _Len;
 			return;
@@ -36,7 +36,7 @@ namespace NMib::NContainer::NPrivate
 		
 		DMibFastCheck(_Len != 0);
 
-		if constexpr (NTraits::TCHasTrivialDestructor<t_CData>::mc_Value)
+		if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
 		{
 			o_Len -= _Len;
 			return;
@@ -68,7 +68,7 @@ namespace NMib::NContainer::NPrivate
 	template <typename t_CData>
 	static void fg_MoveArray(t_CData *_pDest, t_CData *_pSrc, mint _Len)
 	{
-		if constexpr (NTraits::cHasTrivialMoveConstructor<t_CData>)
+		if constexpr (NTraits::cIsTriviallyMoveConstructible<t_CData>)
 		{
 			if (_Len)
 				NMemory::fg_MemCopy((void *)_pDest, _pSrc, _Len * sizeof(t_CData));
@@ -116,13 +116,13 @@ namespace NMib::NContainer::NPrivate
 	template <typename t_CData>
 	static void fg_CopyArray(t_CData *_pDest, t_CData const *_pSrc, mint _Len, mint &o_Len)
 	{
-		if constexpr (NTraits::TCHasTrivialCopyConstructor<t_CData>::mc_Value)
+		if constexpr (NTraits::cIsTriviallyCopyConstructible<t_CData>)
 		{
 			if (_Len)
 				NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
 			o_Len += _Len;
 		}
-		else if constexpr (NTraits::TCIsConstructorNothrowCallableWith<t_CData, void (t_CData const &)>::mc_Value)
+		else if constexpr (NTraits::cIsNothrowConstructibleWith<t_CData, t_CData const &>)
 		{
 			for (mint i = 0; i < _Len; ++i)
 				new((void *)(_pDest + i)) t_CData(_pSrc[i]);
@@ -141,7 +141,7 @@ namespace NMib::NContainer::NPrivate
 	template <typename t_CData0, typename t_CData1>
 	static void fg_CopyArray(t_CData0 *_pDest, t_CData1 const *_pSrc, mint _Len, mint &o_Len)
 	{
-		if constexpr (NTraits::TCIsConstructorNothrowCallableWith<t_CData0, void (t_CData1 const &)>::mc_Value)
+		if constexpr (NTraits::cIsNothrowConstructibleWith<t_CData0, t_CData1 const &>)
 		{
 			for (mint i = 0; i < _Len; ++i)
 				new((void *)(_pDest + i)) t_CData0(_pSrc[i]);
@@ -169,9 +169,9 @@ namespace NMib::NContainer::NPrivate
 			}
 		;
 #endif
-		if constexpr (NTraits::cHasTrivialMoveConstructor<t_CData>)
+		if constexpr (NTraits::cIsTriviallyMoveConstructible<t_CData>)
 		{
-			if constexpr (NTraits::TCHasTrivialDestructor<t_CData>::mc_Value)
+			if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
 			{
 				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
 			}
@@ -186,7 +186,7 @@ namespace NMib::NContainer::NPrivate
 		}
 		else
 		{
-			if constexpr (NTraits::TCHasTrivialDestructor<t_CData>::mc_Value)
+			if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
 			{
 				for (smint i = smint(_Len) - 1; i >= 0; --i)
 				{
@@ -220,9 +220,9 @@ namespace NMib::NContainer::NPrivate
 			}
 		;
 #endif
-		if constexpr (NTraits::cHasTrivialMoveConstructor<t_CData>)
+		if constexpr (NTraits::cIsTriviallyMoveConstructible<t_CData>)
 		{
-			if constexpr (NTraits::TCHasTrivialDestructor<t_CData>::mc_Value)
+			if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
 			{
 				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
 			}
@@ -235,7 +235,7 @@ namespace NMib::NContainer::NPrivate
 		}
 		else
 		{
-			if constexpr (NTraits::TCHasTrivialDestructor<t_CData>::mc_Value)
+			if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
 			{
 				for (mint i = 0; i < _Len; ++i)
 				{
@@ -261,9 +261,9 @@ namespace NMib::NContainer::NPrivate
 	template <typename tf_CData, typename tf_CDataRight>
 	static void fg_CopyOverArray(tf_CData *_pDest, tf_CDataRight const *_pSrc, mint _Len)
 	{
-		if constexpr (NTraits::TCIsSame<tf_CData, tf_CDataRight>::mc_Value && NTraits::TCHasTrivialCopyConstructor<tf_CData>::mc_Value)
+		if constexpr (NTraits::cIsSame<tf_CData, tf_CDataRight> && NTraits::cIsTriviallyCopyConstructible<tf_CData>)
 		{
-			if constexpr (NTraits::TCHasTrivialDestructor<tf_CData>::mc_Value)
+			if constexpr (NTraits::cIsTriviallyDestructible<tf_CData>)
 				NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(tf_CData));
 			else
 			{
@@ -285,12 +285,12 @@ namespace NMib::NContainer::NPrivate
 		}
 		else
 		{
-			if constexpr (NTraits::TCHasTrivialDestructor<tf_CData>::mc_Value)
+			if constexpr (NTraits::cIsTriviallyDestructible<tf_CData>)
 			{
 				for (mint i = 0; i < _Len; ++i)
 					new((void *)(_pDest + i)) tf_CData(_pSrc[i]);
 			}
-			else if constexpr (NTraits::cIsAssignable<tf_CData &, tf_CDataRight const &>)
+			else if constexpr (NTraits::cIsAssignableWith<tf_CData &, tf_CDataRight const &>)
 			{
 				for (mint i = 0; i < _Len; ++i)
 					_pDest[i] = _pSrc[i];
@@ -320,9 +320,9 @@ namespace NMib::NContainer::NPrivate
 	template <typename tf_CData, typename tf_CDataRight>
 	static void fg_MoveOverArray(tf_CData *_pDest, tf_CDataRight *_pSrc, mint _Len)
 	{
-		if constexpr (NTraits::TCIsSame<tf_CData, tf_CDataRight>::mc_Value && NTraits::cHasTrivialMoveConstructor<tf_CData>)
+		if constexpr (NTraits::cIsSame<tf_CData, tf_CDataRight> && NTraits::cIsTriviallyMoveConstructible<tf_CData>)
 		{
-			if constexpr (NTraits::TCHasTrivialDestructor<tf_CData>::mc_Value)
+			if constexpr (NTraits::cIsTriviallyDestructible<tf_CData>)
 				NMemory::fg_MemCopy((void *)_pDest, _pSrc, _Len * sizeof(tf_CData));
 			else
 			{
@@ -344,12 +344,12 @@ namespace NMib::NContainer::NPrivate
 		}
 		else
 		{
-			if constexpr (NTraits::TCHasTrivialDestructor<tf_CData>::mc_Value)
+			if constexpr (NTraits::cIsTriviallyDestructible<tf_CData>)
 			{
 				for (mint i = 0; i < _Len; ++i)
 					new((void *)(_pDest + i)) tf_CData(fg_Move(_pSrc[i]));
 			}
-			else if constexpr (NTraits::cIsAssignable<tf_CData &, tf_CDataRight &&>)
+			else if constexpr (NTraits::cIsAssignableWith<tf_CData &, tf_CDataRight &&>)
 			{
 				for (mint i = 0; i < _Len; ++i)
 					_pDest[i] = fg_Move(_pSrc[i]);

@@ -141,7 +141,7 @@ namespace NMib::NContainer
 		{
 			if (Current == '\n')
 			{
-				if constexpr (!NTraits::TCIsSame<tf_CParseContext, CEmptyParseContext>::mc_Value)
+				if constexpr (!NTraits::cIsSame<tf_CParseContext, CEmptyParseContext>)
 					_ParseContext.f_AddLine(pParse + 1);
 				++pParse;
 				bRet = true;
@@ -166,7 +166,7 @@ namespace NMib::NContainer
 		auto Current = *pParse;
 		while (Current)
 		{
-			if constexpr (!NTraits::TCIsSame<tf_CParseContext, CEmptyParseContext>::mc_Value)
+			if constexpr (!NTraits::cIsSame<tf_CParseContext, CEmptyParseContext>)
 			{
 				if (Current == '\n')
 					_ParseContext.f_AddLine(pParse + 1);

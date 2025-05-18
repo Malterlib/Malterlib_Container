@@ -124,7 +124,7 @@ namespace NMib::NContainer
 
 		template <typename tf_CType, typename... tfp_CParams>
 		CMember *fp_Create(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams)
-			requires (NTraits::TCIsSame<tf_CType, t_CData>::mc_Value || NTraits::TCIsVoid<tf_CType>::mc_Value) // Cannot override creation type
+			requires (NTraits::cIsSame<tf_CType, t_CData> || NTraits::cIsVoid<tf_CType>) // Cannot override creation type
 		{
 			auto Memory = m_Data.f_AllocSafe(sizeof(CMember), alignof(CMember));
 			CMember * pData = (CMember *)Memory.m_pMemory;

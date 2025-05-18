@@ -115,20 +115,15 @@ namespace NMib::NContainer
 			}
 		;
 
-		if constexpr(NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+		if constexpr(NTraits::cIsSame<tf_CKey, t_CKey> && NTraits::cIsSame<tf_CCompare, t_CCompare>)
 		{
 			mp_Compare = _Other.mp_Compare;
 			fp_CopyAll(_Other);
 		}
 		else
 		{
-			if constexpr
-			(
-				NTraits::cIsAssignable<t_CCompare, tf_CCompare const &>
-			)
-			{
+			if constexpr (NTraits::cIsAssignableWith<t_CCompare, tf_CCompare const &>)
 				mp_Compare = _Other.mp_Compare;
-			}
 			fp_CopyAddAll(_Other);
 		}
 
@@ -145,20 +140,15 @@ namespace NMib::NContainer
 			}
 		;
 
-		if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+		if constexpr (NTraits::cIsSame<tf_CKey, t_CKey> && NTraits::cIsSame<tf_CCompare, t_CCompare>)
 		{
 			mp_Compare = _Other.mp_Compare;
 			fp_CopyAll(_Other);
 		}
 		else
 		{
-			if constexpr
-			(
-				NTraits::cIsAssignable<t_CCompare, tf_CCompare const &>
-			)
-			{
+			if constexpr (NTraits::cIsAssignableWith<t_CCompare, tf_CCompare const &>)
 				mp_Compare = _Other.mp_Compare;
-			}
 			fp_CopyAddAll(_Other);
 		}
 
@@ -175,20 +165,15 @@ namespace NMib::NContainer
 			}
 		;
 
-		if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+		if constexpr (NTraits::cIsSame<tf_CKey, t_CKey> && NTraits::cIsSame<tf_CCompare, t_CCompare>)
 		{
 			mp_Compare = fg_Move(_Other.mp_Compare);
 			fp_MoveAll(_Other);
 		}
 		else
 		{
-			if constexpr
-			(
-				NTraits::cIsAssignable<t_CCompare, tf_CCompare &&>
-			)
-			{
+			if constexpr (NTraits::cIsAssignableWith<t_CCompare, tf_CCompare &&>)
 				mp_Compare = fg_Move(_Other.mp_Compare);
-			}
 			fp_MoveAddAll(_Other);
 		}
 
@@ -213,20 +198,15 @@ namespace NMib::NContainer
 	{
 		f_Clear();
 
-		if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+		if constexpr (NTraits::cIsSame<tf_CKey, t_CKey> && NTraits::cIsSame<tf_CCompare, t_CCompare>)
 		{
 			mp_Compare = _Other.mp_Compare;
 			fp_CopyAll(_Other);
 		}
 		else
 		{
-			if constexpr
-			(
-				NTraits::cIsAssignable<t_CCompare, tf_CCompare const &>
-			)
-			{
+			if constexpr (NTraits::cIsAssignableWith<t_CCompare, tf_CCompare const &>)
 				mp_Compare = _Other.mp_Compare;
-			}
 			fp_CopyAddAll(_Other);
 		}
 
@@ -239,20 +219,15 @@ namespace NMib::NContainer
 	{
 		f_Clear();
 
-		if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+		if constexpr (NTraits::cIsSame<tf_CKey, t_CKey> && NTraits::cIsSame<tf_CCompare, t_CCompare>)
 		{
 			mp_Compare = _Other.mp_Compare;
 			fp_CopyAll(_Other);
 		}
 		else
 		{
-			if constexpr
-			(
-				NTraits::cIsAssignable<t_CCompare, tf_CCompare const &>
-			)
-			{
+			if constexpr (NTraits::cIsAssignableWith<t_CCompare, tf_CCompare const &>)
 				mp_Compare = _Other.mp_Compare;
-			}
 			fp_CopyAddAll(_Other);
 		}
 
@@ -265,20 +240,15 @@ namespace NMib::NContainer
 	{
 		f_Clear();
 
-		if constexpr (NTraits::TCIsSame<tf_CKey, t_CKey>::mc_Value && NTraits::TCIsSame<tf_CCompare, t_CCompare>::mc_Value)
+		if constexpr (NTraits::cIsSame<tf_CKey, t_CKey> && NTraits::cIsSame<tf_CCompare, t_CCompare>)
 		{
 			mp_Compare = fg_Move(_Other.mp_Compare);
 			fp_MoveAll(_Other);
 		}
 		else
 		{
-			if constexpr
-			(
-				NTraits::cIsAssignable<t_CCompare, tf_CCompare &&>
-			)
-			{
+			if constexpr (NTraits::cIsAssignableWith<t_CCompare, tf_CCompare &&>)
 				mp_Compare = fg_Move(_Other.mp_Compare);
-			}
 			fp_MoveAddAll(_Other);
 		}
 		return *this;
@@ -300,27 +270,27 @@ namespace NMib::NContainer
 	template <typename tf_CSource>
 	inline_always void TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::fp_CopyAll(tf_CSource && _Other)
 	{
-		return NPrivate::TCMapCopy<TCMap, mcp_bIsReference && !NTraits::TCIsConst<CValueNoRef>::mc_Value>::fs_CopyAll(*this, fg_Forward<tf_CSource>(_Other));
+		return NPrivate::TCMapCopy<TCMap, mcp_bIsReference && !NTraits::cIsConst<CValueNoRef>>::fs_CopyAll(*this, fg_Forward<tf_CSource>(_Other));
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CSource>
 	inline_always void TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::fp_MoveAll(tf_CSource && _Other)
 	{
-		return NPrivate::TCMapCopy<TCMap, mcp_bIsReference && !NTraits::TCIsConst<CValueNoRef>::mc_Value>::fs_MoveAll(*this, fg_Forward<tf_CSource>(_Other));
+		return NPrivate::TCMapCopy<TCMap, mcp_bIsReference && !NTraits::cIsConst<CValueNoRef>>::fs_MoveAll(*this, fg_Forward<tf_CSource>(_Other));
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CSource>
 	inline_always void TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::fp_CopyAddAll(tf_CSource && _Other)
 	{
-		return NPrivate::TCMapCopy<TCMap, mcp_bIsReference && !NTraits::TCIsConst<CValueNoRef>::mc_Value>::fs_CopyAddAll(*this, fg_Forward<tf_CSource>(_Other));
+		return NPrivate::TCMapCopy<TCMap, mcp_bIsReference && !NTraits::cIsConst<CValueNoRef>>::fs_CopyAddAll(*this, fg_Forward<tf_CSource>(_Other));
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CSource>
 	inline_always void TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::fp_MoveAddAll(tf_CSource && _Other)
 	{
-		return NPrivate::TCMapCopy<TCMap, mcp_bIsReference && !NTraits::TCIsConst<CValueNoRef>::mc_Value>::fs_MoveAddAll(*this, fg_Forward<tf_CSource>(_Other));
+		return NPrivate::TCMapCopy<TCMap, mcp_bIsReference && !NTraits::cIsConst<CValueNoRef>>::fs_MoveAddAll(*this, fg_Forward<tf_CSource>(_Other));
 	}
 }

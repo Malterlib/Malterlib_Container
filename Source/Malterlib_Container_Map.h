@@ -23,7 +23,7 @@ namespace NMib::NContainer
 	{
 		using CKey = t_CKey;
 		using CValue = t_CValue;
-		using CValueNoRef = typename NTraits::TCRemoveReference<t_CValue>::CType;
+		using CValueNoRef = NTraits::TCRemoveReference<t_CValue>;
 		using CNode = TCMapNode<t_CKey, t_CValue>;
 		using CNodeHandle = TCMapNodeHandle<CNode, t_CAllocator>;
 
@@ -191,14 +191,14 @@ namespace NMib::NContainer
 		template <typename t_CMap2, EMapIteratorAccess t_Access2, bool t_bReverse2, bool t_bConst2, bool t_bBidirectional2>
 		friend struct NPrivate::TCMapIterator;
 		
-		using CNodeCompare = typename TCChooseType
+		using CNodeCompare = TCConditional
 			<
-				NTraits::TCIsSame<t_CCompare, NMib::CSort_Default>::mc_Value
+				NTraits::cIsSame<t_CCompare, NMib::CSort_Default>
 				, NPrivate::TCMapNodeCompare_Default<CNode, t_CKey>
 				, NPrivate::TCMapNodeCompare_Custom<CNode, t_CCompare>
-			>::CType
+			>
 		;
-		using CUserData = typename NTraits::TCRemoveReference<typename NPrivate::TCMapUserData<t_CKey, t_CValue>::CType>::CType;
+		using CUserData = NTraits::TCRemoveReference<typename NPrivate::TCMapUserData<t_CKey, t_CValue>::CType>;
 		using CAVLTree = NIntrusive::TCAVLTree<&CMapNodeBase::m_Link, void, NMemory::CAllocator_Base, CNode>;
 
 	public:
@@ -244,10 +244,10 @@ namespace NMib::NContainer
 		void f_Clear();
 
 		static t_CKey const &fs_GetKey(CUserData const *_pData)
-			requires (!NTraits::TCIsReference<t_CValue>::mc_Value) //This function is not supported when mapping reference types
+			requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 		;
 		static t_CKey const &fs_GetKey(const CUserData &_Data)
-			requires (!NTraits::TCIsReference<t_CValue>::mc_Value) //This function is not supported when mapping reference types
+			requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 		;
 
 		template <typename tf_CKey>
@@ -313,12 +313,12 @@ namespace NMib::NContainer
 		TCMap &operator -= (TCMap const &_Other);
 
 		void f_Remove(CUserData *_pData)
-			requires (!NTraits::TCIsReference<t_CValue>::mc_Value) //This function is not supported when mapping reference types
+			requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 		;
 
 		// This only makes sense when the actual pointer of the node is used for comparion
 		bool f_TryRemovePointerBasedComparison(CUserData *_pData)
-			requires (!NTraits::TCIsReference<t_CValue>::mc_Value) //This function is not supported when mapping reference types
+			requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 		;
 
 		template <typename tf_CKey>
@@ -332,7 +332,7 @@ namespace NMib::NContainer
 		void f_ExtractAll(tf_FOnNode &&_fOnNode);
 
 		void f_ExtractAndInsert(TCMap &_Map, CUserData *_pData)
-			requires (!NTraits::TCIsReference<t_CValue>::mc_Value) //This function is not supported when mapping reference types
+			requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 		;
 
 		bool f_IsEmpty() const;
@@ -424,7 +424,7 @@ namespace NMib::NContainer
 			)
 		;
 
-		constexpr static bool mcp_bIsReference = NTraits::TCIsReference<t_CValue>::mc_Value;
+		constexpr static bool mcp_bIsReference = NTraits::cIsReference<t_CValue>;
 
 		DMibNoUniqueAddress t_CAllocator mp_Allocator;
 		DMibNoUniqueAddress CNodeCompare mp_Compare;
@@ -432,7 +432,7 @@ namespace NMib::NContainer
 	};
 
 	template <typename t_CType>
-	concept cIsMap = NPrivate::TCIsMap<typename NTraits::TCRemoveReferenceAndQualifiers<t_CType>::CType>::mc_bValue;
+	concept cIsMap = NPrivate::TCIsMap<NTraits::TCRemoveReferenceAndQualifiers<t_CType>>::mc_bValue;
 }
 
 #ifndef DMibPNoShortCuts

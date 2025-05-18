@@ -23,7 +23,7 @@ namespace NMib::NContainer
 	template <typename tf_CFirst, typename... tf_CParams>
 	auto fg_CreateVector(tf_CFirst &&_First, tf_CParams &&...p_Params)
 	{
-		if constexpr (NTraits::TCIsSame<tf_CFirst, uint8>::mc_Value)
+		if constexpr (NTraits::cIsSame<tf_CFirst, uint8>)
 		{
 			using CReturn = CByteVector;
 			CReturn Return;
@@ -32,7 +32,7 @@ namespace NMib::NContainer
 		}
 		else
 		{
-			using CReturn = TCVector<typename NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>::CType>;
+			using CReturn = TCVector<NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>>;
 			CReturn Return;
 			NPrivate::fg_CreateVectorHelper<CReturn>(Return, fg_Forward<tf_CFirst>(_First), fg_Forward<tf_CParams>(p_Params)...);
 			return Return;
@@ -42,7 +42,7 @@ namespace NMib::NContainer
 	template <typename tf_CReturn, typename... tf_CParams>
 	auto fg_CreateVector(tf_CParams && ...p_Params)
 	{
-		if constexpr (NTraits::TCIsSame<tf_CReturn, uint8>::mc_Value)
+		if constexpr (NTraits::cIsSame<tf_CReturn, uint8>)
 		{
 			CByteVector Return;
 			NPrivate::fg_CreateVectorHelper<CByteVector>(Return, fg_Forward<tf_CParams>(p_Params)...);

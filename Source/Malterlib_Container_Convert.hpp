@@ -10,7 +10,7 @@ namespace NMib::NContainer
 	{
 		tf_CToContainer Container;
 
-		if constexpr (NTraits::TCIsRValueReference<tf_CFromContainer>::mc_Value)
+		if constexpr (NTraits::cIsRValueReference<tf_CFromContainer &&>)
 		{
 			for (auto &Value : _Container)
 				Container.f_Insert(fg_Move(Value));
