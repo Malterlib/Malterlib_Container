@@ -71,7 +71,7 @@ namespace NMib::NContainer::NPrivate
 		if constexpr (NTraits::cHasTrivialMoveConstructor<t_CData>)
 		{
 			if (_Len)
-				NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
+				NMemory::fg_MemCopy((void *)_pDest, _pSrc, _Len * sizeof(t_CData));
 		}
 		else
 		{
@@ -276,7 +276,7 @@ namespace NMib::NContainer::NPrivate
 #endif
 				for (mint i = 0; i < _Len; ++i)
 					_pDest[i].~tf_CData();
-				NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(tf_CData));
+				NMemory::fg_MemCopy((void *)_pDest, _pSrc, _Len * sizeof(tf_CData));
 
 #if DMibEnableSafeCheck > 0
 				Cleanup.f_Clear();
@@ -323,7 +323,7 @@ namespace NMib::NContainer::NPrivate
 		if constexpr (NTraits::TCIsSame<tf_CData, tf_CDataRight>::mc_Value && NTraits::cHasTrivialMoveConstructor<tf_CData>)
 		{
 			if constexpr (NTraits::TCHasTrivialDestructor<tf_CData>::mc_Value)
-				NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(tf_CData));
+				NMemory::fg_MemCopy((void *)_pDest, _pSrc, _Len * sizeof(tf_CData));
 			else
 			{
 #if DMibEnableSafeCheck > 0
@@ -335,7 +335,7 @@ namespace NMib::NContainer::NPrivate
 #endif
 				for (mint i = 0; i < _Len; ++i)
 					_pDest[i].~tf_CData();
-				NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(tf_CData));
+				NMemory::fg_MemCopy((void *)_pDest, _pSrc, _Len * sizeof(tf_CData));
 
 #if DMibEnableSafeCheck > 0
 				Cleanup.f_Clear();
