@@ -13,7 +13,7 @@ namespace NMib::NContainer
 	class TCBitArrayHierarchical
 	{
 	public:
-		typedef typename TCBitArray<t_nBits>::CEntryType CEntryType;
+		using CEntryType = typename TCBitArray<t_nBits>::CEntryType;
 	public:
 
 		constexpr TCBitArrayHierarchical(bool _bInitValues = true);

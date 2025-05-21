@@ -152,7 +152,7 @@ namespace NMib::NContainer
 				};
 			};
 
-			typedef NMib::NIntrusive::TCDLinkList
+			using CLinkedList = NMib::NIntrusive::TCDLinkList
 				<
 					TCRegistry
 					, CDLinkTranslatorm_Link
@@ -161,10 +161,9 @@ namespace NMib::NContainer
 					, false
 					, NMib::NMemory::CDefaultAllocator
 				>
-				CLinkedList
 			;
 
-			typedef typename CLinkedList::CIterator CIterator;
+			using CIterator = typename CLinkedList::CIterator;
 
 			CChildren_PreserveOrder();
 			CChildren_PreserveOrder(CChildren_PreserveOrder &&_Other);

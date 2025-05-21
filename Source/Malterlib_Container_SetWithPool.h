@@ -8,7 +8,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CCompare = NMib::CSort_Default>
 	struct TCSetWithPool : public TCSet<t_CKey, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, CMapSet>>>
 	{
-		typedef TCSet<t_CKey, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, CMapSet>>> CSuper;
+		using CSuper = TCSet<t_CKey, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, CMapSet>>>;
 	public:
 		TCSetWithPool()
 		{

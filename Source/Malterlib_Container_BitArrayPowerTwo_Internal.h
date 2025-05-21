@@ -15,7 +15,9 @@ namespace NMib::NContainer::NPrivate
 			, mc_bIsLastLevel = TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>::mc_bIsLastLevelCalc
 			, mc_nSuperBits = t_nBitsInternal / 2
 		};
-		typedef TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels> CSuper;
+
+		using CSuper = TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>;
+		
 		t_TCBitArray<t_nBitsInternal> m_Bits;
 
 		constexpr TCBitArrayPowerTwoInternalArray(bool _bInitValues);

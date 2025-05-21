@@ -50,7 +50,7 @@ namespace NMib::NContainer
 	class TCRegions
 	{
 		class CRegionData;
-		typedef TCMap<t_CKey, CRegionData, CSort_Default, t_CAllocator> CMap;
+		using CMap = TCMap<t_CKey, CRegionData, CSort_Default, t_CAllocator>;
 		class CRegionData : public TCRegionData<t_CKey, t_CRegionData>
 		{
 		public:

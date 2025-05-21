@@ -17,7 +17,7 @@ namespace NMib::NContainer
 	>
 	struct TCMapWithPool : public TCMap<t_CKey, t_CValue, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, t_CValue>, t_GrowSize, t_CAllocator>>
 	{
-		typedef TCMap<t_CKey, t_CValue, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, t_CValue>, t_GrowSize, t_CAllocator, t_CPoolType, t_CLockType>> CSuper;
+		using CSuper = TCMap<t_CKey, t_CValue, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, t_CValue>, t_GrowSize, t_CAllocator, t_CPoolType, t_CLockType>>;
 	public:
 		TCMapWithPool()
 		{

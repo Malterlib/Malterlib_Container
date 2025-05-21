@@ -14,7 +14,9 @@ namespace NMib::NContainer::NPrivate
 			, mc_bIsFirstLevel = t_nBitsInternal == t_nBits
 			, mc_nSuperBits = t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)
 		};
-		typedef TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)> CSuper;
+
+		using CSuper = TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>;
+
 		TCBitArray<t_nBitsInternal> m_Bits;
 
 		constexpr TCBitArrayHierarchicalInternalArray(bool _bInitValues);

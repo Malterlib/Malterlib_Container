@@ -67,7 +67,7 @@ namespace NMib::NContainer
 		class TCSizeHelper
 		{
 		public:
-			typedef uaint CType;
+			using CType = uaint;
 		};
 
 		template <typename t_CDummy>

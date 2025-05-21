@@ -28,10 +28,10 @@ namespace NMib::NContainer
 	class TCVector
 	{
 	public:
-		typedef t_CData CData;
+		using CData = t_CData;
 
-		typedef TCVectorIterator<t_CData> CIterator;
-		typedef TCVectorIterator<t_CData const> CIteratorConst;
+		using CIterator = TCVectorIterator<t_CData>;
+		using CIteratorConst = TCVectorIterator<t_CData const>;
 
 	public:
 		TCVector() noexcept;

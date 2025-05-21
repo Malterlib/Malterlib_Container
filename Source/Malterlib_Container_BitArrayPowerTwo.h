@@ -12,7 +12,6 @@ namespace NMib::NContainer
 	class TCBitArrayPowerTwo
 	{
 	public:
-
 		constexpr TCBitArrayPowerTwo(bool _bInitValues = true);
 		void f_Clear();
 		template <typename tf_CStream>
@@ -71,9 +70,10 @@ namespace NMib::NContainer
 		void f_EnumSetBits(t_CFunctor &&_Functor, mint _StartBit = 0, mint _EndBit = t_nBits) const;
 		template <typename t_CFunctor>
 		void f_EnumSetBitRanges(t_CFunctor &&_Functor, mint _StartBit = 0, mint _EndBit = t_nBits) const;
-	private:
 
-		typedef NPrivate::TCBitArrayPowerTwoInternalArray<t_nBits, t_nBits, 0, t_TCBitArray, t_nMaxLevels> CInternal;
+	private:
+		using CInternal = NPrivate::TCBitArrayPowerTwoInternalArray<t_nBits, t_nBits, 0, t_TCBitArray, t_nMaxLevels>;
+
 		CInternal m_Bits;
 		static constexpr mint mc_nLevels = CInternal::mc_nLevels;
 	};

@@ -72,15 +72,14 @@ namespace NMib::NContainer
 	class TCLinkedList
 	{
 	private:
-
-		typedef TCLinkedListMember<t_CData> CMember;
+		using CMember = TCLinkedListMember<t_CData>;
 
 		class CAllocatorDisable : public NMemory::CAllocator_Base
 		{
 		public:
 		};
 
-		typedef NMib::NIntrusive::TCDLinkList
+		using CList = NMib::NIntrusive::TCDLinkList
 			<
 				CMember
 				, CLinkedListMemberBase::CDLinkTranslatorm_ListLink
@@ -88,13 +87,13 @@ namespace NMib::NContainer
 				, NMib::NIntrusive::CDLinkAggregateListNoPrevPtrList
 				, false
 				, CAllocatorDisable
-			> CList
+			>
 		;
 
-		typedef typename CList::CIterator CInternalIterator;
-		typedef typename CList::CTranslator CTranslator;
-		typedef typename CList::COffset COffset;
-		typedef typename CList::CLink CLink;
+		using CInternalIterator = typename CList::CIterator;
+		using CTranslator = typename CList::CTranslator;
+		using COffset = typename CList::COffset;
+		using CLink = typename CList::CLink;
 
 		class CLocalData : public t_CAllocator
 		{
@@ -214,7 +213,7 @@ namespace NMib::NContainer
 		class CIterator
 		{
 			friend class TCLinkedList;
-			typedef CInternalIterator CIntrusiveIterator;
+			using CIntrusiveIterator = CInternalIterator;
 			CIntrusiveIterator m_Iter;
 			TCLinkedList *m_pLinkedList;
 		public:
@@ -306,7 +305,7 @@ namespace NMib::NContainer
 		class CIteratorConst
 		{
 			friend class TCLinkedList;
-			typedef typename DMibListLinkAllocatorDS_IterConst_FromTemplate(CMember, m_ListLink, CAllocatorDisable) CIntrusiveIterator;
+			using CIntrusiveIterator = typename DMibListLinkAllocatorDS_IterConst_FromTemplate(CMember, m_ListLink, CAllocatorDisable);
 			CIntrusiveIterator m_Iter;
 		public:
 

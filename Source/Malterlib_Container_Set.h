@@ -11,7 +11,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CCompare = NMib::CSort_Default, typename t_CAllocator = NMib::NMemory::CAllocator_Heap>
 	struct TCSet : public TCMap<t_CKey, CMapSet, t_CCompare, t_CAllocator>
 	{
-		typedef TCMap<t_CKey, CMapSet, t_CCompare, t_CAllocator> CMap;
+		using CMap = TCMap<t_CKey, CMapSet, t_CCompare, t_CAllocator>;
 
 		TCSet();
 		TCSet(TCSet &&_Other);

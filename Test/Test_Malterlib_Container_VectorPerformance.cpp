@@ -1039,7 +1039,7 @@ namespace NMib
 				{
 					DMibTestSuite("Regressions")
 					{
-						typedef CThing CThing;
+						using CThing = CThing;
 						{
 							NMib::NContainer::TCVector<CThing> lVec;
 
