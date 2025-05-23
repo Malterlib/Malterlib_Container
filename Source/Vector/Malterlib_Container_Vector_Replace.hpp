@@ -5,31 +5,27 @@
 
 namespace NMib::NContainer
 {
-	// If you send 0 as _Len the remaining part of the list will be copied
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Replace(const TCVector &_Source, const mint _StartInSource, const mint _Len, const mint _StartInList, const mint _MinLen)
+	template <typename tf_CSource>
+	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Replace(tf_CSource &&_Source, mint _StartInSource, mint _Len, mint _StartInList, mint _MinLen)
+		requires (NTraits::cIsSame<NTraits::TCRemoveReference<tf_CSource>, TCVector>)
 	{
-		mint Len;
-		if (!_Len)
-			Len = _Source.f_GetLen() - _StartInSource;
-		else
-			Len = _Len;
+		constexpr static bool c_bIsMove = NTraits::cIsRValueReference<tf_CSource &&>;
 
-		DMibSafeCheck(_StartInSource + Len <= _Source.f_GetLen(), "Attempting to copy to much from source array");
-
-		mint NewLen = fg_Max(fg_Max(_StartInList + Len, f_GetLen()), _MinLen);
+		mint CurrentLength = f_GetLen();
+		mint Len = fg_Min(_Len, _Source.f_GetLen() - _StartInSource);
+		mint NewLen = fg_Max(fg_Max(_StartInList + Len, CurrentLength), _MinLen);
 
 		CVectorData *pNewData;
-		if (NewLen != f_GetLen())
+		if (NewLen != CurrentLength)
 		{
 			// New list
 			pNewData = fp_AllocData(NewLen);
 
-			t_CData *pOldArray = f_GetArray();
-			const t_CData *pSourceArray = _Source.f_GetArray();
-			t_CData *pNewArray = pNewData->f_GetData();
+			auto *pOldArray = f_GetArray();
+			auto *pSourceArray = _Source.f_GetArray();
+			auto *pNewArray = pNewData->f_GetData();
 
-			mint CurrentLength = f_GetLen();
 			mint OldRemainingCells = fg_Min(CurrentLength, _StartInList);
 			mint MaxLen = fg_Max(_StartInList + Len, CurrentLength);
 
@@ -37,7 +33,7 @@ namespace NMib::NContainer
 			mint nConstructed1 = 0;
 			mint nCopied = 0;
 
-			auto Cleanup = [&]
+			auto Cleanup = g_OnScopeExit / [&]
 				{
 					if (nConstructed0)
 						NPrivate::fg_DestroyArray(pNewArray + OldRemainingCells, nConstructed0, nConstructed0);
@@ -56,7 +52,10 @@ namespace NMib::NContainer
 				NPrivate::fg_ConstructArray(pNewArray + MaxLen, NewLen - MaxLen, nConstructed1);
 
 			// Construct all new datas with copy constructor from source datas
-			NPrivate::fg_CopyArray(pNewArray + _StartInList, pSourceArray + _StartInSource, Len, nCopied);
+			if constexpr (c_bIsMove)
+				NPrivate::fg_MoveArray(pNewArray + _StartInList, pSourceArray + _StartInSource, Len);
+			else
+				NPrivate::fg_CopyArray(pNewArray + _StartInList, pSourceArray + _StartInSource, Len, nCopied);
 
 			// Construct all new datas with copy constructor from old datas
 			NPrivate::fg_MoveArray(pNewArray, pOldArray, OldRemainingCells);
@@ -75,10 +74,8 @@ namespace NMib::NContainer
 			// Destroy old array
 			if (pOldData)
 			{
-#if DMibEnableSafeCheck > 0
-				if (!pOldData->m_bReserved || CurrentLength)
-#endif
-					NPrivate::fg_DestroyArray(pOldArray, CurrentLength);
+				if (CurrentLength)
+					NPrivate::fg_DestroyArray(pOldArray, CurrentLength, CurrentLength);
 				fp_FreeData(pOldData);
 			}
 		}
@@ -86,12 +83,15 @@ namespace NMib::NContainer
 		{
 			// We can fit everything in the old array
 
-			t_CData *pOldArray = f_GetArray();
-			const t_CData *pSourceArray = _Source.f_GetArray();
+			auto *pOldArray = f_GetArray();
+			auto *pSourceArray = _Source.f_GetArray();
 
-			DMibSafeCheck((_StartInList + NewLen) == f_GetLen(), "Must align");
+			DMibSafeCheck((_StartInList + Len) <= CurrentLength, "Must align");
 
-			fg_CopyOverArray(pOldArray + _StartInList, pSourceArray + _StartInSource - _StartInList, Len);
+			if constexpr (c_bIsMove)
+				NPrivate::fg_MoveOverArray(pOldArray + _StartInList, pSourceArray + _StartInSource, Len);
+			else
+				NPrivate::fg_CopyOverArray(pOldArray + _StartInList, pSourceArray + _StartInSource, Len);
 		}
 	}
 }

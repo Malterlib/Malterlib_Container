@@ -268,7 +268,11 @@ namespace NMib::NContainer
 
 		void f_Remove(mint _Start, mint _Len = 1);
 		void f_Move(mint _FromPosition, mint _ToPosition, mint _Len = 1);
-		void f_Replace(const TCVector &_Source, const mint _StartInSource = 0, const mint _Len = 0, const mint _StartInList = 0, const mint _MinLen = 0);
+
+		template <typename tf_CSource>
+		void f_Replace(tf_CSource &&_Source, mint _StartInSource = 0, mint _Len = TCLimitsInt<mint>::mc_Max, mint _StartInList = 0, mint _MinLen = 0)
+			requires (NTraits::cIsSame<NTraits::TCRemoveReference<tf_CSource>, TCVector>)
+		;
 
 		t_CData f_Pop();
 		t_CData f_PopBack();

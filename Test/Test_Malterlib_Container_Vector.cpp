@@ -12,12 +12,75 @@
 
 namespace
 {
+	using namespace NMib;
+	using namespace NMib::NStr;
 	using namespace NMib::NContainer;
 	using namespace NMib::NException;
+
+	constinit NAtomic::TCAtomic<mint> g_nObjects = 0;
 
 	class CVector_Tests : public NMib::NTest::CTest
 	{
 	public:
+		struct CCountedObject
+		{
+			CCountedObject(CStr const &_Value)
+				: m_Value(_Value)
+			{
+				++g_nObjects;
+			}
+
+			CCountedObject()
+			{
+				++g_nObjects;
+			}
+
+			~CCountedObject()
+			{
+				--g_nObjects;
+			}
+
+			CCountedObject(CCountedObject const &_Other)
+				: m_Value(_Other.m_Value)
+			{
+				if (_Other.m_bThrowCopy)
+					DMibError("Throw copy");
+
+				_Other.m_bCopiedFrom = true;
+
+				++g_nObjects;
+			}
+
+			CCountedObject(CCountedObject &&_Other)
+				: m_Value(fg_Move(_Other.m_Value))
+			{
+				_Other.m_bMovedFrom = true;
+
+				++g_nObjects;
+			}
+
+			bool operator == (CCountedObject const &_Right) const
+			{
+				return m_Value == _Right.m_Value;
+			}
+
+			COrdering_Weak operator <=> (CCountedObject const &_Right) const
+			{
+				return m_Value <=> _Right.m_Value;
+			}
+
+			template <typename tf_CStr>
+			void f_Format(tf_CStr &o_Str) const
+			{
+				o_Str += m_Value;
+			}
+
+			CStr m_Value;
+
+			bool m_bThrowCopy = false;
+			bool m_bMovedFrom = false;
+			mutable bool m_bCopiedFrom = false;
+		};
 
 		static TCVector<int32> fs_Vector(int32 _0, int32 _1, int32 _2, int32 _3, int32 _4, int32 _5, int32 _6, int32 _7, int32 _8, int32 _9)
 		{
@@ -44,6 +107,7 @@ namespace
 
 			return Ret;
 		}
+
 		void f_General()
 		{
 			DMibTestSuite("Basic")
@@ -360,7 +424,318 @@ namespace
 				TestVector.f_ClearNoTrim();
 			};
 #endif
+			auto fRunReplaceTests = [](mint _DestLen, mint _SourceLen, mint _SourceCopyLen, mint _SourceStart, mint _MinLen, mint _bThrowCopy, bool _bDoMove)
+				{
+					auto fDestVector = [&] -> TCVector<CCountedObject>
+						{
+							TCVector<CCountedObject> Vector;
 
+							for (mint i = 0; i < _DestLen; ++i)
+								Vector.f_Insert(CStr("Dst {}"_f << i));
+
+							return Vector;
+						}
+					;
+					auto fSourceVector = [&] -> TCVector<CCountedObject>
+						{
+							TCVector<CCountedObject> Vector;
+
+							for (mint i = 0; i < _SourceLen; ++i)
+								Vector.f_Insert(CStr("Src {}"_f << i));
+
+							Vector[fg_Min(_SourceStart + _SourceCopyLen / 2, Vector.f_GetLen() - 1)].m_bThrowCopy = _bThrowCopy;
+							return Vector;
+						}
+					;
+					auto fDoTest = [&](auto &&_fTest)
+						{
+							g_nObjects = 0;
+							if (_bDoMove || !_bThrowCopy)
+							{
+								_fTest();
+								return;
+							}
+
+							try
+							{
+								_fTest();
+							}
+							catch (...)
+							{
+							}
+						}
+					;
+
+					struct CExpected
+					{
+						CStr m_Type;
+						mint m_Len = 0;
+					};
+
+					auto fExpected = [](TCInitializerList<CExpected> _Expected) -> TCVector<CCountedObject>
+						{
+							mint iDest = 0;
+							mint iSource = 0;
+
+							TCVector<CCountedObject> Return;
+							
+							for (auto &Expected : _Expected)
+							{
+								if (Expected.m_Type == "D")
+								{
+									for (mint i = 0; i < Expected.m_Len; ++i)
+									{
+										Return.f_Insert().m_Value = "Dst {}"_f << iDest;
+										++iDest;
+									}
+								}
+								else if (Expected.m_Type == "S")
+								{
+									for (mint i = 0; i < Expected.m_Len; ++i)
+									{
+										Return.f_Insert().m_Value = "Src {}"_f << iSource;
+										++iSource;
+										++iDest;
+									}
+								}
+								else if (Expected.m_Type == "SI")
+									iSource += Expected.m_Len;
+								else
+								{
+									for (mint i = 0; i < Expected.m_Len; ++i)
+									{
+										Return.f_Insert();
+										++iDest;
+									}
+								}
+							}
+
+							return Return;
+						}
+					;
+
+					mint CopiedSourceLen = fg_Min(_SourceLen - _SourceStart, _SourceCopyLen);
+
+					DMibTestCategory("At start")
+					{
+						fDoTest
+							(
+								[&]
+								{
+									auto TestVector0 = fDestVector();
+									DMibExpect(g_nObjects.f_Load(), ==, _DestLen);
+									auto TestVector1 = fSourceVector();
+									DMibExpect(g_nObjects.f_Load(), ==, (_DestLen + _SourceLen));
+									{
+										DMibTestPath("After Replace");
+										if (_bDoMove)
+											TestVector0.f_Replace(fg_Move(TestVector1), _SourceStart, _SourceCopyLen, 0, _MinLen);
+										else
+											TestVector0.f_Replace(TestVector1, _SourceStart, _SourceCopyLen, 0, _MinLen);
+										DMibExpect(g_nObjects.f_Load(), ==,  fg_Max((_DestLen + _SourceLen), _MinLen + _SourceLen));
+									}
+									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, == , _bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, == , !_bDoMove);
+
+									mint EndLen = fg_Max(_MinLen, _DestLen) - _DestLen;
+									DMibExpect(TestVector0, == , fExpected({{"SI", _SourceStart}, {"S", CopiedSourceLen}, {"D", _DestLen - CopiedSourceLen}, {"", EndLen}}));
+								}
+							)
+						;
+
+						DMibExpect(g_nObjects.f_Load(), ==, 0);
+					};
+					DMibTestCategory("At end")
+					{
+						fDoTest
+							(
+								[&]
+								{
+									auto TestVector0 = fDestVector();
+									DMibExpect(g_nObjects.f_Load(), ==, _DestLen);
+									auto TestVector1 = fSourceVector();
+									DMibExpect(g_nObjects.f_Load(), ==, (_DestLen + _SourceLen));
+									{
+										DMibTestPath("After Replace");
+										if (_bDoMove)
+											TestVector0.f_Replace(fg_Move(TestVector1), _SourceStart, _SourceCopyLen, _DestLen - _SourceLen, _MinLen);
+										else
+											TestVector0.f_Replace(TestVector1, _SourceStart, _SourceCopyLen, _DestLen - _SourceLen, _MinLen);
+										DMibExpect(g_nObjects.f_Load(), ==, fg_Max((_DestLen + _SourceLen), _MinLen + _SourceLen));
+									}
+									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, == , _bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, == , !_bDoMove);
+
+									mint EndLen = fg_Max(_MinLen, _DestLen) - _DestLen;
+									DMibExpect
+										(
+											TestVector0
+											, ==
+											, fExpected({{"SI", _SourceStart}, {"D", _DestLen - _SourceLen}, {"S", CopiedSourceLen}, {"D", _SourceLen - CopiedSourceLen}, {"", EndLen}})
+										)
+									;
+								}
+							)
+						;
+						DMibExpect(g_nObjects.f_Load(), ==, 0);
+					};
+					DMibTestCategory("Straddling end")
+					{
+						fDoTest
+							(
+								[&]
+								{
+									mint CopyEnd = _DestLen - _SourceLen/2 + CopiedSourceLen;
+									mint NewEnd = fg_Max(_DestLen, CopyEnd);
+									mint EndLen = fg_Max(_MinLen, NewEnd) - NewEnd;
+									
+									auto TestVector0 = fDestVector();
+									DMibExpect(g_nObjects.f_Load(), ==, _DestLen);
+									auto TestVector1 = fSourceVector();
+									DMibExpect(g_nObjects.f_Load(), ==, (_DestLen + _SourceLen));
+									{
+										DMibTestPath("After Replace");
+										if (_bDoMove)
+											TestVector0.f_Replace(fg_Move(TestVector1), _SourceStart, _SourceCopyLen, _DestLen - _SourceLen/2, _MinLen);
+										else
+											TestVector0.f_Replace(TestVector1, _SourceStart, _SourceCopyLen, _DestLen - _SourceLen/2, _MinLen);
+										DMibExpect(g_nObjects.f_Load(), ==, fg_Max(_MinLen, NewEnd) + _SourceLen);
+									}
+									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, == , _bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, == , !_bDoMove);
+
+									DMibExpect
+										(
+											TestVector0
+											, ==
+											, fExpected({{"SI", _SourceStart}, {"D", _DestLen - _SourceLen/2}, {"S", CopiedSourceLen}, {"", EndLen}})
+										)
+									;
+								}
+							)
+						;
+						DMibExpect(g_nObjects.f_Load(), ==, 0);
+					};
+					DMibTestCategory("Past end")
+					{
+						fDoTest
+							(
+								[&]
+								{
+									mint CopyEnd = _DestLen + CopiedSourceLen;
+									mint NewEnd = fg_Max(_DestLen, CopyEnd);
+									mint EndLen = fg_Max(_MinLen, NewEnd) - NewEnd;
+
+									auto TestVector0 = fDestVector();
+									DMibExpect(g_nObjects.f_Load(), ==, _DestLen);
+									auto TestVector1 = fSourceVector();
+									DMibExpect(g_nObjects.f_Load(), ==, (_DestLen + _SourceLen));
+									{
+										DMibTestPath("After Replace");
+										if (_bDoMove)
+											TestVector0.f_Replace(fg_Move(TestVector1), _SourceStart, _SourceCopyLen, _DestLen, _MinLen);
+										else
+											TestVector0.f_Replace(TestVector1, _SourceStart, _SourceCopyLen, _DestLen, _MinLen);
+										DMibExpect(g_nObjects.f_Load(), ==, fg_Max(_MinLen, NewEnd) + _SourceLen);
+									}
+									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, == , _bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, == , !_bDoMove);
+
+									DMibExpect
+										(
+											TestVector0
+											, ==
+											, fExpected({{"SI", _SourceStart}, {"D", _DestLen}, {"S", CopiedSourceLen}, {"", EndLen}})
+										)
+									;
+								}
+							)
+						;
+						DMibExpect(g_nObjects.f_Load(), ==, 0);
+					};
+					DMibTestCategory("Past end 2")
+					{
+						fDoTest
+							(
+								[&]
+								{
+									mint CopyEnd = _DestLen + _SourceLen + CopiedSourceLen;
+									mint NewEnd = fg_Max(_DestLen, CopyEnd);
+									mint EndLen = fg_Max(_MinLen, NewEnd) - NewEnd;
+
+									auto TestVector0 = fDestVector();
+									DMibExpect(g_nObjects.f_Load(), ==, _DestLen);
+									auto TestVector1 = fSourceVector();
+									DMibExpect(g_nObjects.f_Load(), ==, (_DestLen + _SourceLen));
+									{
+										DMibTestPath("After Replace");
+										if (_bDoMove)
+											TestVector0.f_Replace(fg_Move(TestVector1), _SourceStart, _SourceCopyLen, _DestLen + _SourceLen, _MinLen);
+										else
+											TestVector0.f_Replace(TestVector1, _SourceStart, _SourceCopyLen, (_DestLen + _SourceLen), _MinLen);
+										DMibExpect(g_nObjects.f_Load(), ==, fg_Max(_MinLen, NewEnd) + _SourceLen);
+									}
+									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, == , _bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, == , !_bDoMove);
+
+									DMibExpect
+										(
+											TestVector0
+											, ==
+											, fExpected({{"SI", _SourceStart}, {"D", _DestLen}, {"", _SourceLen}, {"S", CopiedSourceLen}, {"", EndLen}})
+										)
+									;
+								}
+							)
+						;
+						DMibExpect(g_nObjects.f_Load(), ==, 0);
+					};
+				}
+			;
+
+			DMibTestSuite("Replace")
+			{
+				for (auto MoveCategory : {gc_Str<"Move">.m_Str, gc_Str<"Copy">.m_Str})
+				{
+					DMibTestCategory(MoveCategory)
+					{
+						for (auto ExceptionCategory : {gc_Str<"No Exception">.m_Str, gc_Str<"ThrowCopy">.m_Str})
+						{
+							DMibTestCategory(ExceptionCategory)
+							{
+								for (auto LenCategory : {gc_Str<"No MinLen">.m_Str, gc_Str<"MinLen">.m_Str})
+								{
+									DMibTestCategory(LenCategory)
+									{
+										for (auto OffsetSource : {gc_Str<"No SourceOffset">.m_Str, gc_Str<"SourceOffset">.m_Str})
+										{
+											DMibTestCategory(OffsetSource)
+											{
+												for (auto SourceCopyLenCategory : {gc_Str<"SourceCopyLenUnrestricted">.m_Str, gc_Str<"SourceCopyLenRestricted">.m_Str})
+												{
+													DMibTestCategory(SourceCopyLenCategory)
+													{
+														mint DestLen = 100;
+														mint SourceLen = 20;
+														mint SourceCopyLen = SourceCopyLenCategory == "SourceCopyLenUnrestricted" ? SourceLen : (SourceLen * 2) / 3;
+														mint SourceStart = OffsetSource == "SourceOffset" ? 3 : 0;
+
+														mint MinLen = LenCategory == "No MinLen" ? 0 : 200;
+														mint bThrowCopy = ExceptionCategory == "ThrowCopy";
+														bool bDoMove = MoveCategory == "Move";
+
+														fRunReplaceTests(DestLen, SourceLen, SourceCopyLen, SourceStart, MinLen, bThrowCopy, bDoMove);
+													};
+												}
+											};
+										}
+									};
+								}
+							};
+						}
+					};
+				}
+			};
 		}
 
 		struct CExceptionObject
