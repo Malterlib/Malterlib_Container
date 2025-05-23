@@ -33,9 +33,7 @@ namespace NMib::NContainer
 
 			if (pOldData)
 			{
-#if DMibEnableSafeCheck > 0
-				if (!pOldData->m_bReserved || OldLen)
-#endif
+				if (OldLen)
 					NPrivate::fg_DestroyArray(pOldArray, OldLen, OldLen);
 				fp_FreeData(pOldData);
 			}
@@ -98,9 +96,7 @@ namespace NMib::NContainer
 
 			if (pOldData)
 			{
-#if DMibEnableSafeCheck > 0
-				if (!pOldData->m_bReserved || OldLen)
-#endif
+				if (OldLen)
 					NPrivate::fg_DestroyArray(pOldArray, OldLen, OldLen);
 				fp_FreeData(pOldData);
 			}
@@ -171,9 +167,7 @@ namespace NMib::NContainer
 
 			if (pOldData)
 			{
-#if DMibEnableSafeCheck > 0
-				if (!pOldData->m_bReserved || CurrentLength)
-#endif
+				if (CurrentLength)
 					NPrivate::fg_DestroyArray(pOldArray, CurrentLength, CurrentLength);
 				fp_FreeData(pOldData);
 			}
@@ -213,17 +207,15 @@ namespace NMib::NContainer
 
 			if (pOldData)
 			{
-#if DMibEnableSafeCheck > 0
-				if (!pOldData->m_bReserved || CurrentLength)
-#endif
+				if (CurrentLength)
 					NPrivate::fg_DestroyArray(pOldArray, CurrentLength, CurrentLength);
 				fp_FreeData(pOldData);
 			}
 		}
 		else
 		{
-			t_CData *pOldArray = f_GetArray();
-			NPrivate::fg_DestroyArray(pOldArray, OldLen, mp_StaticData.m_pData->m_Length);
+			if (OldLen)
+				NPrivate::fg_DestroyArray(f_GetArray(), OldLen, mp_StaticData.m_pData->m_Length);
 		}
 		return mp_StaticData.m_pData->f_GetData();
 	}

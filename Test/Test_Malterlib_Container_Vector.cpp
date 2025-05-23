@@ -465,6 +465,19 @@ namespace
 			};
 		}
 
+		void f_Bugs()
+		{
+			DMibTestSuite("Addition of unsigned offset overflow")
+			{
+				TCVector<CStr> TestVector;
+
+				TestVector.f_Reserve(2);
+				TestVector.f_Clear();
+
+				DMibExpectTrue(TestVector.f_IsEmpty());
+			};
+		}
+
 		void f_DoTests()
 		{
 			DMibTestCategory("General")
@@ -474,6 +487,10 @@ namespace
 			DMibTestCategory("ExceptionSafety")
 			{
 				this->f_ExceptionSafety();
+			};
+			DMibTestCategory("Bugs")
+			{
+				this->f_Bugs();
 			};
 		}
 	};

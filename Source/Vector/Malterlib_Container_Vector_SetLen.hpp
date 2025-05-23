@@ -31,9 +31,7 @@ namespace NMib::NContainer
 
 			if (pOldData)
 			{
-#if DMibEnableSafeCheck > 0
-				if (!pOldData->m_bReserved || CurrentLength)
-#endif
+				if (CurrentLength)
 					NPrivate::fg_DestroyArray(pOldArray, CurrentLength, CurrentLength);
 				fp_FreeData(pOldData);
 			}
@@ -57,12 +55,7 @@ namespace NMib::NContainer
 			return;
 
 		if (!fsp_NeedReallocGrow(_Space, mp_StaticData.m_pData))
-		{
-#if DMibEnableSafeCheck > 0
-			mp_StaticData.m_pData->m_bReserved = true;
-#endif
 			return;
-		}
 
 		CVectorData *pNewData = fp_AllocData(_Space);
 		t_CData *pOldArray = f_GetArray();
@@ -72,18 +65,13 @@ namespace NMib::NContainer
 		NPrivate::fg_MoveArray(pNewArray, pOldArray, CurrentLength);
 
 		pNewData->m_Length = CurrentLength;
-#if DMibEnableSafeCheck > 0
-		pNewData->m_bReserved = true;
-#endif
 
 		auto pOldData = mp_StaticData.m_pData;
 		mp_StaticData.m_pData = pNewData;
 
 		if (pOldData)
 		{
-#if DMibEnableSafeCheck > 0
-			if (!pOldData->m_bReserved || CurrentLength)
-#endif
+			if (CurrentLength)
 				NPrivate::fg_DestroyArray(pOldArray, CurrentLength, CurrentLength);
 			fp_FreeData(pOldData);
 		}
@@ -140,9 +128,7 @@ namespace NMib::NContainer
 
 			if (pOldData)
 			{
-#if DMibEnableSafeCheck > 0
-				if (!pOldData->m_bReserved || CurrentLength)
-#endif
+				if (CurrentLength)
 					NPrivate::fg_DestroyArray(pOldArray, CurrentLength, CurrentLength);
 				fp_FreeData(pOldData);
 			}

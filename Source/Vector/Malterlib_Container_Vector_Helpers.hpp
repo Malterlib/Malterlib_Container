@@ -28,13 +28,8 @@ namespace NMib::NContainer::NPrivate
 	template <typename t_CData>
 	static void fg_DestroyArray(t_CData *_pDest, mint _Len, mint &o_Len)
 	{
-		if (!_pDest)
-		{
-			DMibFastCheck(_Len == 0);
-			return;
-		}
-		
 		DMibFastCheck(_Len != 0);
+		DMibFastCheck(_pDest);
 
 		if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
 		{
