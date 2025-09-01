@@ -8,7 +8,7 @@ namespace NMib::NContainer::NPrivate
 	template <typename t_CNode, typename t_CKey>
 	struct TCMapNodeCompare_Default;
 
-	template 
+	template
 	<
 		typename t_CNode
 		, typename t_CCompare
@@ -57,18 +57,25 @@ namespace NMib::NContainer
 		template <typename tf_CStream>
 		void f_Consume(tf_CStream &_Stream);
 
-		inline_small const t_CKey &f_Key() const;
-		inline_small t_CValue &f_Value() &;
-		inline_small t_CValue &&f_Value() &&;
-		inline_small const t_CValue &f_Value() const &;
+		constexpr inline_small const t_CKey &f_Key() const noexcept;
+		constexpr inline_small t_CValue &f_Value() & noexcept;
+		constexpr inline_small t_CValue &&f_Value() && noexcept;
+		constexpr inline_small const t_CValue &f_Value() const & noexcept;
 
 		constexpr static bool mc_bHasValue = true;
+
+		template <mint tf_iValue>
+		constexpr decltype(auto) get() const & noexcept;
+		template <mint tf_iValue>
+		constexpr decltype(auto) get() & noexcept;
+		template <mint tf_iValue>
+		constexpr decltype(auto) get() && noexcept;
 
 	private:
 		template <typename t_CNode2, typename t_CKey2>
 		friend struct NPrivate::TCMapNodeCompare_Default;
 
-		template 
+		template
 		<
 			typename t_CNode2
 			, typename t_CCompare2
@@ -195,5 +202,26 @@ namespace NMib::NContainer
 
 		t_CNode *mp_pNode = nullptr;
 		DMibNoUniqueAddress t_CAllocator mp_Allocator;
+	};
+}
+
+namespace std
+{
+	template <typename t_CKey, typename t_CValue>
+	struct tuple_size<NMib::NContainer::TCMapNode<t_CKey, t_CValue>>
+		: public integral_constant<size_t, 2>
+	{
+	};
+
+	template <typename t_CKey, typename t_CValue>
+	struct tuple_element<0, NMib::NContainer::TCMapNode<t_CKey, t_CValue>>
+	{
+		using type = const t_CKey;
+	};
+
+	template <typename t_CKey, typename t_CValue>
+	struct tuple_element<1, NMib::NContainer::TCMapNode<t_CKey, t_CValue>>
+	{
+		using type = t_CValue;
 	};
 }

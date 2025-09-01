@@ -1,4 +1,4 @@
-// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
@@ -174,7 +174,7 @@ namespace NMib::NContainer
 	private:
 		template <typename t_CKey2, typename t_CValue2, typename t_CCompare2, typename t_CAllocator2>
 		friend struct TCMap;
-		
+
 		template <typename t_CDestination, bool t_bIsRef>
 		friend struct NPrivate::TCMapCopy;
 		friend CIterator;
@@ -190,7 +190,7 @@ namespace NMib::NContainer
 
 		template <typename t_CMap2, EMapIteratorAccess t_Access2, bool t_bReverse2, bool t_bConst2, bool t_bBidirectional2>
 		friend struct NPrivate::TCMapIterator;
-		
+
 		using CNodeCompare = TCConditional
 			<
 				NTraits::cIsSame<t_CCompare, NMib::CSort_Default>
@@ -211,7 +211,7 @@ namespace NMib::NContainer
 
 		template <typename... tfp_CParams>
 		TCMap(CAllocatorConstructTag const &, tfp_CParams && ...p_Params);
-		
+
 		template <typename... tfp_CParams>
 		TCMap(CCompareConstructTag const &, tfp_CParams && ...p_Params);
 

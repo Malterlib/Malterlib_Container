@@ -26,13 +26,16 @@ namespace NMib::NContainer
 		inline_small const t_CKey &f_Key() const;
 		inline_small const t_CKey &f_Value() const;
 
+		template <mint tf_iValue>
+		constexpr decltype(auto) get() const & noexcept;
+
 		constexpr static bool mc_bHasValue = false;
 
 	private:
 		template <typename t_CNode2, typename t_CKey2>
 		friend struct NPrivate::TCMapNodeCompare_Default;
 
-		template 
+		template
 		<
 			typename t_CNode2
 			, typename t_CCompare2
@@ -56,7 +59,7 @@ namespace NMib::NContainer
 
 		template <typename t_CNode2, typename t_CAllocator2>
 		friend struct TCMapNodeHandle;
-		
+
 		template <typename t_CKey2, typename t_CValue2, typename t_CCompare2, typename t_CAllocator2>
 		friend struct TCMap;
 
@@ -95,3 +98,17 @@ namespace NMib::NContainer::NPrivate
 	};
 }
 
+namespace std
+{
+	template <typename t_CKey>
+	struct tuple_size<NMib::NContainer::TCMapNode<t_CKey, NMib::NContainer::CMapSet>>
+		: public integral_constant<size_t, 1>
+	{
+	};
+
+	template <typename t_CKey>
+	struct tuple_element<0, NMib::NContainer::TCMapNode<t_CKey, NMib::NContainer::CMapSet>>
+	{
+		using type = const t_CKey;
+	};
+}

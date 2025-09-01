@@ -44,10 +44,17 @@ namespace NMib::NContainer
 	{
 		return mp_Key;
 	}
-	
+
 	template <typename t_CKey>
 	inline_small const t_CKey &TCMapNode<t_CKey, CMapSet>::f_Value() const
 	{
 		return mp_Key;
+	}
+
+	template <typename t_CKey>
+	template <mint tf_iValue>
+	constexpr decltype(auto) TCMapNode<t_CKey, CMapSet>::get() const & noexcept
+	{
+		return f_Key();
 	}
 }
