@@ -1,4 +1,4 @@
-// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
@@ -25,15 +25,13 @@ namespace NMib::NContainer
 	};
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	class TCVector
+	struct TCVector
 	{
-	public:
 		using CData = t_CData;
 
 		using CIterator = TCVectorIterator<t_CData>;
 		using CIteratorConst = TCVectorIterator<t_CData const>;
 
-	public:
 		TCVector() noexcept;
 		~TCVector();
 
@@ -114,7 +112,7 @@ namespace NMib::NContainer
 		;
 
 		/// Insert last
-		
+
 		template <typename tf_CData>
 		TCVector &operator << (tf_CData &&_Data);
 
@@ -327,6 +325,30 @@ namespace NMib::NContainer
 		TCVector f_Reverse() const &;
 		TCVector f_Reverse() &&;
 
+		template <typename tf_CThis, typename tf_FTransform>
+		auto f_Map(this tf_CThis &&_This, tf_FTransform &&_fTransform);
+
+		template <typename tf_CThis, typename tf_FPredicate>
+		auto f_Filter(this tf_CThis &&_This, tf_FPredicate &&_fPredicate);
+
+		template <typename tf_FPredicate>
+		bool f_Every(tf_FPredicate &&_fPredicate) const;
+
+		template <typename tf_FPredicate>
+		bool f_Some(tf_FPredicate &&_fPredicate) const;
+
+		template <typename tf_CThis, typename tf_FReducer, typename tf_CAccumulator>
+		auto f_Reduce(this tf_CThis &&_This, tf_FReducer &&_fReducer, tf_CAccumulator &&_Accumulator);
+
+		template <typename tf_CThis, typename tf_FReducer>
+		auto f_Reduce(this tf_CThis &&_This, tf_FReducer &&_fReducer);
+
+		template <typename tf_CThis, typename tf_FReducer, typename tf_CAccumulator>
+		auto f_ReduceRight(this tf_CThis &&_This, tf_FReducer &&_fReducer, tf_CAccumulator &&_Accumulator);
+
+		template <typename tf_CThis, typename tf_FReducer>
+		auto f_ReduceRight(this tf_CThis &&_This, tf_FReducer &&_fReducer);
+
 		struct CFormatOptions
 		{
 			bool m_bSingleLine = false;
@@ -342,6 +364,9 @@ namespace NMib::NContainer
 		static TCVector fs_FromContainer(tf_CContainer &&_Container);
 
 	private:
+		template <typename t_CData2, typename t_CAllocator2, typename t_COptions2>
+		friend struct TCVector;
+
 #if defined(DCompiler_MSVC_Workaround)
 		static constexpr mint fsp_Alignment()
 		{
@@ -358,7 +383,7 @@ namespace NMib::NContainer
 		public:
 			mint m_Length;
 			mint m_AllocSize;
-			
+
 			inline_small t_CData *f_GetData()
 			{
 				return (t_CData *)(this + 1);
@@ -534,7 +559,7 @@ namespace NMib::NContainer
 
 #include "Vector/Malterlib_Container_Vector_Helpers.hpp"
 #include "Vector/Malterlib_Container_Vector.hpp"
-		
+
 #include "Vector/Malterlib_Container_Vector_Allocation.hpp"
 #include "Vector/Malterlib_Container_Vector_BoundsCheck.hpp"
 #include "Vector/Malterlib_Container_Vector_Compare.hpp"
@@ -569,6 +594,10 @@ namespace NMib::NContainer
 #include "Vector/Malterlib_Container_Vector_SetLen.hpp"
 #include "Vector/Malterlib_Container_Vector_Sort.hpp"
 #include "Vector/Malterlib_Container_Vector_Stream.hpp"
+#include "Vector/Malterlib_Container_Vector_FunctionalHelpers.hpp"
+#include "Vector/Malterlib_Container_Vector_Map.hpp"
+#include "Vector/Malterlib_Container_Vector_Filter.hpp"
+#include "Vector/Malterlib_Container_Vector_Functional.hpp"
 
 namespace NMib::NContainer
 {
