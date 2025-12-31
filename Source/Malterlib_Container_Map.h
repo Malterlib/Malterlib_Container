@@ -262,11 +262,6 @@ namespace NMib::NContainer
 		CUserData &f_Insert(CNodeHandle const &_Node) = delete;
 		CUserData &f_Insert(CNodeHandle &_Node) = delete;
 
-		template <typename tf_CKey>
-		CUserData &f_Map(tf_CKey &&_Key);
-		template <typename tf_CKey, typename... tfp_CArgs>
-		CUserData &f_Map(tf_CKey &&_Key, bool &_bCreated, tfp_CArgs && ... p_Args);
-
 		template <typename tf_FDoInsert>
 		void f_BatchMap(tf_FDoInsert &&_fDoInsert);
 		template <typename tf_FDoInsert>

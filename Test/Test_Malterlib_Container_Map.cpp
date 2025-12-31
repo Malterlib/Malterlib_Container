@@ -472,9 +472,8 @@ namespace
 				TCMap<int, int const &> Testing;
 				static_assert(sizeof(Testing) == sizeof(void *));
 
-				bool bCreated;
 				for (int i = 0; i < 10; ++i)
-					Testing.f_Map(i, bCreated, Values[i]);
+					Testing[i, Values[i]];
 
 				auto Iter = Testing.f_GetIterator();
 				{

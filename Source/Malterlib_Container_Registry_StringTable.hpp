@@ -1,4 +1,4 @@
-// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
@@ -79,9 +79,9 @@ namespace NMib::NContainer
 	template <typename tf_CStr>
 	t_CIndex TCRegistryStringTable<t_CStr, t_CIndex>::f_GetIndex(tf_CStr const &_String)
 	{
-		bool bCreated = false;
-		CIndex &Index = m_Strings.f_Map(_String, bCreated);
-		if (bCreated)
+		auto Mapped = m_Strings(_String);
+		CIndex &Index = *Mapped;
+		if (Mapped.f_WasCreated())
 		{
 			Index.m_Index = m_CurrentIndex;
 			++m_CurrentIndex;
