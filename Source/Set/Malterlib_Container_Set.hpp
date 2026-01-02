@@ -120,7 +120,7 @@ namespace NMib::NContainer
 #endif
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Or(TCSet const &_Other) const -> TCSet 
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Or(TCSet const &_Other) const -> TCSet
 	{
 		TCSet Return = *this;
 		Return += _Other;
@@ -128,22 +128,19 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator | (TCSet const &_Right) const -> TCSet 
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator | (TCSet const &_Right) const -> TCSet
 	{
 		return f_Or(_Right);
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_And(TCSet const &_Other) const -> TCSet 
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_And(TCSet const &_Other) const -> TCSet
 	{
 		TCSet Return;
 		auto iLeft = this->f_GetIterator();
 		auto iRight = _Other.f_GetIterator();
 
-		if (!iRight)
-			return {};
-
-		while (true)
+		while (iRight)
 		{
 			while (iLeft && *iLeft < *iRight)
 				++iLeft;
@@ -162,13 +159,13 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator & (TCSet const &_Right) const -> TCSet 
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator & (TCSet const &_Right) const -> TCSet
 	{
 		return f_And(_Right);
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Xor(TCSet const &_Right) const -> TCSet 
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Xor(TCSet const &_Right) const -> TCSet
 	{
 		TCSet Return;
 		auto iLeft = this->f_GetIterator();
@@ -180,7 +177,7 @@ namespace NMib::NContainer
 			return Return;
 		}
 
-		while (true)
+		while (iRight)
 		{
 			for (; iLeft && *iLeft < *iRight; ++iLeft)
 				Return[*iLeft];
@@ -193,28 +190,30 @@ namespace NMib::NContainer
 			}
 			for (; iRight && *iRight < *iLeft; ++iRight)
 				Return[*iRight];
+
 			if (!iRight)
-			{
-				for (; iLeft; ++iLeft)
-					Return[*iLeft];
 				break;
-			}
-			Return[*iLeft];
+
+			// Equal elements - skip both (XOR excludes elements in both sets)
 			++iLeft;
 			++iRight;
 		}
+
+		// Add any remaining elements from left
+		for (; iLeft; ++iLeft)
+			Return[*iLeft];
 
 		return Return;
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator ^ (TCSet const &_Right) -> TCSet 
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator ^ (TCSet const &_Right) -> TCSet
 	{
 		return f_Xor(_Right);
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Difference(TCSet const &_Right) const -> TCSet 
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Difference(TCSet const &_Right) const -> TCSet
 	{
 		TCSet Return = *this;
 
@@ -226,7 +225,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator - (TCSet const &_Right) -> TCSet 
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator - (TCSet const &_Right) -> TCSet
 	{
 		return f_Difference(_Right);
 	}
