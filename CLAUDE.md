@@ -152,7 +152,7 @@ auto Version = Reg.f_GetString("Software/MyApp/Version");
 ### Running Module Tests
 ```bash
 # Build tests
-./mib build Tests macOS x86_64 Debug
+MalterlibBuildShowProgress=false ./mib build Tests macOS arm64 Debug
 
 # Run all container tests
 /opt/Deploy/Tests/RunAllTests --paths '["Container/*"]'
