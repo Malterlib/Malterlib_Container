@@ -43,6 +43,9 @@ namespace NMib::NContainer
 		TCVector(t_CData const *_pItems, mint _nItems);
 		TCVector(mint _nItems);
 
+		template <typename... tfp_CParams>
+		TCVector(CAllocatorConstructTag const &, tfp_CParams && ...p_Params);
+
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 		TCVector(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Source);
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>

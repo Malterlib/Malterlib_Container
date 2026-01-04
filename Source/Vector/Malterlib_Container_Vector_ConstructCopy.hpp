@@ -37,6 +37,7 @@ namespace NMib::NContainer
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	TCVector<t_CData, t_CAllocator, t_COptions>::TCVector(TCVector const &_Source)
+		: mp_StaticData{_Source.fp_Allocator(), nullptr}
 	{
 		auto Cleanup = g_OnScopeExit / [&]
 			{

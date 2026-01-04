@@ -1,4 +1,4 @@
-// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
@@ -7,10 +7,30 @@ namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	TCVector<t_CData, t_CAllocator, t_COptions>::TCVector(TCVector &&_Source)
+		: mp_StaticData{fg_Move(_Source.fp_Allocator()), nullptr}
 	{
-		if constexpr (t_CAllocator::mc_CanBeStatic)
+		if constexpr (NTraits::cIsEmpty<t_CAllocator>)
 		{
-			if (_Source.fp_Allocator().f_IsStatic(_Source.mp_StaticData.m_pData))
+			mp_StaticData.m_pData = _Source.mp_StaticData.m_pData;
+			_Source.mp_StaticData.m_pData = nullptr;
+		}
+		else
+		{
+			bool bCanSteal = false;
+			if constexpr (t_CAllocator::mc_CanBeStatic)
+			{
+				if (!_Source.fp_Allocator().f_IsStatic(_Source.mp_StaticData.m_pData))
+					bCanSteal = fp_Allocator() == _Source.fp_Allocator();
+			}
+			else
+				bCanSteal = fp_Allocator() == _Source.fp_Allocator();
+
+			if (bCanSteal)
+			{
+				mp_StaticData.m_pData = _Source.mp_StaticData.m_pData;
+				_Source.mp_StaticData.m_pData = nullptr;
+			}
+			else
 			{
 				auto Cleanup = g_OnScopeExit / [&]
 					{
@@ -22,16 +42,6 @@ namespace NMib::NContainer
 
 				Cleanup.f_Clear();
 			}
-			else
-			{
-				mp_StaticData.m_pData = _Source.mp_StaticData.m_pData;
-				_Source.mp_StaticData.m_pData = nullptr;
-			}
-		}
-		else
-		{
-			mp_StaticData.m_pData = _Source.mp_StaticData.m_pData;
-			_Source.mp_StaticData.m_pData = nullptr;
 		}
 	}
 
@@ -57,7 +67,7 @@ namespace NMib::NContainer
 
 		Cleanup.f_Clear();
 	}
-	
+
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 	auto TCVector<t_CData, t_CAllocator, t_COptions>::operator = (TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Source) -> TCVector &
@@ -98,9 +108,28 @@ namespace NMib::NContainer
 	{
 		f_Clear();
 
-		if constexpr (t_CAllocator::mc_CanBeStatic)
+		if constexpr (NTraits::cIsEmpty<t_CAllocator>)
 		{
-			if (_Source.fp_Allocator().f_IsStatic(_Source.mp_StaticData.m_pData))
+			mp_StaticData.m_pData = _Source.mp_StaticData.m_pData;
+			_Source.mp_StaticData.m_pData = nullptr;
+		}
+		else
+		{
+			bool bCanSteal = false;
+			if constexpr (t_CAllocator::mc_CanBeStatic)
+			{
+				if (!_Source.fp_Allocator().f_IsStatic(_Source.mp_StaticData.m_pData))
+					bCanSteal = fp_Allocator() == _Source.fp_Allocator();
+			}
+			else
+				bCanSteal = fp_Allocator() == _Source.fp_Allocator();
+
+			if (bCanSteal)
+			{
+				mp_StaticData.m_pData = _Source.mp_StaticData.m_pData;
+				_Source.mp_StaticData.m_pData = nullptr;
+			}
+			else
 			{
 				auto Cleanup = g_OnScopeExit / [&]
 					{
@@ -112,16 +141,6 @@ namespace NMib::NContainer
 
 				Cleanup.f_Clear();
 			}
-			else
-			{
-				mp_StaticData.m_pData = _Source.mp_StaticData.m_pData;
-				_Source.mp_StaticData.m_pData = nullptr;
-			}
-		}
-		else
-		{
-			mp_StaticData.m_pData = _Source.mp_StaticData.m_pData;
-			_Source.mp_StaticData.m_pData = nullptr;
 		}
 
 		return *this;

@@ -3,6 +3,7 @@
 
 #include <Mib/Test/Exception>
 #include <Mib/Test/Memory>
+#include <Mib/Memory/MemoryManager>
 
 /*************************************************************************************************\
 |¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -853,6 +854,202 @@ namespace
 			};
 		}
 
+		void f_Allocators()
+		{
+			DMibTestSuite("DefaultAllocator")
+			{
+				// Default allocator is stateless - can always steal
+				DMibTestCategory("MoveConstruct")
+				{
+					TCVector<CStr> VectorA;
+					VectorA.f_Insert("Value1");
+					VectorA.f_Insert("Value2");
+
+					CStr *pOriginalData = VectorA.f_GetArray();
+
+					TCVector<CStr> VectorB(fg_Move(VectorA));
+
+					DMibExpect(VectorB.f_GetLen(), ==, 2);
+					DMibExpect(VectorA.f_GetLen(), ==, 0);
+					DMibExpect(VectorB.f_GetArray(), ==, pOriginalData);
+				};
+				DMibTestCategory("MoveAssign")
+				{
+					TCVector<CStr> VectorA;
+					VectorA.f_Insert("Value1");
+					VectorA.f_Insert("Value2");
+
+					CStr *pOriginalData = VectorA.f_GetArray();
+
+					TCVector<CStr> VectorB;
+					VectorB.f_Insert("Existing");
+					VectorB = fg_Move(VectorA);
+
+					DMibExpect(VectorB.f_GetLen(), ==, 2);
+					DMibExpect(VectorA.f_GetLen(), ==, 0);
+					DMibExpect(VectorB.f_GetArray(), ==, pOriginalData);
+				};
+			};
+			DMibTestSuite("StatefulAllocator")
+			{
+				using CMemoryManagerParams = NMemory::TCMemoryManagerParams<>;
+				using CMemoryManager = NMemory::TCMemoryManager<CMemoryManagerParams>;
+				using CStatefulAllocator = NMemory::TCAllocator_MemoryManager<CMemoryManagerParams>;
+				using CVectorStateful = TCVector<CStr, CStatefulAllocator>;
+
+				CMemoryManager MemoryManagerA{NMemory::CMemoryManagerConfig()};
+				CMemoryManager MemoryManagerB{NMemory::CMemoryManagerConfig()};
+
+				DMibTestCategory("MoveConstruct")
+				{
+					// Move construction copies the allocator from source, so can always steal
+					CVectorStateful VectorA(CAllocatorConstructTag(), &MemoryManagerA);
+					VectorA.f_Insert("Value1");
+					VectorA.f_Insert("Value2");
+					VectorA.f_Insert("Value3");
+
+					CStr *pOriginalData = VectorA.f_GetArray();
+
+					// Move construct - should steal because allocator is copied from source
+					CVectorStateful VectorB(fg_Move(VectorA));
+
+					DMibExpect(VectorB.f_GetLen(), ==, 3);
+					DMibExpect(VectorA.f_GetLen(), ==, 0);
+					// Verify pointer was stolen (same address)
+					DMibExpect(VectorB.f_GetArray(), ==, pOriginalData);
+				};
+				DMibTestCategory("MoveAssign")
+				{
+					DMibTestCategory("SameAllocator")
+					{
+						CVectorStateful VectorA(CAllocatorConstructTag(), &MemoryManagerA);
+						VectorA.f_Insert("Value1");
+						VectorA.f_Insert("Value2");
+
+						CStr *pOriginalData = VectorA.f_GetArray();
+
+						CVectorStateful VectorB(CAllocatorConstructTag(), &MemoryManagerA);
+						VectorB.f_Insert("Existing");
+						VectorB = fg_Move(VectorA);
+
+						DMibExpect(VectorB.f_GetLen(), ==, 2);
+						DMibExpect(VectorA.f_GetLen(), ==, 0);
+						DMibExpect(VectorB.f_GetArray(), ==, pOriginalData);
+					};
+					DMibTestCategory("DifferentAllocator")
+					{
+						CVectorStateful VectorA(CAllocatorConstructTag(), &MemoryManagerA);
+						VectorA.f_Insert("Value1");
+						VectorA.f_Insert("Value2");
+
+						CStr *pOriginalData = VectorA.f_GetArray();
+
+						CVectorStateful VectorB(CAllocatorConstructTag(), &MemoryManagerB);
+						VectorB.f_Insert("Existing");
+						VectorB = fg_Move(VectorA);
+
+						DMibExpect(VectorB.f_GetLen(), ==, 2);
+						// Source should still have data (was copied, not stolen)
+						DMibExpect(VectorA.f_GetLen(), ==, 2);
+						DMibExpect(VectorB.f_GetArray(), !=, pOriginalData);
+						DMibExpect(VectorB[0], ==, CStr("Value1"));
+						DMibExpect(VectorB[1], ==, CStr("Value2"));
+					};
+				};
+			};
+			DMibTestSuite("StaticAllocator")
+			{
+				// Use small static buffer so we can test both static and overflow cases
+				using CStaticAllocator = NMemory::TCAllocator_Static<128>;
+				using CVectorStatic = TCVector<int32, CStaticAllocator>;
+
+				DMibTestCategory("StaticAllocation")
+				{
+					// Small data fits in static buffer - should NOT be stolen
+					DMibTestCategory("MoveConstruct")
+					{
+						CVectorStatic VectorA;
+						// Use f_SetLen with trim to avoid default 16-element minimum allocation
+						VectorA.f_SetLen(2, true);
+						VectorA[0] = 1;
+						VectorA[1] = 2;
+
+						int32 *pOriginalData = VectorA.f_GetArray();
+
+						// Static allocator - move should copy since static allocations can't be transferred
+						CVectorStatic VectorB(fg_Move(VectorA));
+
+						DMibExpect(VectorB.f_GetLen(), ==, 2);
+						// Source should still have data (was copied, not stolen)
+						DMibExpect(VectorA.f_GetLen(), ==, 2);
+						// Verify pointer was NOT stolen
+						DMibExpect(VectorB.f_GetArray(), !=, pOriginalData);
+						DMibExpect(VectorB[0], ==, 1);
+						DMibExpect(VectorB[1], ==, 2);
+					};
+					DMibTestCategory("MoveAssign")
+					{
+						CVectorStatic VectorA;
+						VectorA.f_SetLen(2, true);
+						VectorA[0] = 1;
+						VectorA[1] = 2;
+
+						int32 *pOriginalData = VectorA.f_GetArray();
+
+						CVectorStatic VectorB;
+						VectorB.f_SetLen(1, true);
+						VectorB[0] = 99;
+						VectorB = fg_Move(VectorA);
+
+						DMibExpect(VectorB.f_GetLen(), ==, 2);
+						// Source should still have data
+						DMibExpect(VectorA.f_GetLen(), ==, 2);
+						DMibExpect(VectorB.f_GetArray(), !=, pOriginalData);
+						DMibExpect(VectorB[0], ==, 1);
+						DMibExpect(VectorB[1], ==, 2);
+					};
+				};
+				DMibTestCategory("HeapOverflow")
+				{
+					// Large data overflows static buffer to heap - CAN be stolen
+					DMibTestCategory("MoveConstruct")
+					{
+						CVectorStatic VectorA;
+						// Add enough data to overflow the 128-byte static buffer (128 bytes / 4 bytes per int32 = 32, but need header too)
+						for (mint i = 0; i < 50; ++i)
+							VectorA.f_Insert((int32)i);
+
+						int32 *pOriginalData = VectorA.f_GetArray();
+
+						// Heap allocation can be stolen since it's not in the static buffer
+						CVectorStatic VectorB(fg_Move(VectorA));
+
+						DMibExpect(VectorB.f_GetLen(), ==, 50);
+						DMibExpect(VectorA.f_GetLen(), ==, 0);
+						// Verify pointer WAS stolen (heap allocation)
+						DMibExpect(VectorB.f_GetArray(), ==, pOriginalData);
+					};
+					DMibTestCategory("MoveAssign")
+					{
+						CVectorStatic VectorA;
+						for (mint i = 0; i < 50; ++i)
+							VectorA.f_Insert((int32)i);
+
+						int32 *pOriginalData = VectorA.f_GetArray();
+
+						CVectorStatic VectorB;
+						VectorB.f_Insert(99);
+						VectorB = fg_Move(VectorA);
+
+						DMibExpect(VectorB.f_GetLen(), ==, 50);
+						DMibExpect(VectorA.f_GetLen(), ==, 0);
+						// Verify pointer WAS stolen (heap allocation)
+						DMibExpect(VectorB.f_GetArray(), ==, pOriginalData);
+					};
+				};
+			};
+		}
+
 		void f_DoTests()
 		{
 			DMibTestCategory("General")
@@ -866,6 +1063,10 @@ namespace
 			DMibTestCategory("Bugs")
 			{
 				this->f_Bugs();
+			};
+			DMibTestCategory("Allocators")
+			{
+				this->f_Allocators();
 			};
 		}
 	};
