@@ -36,7 +36,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue>
-	constexpr inline_small auto TCMapNode<t_CKey, t_CValue>::f_Key() const noexcept -> const t_CKey &
+	constexpr inline_small auto TCMapNode<t_CKey, t_CValue>::f_Key() const & noexcept -> const t_CKey &
 	{
 		return mp_Key;
 	}

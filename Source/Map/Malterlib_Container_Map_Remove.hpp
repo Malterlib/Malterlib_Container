@@ -10,7 +10,7 @@ namespace NMib::NContainer
 		requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 	{
 		mint Offset = CNode::fs_GetOffset();
-		CNode *pNode = (CNode *)(((uint8 *)_pData) - Offset);
+		CNodeDestructive *pNode = (CNodeDestructive *)(((uint8 *)_pData) - Offset);
 		mp_Tree.f_Remove(pNode, mp_Compare);
 		fg_DeleteObjectDefiniteType(mp_Allocator, pNode);
 	}
@@ -20,7 +20,7 @@ namespace NMib::NContainer
 		requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 	{
 		mint Offset = CNode::fs_GetOffset();
-		CNode *pNode = (CNode *)(((uint8 *)_pData) - Offset);
+		CNodeDestructive *pNode = (CNodeDestructive *)(((uint8 *)_pData) - Offset);
 		auto *pRemoved = mp_Tree.f_FindEqualAndRemove(pNode->mp_Key, mp_Compare);
 		if (!pRemoved)
 			return false;
@@ -34,7 +34,7 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	bool TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Remove(tf_CKey &&_Key)
 	{
-		CNode *pNode = mp_Tree.f_FindEqualAndRemove(_Key, mp_Compare);
+		CNodeDestructive *pNode = mp_Tree.f_FindEqualAndRemove(_Key, mp_Compare);
 		if (pNode)
 		{
 			fg_DeleteObjectDefiniteType(mp_Allocator, pNode);

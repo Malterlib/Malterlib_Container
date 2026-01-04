@@ -33,9 +33,9 @@ namespace NMib::NContainer
 
 		while (nItems)
 		{
-			auto Memory = mp_Allocator.f_AllocSafe(sizeof(CNode), alignof(CNode));
-			CNode *pData = (CNode *)Memory.m_pMemory;
-			pData = new((void *)pData) CNode();
+			auto Memory = mp_Allocator.f_AllocSafe(sizeof(CNodeDestructive), alignof(CNodeDestructive));
+			CNodeDestructive *pData = (CNodeDestructive *)Memory.m_pMemory;
+			pData = new((void *)pData) CNodeDestructive();
 			Memory.f_Claim();
 			auto Cleanup = g_OnScopeExit / [&]
 				{
@@ -47,7 +47,7 @@ namespace NMib::NContainer
 			auto pFoundData = mp_Tree.f_FindEqualOrInsert
 				(
 					pData->mp_Key
-					, [&]() -> CNode *
+					, [&]() -> CNodeDestructive *
 					{
 						return pData;
 					}

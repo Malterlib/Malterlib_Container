@@ -40,13 +40,13 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey>
-	inline_small const t_CKey &TCMapNode<t_CKey, CMapSet>::f_Key() const
+	inline_small const t_CKey &TCMapNode<t_CKey, CMapSet>::f_Key() const &
 	{
 		return mp_Key;
 	}
 
 	template <typename t_CKey>
-	inline_small const t_CKey &TCMapNode<t_CKey, CMapSet>::f_Value() const
+	inline_small const t_CKey &TCMapNode<t_CKey, CMapSet>::f_Value() const &
 	{
 		return mp_Key;
 	}

@@ -19,7 +19,7 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Extract(tf_CKey &&_Key) -> CNodeHandle
 	{
-		CNode *pNode = mp_Tree.f_FindEqualAndRemove(_Key, mp_Compare);
+		CNodeDestructive *pNode = mp_Tree.f_FindEqualAndRemove(_Key, mp_Compare);
 		return CNodeHandle(pNode, mp_Allocator);
 	}
 
@@ -27,7 +27,7 @@ namespace NMib::NContainer
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Extract(CUserData *_pData) -> CNodeHandle
 	{
 		mint Offset = CNode::fs_GetOffset();
-		CNode *pNode = (CNode *)(((uint8 *)_pData) - Offset);
+		CNodeDestructive *pNode = (CNodeDestructive *)(((uint8 *)_pData) - Offset);
 		mp_Tree.f_Remove(pNode, mp_Compare);
 		return CNodeHandle(pNode, mp_Allocator);
 	}
@@ -38,11 +38,21 @@ namespace NMib::NContainer
 	{
 		mp_Tree.f_DeleteAll
 			(
-				[&](CNode *_pNode)
+				[&](CNodeDestructive *_pNode)
 				{
 					_fOnNode(CNodeHandle(_pNode, mp_Allocator));
 				}
 			)
 		;
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::fp_ExtractNoRebalance(CNodeDestructive *_pParent, CNodeDestructive *_pToRemove) -> CNodeHandle
+	{
+		if (_pParent)
+			mp_Tree.f_RemoveNoRebalance(_pParent, _pToRemove);
+		else
+			mp_Tree.f_RemoveNoRebalanceRoot(_pToRemove);
+		return CNodeHandle(_pToRemove, mp_Allocator);
 	}
 }

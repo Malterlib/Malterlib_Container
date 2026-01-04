@@ -20,7 +20,7 @@ namespace NMib::NContainer
 
 		template <typename... tfp_CParams>
 		TCSet(CAllocatorConstructTag const &, tfp_CParams && ...p_Params);
-		
+
 		template <typename... tfp_CParams>
 		TCSet(CCompareConstructTag const &, tfp_CParams && ...p_Params);
 
@@ -33,7 +33,7 @@ namespace NMib::NContainer
 				, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
 			)
 		;
-		
+
 		template <typename tf_COther>
 		TCSet(tf_COther &&_Other);
 		TCSet &operator = (TCSet &&_Other);
@@ -79,6 +79,16 @@ namespace NMib::NContainer
 		TCSet operator ^ (TCSet const &_Right);
 		TCSet f_Difference(TCSet const &_Right) const;
 		TCSet operator - (TCSet const &_Right);
+
+		using CIteratorDestructive = typename CMap::CKeyIteratorDestructive;
+		using CIteratorReverseDestructive = typename CMap::CKeyIteratorReverseDestructive;
+		using CIteratorBidirectionalDestructive = typename CMap::CKeyIteratorBidirectionalDestructive;
+		using CIteratorBidirectionalReverseDestructive = typename CMap::CKeyIteratorBidirectionalReverseDestructive;
+
+		CIteratorDestructive f_GetIteratorDestructive() &&;
+		CIteratorReverseDestructive f_GetIteratorReverseDestructive() &&;
+		CIteratorBidirectionalDestructive f_GetIteratorBidirectionalDestructive() &&;
+		CIteratorBidirectionalReverseDestructive f_GetIteratorBidirectionalReverseDestructive() &&;
 
 		template <typename tf_CFormatInto, typename tf_CFormatOptions>
 		void f_Format(tf_CFormatInto &o_FormatInto, tf_CFormatOptions const &_Options) const;

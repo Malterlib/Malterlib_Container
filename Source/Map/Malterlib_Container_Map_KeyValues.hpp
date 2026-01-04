@@ -30,25 +30,25 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Entries() -> CEntries
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Entries() & -> CEntries
 	{
 		return *this;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Entries() const -> CEntriesConst
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Entries() const & -> CEntriesConst
 	{
 		return *this;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Keys() -> CKeys
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Keys() & -> CKeys
 	{
 		return *this;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Keys() const -> CKeysConst
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Keys() const & -> CKeysConst
 	{
 		return *this;
 	}
@@ -380,5 +380,79 @@ namespace NMib::NContainer
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
 		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
 		return Iterator;
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeysDestructive::CKeysDestructive(TCMap &&_Map)
+		: CKeys(_Map)
+	{
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeysDestructive::f_GetIteratorDestructive() -> CKeyIteratorDestructive
+	{
+		return {fg_Move(this->mp_Map)};
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeysDestructive::f_GetIteratorReverseDestructive() -> CKeyIteratorReverseDestructive
+	{
+		return {fg_Move(this->mp_Map)};
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeysDestructive::f_GetIteratorBidirectionalDestructive() -> CKeyIteratorBidirectionalDestructive
+	{
+		return {fg_Move(this->mp_Map)};
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeysDestructive::f_GetIteratorBidirectionalReverseDestructive() -> CKeyIteratorBidirectionalReverseDestructive
+	{
+		return {fg_Move(this->mp_Map)};
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntriesDestructive::CEntriesDestructive(TCMap &&_Map)
+		: CEntries(_Map)
+	{
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntriesDestructive::f_GetIteratorDestructive() -> CKeyValueIteratorDestructive
+	{
+		return {fg_Move(this->mp_Map)};
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntriesDestructive::f_GetIteratorReverseDestructive() -> CKeyValueIteratorReverseDestructive
+	{
+		return {fg_Move(this->mp_Map)};
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntriesDestructive::f_GetIteratorBidirectionalDestructive() -> CKeyValueIteratorBidirectionalDestructive
+	{
+		return {fg_Move(this->mp_Map)};
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntriesDestructive::f_GetIteratorBidirectionalReverseDestructive() -> CKeyValueIteratorBidirectionalReverseDestructive
+	{
+		return {fg_Move(this->mp_Map)};
+	}
+
+	// Rvalue-qualified f_Keys() and f_Entries()
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Keys() && -> CKeysDestructive
+	{
+		return {fg_Move(*this)};
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Entries() && -> CEntriesDestructive
+	{
+		return {fg_Move(*this)};
 	}
 }

@@ -137,6 +137,51 @@ namespace
 						DMibExpect(Testing.f_GetLen(), ==, 0);
 						DMibExpect(Testing2.f_GetLen(), ==, 9);
 					}
+
+					{
+						DMibTestPath("InsertHandle Diff MemoryManager");
+						using CMemoryManagerParams = NMemory::TCMemoryManagerParams<>;
+						using CMemoryManager = NMemory::TCMemoryManager<CMemoryManagerParams>;
+						using CDiffAllocator = NMemory::TCAllocator_MemoryManager<CMemoryManagerParams>;
+
+						CMemoryManager MemoryManagerA{NMemory::CMemoryManagerConfig()};
+						CMemoryManager MemoryManagerB{NMemory::CMemoryManagerConfig()};
+
+						TCMap<CStr, CStr, CSort_Default, CDiffAllocator> MapA(CAllocatorConstructTag(), &MemoryManagerA);
+						MapA["Key"] = "Value";
+
+						auto Handle = MapA.f_Extract("Key");
+						DMibExpectTrue(Handle);
+						DMibExpect(MapA.f_GetLen(), ==, 0);
+
+						TCMap<CStr, CStr, CSort_Default, CDiffAllocator> MapB(CAllocatorConstructTag(), &MemoryManagerB);
+						MapB.f_Insert(fg_Move(Handle));
+
+						DMibExpectFalse(Handle);
+						DMibExpect(MapB.f_GetLen(), ==, 1);
+						DMibExpect(MapB.f_FindEqual("Key"), !=, nullptr);
+						DMibExpect(*MapB.f_FindEqual("Key"), ==, CStr("Value"));
+					}
+
+					{
+						DMibTestPath("InsertHandle StaticAllocator");
+						using CStaticAllocator = NMemory::TCAllocator_Static<4096>;
+
+						TCMap<CStr, CStr, CSort_Default, CStaticAllocator> MapA;
+						MapA["Key"] = "Value";
+
+						auto Handle = MapA.f_Extract("Key");
+						DMibExpectTrue(Handle);
+						DMibExpect(MapA.f_GetLen(), ==, 0);
+
+						TCMap<CStr, CStr, CSort_Default, CStaticAllocator> MapB;
+						MapB.f_Insert(fg_Move(Handle));
+
+						DMibExpectFalse(Handle);
+						DMibExpect(MapB.f_GetLen(), ==, 1);
+						DMibExpect(MapB.f_FindEqual("Key"), !=, nullptr);
+						DMibExpect(*MapB.f_FindEqual("Key"), ==, CStr("Value"));
+					}
 				};
 				DMibTestSuite("Set")
 				{
@@ -1186,9 +1231,783 @@ namespace
 					}
 				}
 			};
+			DMibTestSuite("Destructive Iterator")
+			{
+				DMibTestCategory("Iterator Move Semantics")
+				{
+					{
+						DMibTestPath("MoveCtor Transfers Ownership");
+						TCMap<int, int> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[i] = i;
+
+						{
+							auto iIter0 = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive();
+							{
+								DMibTestPath("BeforeMove");
+								DMibExpect(Source.f_GetLen(), ==, 10);
+							}
+
+							{
+								auto iIter1 = fg_Move(iIter0);
+								{
+									DMibTestPath("AfterMove");
+									DMibExpect(Source.f_GetLen(), ==, 10);
+								}
+								DMibExpectTrue(iIter1);
+							}
+
+							// iIter0 was moved-from, should not clear the map here
+							{
+								DMibTestPath("AfterMovedToDestroyed");
+								DMibExpect(Source.f_GetLen(), ==, 0);
+							}
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+					}
+
+					{
+						DMibTestPath("MoveAssign Clears Previous Map");
+						TCMap<int, int> SourceA;
+						for (int i = 0; i < 10; ++i)
+							SourceA[i] = i;
+
+						TCMap<int, int> SourceB;
+						for (int i = 0; i < 7; ++i)
+							SourceB[i] = i;
+
+						{
+							auto iIterA = fg_Move(SourceA).f_Entries().f_GetIteratorBidirectionalDestructive();
+							auto iIterB = fg_Move(SourceB).f_Entries().f_GetIteratorBidirectionalDestructive();
+
+							{
+								DMibTestPath("BeforeAssign");
+								DMibExpect(SourceA.f_GetLen(), ==, 10);
+								DMibExpect(SourceB.f_GetLen(), ==, 7);
+							}
+
+							iIterB = fg_Move(iIterA);
+
+							// Move-assign should clear the previously-owned map (SourceB)
+							{
+								DMibTestPath("AfterAssign");
+								DMibExpect(SourceB.f_GetLen(), ==, 0);
+								DMibExpect(SourceA.f_GetLen(), ==, 10);
+							}
+						}
+
+						// Remaining ownership should clear SourceA at end of scope
+						DMibExpect(SourceA.f_GetLen(), ==, 0);
+						DMibExpect(SourceB.f_GetLen(), ==, 0);
+					}
+				};
+
+				DMibTestCategory("Keys Destructive")
+				{
+					{
+						DMibTestPath("Forward");
+						TCMap<CStr, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+
+						TCVector<CStr> Collected;
+						for (auto iIter = fg_Move(Source).f_Keys().f_GetIteratorDestructive(); iIter; ++iIter)
+						{
+							CStr Key = fg_Move(*iIter);
+							Collected.f_InsertLast(fg_Move(Key));
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Collected.f_GetLen(), ==, 10);
+						for (int i = 0; i < 10; ++i)
+							DMibExpect(Collected[i], ==, CStr("Key {}"_f << i))(ETestFlag_Aggregated);
+					}
+
+					{
+						DMibTestPath("Reverse");
+						TCMap<CStr, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+
+						TCVector<CStr> Collected;
+						for (auto iIter = fg_Move(Source).f_Keys().f_GetIteratorReverseDestructive(); iIter; ++iIter)
+						{
+							CStr Key = fg_Move(*iIter);
+							Collected.f_InsertLast(fg_Move(Key));
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Collected.f_GetLen(), ==, 10);
+						for (int i = 0; i < 10; ++i)
+							DMibExpect(Collected[i], ==, CStr("Key {}"_f << (9 - i)))(ETestFlag_Aggregated);
+					}
+
+					{
+						DMibTestPath("Bidirectional");
+						TCMap<CStr, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+
+						auto iIter = fg_Move(Source).f_Keys().f_GetIteratorBidirectionalDestructive();
+
+						DMibExpectTrue(iIter);
+						DMibExpect(*iIter, ==, CStr("Key 0"));
+						++iIter;
+						++iIter;
+						DMibExpect(*iIter, ==, CStr("Key 2"));
+
+						--iIter;
+						DMibExpect(*iIter, ==, CStr("Key 1"));
+					}
+
+					{
+						DMibTestPath("BidirectionalReverse");
+						TCMap<CStr, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+
+						{
+							auto iIter = fg_Move(Source).f_Keys().f_GetIteratorBidirectionalReverseDestructive();
+
+							DMibExpectTrue(iIter);
+							DMibExpect(*iIter, ==, CStr("Key 9"));
+							++iIter;
+							DMibExpect(*iIter, ==, CStr("Key 8"));
+							--iIter;
+							{
+								DMibTestPath("After decrease");
+								DMibExpect(*iIter, ==, CStr("Key 9"));
+							}
+						}
+
+						// Iterator destructor should clear the moved-from map
+						DMibExpect(Source.f_GetLen(), ==, 0);
+					}
+				};
+
+				DMibTestCategory("Forward Non-Extracting")
+				{
+					// Test that destructive iteration moves keys/values and clears map
+					{
+						DMibTestPath("Map");
+						TCMap<CStr, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+
+						TCVector<TCTuple<CStr, CStr>> Collected;
+						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorDestructive(); iIter; ++iIter)
+						{
+							// Keys should be movable from destructive iterator
+							CStr Key = fg_Move(iIter->f_Key());
+							CStr Value = fg_Move(iIter->f_Value());
+							Collected.f_InsertLast(TCTuple{fg_Move(Key), fg_Move(Value)});
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Collected.f_GetLen(), ==, 10);
+
+						// Verify ordering (should be sorted by key)
+						for (int i = 0; i < 10; ++i)
+						{
+							DMibExpect(fg_Get<0>(Collected[i]), ==, CStr("Key {}"_f << i))(ETestFlag_Aggregated);
+							DMibExpect(fg_Get<1>(Collected[i]), ==, CStr("Value {}"_f << i))(ETestFlag_Aggregated);
+						}
+					}
+					{
+						DMibTestPath("Set");
+						TCSet<CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)];
+
+						TCVector<CStr> Collected;
+						for (auto iIter = fg_Move(Source).f_GetIteratorDestructive(); iIter; ++iIter)
+						{
+							CStr Key = fg_Move(*iIter);
+							Collected.f_InsertLast(fg_Move(Key));
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Collected.f_GetLen(), ==, 10);
+
+						for (int i = 0; i < 10; ++i)
+							DMibExpect(Collected[i], ==, CStr("Key {}"_f << i))(ETestFlag_Aggregated);
+					}
+				};
+				DMibTestCategory("Reverse Non-Extracting")
+				{
+					{
+						DMibTestPath("Map");
+						TCMap<CStr, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+
+						TCVector<TCTuple<CStr, CStr>> Collected;
+						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorReverseDestructive(); iIter; ++iIter)
+						{
+							CStr Key = fg_Move(iIter->f_Key());
+							CStr Value = fg_Move(iIter->f_Value());
+							Collected.f_InsertLast(TCTuple{fg_Move(Key), fg_Move(Value)});
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Collected.f_GetLen(), ==, 10);
+
+						// Reverse order - should be from 9 down to 0
+						for (int i = 0; i < 10; ++i)
+						{
+							DMibExpect(fg_Get<0>(Collected[i]), ==, CStr("Key {}"_f << (9 - i)))(ETestFlag_Aggregated);
+							DMibExpect(fg_Get<1>(Collected[i]), ==, CStr("Value {}"_f << (9 - i)))(ETestFlag_Aggregated);
+						}
+					}
+					{
+						DMibTestPath("Set");
+						TCSet<CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)];
+
+						TCVector<CStr> Collected;
+						for (auto iIter = fg_Move(Source).f_GetIteratorReverseDestructive(); iIter; ++iIter)
+						{
+							CStr Key = fg_Move(*iIter);
+							Collected.f_InsertLast(fg_Move(Key));
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Collected.f_GetLen(), ==, 10);
+
+						for (int i = 0; i < 10; ++i)
+							DMibExpect(Collected[i], ==, CStr("Key {}"_f << (9 - i)))(ETestFlag_Aggregated);
+					}
+				};
+				DMibTestCategory("Bidirectional Non-Extracting")
+				{
+					{
+						DMibTestPath("Map");
+						TCMap<CStr, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+
+						auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive();
+
+						// Move forward 5 steps
+						TCVector<CStr> ForwardKeys;
+						for (int i = 0; i < 5 && iIter; ++i, ++iIter)
+							ForwardKeys.f_InsertLast(iIter->f_Key());
+
+						DMibExpect(ForwardKeys.f_GetLen(), ==, 5);
+						for (int i = 0; i < 5; ++i)
+							DMibExpect(ForwardKeys[i], ==, CStr("Key {}"_f << i))(ETestFlag_Aggregated);
+
+						// Move backward 2 steps
+						TCVector<CStr> BackwardKeys;
+						--iIter;
+						BackwardKeys.f_InsertLast(iIter->f_Key());
+						--iIter;
+						BackwardKeys.f_InsertLast(iIter->f_Key());
+
+						DMibExpect(BackwardKeys.f_GetLen(), ==, 2);
+						DMibExpect(BackwardKeys[0], ==, CStr("Key 4"));
+						DMibExpect(BackwardKeys[1], ==, CStr("Key 3"));
+
+						// Let iterator destructor clean up remaining elements
+					}
+					{
+						DMibTestPath("Set");
+						TCSet<CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)];
+
+						auto iIter = fg_Move(Source).f_GetIteratorBidirectionalDestructive();
+
+						// Move forward 5 steps
+						TCVector<CStr> ForwardKeys;
+						for (int i = 0; i < 5 && iIter; ++i, ++iIter)
+							ForwardKeys.f_InsertLast(*iIter);
+
+						DMibExpect(ForwardKeys.f_GetLen(), ==, 5);
+
+						// Move backward 2 steps
+						--iIter;
+						--iIter;
+						DMibExpect(*iIter, ==, CStr("Key 3"));
+					}
+				};
+				DMibTestCategory("Bidirectional Reverse Non-Extracting")
+				{
+					{
+						DMibTestPath("Map");
+						TCMap<CStr, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+
+						auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalReverseDestructive();
+
+						// First element should be Key 9 (highest)
+						DMibExpect(iIter->f_Key(), ==, CStr("Key 9"));
+
+						// Move forward (which goes toward lower keys in reverse mode)
+						++iIter;
+						DMibExpect(iIter->f_Key(), ==, CStr("Key 8"));
+						++iIter;
+						DMibExpect(iIter->f_Key(), ==, CStr("Key 7"));
+
+						// Move backward (toward higher keys in reverse mode)
+						--iIter;
+						{
+							DMibTestPath("AfterBackward");
+							DMibExpect(iIter->f_Key(), ==, CStr("Key 8"));
+						}
+					}
+					{
+						DMibTestPath("Set");
+						TCSet<CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)];
+
+						auto iIter = fg_Move(Source).f_GetIteratorBidirectionalReverseDestructive();
+
+						DMibExpect(*iIter, ==, CStr("Key 9"));
+						++iIter;
+						DMibExpect(*iIter, ==, CStr("Key 8"));
+						{
+							DMibTestPath("AfterBackward");
+							--iIter;
+							DMibExpect(*iIter, ==, CStr("Key 9"));
+						}
+					}
+				};
+				DMibTestCategory("Forward Extract Node")
+				{
+					{
+						DMibTestPath("Map ExtractAll");
+						TCMap<CStr, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+
+						TCMap<CStr, CStr> Target;
+						// f_ExtractNode() requires bidirectional iterator (maintains full ancestor path for parent lookup)
+						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive(); iIter; )
+						{
+							// f_ExtractNode() advances the iterator
+							auto Handle = iIter.f_ExtractNode();
+							DMibExpectTrue(Handle)(ETestFlag_Aggregated);
+							Target.f_Insert(fg_Move(Handle));
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Target.f_GetLen(), ==, 10);
+
+						// Verify all keys/values transferred correctly
+						for (int i = 0; i < 10; ++i)
+						{
+							CStr Key = "Key {}"_f << i;
+							auto *pValue = Target.f_FindEqual(Key);
+							DMibAssertTrue(pValue)(ETestFlag_Aggregated);
+							DMibExpect(*pValue, ==, CStr("Value {}"_f << i))(ETestFlag_Aggregated);
+						}
+					}
+					{
+						DMibTestPath("Map ExtractConditional");
+						TCMap<CStr, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+
+						TCMap<CStr, CStr> Target;
+						// f_ExtractNode() requires bidirectional iterator
+						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive(); iIter; )
+						{
+							// Extract only even-numbered keys
+							CStr Key = iIter->f_Key();
+							int Num = 0;
+							aint nParsed = 0;
+							(CStr::CParse("Key {}") >> Num).f_Parse(Key, nParsed);
+
+							if (Num % 2 == 0)
+							{
+								auto Handle = iIter.f_ExtractNode();
+								Target.f_Insert(fg_Move(Handle));
+							}
+							else
+							{
+								++iIter;
+							}
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Target.f_GetLen(), ==, 5);
+
+						// Verify only even keys transferred
+						for (int i = 0; i < 10; i += 2)
+						{
+							CStr Key = "Key {}"_f << i;
+							auto *pValue = Target.f_FindEqual(Key);
+							DMibAssertTrue(pValue)(ETestFlag_Aggregated);
+						}
+					}
+					{
+						DMibTestPath("Set ExtractAll");
+						TCSet<CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)];
+
+						TCSet<CStr> Target;
+						// f_ExtractNode() requires bidirectional iterator
+						for (auto iIter = fg_Move(Source).f_GetIteratorBidirectionalDestructive(); iIter;)
+						{
+							auto Handle = iIter.f_ExtractNode();
+							Target.f_Insert(fg_Move(Handle));
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Target.f_GetLen(), ==, 10);
+					}
+				};
+				DMibTestCategory("Reverse Extract Node")
+				{
+					{
+						DMibTestPath("Map ExtractAll");
+						TCMap<CStr, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+
+						TCMap<CStr, CStr> Target;
+						TCVector<CStr> ExtractOrder;
+						// f_ExtractNode() requires bidirectional iterator
+						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalReverseDestructive(); iIter; )
+						{
+							ExtractOrder.f_InsertLast(iIter->f_Key());
+							auto Handle = iIter.f_ExtractNode();
+							Target.f_Insert(fg_Move(Handle));
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Target.f_GetLen(), ==, 10);
+						DMibExpect(ExtractOrder.f_GetLen(), ==, 10);
+
+						// Verify extraction was in reverse order
+						for (int i = 0; i < 10; ++i)
+							DMibExpect(ExtractOrder[i], ==, CStr("Key {}"_f << (9 - i)))(ETestFlag_Aggregated);
+					}
+					{
+						DMibTestPath("Set ExtractConditional");
+						TCSet<CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[CStr("Key {}"_f << i)];
+
+						TCSet<CStr> Target;
+						// f_ExtractNode() requires bidirectional iterator
+						for (auto iIter = fg_Move(Source).f_GetIteratorBidirectionalReverseDestructive(); iIter; )
+						{
+							CStr Key = *iIter;
+							int Num = 0;
+							aint nParsed = 0;
+							(CStr::CParse("Key {}") >> Num).f_Parse(Key, nParsed);
+
+							if (Num % 2 == 1) // Extract odd keys
+							{
+								auto Handle = iIter.f_ExtractNode();
+								Target.f_Insert(fg_Move(Handle));
+							}
+							else
+							{
+								++iIter;
+							}
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Target.f_GetLen(), ==, 5);
+					}
+				};
+				DMibTestCategory("Bidirectional Extract Node")
+				{
+					{
+						DMibTestPath("Map Forward Then Back");
+						TCMap<int, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[i] = "Value {}"_f << i;
+
+						TCMap<int, CStr> Target;
+
+						auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive();
+
+						// Extract first 3 elements going forward
+						for (int i = 0; i < 3; ++i)
+						{
+							Target.f_Insert(iIter.f_ExtractNode());
+						}
+
+						// Now at element 3, move forward to 5
+						++iIter;
+						++iIter;
+						DMibExpect(iIter->f_Key(), ==, 5);
+
+						// Extract element 5
+						Target.f_Insert(iIter.f_ExtractNode());
+
+						// Should now be at element 6, go back to 4
+						--iIter;
+						DMibExpect(iIter->f_Key(), ==, 4);
+
+						// Extract element 4
+						Target.f_Insert(iIter.f_ExtractNode());
+
+						// Verify extracted elements
+						DMibExpect(Target.f_GetLen(), ==, 5);
+						DMibExpectTrue(Target.f_FindEqual(0));
+						DMibExpectTrue(Target.f_FindEqual(1));
+						DMibExpectTrue(Target.f_FindEqual(2));
+						DMibExpectTrue(Target.f_FindEqual(4));
+						DMibExpectTrue(Target.f_FindEqual(5));
+					}
+					{
+						DMibTestPath("Set Zigzag");
+						TCSet<int> Source;
+						for (int i = 0; i < 20; ++i)
+							Source[i];
+
+						TCSet<int> Target;
+						{
+							auto iIter = fg_Move(Source).f_GetIteratorBidirectionalDestructive();
+
+							// Extract 0
+							Target.f_Insert(iIter.f_ExtractNode());
+							// Now at 1, skip to 5
+							for (int i = 0; i < 4; ++i)
+								++iIter;
+							DMibExpect(*iIter, ==, 5);
+							Target.f_Insert(iIter.f_ExtractNode());
+
+							// Now at 6, go back to 3
+							--iIter;
+							--iIter;
+							DMibExpect(*iIter, ==, 3);
+							Target.f_Insert(iIter.f_ExtractNode());
+
+							DMibExpect(Target.f_GetLen(), ==, 3);
+							DMibExpect(Source.f_GetLen(), ==, 17);
+							DMibExpectTrue(Target.f_FindEqual(0));
+							DMibExpectTrue(Target.f_FindEqual(3));
+							DMibExpectTrue(Target.f_FindEqual(5));
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+					}
+				};
+				DMibTestCategory("Bidirectional Reverse Extract Node")
+				{
+					{
+						DMibTestPath("Map");
+						TCMap<int, CStr> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[i] = "Value {}"_f << i;
+
+						TCMap<int, CStr> Target;
+
+						auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalReverseDestructive();
+
+						// Start at 9 (reverse iterator starts at highest)
+						DMibExpect(iIter->f_Key(), ==, 9);
+						Target.f_Insert(iIter.f_ExtractNode());
+
+						// Now at 8
+						DMibExpect(iIter->f_Key(), ==, 8);
+						++iIter; // Move to 7 in reverse direction
+						DMibExpect(iIter->f_Key(), ==, 7);
+
+						// Go back towards 8
+						{
+							DMibTestPath("AfterBackward");
+							--iIter;
+							DMibExpect(iIter->f_Key(), ==, 8);
+							Target.f_Insert(iIter.f_ExtractNode());
+
+							DMibExpect(Target.f_GetLen(), ==, 2);
+							DMibExpectTrue(Target.f_FindEqual(8));
+							DMibExpectTrue(Target.f_FindEqual(9));
+						}
+					}
+				};
+				DMibTestCategory("Extract Edge Cases")
+				{
+					{
+						DMibTestPath("ExtractLastElementForward");
+						TCSet<int> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[i];
+
+						TCSet<int> Target;
+						{
+							auto iIter = fg_Move(Source).f_GetIteratorBidirectionalDestructive();
+
+							// Advance to last element (9)
+							for (int i = 0; i < 9; ++i)
+								++iIter;
+							DMibExpectTrue(iIter);
+							DMibExpect(*iIter, ==, 9);
+
+							Target.f_Insert(iIter.f_ExtractNode());
+							DMibExpectFalse(iIter);
+
+							DMibExpect(Target.f_GetLen(), ==, 1);
+							DMibExpectTrue(Target.f_FindEqual(9));
+							DMibExpect(Source.f_GetLen(), ==, 9);
+						}
+						DMibExpect(Source.f_GetLen(), ==, 0);
+					}
+
+					{
+						DMibTestPath("ExtractAndDropHandle");
+						TCMap<int, int> Source;
+						for (int i = 0; i < 10; ++i)
+							Source[i] = i * 10;
+
+						{
+							auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive();
+							DMibExpect(Source.f_GetLen(), ==, 10);
+
+							// Extract node and immediately drop it (handle destructor deletes the node)
+							{
+								auto Handle = iIter.f_ExtractNode();
+								DMibExpectTrue(Handle);
+							}
+
+							DMibExpect(Source.f_GetLen(), ==, 9);
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+					}
+				};
+				DMibTestCategory("Extract Preserves Tree Integrity")
+				{
+					// Test with larger dataset to stress the no-rebalance removal
+					{
+						DMibTestPath("Large Map");
+						TCMap<int, int> Source;
+						for (int i = 0; i < 100; ++i)
+							Source[i] = i * 10;
+
+						TCMap<int, int> Target;
+						TCVector<int> ExtractedKeys;
+
+						// f_ExtractNode() requires bidirectional iterator
+						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive(); iIter; )
+						{
+							// Extract every third element
+							if (iIter->f_Key() % 3 == 0)
+							{
+								ExtractedKeys.f_InsertLast(iIter->f_Key());
+								Target.f_Insert(iIter.f_ExtractNode());
+							}
+							else
+							{
+								++iIter;
+							}
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Target.f_GetLen(), ==, 34); // 0, 3, 6, ..., 99 = 34 elements
+
+						// Verify extracted keys maintain sorted order in target
+						int PrevKey = -1;
+						for (auto iIter = Target.f_GetIterator(); iIter; ++iIter)
+						{
+							DMibExpectTrue(iIter.f_GetKey() > PrevKey)(ETestFlag_Aggregated);
+							DMibExpect(*iIter, ==, iIter.f_GetKey() * 10)(ETestFlag_Aggregated);
+							PrevKey = iIter.f_GetKey();
+						}
+					}
+					{
+						DMibTestPath("Large Set Reverse");
+						TCSet<int> Source;
+						for (int i = 0; i < 100; ++i)
+							Source[i];
+
+						TCSet<int> Target;
+						int nExtracted = 0;
+
+						// f_ExtractNode() requires bidirectional iterator
+						for (auto iIter = fg_Move(Source).f_GetIteratorBidirectionalReverseDestructive(); iIter; )
+						{
+							// Extract every other element
+							if (*iIter % 2 == 0)
+							{
+								Target.f_Insert(iIter.f_ExtractNode());
+								++nExtracted;
+							}
+							else
+							{
+								++iIter;
+							}
+						}
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Target.f_GetLen(), ==, 50);
+						DMibExpect(nExtracted, ==, 50);
+					}
+				};
+				DMibTestCategory("Empty Map Destructive Iterator")
+				{
+					{
+						DMibTestPath("Map Forward");
+						TCMap<int, int> Source;
+						int nCount = 0;
+						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorDestructive(); iIter; ++iIter)
+							++nCount;
+						DMibExpect(nCount, ==, 0);
+					}
+					{
+						DMibTestPath("Map Reverse");
+						TCMap<int, int> Source;
+						int nCount = 0;
+						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorReverseDestructive(); iIter; ++iIter)
+							++nCount;
+						DMibExpect(nCount, ==, 0);
+					}
+					{
+						DMibTestPath("Set Bidirectional");
+						TCSet<int> Source;
+						auto iIter = fg_Move(Source).f_GetIteratorBidirectionalDestructive();
+						DMibExpectFalse(iIter);
+					}
+				};
+				DMibTestCategory("Single Element Destructive Iterator")
+				{
+					{
+						DMibTestPath("Map Extract");
+						TCMap<CStr, int> Source;
+						Source["OnlyKey"] = 42;
+
+						TCMap<CStr, int> Target;
+						// f_ExtractNode() requires bidirectional iterator
+						auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive();
+						DMibExpectTrue(iIter);
+						Target.f_Insert(iIter.f_ExtractNode());
+						DMibExpectFalse(iIter);
+
+						DMibExpect(Source.f_GetLen(), ==, 0);
+						DMibExpect(Target.f_GetLen(), ==, 1);
+						DMibExpect(*Target.f_FindEqual("OnlyKey"), ==, 42);
+					}
+					{
+						DMibTestPath("Set Reverse Extract");
+						TCSet<int> Source;
+						Source[999];
+
+						TCSet<int> Target;
+						// f_ExtractNode() requires bidirectional iterator
+						auto iIter = fg_Move(Source).f_GetIteratorBidirectionalReverseDestructive();
+						DMibExpectTrue(iIter);
+						DMibExpect(*iIter, ==, 999);
+						Target.f_Insert(iIter.f_ExtractNode());
+						DMibExpectFalse(iIter);
+
+						DMibExpect(Target.f_GetLen(), ==, 1);
+					}
+				};
+			};
 		}
 	};
 
 	DMibTestRegister(CMap_Tests, Malterlib::Container);
 }
-

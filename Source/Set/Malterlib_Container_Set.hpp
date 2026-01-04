@@ -257,4 +257,28 @@ namespace NMib::NContainer
 		fg_CreateSetHelper<tf_CReturn>(Return, fg_Forward<tf_CParams>(p_Params)...);
 		return Return;
 	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_GetIteratorDestructive() && -> typename TCSet<t_CKey, t_CCompare, t_CAllocator>::CIteratorDestructive
+	{
+		return {fg_Move(*this)};
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_GetIteratorReverseDestructive() && -> typename TCSet<t_CKey, t_CCompare, t_CAllocator>::CIteratorReverseDestructive
+	{
+		return {fg_Move(*this)};
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_GetIteratorBidirectionalDestructive() && -> typename TCSet<t_CKey, t_CCompare, t_CAllocator>::CIteratorBidirectionalDestructive
+	{
+		return {fg_Move(*this)};
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_GetIteratorBidirectionalReverseDestructive() && -> typename TCSet<t_CKey, t_CCompare, t_CAllocator>::CIteratorBidirectionalReverseDestructive
+	{
+		return {fg_Move(*this)};
+	}
 }

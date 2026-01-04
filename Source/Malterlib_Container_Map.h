@@ -25,37 +25,53 @@ namespace NMib::NContainer
 		using CValue = t_CValue;
 		using CValueNoRef = NTraits::TCRemoveReference<t_CValue>;
 		using CNode = TCMapNode<t_CKey, t_CValue>;
-		using CNodeHandle = TCMapNodeHandle<CNode, t_CAllocator>;
+		using CNodeDestructive = TCDestructiveMapNode<t_CKey, t_CValue>;
+		using CNodeHandle = TCMapNodeHandle<CNodeDestructive, t_CAllocator>;
 
-		using CMapper = NPrivate::TCMapMapper<CNode>;
+		using CMapper = NPrivate::TCMapMapper<CNodeDestructive>;
 		using CConditionalMapper = NPrivate::TCMapConditionalMapper<TCMap>;
 
-		using CIterator = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, false, false, false>;
-		using CIteratorConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, false, true, false>;
-		using CIteratorReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, true, false, false>;
-		using CIteratorReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, true, true, false>;
-		using CIteratorBidirectional = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, false, false, true>;
-		using CIteratorBidirectionalConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, false, true, true>;
-		using CIteratorBidirectionalReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, true, false, true>;
-		using CIteratorBidirectionalReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, true, true, true>;
+		using CIterator = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, EMapIteratorFlags_None>;
+		using CIteratorConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, EMapIteratorFlags_Const>;
+		using CIteratorReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, EMapIteratorFlags_Reverse>;
+		using CIteratorReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, EMapIteratorFlags_ReverseConst>;
+		using CIteratorBidirectional = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, EMapIteratorFlags_Bidirectional>;
+		using CIteratorBidirectionalConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, EMapIteratorFlags_BidirectionalConst>;
+		using CIteratorBidirectionalReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, EMapIteratorFlags_BidirectionalReverse>;
+		using CIteratorBidirectionalReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, EMapIteratorFlags_BidirectionalReverseConst>;
 
-		using CKeyIterator = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, false, false, false>;
-		using CKeyIteratorConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, false, true, false>;
-		using CKeyIteratorReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, true, false, false>;
-		using CKeyIteratorReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, true, true, false>;
-		using CKeyIteratorBidirectional = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, false, false, true>;
-		using CKeyIteratorBidirectionalConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, false, true, true>;
-		using CKeyIteratorBidirectionalReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, true, false, true>;
-		using CKeyIteratorBidirectionalReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, true, true, true>;
+		using CKeyIterator = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, EMapIteratorFlags_None>;
+		using CKeyIteratorConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, EMapIteratorFlags_Const>;
+		using CKeyIteratorReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, EMapIteratorFlags_Reverse>;
+		using CKeyIteratorReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, EMapIteratorFlags_ReverseConst>;
+		using CKeyIteratorBidirectional = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, EMapIteratorFlags_Bidirectional>;
+		using CKeyIteratorBidirectionalConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, EMapIteratorFlags_BidirectionalConst>;
+		using CKeyIteratorBidirectionalReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, EMapIteratorFlags_BidirectionalReverse>;
+		using CKeyIteratorBidirectionalReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, EMapIteratorFlags_BidirectionalReverseConst>;
 
-		using CKeyValueIterator = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, false, false, false>;
-		using CKeyValueIteratorConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, false, true, false>;
-		using CKeyValueIteratorReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, true, false, false>;
-		using CKeyValueIteratorReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, true, true, false>;
-		using CKeyValueIteratorBidirectional = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, false, false, true>;
-		using CKeyValueIteratorBidirectionalConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, false, true, true>;
-		using CKeyValueIteratorBidirectionalReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, true, false, true>;
-		using CKeyValueIteratorBidirectionalReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, true, true, true>;
+		using CKeyValueIterator = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, EMapIteratorFlags_None>;
+		using CKeyValueIteratorConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, EMapIteratorFlags_Const>;
+		using CKeyValueIteratorReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, EMapIteratorFlags_Reverse>;
+		using CKeyValueIteratorReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, EMapIteratorFlags_ReverseConst>;
+		using CKeyValueIteratorBidirectional = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, EMapIteratorFlags_Bidirectional>;
+		using CKeyValueIteratorBidirectionalConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, EMapIteratorFlags_BidirectionalConst>;
+		using CKeyValueIteratorBidirectionalReverse = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, EMapIteratorFlags_BidirectionalReverse>;
+		using CKeyValueIteratorBidirectionalReverseConst = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, EMapIteratorFlags_BidirectionalReverseConst>;
+
+		using CIteratorDestructive = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, EMapIteratorFlags_Destructive>;
+		using CIteratorReverseDestructive = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, EMapIteratorFlags_ReverseDestructive>;
+		using CIteratorBidirectionalDestructive = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, EMapIteratorFlags_BidirectionalDestructive>;
+		using CIteratorBidirectionalReverseDestructive = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Value, EMapIteratorFlags_BidirectionalReverseDestructive>;
+
+		using CKeyIteratorDestructive = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, EMapIteratorFlags_Destructive>;
+		using CKeyIteratorReverseDestructive = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, EMapIteratorFlags_ReverseDestructive>;
+		using CKeyIteratorBidirectionalDestructive = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, EMapIteratorFlags_BidirectionalDestructive>;
+		using CKeyIteratorBidirectionalReverseDestructive = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_Key, EMapIteratorFlags_BidirectionalReverseDestructive>;
+
+		using CKeyValueIteratorDestructive = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, EMapIteratorFlags_Destructive>;
+		using CKeyValueIteratorReverseDestructive = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, EMapIteratorFlags_ReverseDestructive>;
+		using CKeyValueIteratorBidirectionalDestructive = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, EMapIteratorFlags_BidirectionalDestructive>;
+		using CKeyValueIteratorBidirectionalReverseDestructive = NPrivate::TCMapIterator<TCMap, EMapIteratorAccess_KeyValue, EMapIteratorFlags_BidirectionalReverseDestructive>;
 
 		struct CKeys
 		{
@@ -80,7 +96,7 @@ namespace NMib::NContainer
 			template <typename tf_CKey>
 			CKeyIteratorBidirectional f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key);
 
-		private:
+		protected:
 			TCMap &mp_Map;
 		};
 
@@ -134,7 +150,7 @@ namespace NMib::NContainer
 			template <typename tf_CKey>
 			CKeyValueIteratorBidirectional f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key);
 
-		private:
+		protected:
 			TCMap &mp_Map;
 		};
 
@@ -165,13 +181,33 @@ namespace NMib::NContainer
 			TCMap const &mp_Map;
 		};
 
+		struct CKeysDestructive : public CKeys
+		{
+			CKeysDestructive(TCMap &&_Map);
+
+			CKeyIteratorDestructive f_GetIteratorDestructive();
+			CKeyIteratorReverseDestructive f_GetIteratorReverseDestructive();
+			CKeyIteratorBidirectionalDestructive f_GetIteratorBidirectionalDestructive();
+			CKeyIteratorBidirectionalReverseDestructive f_GetIteratorBidirectionalReverseDestructive();
+		};
+
+		struct CEntriesDestructive : public CEntries
+		{
+			CEntriesDestructive(TCMap &&_Map);
+
+			CKeyValueIteratorDestructive f_GetIteratorDestructive();
+			CKeyValueIteratorReverseDestructive f_GetIteratorReverseDestructive();
+			CKeyValueIteratorBidirectionalDestructive f_GetIteratorBidirectionalDestructive();
+			CKeyValueIteratorBidirectionalReverseDestructive f_GetIteratorBidirectionalReverseDestructive();
+		};
+
 		struct CFormatOptions
 		{
 			bool m_bSingleLine = false;
 			bool m_bBrackets = true;
 		};
 
-	private:
+	protected:
 		template <typename t_CKey2, typename t_CValue2, typename t_CCompare2, typename t_CAllocator2>
 		friend struct TCMap;
 
@@ -188,18 +224,18 @@ namespace NMib::NContainer
 		friend CMapper;
 		friend CConditionalMapper;
 
-		template <typename t_CMap2, EMapIteratorAccess t_Access2, bool t_bReverse2, bool t_bConst2, bool t_bBidirectional2>
+		template <typename t_CMap2, EMapIteratorAccess t_Access2, EMapIteratorFlags t_Flags2>
 		friend struct NPrivate::TCMapIterator;
 
 		using CNodeCompare = TCConditional
 			<
 				NTraits::cIsSame<t_CCompare, NMib::CSort_Default>
-				, NPrivate::TCMapNodeCompare_Default<CNode, t_CKey>
-				, NPrivate::TCMapNodeCompare_Custom<CNode, t_CCompare>
+				, NPrivate::TCMapNodeCompare_Default<CNodeDestructive, t_CKey>
+				, NPrivate::TCMapNodeCompare_Custom<CNodeDestructive, t_CCompare>
 			>
 		;
 		using CUserData = NTraits::TCRemoveReference<typename NPrivate::TCMapUserData<t_CKey, t_CValue>::CType>;
-		using CAVLTree = NIntrusive::TCAVLTree<&CMapNodeBase::m_Link, void, NMemory::CAllocator_Base, CNode>;
+		using CAVLTree = NIntrusive::TCAVLTree<&CMapNodeBase::m_Link, void, NMemory::CAllocator_Base, CNodeDestructive>;
 
 	public:
 		~TCMap();
@@ -336,11 +372,13 @@ namespace NMib::NContainer
 		mint f_GetLen() const;
 		mint f_GetDepth() const;
 
-		CEntries f_Entries();
-		CEntriesConst f_Entries() const;
+		CEntries f_Entries() &;
+		CEntriesConst f_Entries() const &;
+		CEntriesDestructive f_Entries() &&;
 
-		CKeys f_Keys();
-		CKeysConst f_Keys() const;
+		CKeys f_Keys() &;
+		CKeysConst f_Keys() const &;
+		CKeysDestructive f_Keys() &&;
 
 		CIteratorConst f_GetIterator() const;
 		CIterator f_GetIterator();
@@ -397,7 +435,9 @@ namespace NMib::NContainer
 
 		TCSet<t_CKey, t_CCompare, t_CAllocator> f_KeySet() const;
 
-	private:
+	protected:
+		CNodeHandle fp_ExtractNoRebalance(CNodeDestructive *_pParent, CNodeDestructive *_pToRemove);
+
 		template <typename tf_CSource>
 		inline_always void fp_CopyAll(tf_CSource && _Other);
 		template <typename tf_CSource>

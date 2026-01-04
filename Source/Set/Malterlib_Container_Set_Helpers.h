@@ -23,8 +23,8 @@ namespace NMib::NContainer
 		template <typename tf_CStream>
 		void f_Consume(tf_CStream &_Stream);
 
-		inline_small const t_CKey &f_Key() const;
-		inline_small const t_CKey &f_Value() const;
+		inline_small const t_CKey &f_Key() const &;
+		inline_small const t_CKey &f_Value() const &;
 
 		template <mint tf_iValue>
 		constexpr decltype(auto) get() const & noexcept;
@@ -45,7 +45,7 @@ namespace NMib::NContainer
 		>
 		friend struct NPrivate::TCMapNodeCompare_Custom;
 
-		template <typename t_CMap2, EMapIteratorAccess t_Access, bool t_bReverse2, bool t_bConst2, bool t_bBidirectional2>
+		template <typename t_CMap2, EMapIteratorAccess t_Access2, EMapIteratorFlags t_Flags2>
 		friend struct NPrivate::TCMapIterator;
 
 		template <typename t_CDestination2, bool t_bIsRef2>
@@ -66,6 +66,9 @@ namespace NMib::NContainer
 		template <auto t_pLinkMember2, typename t_CCompare2, typename t_CAllocator2, typename t_COverrideNodeType2>
 		friend class NIntrusive::TCAVLTreeAggregate;
 
+		template <typename t_CKey2, typename t_CValue2>
+		friend struct TCDestructiveMapNode;
+
 		inline_small TCMapNode() = default;
 
 		template <typename tf_CKey>
@@ -74,6 +77,39 @@ namespace NMib::NContainer
 		explicit inline_small TCMapNode(tf_CKey &&_Key, tf_CArg0 &&_Arg0);
 
 		DMibNoUniqueAddress t_CKey mp_Key;
+	};
+
+	template <typename t_CKey>
+	struct TCDestructiveMapNode<t_CKey, CMapSet> : public TCMapNode<t_CKey, CMapSet>
+	{
+		using CBase = TCMapNode<t_CKey, CMapSet>;
+		using CBase::CBase;
+
+		using CBase::get;
+		using CBase::f_Key;
+		using CBase::f_Value;
+		using CBase::f_Feed;
+		using CBase::f_Consume;
+
+		constexpr inline_small t_CKey &f_Key() & noexcept
+		{
+			return this->mp_Key;
+		}
+
+		constexpr inline_small t_CKey &&f_Key() && noexcept
+		{
+			return fg_Move(this->mp_Key);
+		}
+
+		constexpr inline_small t_CKey &f_Value() & noexcept
+		{
+			return this->mp_Key;
+		}
+
+		constexpr inline_small t_CKey &&f_Value() && noexcept
+		{
+			return fg_Move(this->mp_Key);
+		}
 	};
 }
 

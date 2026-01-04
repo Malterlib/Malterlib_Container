@@ -12,11 +12,11 @@ namespace NMib::NContainer
 		return mp_Tree.f_FindEqualOrInsert
 			(
 				_Key
-				, [&]() -> CNode *
+				, [&]() -> CNodeDestructive *
 				{
-					auto Memory = mp_Allocator.f_AllocSafe(sizeof(CNode), alignof(CNode));
-					auto pData = (CNode *)Memory.m_pMemory;
-					new ((void *)pData) CNode(fg_Forward<tf_CKey>(_Key));
+					auto Memory = mp_Allocator.f_AllocSafe(sizeof(CNodeDestructive), alignof(CNodeDestructive));
+					auto pData = (CNodeDestructive *)Memory.m_pMemory;
+					new ((void *)pData) CNodeDestructive(fg_Forward<tf_CKey>(_Key));
 					Memory.f_Claim();
 					return pData;
 				}
@@ -56,12 +56,12 @@ namespace NMib::NContainer
 		auto pData = mp_Tree.f_FindEqualOrInsert
 			(
 				_Key
-				, [&]() -> CNode *
+				, [&]() -> CNodeDestructive *
 				{
 					bWasCreated = true;
-					auto Memory = mp_Allocator.f_AllocSafe(sizeof(CNode), alignof(CNode));
-					auto pData = (CNode *)Memory.m_pMemory;
-					new ((void *)pData) CNode(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
+					auto Memory = mp_Allocator.f_AllocSafe(sizeof(CNodeDestructive), alignof(CNodeDestructive));
+					auto pData = (CNodeDestructive *)Memory.m_pMemory;
+					new ((void *)pData) CNodeDestructive(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
 					Memory.f_Claim();
 					return pData;
 				}

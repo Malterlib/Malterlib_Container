@@ -11,11 +11,28 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
 	struct TCSet;
 
-	enum EMapIteratorAccess
+	enum EMapIteratorAccess : uint8
 	{
 		EMapIteratorAccess_Value = 0
 		, EMapIteratorAccess_Key
 		, EMapIteratorAccess_KeyValue
+	};
+
+	enum EMapIteratorFlags : uint8
+	{
+		EMapIteratorFlags_None = 0
+		, EMapIteratorFlags_Reverse = DMibBit(0)
+		, EMapIteratorFlags_Const = DMibBit(1)
+		, EMapIteratorFlags_Bidirectional = DMibBit(2)
+		, EMapIteratorFlags_Destructive = DMibBit(3)
+
+		, EMapIteratorFlags_ReverseConst = EMapIteratorFlags_Reverse | EMapIteratorFlags_Const
+		, EMapIteratorFlags_BidirectionalConst = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Const
+		, EMapIteratorFlags_BidirectionalReverse = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Reverse
+		, EMapIteratorFlags_BidirectionalReverseConst = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Reverse | EMapIteratorFlags_Const
+		, EMapIteratorFlags_ReverseDestructive = EMapIteratorFlags_Reverse | EMapIteratorFlags_Destructive
+		, EMapIteratorFlags_BidirectionalDestructive = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Destructive
+		, EMapIteratorFlags_BidirectionalReverseDestructive = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Reverse | EMapIteratorFlags_Destructive
 	};
 }
 
@@ -32,14 +49,14 @@ namespace NMib::NContainer::NPrivate
 	{
 		static constexpr bool mc_bValue = true;
 	};
-	
+
 	template <typename t_CKey, typename t_CValue>
 	struct TCMapUserData
 	{
 		using CType = t_CValue;
 	};
 
-	template <typename t_CMap, EMapIteratorAccess t_Access, bool t_bReverse, bool t_bConst, bool t_bBidirectional>
+	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
 	struct TCMapIterator;
 
 	template <typename t_CNode>
@@ -51,7 +68,7 @@ namespace NMib::NContainer::NPrivate
 	template <typename t_CDestination, bool t_bIsRef>
 	struct TCMapCopy
 	{
-		using CNode = typename t_CDestination::CNode;
+		using CNode = typename t_CDestination::CNodeDestructive;
 
 		template <typename tf_CSource>
 		static void fs_CopyAll(t_CDestination &_Map, tf_CSource &&_Other)

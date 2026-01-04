@@ -27,7 +27,7 @@ namespace NMib::NContainer
 		template <typename t_CMap>
 		struct TCMapConditionalMapper
 		{
-			using CNode = typename t_CMap::CNode;
+			using CNode = typename t_CMap::CNodeDestructive;
 			using CUserData = typename t_CMap::CUserData;
 
 			TCMapConditionalMapper(void * _pMemory, t_CMap &_Map)
@@ -71,15 +71,15 @@ namespace NMib::NContainer
 	{
 		mp_Allocator.f_AllocBatch
 			(
-				sizeof(CNode)
-				, alignof(CNode)
+				sizeof(CNodeDestructive)
+				, alignof(CNodeDestructive)
 				, [&](void * _pAlloc, mint _Size) -> bool
 				{
 					auto Cleanup = mp_Allocator.f_MakeSafe(_pAlloc, _Size);
 					CMapper Mapper(_pAlloc);
 					bool bRet = _fDoInsert(Mapper);
 					Cleanup.f_Claim();
-					auto pData = (CNode *)_pAlloc;
+					auto pData = (CNodeDestructive *)_pAlloc;
 					mp_Tree.f_Insert(pData, mp_Compare);
 					return bRet;
 				}
@@ -93,8 +93,8 @@ namespace NMib::NContainer
 	{
 		mp_Allocator.f_AllocBatch
 			(
-				sizeof(CNode)
-				, alignof(CNode)
+				sizeof(CNodeDestructive)
+				, alignof(CNodeDestructive)
 				, [&](void * _pAlloc, mint _Size) -> bool
 				{
 					auto Cleanup = mp_Allocator.f_MakeSafe(_pAlloc, _Size);
