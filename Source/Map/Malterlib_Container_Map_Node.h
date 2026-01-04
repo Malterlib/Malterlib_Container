@@ -151,29 +151,44 @@ namespace NMib::NContainer
 		using CKey = typename t_CNode::CKey;
 		using CValue = typename t_CNode::CValue;
 		using CAllocator = t_CAllocator;
+		using CAllocatorStore = TCConditional
+			<
+				!NTraits::cIsEmpty<t_CAllocator> && (!NTraits::cIsCopyConstructible<t_CAllocator> || t_CAllocator::mc_CanBeStatic)
+				, t_CAllocator *
+				, t_CAllocator
+			>
+		;
 
 		TCMapNodeHandle() = default;
 
 		TCMapNodeHandle(TCMapNodeHandle &&_Other) noexcept
 			: mp_pNode(fg_Exchange(_Other.mp_pNode, nullptr))
+			, mp_Allocator(fg_Move(_Other.mp_Allocator))
 		{
+			if constexpr (NTraits::cIsPointer<CAllocatorStore>)
+				_Other.mp_Allocator = nullptr;
 		}
 
 		~TCMapNodeHandle()
 		{
 			if (mp_pNode)
-				fg_DeleteObjectDefiniteType(mp_Allocator, mp_pNode);
+				fg_DeleteObjectDefiniteType(fp_Allocator(), mp_pNode);
 		}
 
 		void f_Clear()
 		{
 			if (mp_pNode)
-				fg_DeleteObjectDefiniteType(mp_Allocator, fg_Exchange(mp_pNode, nullptr));
+				fg_DeleteObjectDefiniteType(fp_Allocator(), fg_Exchange(mp_pNode, nullptr));
 		}
 
 		TCMapNodeHandle &operator = (TCMapNodeHandle &&_Other) noexcept
 		{
+			f_Clear();
+
 			mp_Allocator = fg_Move(_Other.mp_Allocator);
+			if constexpr (NTraits::cIsPointer<CAllocatorStore>)
+				_Other.mp_Allocator = nullptr;
+
 			mp_pNode = fg_Exchange(_Other.mp_pNode, nullptr);
 
 			return *this;
@@ -214,23 +229,44 @@ namespace NMib::NContainer
 			return &f_Value();
 		}
 
-		t_CAllocator f_GetAllocator() const
+		t_CAllocator &f_GetAllocator() const
 		{
-			return mp_Allocator;
+			return fp_Allocator();
 		}
 
 	private:
+		t_CAllocator &fp_Allocator() const
+		{
+			if constexpr (NTraits::cIsPointer<CAllocatorStore>)
+				return *mp_Allocator;
+			else
+				return (t_CAllocator &)mp_Allocator;
+		}
+
 		template <typename t_CKey2, typename t_CValue2, typename t_CCompare2, typename t_CAllocator2>
 		friend struct TCMap;
 
-		TCMapNodeHandle(t_CNode *_pNode, t_CAllocator const &_Allocator)
+		template <typename t_CMap2, EMapIteratorAccess t_Access2, EMapIteratorFlags t_Flags2>
+		friend struct NPrivate::TCMapIterator;
+
+		TCMapNodeHandle(t_CNode *_pNode, t_CAllocator &_Allocator)
 			: mp_pNode(_pNode)
-			, mp_Allocator(_Allocator)
+			, mp_Allocator
+			(
+				[&]
+				{
+					if constexpr (NTraits::cIsPointer<CAllocatorStore>)
+						return &_Allocator;
+					else
+						return _Allocator;
+				}
+				()
+			)
 		{
 		}
 
 		t_CNode *mp_pNode = nullptr;
-		DMibNoUniqueAddress t_CAllocator mp_Allocator;
+		DMibNoUniqueAddress CAllocatorStore mp_Allocator;
 	};
 }
 

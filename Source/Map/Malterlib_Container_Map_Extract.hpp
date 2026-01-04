@@ -9,10 +9,7 @@ namespace NMib::NContainer
 	void TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_ExtractAndInsert(TCMap &_Map, CUserData *_pData)
 		requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 	{
-		mint Offset = CNode::fs_GetOffset();
-		CNode *pNode = (CNode *)(((uint8 *)_pData) - Offset);
-		_Map.mp_Tree.f_Remove(pNode, _Map.mp_Compare);
-		mp_Tree.f_Insert(pNode, mp_Compare);
+		f_Insert(_Map.f_Extract(_pData));
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
