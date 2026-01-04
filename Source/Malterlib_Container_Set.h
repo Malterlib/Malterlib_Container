@@ -73,15 +73,37 @@ namespace NMib::NContainer
 		;
 #endif
 
-		TCSet f_Or(TCSet const &_Other) const;
-		TCSet operator | (TCSet const &_Right) const;
-		TCSet f_And(TCSet const &_Other) const;
+		template <typename t_CThis>
+		TCSet f_Or(this t_CThis &&_This, TCSet const &_Right);
+		template <typename t_CThis>
+		TCSet f_Or(this t_CThis &&_This, TCSet &&_Right);
+		template <typename t_CThis>
+		TCSet operator | (this t_CThis &&_This, TCSet const &_Right);
+		template <typename t_CThis>
+		TCSet operator | (this t_CThis &&_This, TCSet &&_Right);
 
-		TCSet operator & (TCSet const &_Right) const;
-		TCSet f_Xor(TCSet const &_Right) const;
-		TCSet operator ^ (TCSet const &_Right);
-		TCSet f_Difference(TCSet const &_Right) const;
-		TCSet operator - (TCSet const &_Right);
+		template <typename t_CThis>
+		TCSet f_And(this t_CThis &&_This, TCSet const &_Right);
+		template <typename t_CThis>
+		TCSet f_And(this t_CThis &&_This, TCSet &&_Right);
+		template <typename t_CThis>
+		TCSet operator & (this t_CThis &&_This, TCSet const &_Right);
+		template <typename t_CThis>
+		TCSet operator & (this t_CThis &&_This, TCSet &&_Right);
+
+		template <typename t_CThis>
+		TCSet f_Xor(this t_CThis &&_This, TCSet const &_Right);
+		template <typename t_CThis>
+		TCSet f_Xor(this t_CThis &&_This, TCSet &&_Right);
+		template <typename t_CThis>
+		TCSet operator ^ (this t_CThis &&_This, TCSet const &_Right);
+		template <typename t_CThis>
+		TCSet operator ^ (this t_CThis &&_This, TCSet &&_Right);
+
+		template <typename t_CThis>
+		TCSet f_Difference(this t_CThis &&_This, TCSet const &_Right);
+		template <typename t_CThis>
+		TCSet operator - (this t_CThis &&_This, TCSet const &_Right);
 
 		using CIteratorDestructive = typename CMap::CKeyIteratorDestructive;
 		using CIteratorReverseDestructive = typename CMap::CKeyIteratorReverseDestructive;

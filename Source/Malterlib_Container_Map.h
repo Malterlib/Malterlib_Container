@@ -15,6 +15,13 @@
 
 namespace NMib::NContainer
 {
+	enum class EMapOperationPolicy
+	{
+		mc_PreferLeft    // On key collision, keep left value
+		, mc_PreferRight // On key collision, keep right value
+		, mc_Fastest     // Use whichever side allows best move optimization
+	};
+
 	template <typename t_CKey, typename t_CValue, typename t_CCompare = NMib::CSort_Default, typename t_CAllocator = NMib::NMemory::CAllocator_Heap>
 	struct TCMap;
 
@@ -342,6 +349,30 @@ namespace NMib::NContainer
 		TCMap &operator += (TCMap const &_Other);
 		TCMap &operator += (TCMap &&_Other);
 		TCMap &operator -= (TCMap const &_Other);
+
+		template <typename t_CThis>
+		TCMap f_Xor(this t_CThis &&_This, TCMap const &_Right);
+		template <typename t_CThis>
+		TCMap f_Xor(this t_CThis &&_This, TCMap &&_Right);
+		template <typename t_CThis>
+		TCMap operator ^ (this t_CThis &&_This, TCMap const &_Right);
+		template <typename t_CThis>
+		TCMap operator ^ (this t_CThis &&_This, TCMap &&_Right);
+
+		template <typename t_CThis>
+		TCMap f_Difference(this t_CThis &&_This, TCMap const &_Right);
+		template <typename t_CThis>
+		TCMap operator - (this t_CThis &&_This, TCMap const &_Right);
+
+		template <EMapOperationPolicy t_Policy, typename t_CThis>
+		TCMap f_Or(this t_CThis &&_This, TCMap const &_Right);
+		template <EMapOperationPolicy t_Policy, typename t_CThis>
+		TCMap f_Or(this t_CThis &&_This, TCMap &&_Right);
+
+		template <EMapOperationPolicy t_Policy, typename t_CThis>
+		TCMap f_And(this t_CThis &&_This, TCMap const &_Right);
+		template <EMapOperationPolicy t_Policy, typename t_CThis>
+		TCMap f_And(this t_CThis &&_This, TCMap &&_Right);
 
 		void f_Remove(CUserData *_pData)
 			requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types

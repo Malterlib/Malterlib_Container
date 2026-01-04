@@ -120,114 +120,348 @@ namespace NMib::NContainer
 #endif
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Or(TCSet const &_Other) const -> TCSet
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Or(this t_CThis &&_This, TCSet const &_Right) -> TCSet
 	{
-		TCSet Return = *this;
-		Return += _Other;
-		return Return;
-	}
-
-	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator | (TCSet const &_Right) const -> TCSet
-	{
-		return f_Or(_Right);
-	}
-
-	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_And(TCSet const &_Other) const -> TCSet
-	{
-		TCSet Return;
-		auto iLeft = this->f_GetIterator();
-		auto iRight = _Other.f_GetIterator();
-
-		while (iRight)
+		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
 		{
-			while (iLeft && *iLeft < *iRight)
-				++iLeft;
-			if (!iLeft)
-				break;
-			while (iRight && *iRight < *iLeft)
-				++iRight;
-			if (!iRight)
-				break;
-			Return[*iLeft];
-			++iLeft;
-			++iRight;
-		}
-
-		return Return;
-	}
-
-	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator & (TCSet const &_Right) const -> TCSet
-	{
-		return f_And(_Right);
-	}
-
-	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Xor(TCSet const &_Right) const -> TCSet
-	{
-		TCSet Return;
-		auto iLeft = this->f_GetIterator();
-		auto iRight = _Right.f_GetIterator();
-		if (!iRight)
-		{
-			for (; iLeft; ++iLeft)
-				Return[*iLeft];
+			TCSet Return(_Right);
+			Return += fg_Move(_This);
 			return Return;
 		}
-
-		while (iRight)
+		else
 		{
-			for (; iLeft && *iLeft < *iRight; ++iLeft)
-				Return[*iLeft];
+			TCSet Return(_This);
+			Return += _Right;
+			return Return;
+		}
+	}
 
-			if (!iLeft)
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Or(this t_CThis &&_This, TCSet &&_Right) -> TCSet
+	{
+
+		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		{
+			TCSet Return(fg_Move(_Right));
+			Return += fg_Move(_This);
+			return Return;
+		}
+		else
+		{
+			TCSet Return(_This);
+			Return += fg_Move(_Right);
+			return Return;
+		}
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator | (this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	{
+		return fg_Forward<t_CThis>(_This).f_Or(_Right);
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator | (this t_CThis &&_This, TCSet &&_Right) -> TCSet
+	{
+		return fg_Forward<t_CThis>(_This).f_Or(fg_Move(_Right));
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_And(this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	{
+		TCSet Return;
+
+		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		{
+			auto iLeft = fg_Move(_This).f_GetIteratorBidirectionalDestructive();
+			auto iRight = _Right.f_GetIterator();
+
+			while (iLeft && iRight)
 			{
-				for (; iRight; ++iRight)
-					Return[*iRight];
-				break;
+				auto Cmp = _This.mp_Compare.f_CompareKeys(*iLeft, *iRight);
+				if (Cmp < 0)
+					++iLeft;
+				else if (Cmp > 0)
+					++iRight;
+				else
+				{
+					Return.f_Insert(iLeft.f_ExtractNode());
+					++iRight;
+				}
 			}
-			for (; iRight && *iRight < *iLeft; ++iRight)
-				Return[*iRight];
+		}
+		else
+		{
+			auto iLeft = _This.f_GetIterator();
+			auto iRight = _Right.f_GetIterator();
 
-			if (!iRight)
-				break;
-
-			// Equal elements - skip both (XOR excludes elements in both sets)
-			++iLeft;
-			++iRight;
+			while (iLeft && iRight)
+			{
+				auto Cmp = _This.mp_Compare.f_CompareKeys(*iLeft, *iRight);
+				if (Cmp < 0)
+					++iLeft;
+				else if (Cmp > 0)
+					++iRight;
+				else
+				{
+					Return[*iLeft];
+					++iLeft;
+					++iRight;
+				}
+			}
 		}
 
-		// Add any remaining elements from left
-		for (; iLeft; ++iLeft)
-			Return[*iLeft];
+		return Return;
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_And(this t_CThis &&_This, TCSet &&_Right) -> TCSet
+	{
+		TCSet Return;
+		auto iLeft = _This.f_GetIterator();
+		auto iRight = fg_Move(_Right).f_GetIteratorBidirectionalDestructive();
+
+		while (iLeft && iRight)
+		{
+			auto Cmp = _This.mp_Compare.f_CompareKeys(*iLeft, *iRight);
+			if (Cmp < 0)
+				++iLeft;
+			else if (Cmp > 0)
+				++iRight;
+			else
+			{
+				Return.f_Insert(iRight.f_ExtractNode());
+				++iLeft;
+			}
+		}
 
 		return Return;
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator ^ (TCSet const &_Right) -> TCSet
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator & (this t_CThis &&_This, TCSet const &_Right) -> TCSet
 	{
-		return f_Xor(_Right);
+		return fg_Forward<t_CThis>(_This).f_And(_Right);
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Difference(TCSet const &_Right) const -> TCSet
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator & (this t_CThis &&_This, TCSet &&_Right) -> TCSet
 	{
-		TCSet Return = *this;
+		return fg_Forward<t_CThis>(_This).f_And(fg_Move(_Right));
+	}
 
-		DMibFastCheck(&Return != this);
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Xor(this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	{
+		TCSet Return;
 
-		Return -= _Right;
+		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		{
+			if (_Right.f_IsEmpty())
+				return fg_Move(_This);
+			else if (_This.f_IsEmpty())
+				return _Right;
+
+			auto iLeft = fg_Move(_This).f_GetIteratorBidirectionalDestructive();
+			auto iRight = _Right.f_GetIterator();
+
+			while (iLeft && iRight)
+			{
+				auto Cmp = _This.mp_Compare.f_CompareKeys(*iLeft, *iRight);
+				if (Cmp < 0)
+					Return.f_Insert(iLeft.f_ExtractNode());
+				else if (Cmp > 0)
+				{
+					Return[*iRight];
+					++iRight;
+				}
+				else
+				{
+					++iLeft;
+					++iRight;
+				}
+			}
+
+			for (; iLeft;)
+				Return.f_Insert(iLeft.f_ExtractNode());
+
+			for (; iRight; ++iRight)
+				Return[*iRight];
+		}
+		else
+		{
+			if (_Right.f_IsEmpty())
+				return _This;
+			else if (_This.f_IsEmpty())
+				return _Right;
+
+			auto iLeft = _This.f_GetIterator();
+			auto iRight = _Right.f_GetIterator();
+
+			while (iLeft && iRight)
+			{
+				auto Cmp = _This.mp_Compare.f_CompareKeys(*iLeft, *iRight);
+				if (Cmp < 0)
+				{
+					Return[*iLeft];
+					++iLeft;
+				}
+				else if (Cmp > 0)
+				{
+					Return[*iRight];
+					++iRight;
+				}
+				else
+				{
+					++iLeft;
+					++iRight;
+				}
+			}
+
+			for (; iLeft; ++iLeft)
+				Return[*iLeft];
+
+			for (; iRight; ++iRight)
+				Return[*iRight];
+		}
 
 		return Return;
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator - (TCSet const &_Right) -> TCSet
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Xor(this t_CThis &&_This, TCSet &&_Right) -> TCSet
 	{
-		return f_Difference(_Right);
+		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		{
+			if (_Right.f_IsEmpty())
+				return fg_Move(_This);
+			else if (_This.f_IsEmpty())
+				return fg_Move(_Right);
+
+			TCSet Return(fg_Move(_This));
+
+			_Right.f_ExtractAll
+				(
+					[&](typename CMap::CNodeHandle &&_Handle)
+					{
+						if (Return.f_Remove(_Handle.f_Key()))
+							return;
+
+						Return.f_Insert(fg_Move(_Handle));
+					}
+				)
+			;
+
+			return Return;
+		}
+		else
+		{
+			TCSet Return;
+
+			if (_Right.f_IsEmpty())
+				return _This;
+			else if (_This.f_IsEmpty())
+				return fg_Move(_Right);
+
+			auto iLeft = _This.f_GetIterator();
+			auto iRight = fg_Move(_Right).f_GetIteratorBidirectionalDestructive();
+
+			while (iLeft && iRight)
+			{
+				auto Cmp = _This.mp_Compare.f_CompareKeys(*iLeft, *iRight);
+				if (Cmp < 0)
+				{
+					Return[*iLeft];
+					++iLeft;
+				}
+				else if (Cmp > 0)
+					Return.f_Insert(iRight.f_ExtractNode());
+				else
+				{
+					++iLeft;
+					++iRight;
+				}
+			}
+
+			for (; iLeft; ++iLeft)
+				Return[*iLeft];
+
+			for (; iRight;)
+				Return.f_Insert(iRight.f_ExtractNode());
+
+			return Return;
+		}
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator ^ (this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	{
+		return fg_Forward<t_CThis>(_This).f_Xor(_Right);
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator ^ (this t_CThis &&_This, TCSet &&_Right) -> TCSet
+	{
+		return fg_Forward<t_CThis>(_This).f_Xor(fg_Move(_Right));
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Difference(this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	{
+		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		{
+			TCSet Return = fg_Move(_This);
+			Return -= _Right;
+			return Return;
+		}
+		else
+		{
+			TCSet Return;
+			auto iLeft = _This.f_GetIterator();
+			auto iRight = _Right.f_GetIterator();
+
+			while (iLeft && iRight)
+			{
+				auto Cmp = _This.mp_Compare.f_CompareKeys(*iLeft, *iRight);
+				if (Cmp < 0)
+				{
+					Return[*iLeft];
+					++iLeft;
+				}
+				else if (Cmp > 0)
+					++iRight;
+				else
+				{
+					++iLeft;
+					++iRight;
+				}
+			}
+
+			for (; iLeft; ++iLeft)
+				Return[*iLeft];
+
+			return Return;
+		}
+	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename t_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator - (this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	{
+		return fg_Forward<t_CThis>(_This).f_Difference(_Right);
 	}
 
 	template <typename tf_CReturn, typename... tf_CParams>

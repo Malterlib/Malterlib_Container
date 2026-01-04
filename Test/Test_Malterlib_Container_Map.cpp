@@ -9,6 +9,7 @@ namespace
 	using namespace NMib::NTraits;
 	using namespace NMib::NStr;
 	using namespace NMib::NContainer;
+	using namespace NMib::NStorage;
 
 	class CMap_Tests : public NMib::NTest::CTest
 	{
@@ -262,6 +263,520 @@ namespace
 						DMibExpect(Testing.f_GetLen(), ==, 0);
 						DMibExpect(Testing2.f_GetLen(), ==, 9);
 					}
+				};
+			};
+			DMibTestSuite("MapSetOperations")
+			{
+				DMibTestCategory("Difference")
+				{
+					DMibTestCategory("Overlapping")
+					{
+						TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{3, 30}};
+						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Expected));
+					};
+					DMibTestCategory("MovableLeft")
+					{
+						TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{3, 30}};
+						DMibTest((DMibExpr(fg_Move(Left)) - DMibExpr(Right)) == DMibExpr(Expected));
+					};
+					DMibTestCategory("Disjoint")
+					{
+						TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}};
+						TCMap<int, int> Right = {TCTuple{3, 30}, TCTuple{4, 40}};
+
+						TCMap<int, int> Expected = Left;
+						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Expected));
+					};
+				};
+
+				DMibTestCategory("Xor")
+				{
+					DMibTestCategory("ConstRight")
+					{
+						TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{3, 30}, TCTuple{4, 400}};
+						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
+					};
+					DMibTestCategory("MovableBoth")
+					{
+						TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{3, 30}, TCTuple{4, 400}};
+						DMibTest((DMibExpr(fg_Move(Left)) ^ DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+					};
+					DMibTestCategory("MovableLeft")
+					{
+						TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{3, 30}, TCTuple{4, 400}};
+						DMibTest((DMibExpr(fg_Move(Left)) ^ DMibExpr(Right)) == DMibExpr(Expected));
+					};
+					DMibTestCategory("MovableRight")
+					{
+						TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{3, 30}, TCTuple{4, 400}};
+						DMibTest((DMibExpr(Left) ^ DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+					};
+					DMibTestCategory("Identical")
+					{
+						TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}};
+						TCMap<int, int> Right = {TCTuple{1, 100}, TCTuple{2, 200}};
+						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr((TCMap<int, int>())));
+					};
+				};
+
+				DMibTestCategory("Or")
+				{
+					DMibTestCategory("PreferLeft")
+					{
+						DMibTestCategory("Overlapping")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}, TCTuple{4, 400}};
+							DMibTest(DMibExpr(Left.f_Or<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
+						};
+						DMibTestCategory("MovableLeft")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}, TCTuple{4, 400}};
+							DMibTest(DMibExpr(fg_Move(Left).f_Or<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
+						};
+						DMibTestCategory("MovableRight")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}, TCTuple{4, 400}};
+							DMibTest(DMibExpr(Left.f_Or<EMapOperationPolicy::mc_PreferLeft>(fg_Move(Right))) == DMibExpr(Expected));
+						};
+						DMibTestCategory("MovableBoth")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}, TCTuple{4, 400}};
+							DMibTest(DMibExpr(fg_Move(Left).f_Or<EMapOperationPolicy::mc_PreferLeft>(fg_Move(Right))) == DMibExpr(Expected));
+						};
+						DMibTestCategory("Disjoint")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}};
+							TCMap<int, int> Right = {TCTuple{3, 30}, TCTuple{4, 40}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}, TCTuple{4, 40}};
+							DMibTest(DMibExpr(Left.f_Or<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
+						};
+						DMibTestCategory("Identical")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}};
+							TCMap<int, int> Right = {TCTuple{1, 100}, TCTuple{2, 200}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{2, 20}};
+							DMibTest(DMibExpr(Left.f_Or<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
+						};
+					};
+					DMibTestCategory("PreferRight")
+					{
+						DMibTestCategory("Overlapping")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{2, 200}, TCTuple{3, 30}, TCTuple{4, 400}};
+							DMibTest(DMibExpr(Left.f_Or<EMapOperationPolicy::mc_PreferRight>(Right)) == DMibExpr(Expected));
+						};
+						DMibTestCategory("MovableLeft")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{2, 200}, TCTuple{3, 30}, TCTuple{4, 400}};
+							DMibTest(DMibExpr(fg_Move(Left).f_Or<EMapOperationPolicy::mc_PreferRight>(Right)) == DMibExpr(Expected));
+						};
+						DMibTestCategory("MovableRight")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{2, 200}, TCTuple{3, 30}, TCTuple{4, 400}};
+							DMibTest(DMibExpr(Left.f_Or<EMapOperationPolicy::mc_PreferRight>(fg_Move(Right))) == DMibExpr(Expected));
+						};
+						DMibTestCategory("MovableBoth")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{2, 200}, TCTuple{3, 30}, TCTuple{4, 400}};
+							DMibTest(DMibExpr(fg_Move(Left).f_Or<EMapOperationPolicy::mc_PreferRight>(fg_Move(Right))) == DMibExpr(Expected));
+						};
+						DMibTestCategory("Identical")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}};
+							TCMap<int, int> Right = {TCTuple{1, 100}, TCTuple{2, 200}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 100}, TCTuple{2, 200}};
+							DMibTest(DMibExpr(Left.f_Or<EMapOperationPolicy::mc_PreferRight>(Right)) == DMibExpr(Expected));
+						};
+					};
+					DMibTestCategory("Fastest")
+					{
+						DMibTestCategory("Overlapping")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+							// Fastest produces a valid union (all keys present)
+							auto Result = Left.f_Or<EMapOperationPolicy::mc_Fastest>(Right);
+							DMibExpect(Result.f_GetLen(), ==, 4);
+							DMibExpectTrue(Result.f_FindEqual(1) != nullptr);
+							DMibExpectTrue(Result.f_FindEqual(2) != nullptr);
+							DMibExpectTrue(Result.f_FindEqual(3) != nullptr);
+							DMibExpectTrue(Result.f_FindEqual(4) != nullptr);
+						};
+						DMibTestCategory("MovableLeft")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+							auto Result = fg_Move(Left).f_Or<EMapOperationPolicy::mc_Fastest>(Right);
+							DMibExpect(Result.f_GetLen(), ==, 4);
+							DMibExpectTrue(Result.f_FindEqual(1) != nullptr);
+							DMibExpectTrue(Result.f_FindEqual(2) != nullptr);
+							DMibExpectTrue(Result.f_FindEqual(3) != nullptr);
+							DMibExpectTrue(Result.f_FindEqual(4) != nullptr);
+						};
+						DMibTestCategory("MovableRight")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+							auto Result = Left.f_Or<EMapOperationPolicy::mc_Fastest>(fg_Move(Right));
+							DMibExpect(Result.f_GetLen(), ==, 4);
+							DMibExpectTrue(Result.f_FindEqual(1) != nullptr);
+							DMibExpectTrue(Result.f_FindEqual(2) != nullptr);
+							DMibExpectTrue(Result.f_FindEqual(3) != nullptr);
+							DMibExpectTrue(Result.f_FindEqual(4) != nullptr);
+						};
+						DMibTestCategory("MovableBoth")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+							auto Result = fg_Move(Left).f_Or<EMapOperationPolicy::mc_Fastest>(fg_Move(Right));
+							DMibExpect(Result.f_GetLen(), ==, 4);
+						};
+					};
+				};
+
+				DMibTestCategory("And")
+				{
+					DMibTestCategory("PreferLeft")
+					{
+						DMibTestCategory("Overlapping")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{2, 20}, TCTuple{3, 30}};  // Left values kept
+							DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
+						};
+						DMibTestCategory("MovableLeft")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{2, 20}, TCTuple{3, 30}};
+							DMibTest(DMibExpr(fg_Move(Left).f_And<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
+						};
+						DMibTestCategory("MovableRight")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{2, 20}, TCTuple{3, 30}};
+							DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferLeft>(fg_Move(Right))) == DMibExpr(Expected));
+						};
+						DMibTestCategory("MovableBoth")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{2, 20}, TCTuple{3, 30}};
+							DMibTest(DMibExpr(fg_Move(Left).f_And<EMapOperationPolicy::mc_PreferLeft>(fg_Move(Right))) == DMibExpr(Expected));
+						};
+						DMibTestCategory("Disjoint")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}};
+							TCMap<int, int> Right = {TCTuple{3, 30}, TCTuple{4, 40}};
+
+							TCMap<int, int> Expected;
+							DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
+						};
+						DMibTestCategory("Identical")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}};
+							TCMap<int, int> Right = {TCTuple{1, 100}, TCTuple{2, 200}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 10}, TCTuple{2, 20}};
+							DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
+						};
+						DMibTestCategory("LeftExhaustedFirst")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{2, 20}};
+							DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
+						};
+						DMibTestCategory("RightExhaustedFirst")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{1, 100}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 10}};
+							DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
+						};
+					};
+					DMibTestCategory("PreferRight")
+					{
+						DMibTestCategory("Overlapping")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{2, 200}, TCTuple{3, 300}};  // Right values kept
+							DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferRight>(Right)) == DMibExpr(Expected));
+						};
+						DMibTestCategory("MovableLeft")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{2, 200}, TCTuple{3, 300}};
+							DMibTest(DMibExpr(fg_Move(Left).f_And<EMapOperationPolicy::mc_PreferRight>(Right)) == DMibExpr(Expected));
+						};
+						DMibTestCategory("MovableRight")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{2, 200}, TCTuple{3, 300}};
+							DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferRight>(fg_Move(Right))) == DMibExpr(Expected));
+						};
+						DMibTestCategory("MovableBoth")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							TCMap<int, int> Expected = {TCTuple{2, 200}, TCTuple{3, 300}};
+							DMibTest(DMibExpr(fg_Move(Left).f_And<EMapOperationPolicy::mc_PreferRight>(fg_Move(Right))) == DMibExpr(Expected));
+						};
+						DMibTestCategory("Identical")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}};
+							TCMap<int, int> Right = {TCTuple{1, 100}, TCTuple{2, 200}};
+
+							TCMap<int, int> Expected = {TCTuple{1, 100}, TCTuple{2, 200}};
+							DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferRight>(Right)) == DMibExpr(Expected));
+						};
+					};
+					DMibTestCategory("Fastest")
+					{
+						DMibTestCategory("Overlapping")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							// Fastest produces a valid intersection (correct keys)
+							auto Result = Left.f_And<EMapOperationPolicy::mc_Fastest>(Right);
+							DMibExpect(Result.f_GetLen(), ==, 2);
+							DMibExpectTrue(Result.f_FindEqual(2) != nullptr);
+							DMibExpectTrue(Result.f_FindEqual(3) != nullptr);
+						};
+						DMibTestCategory("MovableLeft")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							auto Result = fg_Move(Left).f_And<EMapOperationPolicy::mc_Fastest>(Right);
+							DMibExpect(Result.f_GetLen(), ==, 2);
+							DMibExpectTrue(Result.f_FindEqual(2) != nullptr);
+							DMibExpectTrue(Result.f_FindEqual(3) != nullptr);
+						};
+						DMibTestCategory("MovableRight")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							auto Result = Left.f_And<EMapOperationPolicy::mc_Fastest>(fg_Move(Right));
+							DMibExpect(Result.f_GetLen(), ==, 2);
+							DMibExpectTrue(Result.f_FindEqual(2) != nullptr);
+							DMibExpectTrue(Result.f_FindEqual(3) != nullptr);
+						};
+						DMibTestCategory("MovableBoth")
+						{
+							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+							auto Result = fg_Move(Left).f_And<EMapOperationPolicy::mc_Fastest>(fg_Move(Right));
+							DMibExpect(Result.f_GetLen(), ==, 2);
+						};
+					};
+				};
+
+				DMibTestCategory("CustomCompare")
+				{
+					struct CCompareReverse
+					{
+						auto operator () (int const &_Left, int const &_Right) const
+						{
+							return _Right <=> _Left;
+						}
+					};
+
+					DMibTestCategory("Xor")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{1, 10}, TCTuple{3, 30}, TCTuple{4, 400}};
+						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
+					};
+					DMibTestCategory("XorMove")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{1, 10}, TCTuple{3, 30}, TCTuple{4, 400}};
+						DMibTest((DMibExpr(fg_Move(Left)) ^ DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+					};
+					DMibTestCategory("XorMoveLeft")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{1, 10}, TCTuple{3, 30}, TCTuple{4, 400}};
+						DMibTest((DMibExpr(fg_Move(Left)) ^ DMibExpr(Right)) == DMibExpr(Expected));
+					};
+					DMibTestCategory("XorMoveRight")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{1, 10}, TCTuple{3, 30}, TCTuple{4, 400}};
+						DMibTest((DMibExpr(Left) ^ DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+					};
+					DMibTestCategory("Difference")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{1, 10}, TCTuple{3, 30}};
+						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Expected));
+					};
+					DMibTestCategory("DifferenceMove")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{1, 10}, TCTuple{3, 30}};
+						DMibTest((DMibExpr(fg_Move(Left)) - DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+					};
+					DMibTestCategory("DifferenceMoveLeft")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{1, 10}, TCTuple{3, 30}};
+						DMibTest((DMibExpr(fg_Move(Left)) - DMibExpr(Right)) == DMibExpr(Expected));
+					};
+					DMibTestCategory("DifferenceMoveRight")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{1, 10}, TCTuple{3, 30}};
+						DMibTest((DMibExpr(Left) - DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+					};
+					DMibTestCategory("OrPreferLeft")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}, TCTuple{4, 400}};
+						DMibTest(DMibExpr(Left.f_Or<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
+					};
+					DMibTestCategory("OrPreferLeftMove")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}, TCTuple{4, 400}};
+						DMibTest(DMibExpr(fg_Move(Left).f_Or<EMapOperationPolicy::mc_PreferLeft>(fg_Move(Right))) == DMibExpr(Expected));
+					};
+					DMibTestCategory("OrPreferRight")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{1, 10}, TCTuple{2, 200}, TCTuple{3, 30}, TCTuple{4, 400}};
+						DMibTest(DMibExpr(Left.f_Or<EMapOperationPolicy::mc_PreferRight>(Right)) == DMibExpr(Expected));
+					};
+					DMibTestCategory("OrPreferRightMove")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{1, 10}, TCTuple{2, 200}, TCTuple{3, 30}, TCTuple{4, 400}};
+						DMibTest(DMibExpr(fg_Move(Left).f_Or<EMapOperationPolicy::mc_PreferRight>(fg_Move(Right))) == DMibExpr(Expected));
+					};
+					DMibTestCategory("AndPreferLeft")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{2, 20}, TCTuple{3, 30}};
+						DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
+					};
+					DMibTestCategory("AndPreferLeftMove")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{2, 20}, TCTuple{3, 30}};
+						DMibTest(DMibExpr(fg_Move(Left).f_And<EMapOperationPolicy::mc_PreferLeft>(fg_Move(Right))) == DMibExpr(Expected));
+					};
+					DMibTestCategory("AndPreferRight")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{2, 200}, TCTuple{3, 300}};
+						DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferRight>(Right)) == DMibExpr(Expected));
+					};
+					DMibTestCategory("AndPreferRightMove")
+					{
+						TCMap<int, int, CCompareReverse> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
+						TCMap<int, int, CCompareReverse> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
+
+						TCMap<int, int, CCompareReverse> Expected = {TCTuple{2, 200}, TCTuple{3, 300}};
+						DMibTest(DMibExpr(fg_Move(Left).f_And<EMapOperationPolicy::mc_PreferRight>(fg_Move(Right))) == DMibExpr(Expected));
+					};
 				};
 			};
 			DMibTestSuite("Misc")
@@ -549,7 +1064,7 @@ namespace
 			};
 			DMibTestSuite("CTAD Map")
 			{
-				TCMap Map0{std::tuple{1, 2}, {3 ,4}, {5, 6}};
+				TCMap Map0{TCTuple{1, 2}, {3 ,4}, {5, 6}};
 				static_assert(cIsSame<decltype(Map0), TCMap<int, int>>);
 				DMibExpect(Map0, ==, (TCMap<int, int>({{1, 2}, {3 ,4}, {5, 6}})));
 			};

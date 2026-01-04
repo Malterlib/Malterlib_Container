@@ -38,13 +38,19 @@ namespace NMib::NContainer::NPrivate
 			return *this;
 		}
 
+		template <typename tf_CKeyLeft, typename tf_CKeyRight>
+		auto f_CompareKeys(tf_CKeyLeft const &_Left, tf_CKeyRight const &_Right) const
+		{
+			return _Left <=> _Right;
+		}
+
 		t_CKey const &operator () (t_CNode const &_Left) const
 		{
 			return _Left.mp_Key;
 		}
 	};
 
-	template 
+	template
 	<
 		typename t_CNode
 		, typename t_CCompare
@@ -94,6 +100,12 @@ namespace NMib::NContainer::NPrivate
 		{
 		}
 
+		template <typename tf_CKeyLeft, typename tf_CKeyRight>
+		auto f_CompareKeys(tf_CKeyLeft const &_Left, tf_CKeyRight const &_Right) const
+		{
+			return mp_Compare(_Left, _Right);
+		}
+
 		auto operator () (t_CNode const &_Left, t_CNode const &_Right) const
 		{
 			return mp_Compare(_Left.mp_Key, _Right.mp_Key);
@@ -118,7 +130,7 @@ namespace NMib::NContainer::NPrivate
 
 	private:
 #if !defined(DCompiler_MSVC) && !defined(DCompiler_clang_cl)
-		DMibNoUniqueAddress 
+		DMibNoUniqueAddress
 #endif
 		t_CCompare mp_Compare;
 	};
@@ -160,6 +172,12 @@ namespace NMib::NContainer::NPrivate
 		template <typename ...tfp_CParams>
 		TCMapNodeCompare_Custom(tfp_CParams && ...p_Params)
 		{
+		}
+
+		template <typename tf_CKeyLeft, typename tf_CKeyRight>
+		auto f_CompareKeys(tf_CKeyLeft const &_Left, tf_CKeyRight const &_Right) const
+		{
+			return t_CCompare()(_Left, _Right);
 		}
 
 		auto operator () (t_CNode const &_Left, t_CNode const &_Right) const
