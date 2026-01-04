@@ -281,4 +281,25 @@ namespace NMib::NContainer
 	{
 		return {fg_Move(*this)};
 	}
+
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	template <typename tf_CKey>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator[] (tf_CKey &&_Key) -> typename CMap::CUserData &
+	{
+		return this->mp_Tree.f_FindEqualOrInsert
+			(
+				_Key
+				, [&]() -> typename CMap::CNodeDestructive *
+				{
+					auto Memory = this->mp_Allocator.f_AllocSafe(sizeof(typename CMap::CNodeDestructive), alignof(typename CMap::CNodeDestructive));
+					auto pData = (typename CMap::CNodeDestructive *)Memory.m_pMemory;
+					new ((void *)pData) typename CMap::CNodeDestructive(fg_Forward<tf_CKey>(_Key));
+					Memory.f_Claim();
+					return pData;
+				}
+				, this->mp_Compare
+			)->f_Value()
+		;
+	}
+
 }

@@ -6,8 +6,8 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <typename tf_CKey>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator[] (tf_CKey &&_Key) -> CUserData &
+	template <typename tf_CKey, typename... tfp_CParam>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator[] (tf_CKey &&_Key, tfp_CParam && ... p_Params) -> CUserData &
 	{
 		return mp_Tree.f_FindEqualOrInsert
 			(
@@ -16,7 +16,7 @@ namespace NMib::NContainer
 				{
 					auto Memory = mp_Allocator.f_AllocSafe(sizeof(CNodeDestructive), alignof(CNodeDestructive));
 					auto pData = (CNodeDestructive *)Memory.m_pMemory;
-					new ((void *)pData) CNodeDestructive(fg_Forward<tf_CKey>(_Key));
+					new ((void *)pData) CNodeDestructive(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
 					Memory.f_Claim();
 					return pData;
 				}

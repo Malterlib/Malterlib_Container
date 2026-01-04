@@ -286,8 +286,8 @@ namespace NMib::NContainer
 			requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 		;
 
-		template <typename tf_CKey>
-		CUserData &operator[] (tf_CKey &&_Key);
+		template <typename tf_CKey, typename... tfp_CParam>
+		CUserData &operator[] (tf_CKey &&_Key, tfp_CParam && ... p_Params);
 
 		template <typename tf_CKey, typename... tfp_CParam>
 		TCMapResult<CUserData &> operator () (tf_CKey &&_Key, tfp_CParam && ... p_Params);

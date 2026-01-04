@@ -41,6 +41,9 @@ namespace NMib::NContainer
 		template <typename tf_COther>
 		TCSet &operator = (tf_COther &&_Other);
 
+		template <typename tf_CKey>
+		auto operator[] (tf_CKey &&_Key) -> typename CMap::CUserData &;
+
 #ifdef DCompiler_MSVC_Workaround
 		template <typename tf_CContainer>
 		TCSet & f_AddContainer(tf_CContainer &&_Container)

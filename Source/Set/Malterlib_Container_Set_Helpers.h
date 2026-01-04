@@ -10,6 +10,9 @@ namespace NMib::NContainer
 		constexpr auto operator <=> (CMapSet const &_Other) const = default;
 	};
 
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
+	struct TCSet;
+
 	template <typename t_CKey>
 	struct TCMapNode<t_CKey, CMapSet> : private CMapNodeBase
 	{
@@ -62,6 +65,9 @@ namespace NMib::NContainer
 
 		template <typename t_CKey2, typename t_CValue2, typename t_CCompare2, typename t_CAllocator2>
 		friend struct TCMap;
+
+		template <typename t_CKey2, typename t_CCompare2, typename t_CAllocator2>
+		friend struct TCSet;
 
 		template <auto t_pLinkMember2, typename t_CCompare2, typename t_CAllocator2, typename t_COverrideNodeType2>
 		friend class NIntrusive::TCAVLTreeAggregate;
