@@ -1,4 +1,4 @@
-// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
@@ -84,7 +84,7 @@ namespace NMib::NContainer
 		else
 			_Dest += _Str;
 	}
-	
+
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bIncludeFileLine, bool tf_bEscapeNewLines, typename tf_CStr>

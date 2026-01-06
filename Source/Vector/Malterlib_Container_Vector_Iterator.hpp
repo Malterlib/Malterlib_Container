@@ -1,4 +1,4 @@
-// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
@@ -75,7 +75,7 @@ namespace NMib::NContainer
 	{
 		m_pBegin = m_pBegin + 1;
 		DMibFastCheck(m_pBegin <= m_pEnd);
-		
+
 		return *this;
 	}
 
@@ -93,7 +93,7 @@ namespace NMib::NContainer
 	{
 		return m_pEnd - m_pBegin;
 	}
-	
+
 	template <typename t_CIteratorData>
 	inline_small t_CIteratorData *TCVectorIterator<t_CIteratorData>::fp_GetCurrent() const
 	{

@@ -1,4 +1,4 @@
-// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
@@ -190,7 +190,7 @@ namespace NMib::NContainer
 				return nullptr;
 			}
 		}
-		
+
 		mint OldLen = f_GetLen();
 		if (fsp_NeedRealloc(NewLen, mp_StaticData.m_pData))
 		{

@@ -1,4 +1,4 @@
-// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
@@ -39,7 +39,7 @@ namespace NMib::NContainer
 	{
 		return f_InsertBefore(_Position, fg_Const(_Vector));
 	}
-	
+
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(mint _Position, const t_CData *_pData, mint _Len)
 	{
@@ -64,7 +64,7 @@ namespace NMib::NContainer
 
 		return pArray + _Position;
 	}
-	
+
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBeforeMove(mint _Position, t_CData *_pData, mint _Len)
 	{

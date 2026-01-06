@@ -1,4 +1,4 @@
-// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
@@ -17,7 +17,7 @@ namespace NMib::NContainer::NPrivate
 		};
 
 		using CSuper = TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>;
-		
+
 		t_TCBitArray<t_nBitsInternal> m_Bits;
 
 		constexpr TCBitArrayPowerTwoInternalArray(bool _bInitValues);

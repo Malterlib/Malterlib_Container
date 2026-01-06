@@ -1,4 +1,4 @@
-// Copyright © 2015 Hansoft AB 
+// Copyright © 2015 Hansoft AB
 // Distributed under the MIT license, see license text in LICENSE.Malterlib
 
 #pragma once
@@ -52,7 +52,7 @@ namespace NMib::NContainer
 			{
 				if (nCopied)
 					NPrivate::fg_DestroyArray(pArray, nCopied, nCopied);
-				
+
 				fp_MakeRoomBeginUndo(_Len);
 			}
 		;

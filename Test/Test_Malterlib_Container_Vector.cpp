@@ -479,7 +479,7 @@ namespace
 							mint iSource = 0;
 
 							TCVector<CCountedObject> Return;
-							
+
 							for (auto &Expected : _Expected)
 							{
 								if (Expected.m_Type == "D")
@@ -589,7 +589,7 @@ namespace
 									mint CopyEnd = _DestLen - _SourceLen/2 + CopiedSourceLen;
 									mint NewEnd = fg_Max(_DestLen, CopyEnd);
 									mint EndLen = fg_Max(_MinLen, NewEnd) - NewEnd;
-									
+
 									auto TestVector0 = fDestVector();
 									DMibExpect(g_nObjects.f_Load(), ==, _DestLen);
 									auto TestVector1 = fSourceVector();
