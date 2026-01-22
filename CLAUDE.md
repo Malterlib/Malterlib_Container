@@ -152,16 +152,16 @@ auto Version = Reg.f_GetString("Software/MyApp/Version");
 ### Running Module Tests
 ```bash
 # Build tests
-MalterlibBuildShowProgress=false ./mib build Tests macOS arm64 Debug
+MalterlibBuildShowProgress=false ./mib build Tests
 
 # Run all container tests
-/opt/Deploy/Tests/RunAllTests --paths '["Container/*"]'
+/opt/Deploy/Tests/RunAllTests --paths '["Malterlib/Container/*"]'
 
 # Run specific tests
-/opt/Deploy/Tests/RunAllTests --paths '["Container/Vector", "Container/Map"]'
+/opt/Deploy/Tests/RunAllTests --paths '["Malterlib/Container/Vector/*", "Malterlib/Container/Map/*"]'
 
 # Performance tests
-/opt/Deploy/Tests/RunAllTests --paths '["Container/MapPerformance", "Container/VectorPerformance"]'
+/opt/Deploy/Tests/RunAllTests --no-parallel -g Performance --paths '["Malterlib/Container/*"]'
 ```
 
 ## Important Files
