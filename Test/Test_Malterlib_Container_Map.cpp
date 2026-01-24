@@ -126,6 +126,49 @@ namespace
 						}
 					}
 					{
+						DMibTestPath("InsertOrAssign existing");
+						// Test that InsertOrAssign replaces value when key exists
+						TCMap<CStr, CStr> MapA;
+						TCMap<CStr, CStr> MapB;
+
+						MapA["Key"] = "Original Value";
+						MapB["Key"] = "New Value";
+
+						auto Handle = MapB.f_Extract("Key");
+						DMibExpectTrue(Handle);
+						DMibExpect(Handle.f_Value(), ==, CStr("New Value"));
+
+						auto &ResultValue = MapA.f_InsertOrAssign(fg_Move(Handle));
+						DMibExpect(MapA.f_GetLen(), ==, 1);
+						DMibExpect(ResultValue, ==, CStr("New Value"));
+						DMibExpect(*MapA.f_FindEqual("Key"), ==, CStr("New Value"));
+						{
+							DMibTestPath("After assign");
+							// Handle stays valid when key exists (node not consumed, only value moved)
+							DMibExpectTrue(Handle);
+						}
+					}
+					{
+						DMibTestPath("InsertOrAssign non-existing");
+						// Test that InsertOrAssign works for new keys too
+						TCMap<CStr, CStr> MapA;
+						TCMap<CStr, CStr> MapB;
+
+						MapB["NewKey"] = "New Value";
+
+						auto Handle = MapB.f_Extract("NewKey");
+						DMibExpectTrue(Handle);
+
+						auto &ResultValue = MapA.f_InsertOrAssign(fg_Move(Handle));
+						DMibExpect(MapA.f_GetLen(), ==, 1);
+						DMibExpect(ResultValue, ==, CStr("New Value"));
+						{
+							DMibTestPath("After insert");
+							// Handle is empty when key didn't exist (node was consumed)
+							DMibExpectFalse(Handle);
+						}
+					}
+					{
 						DMibTestPath("ExtractAll");
 						Testing.f_ExtractAll
 							(

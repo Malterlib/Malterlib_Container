@@ -86,6 +86,55 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_InsertOrAssign(CNodeHandle &&_Node) -> CUserData &
+	{
+		DMibFastCheck(!!_Node);
+
+		bool bInserted = false;
+		auto pResult = mp_Tree.f_FindEqualOrInsert
+			(
+				_Node.f_Key()
+				, [&]() -> CNodeDestructive *
+				{
+					bInserted = true;
+					if constexpr (NTraits::cIsEmpty<t_CAllocator>)
+					{
+						return fg_Exchange(_Node.mp_pNode, nullptr);
+					}
+					else
+					{
+						bool bCanSteal = false;
+						if constexpr (t_CAllocator::mc_CanBeStatic)
+						{
+							if (_Node.f_GetAllocator().f_IsStatic(_Node.mp_pNode))
+								bCanSteal = &mp_Allocator == &_Node.f_GetAllocator();
+							else
+								bCanSteal = mp_Allocator == _Node.f_GetAllocator();
+						}
+						else
+							bCanSteal = mp_Allocator == _Node.f_GetAllocator();
+
+						if (bCanSteal)
+							return fg_Exchange(_Node.mp_pNode, nullptr);
+
+						auto Allocation = mp_Allocator.f_AllocSafe(sizeof(CNodeDestructive), alignof(CNodeDestructive));
+						auto *pData = new(Allocation.m_pMemory) CNodeDestructive(fg_Move(_Node.f_Key()), fg_Move(_Node.f_Value()));
+						Allocation.f_Claim();
+
+						_Node.f_Clear();
+
+						return pData;
+					}
+				}
+				, mp_Compare
+			)
+		;
+		if (!bInserted)
+			pResult->f_Value() = fg_Move(_Node.f_Value());
+		return pResult->f_Value();
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey, typename... tfp_CParam>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator () (tf_CKey &&_Key, tfp_CParam && ... p_Params) -> TCMapResult<CUserData &>
 	{
