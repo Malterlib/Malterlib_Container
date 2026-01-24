@@ -305,6 +305,10 @@ namespace NMib::NContainer
 		CUserData &f_Insert(CNodeHandle const &_Node) = delete;
 		CUserData &f_Insert(CNodeHandle &_Node) = delete;
 
+		CUserData &f_InsertOrAssign(CNodeHandle &&_Node);
+		CUserData &f_InsertOrAssign(CNodeHandle const &_Node) = delete;
+		CUserData &f_InsertOrAssign(CNodeHandle &_Node) = delete;
+
 		template <typename tf_FDoInsert>
 		void f_BatchMap(tf_FDoInsert &&_fDoInsert);
 		template <typename tf_FDoInsert>

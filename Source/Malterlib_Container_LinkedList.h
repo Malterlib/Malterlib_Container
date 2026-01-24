@@ -11,6 +11,9 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator = NMib::NMemory::CAllocator_Heap >
 	class TCLinkedList;
 
+	template <typename t_CNode, typename t_CAllocator>
+	struct TCLinkedListNodeHandle;
+
 	struct CLinkedListMemberBase
 	{
 		DMibListLinkDS_Link(CLinkedListMemberBase, m_ListLink);
@@ -20,7 +23,12 @@ namespace NMib::NContainer
 	class TCLinkedListMember final : public CLinkedListMemberBase
 	{
 		template <typename t_CData2, typename t_CAllocator2> friend class TCLinkedList;
+		template <typename t_CNode2, typename t_CAllocator2> friend struct TCLinkedListNodeHandle;
 
+	public:
+		using CData = t_CData;
+
+	private:
 		t_CData m_Object;
 
 		TCLinkedListMember()
@@ -66,6 +74,92 @@ namespace NMib::NContainer
 		~TCLinkedListMember()
 		{
 		}
+	};
+
+	template <typename t_CNode, typename t_CAllocator>
+	struct TCLinkedListNodeHandle
+	{
+		using CNode = t_CNode;
+		using CData = typename t_CNode::CData;
+		using CAllocatorStore = TCConditional
+			<
+				!NTraits::cIsEmpty<t_CAllocator> && (!NTraits::cIsCopyConstructible<t_CAllocator> || t_CAllocator::mc_CanBeStatic)
+				, t_CAllocator *
+				, t_CAllocator
+			>
+		;
+
+		TCLinkedListNodeHandle() = default;
+
+		TCLinkedListNodeHandle(TCLinkedListNodeHandle &&_Other) noexcept
+			: mp_pNode(fg_Exchange(_Other.mp_pNode, nullptr))
+			, mp_Allocator(fg_Move(_Other.mp_Allocator))
+		{
+			if constexpr (NTraits::cIsPointer<CAllocatorStore>)
+				_Other.mp_Allocator = nullptr;
+		}
+
+		~TCLinkedListNodeHandle()
+		{
+			if (mp_pNode)
+				fg_DeleteObjectDefiniteType(fp_Allocator(), mp_pNode);
+		}
+
+		TCLinkedListNodeHandle &operator = (TCLinkedListNodeHandle &&_Other) noexcept
+		{
+			if (mp_pNode)
+				fg_DeleteObjectDefiniteType(fp_Allocator(), mp_pNode);
+
+			mp_Allocator = fg_Move(_Other.mp_Allocator);
+			if constexpr (NTraits::cIsPointer<CAllocatorStore>)
+				_Other.mp_Allocator = nullptr;
+
+			mp_pNode = fg_Exchange(_Other.mp_pNode, nullptr);
+			return *this;
+		}
+
+		TCLinkedListNodeHandle(TCLinkedListNodeHandle const &) = delete;
+		TCLinkedListNodeHandle &operator = (TCLinkedListNodeHandle const &) = delete;
+
+		[[nodiscard]] bool f_IsEmpty() const noexcept { return !mp_pNode; }
+		[[nodiscard]] explicit operator bool() const noexcept { return !!mp_pNode; }
+
+		CData &f_Value() noexcept { return mp_pNode->m_Object; }
+		CData const &f_Value() const noexcept { return mp_pNode->m_Object; }
+		CData &operator*() noexcept { return f_Value(); }
+		CData const &operator*() const noexcept { return f_Value(); }
+		CData *operator->() noexcept { return &f_Value(); }
+		CData const *operator->() const noexcept { return &f_Value(); }
+
+	private:
+		template <typename t_CData2, typename t_CAllocator2> friend class TCLinkedList;
+
+		t_CAllocator &fp_Allocator() const
+		{
+			if constexpr (NTraits::cIsPointer<CAllocatorStore>)
+				return *mp_Allocator;
+			else
+				return (t_CAllocator &)mp_Allocator;
+		}
+
+		TCLinkedListNodeHandle(t_CNode *_pNode, t_CAllocator &_Allocator)
+			: mp_pNode(_pNode)
+			, mp_Allocator
+			(
+				[&]
+				{
+					if constexpr (NTraits::cIsPointer<CAllocatorStore>)
+						return &_Allocator;
+					else
+						return _Allocator;
+				}
+				()
+			)
+		{
+		}
+
+		t_CNode *mp_pNode = nullptr;
+		DMibNoUniqueAddress CAllocatorStore mp_Allocator;
 	};
 
 	template <typename t_CData, typename t_CAllocator>
@@ -210,6 +304,8 @@ namespace NMib::NContainer
 		}
 
 	public:
+		using CNodeHandle = TCLinkedListNodeHandle<CMember, t_CAllocator>;
+
 		class CIterator
 		{
 			friend class TCLinkedList;
@@ -271,6 +367,16 @@ namespace NMib::NContainer
 				t_CData *pToRemove = f_GetCurrent();
 				f_Next();
 				m_pLinkedList->f_Remove(*pToRemove);
+			}
+
+			CNodeHandle f_ExtractNode()
+			{
+				DMibSafeCheck(f_GetCurrent(), "Cannot extract from exhausted iterator");
+
+				CMember *pMember = fsp_MemberFromData(*f_GetCurrent());
+				++*this;
+				m_pLinkedList->m_Data.m_List.f_Remove(pMember);
+				return CNodeHandle(pMember, m_pLinkedList->m_Data);
 			}
 
 			inline_small t_CData *f_GetCurrent() const
@@ -891,6 +997,44 @@ namespace NMib::NContainer
 		t_CData f_Pop()
 		{
 			return f_PopFirst();
+		}
+
+		CNodeHandle f_Extract(t_CData &_Member)
+		{
+			CMember *pMember = fsp_MemberFromData(_Member);
+			DMibSafeCheck(pMember->m_ListLink.f_IsInList(), "Object is not linked into the list");
+			m_Data.m_List.f_Remove(pMember);
+			return CNodeHandle(pMember, m_Data);
+		}
+
+		t_CData &f_Insert(CNodeHandle &&_Handle)
+		{
+			DMibFastCheck(!!_Handle);
+			CMember *pMember = fg_Exchange(_Handle.mp_pNode, nullptr);
+			if constexpr (NTraits::cIsPointer<typename CNodeHandle::CAllocatorStore>)
+				_Handle.mp_Allocator = nullptr;
+			m_Data.m_List.f_Insert(pMember);
+			return pMember->m_Object;
+		}
+
+		t_CData &f_InsertAfter(CNodeHandle &&_Handle, CIterator const &_InsertAfter)
+		{
+			DMibFastCheck(!!_Handle);
+			CMember *pMember = fg_Exchange(_Handle.mp_pNode, nullptr);
+			if constexpr (NTraits::cIsPointer<typename CNodeHandle::CAllocatorStore>)
+				_Handle.mp_Allocator = nullptr;
+			m_Data.m_List.f_InsertAfter(pMember, fsp_MemberFromData(*_InsertAfter));
+			return pMember->m_Object;
+		}
+
+		t_CData &f_InsertFirst(CNodeHandle &&_Handle)
+		{
+			DMibFastCheck(!!_Handle);
+			CMember *pMember = fg_Exchange(_Handle.mp_pNode, nullptr);
+			if constexpr (NTraits::cIsPointer<typename CNodeHandle::CAllocatorStore>)
+				_Handle.mp_Allocator = nullptr;
+			m_Data.m_List.f_InsertFirst(pMember);
+			return pMember->m_Object;
 		}
 
 		t_CData &f_GetFirst()
