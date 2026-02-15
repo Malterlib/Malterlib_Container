@@ -188,14 +188,14 @@ namespace NMib::NContainer
 						{
 							// Slice is fully inclosed in current block, just transform
 							_Transform(pSlice->f_Data());
-							//DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Transform" DMibNewLine, pSlice->f_Start() << pSlice->f_End() << iOper++);
+							//DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Transform" DMibNewLine, pSlice->f_Start(), pSlice->f_End(), iOper++);
 							CurrentRegion = pSlice->f_End();
 						}
 						else
 						{
 							if (CurrentRegion > pSlice->f_Start() && _End < pSlice->f_End())
 							{
-								//DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Split" DMibNewLine, pSlice->f_Start() << pSlice->f_End() << iOper++);
+								//DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Split" DMibNewLine, pSlice->f_Start(), pSlice->f_End(), iOper++);
 								// We are inside and need to split in three
 								auto &New0 = m_Regions[CurrentRegion];
 								New0.f_End() = _End;
@@ -215,7 +215,7 @@ namespace NMib::NContainer
 							{
 								if (CurrentRegion == pSlice->f_Start())
 								{
-									//DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Same start" DMibNewLine, pSlice->m_TimeStart << pSlice->f_End() << iOper++);
+									//DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Same start" DMibNewLine, pSlice->m_TimeStart, pSlice->f_End(), iOper++);
 									DMibSafeCheck(_End != pSlice->f_End(), "");
 
 									auto &New0 = m_Regions[_End];
@@ -228,7 +228,7 @@ namespace NMib::NContainer
 								}
 								else
 								{
-									//DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Same end" DMibNewLine, pSlice->m_TimeStart << pSlice->f_End() << iOper++);
+									//DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Same end" DMibNewLine, pSlice->m_TimeStart, pSlice->f_End(), iOper++);
 									DMibSafeCheck(CurrentRegion != pSlice->f_Start(), "");
 
 									auto &New0 = m_Regions[CurrentRegion];
@@ -289,7 +289,7 @@ namespace NMib::NContainer
 
 						if (pPrevSlice->f_Data() == pSlice->f_Data() && pPrevSlice->f_End() == pSlice->f_Start())
 						{
-	//							DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Merge" DMibNewLine, pPrevSlice->m_TimeStart << pSlice->f_End() << iOper++);
+	//							DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Merge" DMibNewLine, pPrevSlice->m_TimeStart, pSlice->f_End(), iOper++);
 							// Merge
 							pPrevSlice->f_End() = pSlice->f_End();
 							m_Regions.f_Remove(pSlice);
