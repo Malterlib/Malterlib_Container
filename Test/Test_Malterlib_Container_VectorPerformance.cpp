@@ -3,6 +3,7 @@
 
 #include <Mib/Core/Core>
 #include <Mib/Test/Test>
+#include <Mib/Time/PerfTimeMeasure>
 
 #include <vector>
 #include <algorithm>
@@ -570,8 +571,8 @@ namespace NMib
 					Big Item;
 					for (int32 i = 0; i < 1000; ++i)
 						Item.dummy[i] = i;
-					CTimerMin MalterlibTime;
-					CTimerMin StdTime;
+					CPerfTimeMeasureMin MalterlibTime;
+					CPerfTimeMeasureMin StdTime;
 
 					for (int32 i=0;i<nRep;++i)
 					{
@@ -603,8 +604,8 @@ namespace NMib
 #endif
 
 					int32 Item = 1;
-					CTimerMin MalterlibTime;
-					CTimerMin StdTime;
+					CPerfTimeMeasureMin MalterlibTime;
+					CPerfTimeMeasureMin StdTime;
 					for (int32 i=0;i<nRep;++i)
 					{
 						TCVector<int32> Vec1;
@@ -649,8 +650,8 @@ namespace NMib
 					TCVector<TCVector<int32>> vecvec1;
 					std::vector<std::vector<int32>> vecvec2;
 
-					CTimerMin MalterlibTime;
-					CTimerMin StdTime;
+					CPerfTimeMeasureMin MalterlibTime;
+					CPerfTimeMeasureMin StdTime;
 					for (int32 i=0;i<nRep;++i)
 					{
 						MalterlibTime.f_Start();
@@ -761,8 +762,8 @@ namespace NMib
 						ToSortMalterlib.f_Insert(Value);
 					}
 
-					CTimerMin MalterlibTime;
-					CTimerMin StdTime;
+					CPerfTimeMeasureMin MalterlibTime;
+					CPerfTimeMeasureMin StdTime;
 
 					for (int32 i=0;i<nRep;++i)
 					{
@@ -878,8 +879,8 @@ namespace NMib
 							return true;
 						}
 					;
-					CTimerMin MalterlibTime;
-					CTimerMin StdTime;
+					CPerfTimeMeasureMin MalterlibTime;
+					CPerfTimeMeasureMin StdTime;
 					for (int32 i=0;i<nRep;++i)
 					{
 						TCVector<CTestClass> Vec1 = ToSortMalterlib;
