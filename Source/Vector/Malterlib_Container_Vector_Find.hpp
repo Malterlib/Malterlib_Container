@@ -36,15 +36,15 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CCompare, typename t_CFind>
-	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearch(tf_CCompare &&_fCompare, const t_CFind &_ToFind, aint _nMax) const
+	template <typename tf_CCompare, typename tf_CFind>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearch(tf_CCompare &&_fCompare, const tf_CFind &_ToFind, aint _nMax) const
 	{
 		mint Len = f_GetLen();
 		if (_nMax >= 0)
 			Len = fg_Min(mint(_nMax), Len);
 		mint Low = 0;
 		mint High = Len;
-		t_CData const*pArray = f_GetArray();
+		t_CData const *pArray = f_GetArray();
 
 		while(Low < High)
 		{
@@ -61,18 +61,19 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename t_CFind>
-	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearch(const t_CFind &_ToFind) const
+	template <typename tf_CFind>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearch(const tf_CFind &_ToFind) const
 	{
 		return f_BinarySearch(CSort_Default(), _ToFind, -1);
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CCompare, typename t_CFind>
-	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearchLowerBound(tf_CCompare &&_fCompare, const t_CFind &_ToFind) const
+	template <typename tf_CCompare, typename tf_CFind>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearchLowerBound(tf_CCompare &&_fCompare, const tf_CFind &_ToFind) const
 	{
 		mint Low = 0;
 		mint High = f_GetLen();
+		t_CData const *pArray = f_GetArray();
 
 		if (High == 0)
 			return -1;
@@ -80,12 +81,49 @@ namespace NMib::NContainer
 		while(Low < High)
 		{
 			mint Mid = (Low + High) >> 1;
-			if (fg_CheckOrdering(_fCompare(operator[](Mid) , _ToFind)) < 0)
+			if (fg_CheckOrdering(_fCompare(pArray[Mid] , _ToFind)) < 0)
 				Low = Mid + 1;
 			else
 				High = Mid;
 		}
 
 		return Low;
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	template <typename tf_CFind>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearchLowerBound(const tf_CFind &_ToFind) const
+	{
+		return f_BinarySearchLowerBound(CSort_Default(), _ToFind);
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	template <typename tf_CCompare, typename tf_CFind>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearchUpperBound(tf_CCompare &&_fCompare, const tf_CFind &_ToFind) const
+	{
+		mint Low = 0;
+		mint High = f_GetLen();
+		t_CData const *pArray = f_GetArray();
+
+		if (High == 0)
+			return -1;
+
+		while(Low < High)
+		{
+			mint Mid = (Low + High) >> 1;
+			if (fg_CheckOrdering(_fCompare(pArray[Mid] , _ToFind)) <= 0)
+				Low = Mid + 1;
+			else
+				High = Mid;
+		}
+
+		return Low;
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	template <typename tf_CFind>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearchUpperBound(const tf_CFind &_ToFind) const
+	{
+		return f_BinarySearchUpperBound(CSort_Default(), _ToFind);
 	}
 }

@@ -319,6 +319,12 @@ namespace NMib::NContainer
 		aint f_BinarySearch(tf_CFind const &_ToFind) const;
 		template <typename tf_CCompare, typename tf_CFind>
 		aint f_BinarySearchLowerBound(tf_CCompare &&_fCompare, tf_CFind const &_ToFind) const;
+		template <typename tf_CFind>
+		aint f_BinarySearchLowerBound(tf_CFind const &_ToFind) const;
+		template <typename tf_CCompare, typename tf_CFind>
+		aint f_BinarySearchUpperBound(tf_CCompare &&_fCompare, tf_CFind const &_ToFind) const;
+		template <typename tf_CFind>
+		aint f_BinarySearchUpperBound(tf_CFind const &_ToFind) const;
 
 		mint f_Grow(mint _MinLen);
 		void f_Reserve(mint _Space);
