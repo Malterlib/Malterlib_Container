@@ -800,7 +800,7 @@ namespace NMib
 					int32 m_Value;
 					int32 m_Sequence;
 
-					auto operator <=> (CTestClass const &_Right) const
+					auto operator <=> (CTestClass const &_Right) const noexcept
 					{
 						return m_Value <=> _Right.m_Value;
 					}

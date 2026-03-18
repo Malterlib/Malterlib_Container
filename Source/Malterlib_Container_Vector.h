@@ -82,10 +82,10 @@ namespace NMib::NContainer
 		mint f_GetArrayAllocSize() const;
 
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-		bool operator == (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const;
+		bool operator == (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const noexcept(noexcept(fg_GetType<const t_CData &>() == fg_GetType<const tf_CData &>()));
 
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-		auto operator <=> (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const;
+		auto operator <=> (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const noexcept(noexcept(fg_GetType<const t_CData &>() <=> fg_GetType<const tf_CData &>()));
 
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions, typename t_CFunctor>
 		aint f_Compare(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other, t_CFunctor &&_Functor) const;

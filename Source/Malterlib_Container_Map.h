@@ -456,12 +456,32 @@ namespace NMib::NContainer
 		void f_Consume(tf_CStream &_Stream);
 
 		template <typename tf_CKey, typename tf_CValue, typename tf_CCompare, typename tf_CAllocator>
-		bool operator == (TCMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator> const &_Other) const;
-		bool operator == (TCMap const &_Other) const;
+		bool operator == (TCMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator> const &_Other) const noexcept
+			(
+				noexcept(fg_GetType<t_CKey const &>() == fg_GetType<tf_CKey const &>())
+				&& noexcept(fg_GetType<t_CValue const &>() == fg_GetType<tf_CValue const &>())
+			)
+		;
+		bool operator == (TCMap const &_Other) const noexcept
+			(
+				noexcept(fg_GetType<t_CKey const &>() == fg_GetType<t_CKey const &>())
+				&& noexcept(fg_GetType<t_CValue const &>() == fg_GetType<t_CValue const &>())
+			)
+		;;
 
 		template <typename tf_CKey, typename tf_CValue, typename tf_CCompare, typename tf_CAllocator>
-		auto operator <=> (TCMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator> const &_Other) const;
-		auto operator <=> (TCMap const &_Other) const;
+		auto operator <=> (TCMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator> const &_Other) const noexcept
+			(
+				noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<tf_CKey const &>())
+				&& noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<tf_CValue const &>())
+			)
+		;
+		auto operator <=> (TCMap const &_Other) const noexcept
+			(
+				noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<t_CKey const &>())
+				&& noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<t_CValue const &>())
+			)
+		;
 
 		template <typename tf_COption>
 		bool f_FormatParseOption(CFormatOptions &_Options, tf_COption &_Option) const;

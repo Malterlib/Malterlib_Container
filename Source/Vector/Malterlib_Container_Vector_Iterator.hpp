@@ -45,7 +45,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CIteratorData>
-	inline_small auto TCVectorIterator<t_CIteratorData>::operator =(TCVectorIterator const& _ToCopy) -> TCVectorIterator &
+	inline_small auto TCVectorIterator<t_CIteratorData>::operator = (TCVectorIterator const& _ToCopy) -> TCVectorIterator &
 	{
 		m_pBegin = _ToCopy.m_pBegin;
 		m_pEnd = _ToCopy.m_pEnd;
@@ -53,7 +53,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CIteratorData>
-	inline_small bool TCVectorIterator<t_CIteratorData>::operator ==(TCVectorIterator const& _Other) const
+	inline_small bool TCVectorIterator<t_CIteratorData>::operator == (TCVectorIterator const& _Other) const noexcept
 	{
 		return (m_pBegin == _Other.m_pBegin) && (m_pEnd == _Other.m_pEnd);
 	}
@@ -65,13 +65,13 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CIteratorData>
-	inline_small t_CIteratorData *TCVectorIterator<t_CIteratorData>::operator ->() const
+	inline_small t_CIteratorData *TCVectorIterator<t_CIteratorData>::operator -> () const
 	{
 		return fp_GetCurrent();
 	}
 
 	template <typename t_CIteratorData>
-	inline_small auto TCVectorIterator<t_CIteratorData>::operator ++() -> TCVectorIterator &
+	inline_small auto TCVectorIterator<t_CIteratorData>::operator ++ () -> TCVectorIterator &
 	{
 		m_pBegin = m_pBegin + 1;
 		DMibFastCheck(m_pBegin <= m_pEnd);
@@ -80,7 +80,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CIteratorData>
-	inline_small auto TCVectorIterator<t_CIteratorData>::operator +=(smint _Offset) -> TCVectorIterator &
+	inline_small auto TCVectorIterator<t_CIteratorData>::operator += (smint _Offset) -> TCVectorIterator &
 	{
 		m_pBegin = m_pBegin + _Offset;
 		DMibFastCheck(m_pBegin <= m_pEnd);

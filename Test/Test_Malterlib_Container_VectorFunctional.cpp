@@ -52,7 +52,7 @@ namespace
 				return *this;
 			}
 
-			bool operator == (CTrackedObject const &_Other) const
+			bool operator == (CTrackedObject const &_Other) const noexcept
 			{
 				return m_Value == _Other.m_Value;
 			}

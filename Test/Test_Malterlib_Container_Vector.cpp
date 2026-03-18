@@ -60,12 +60,12 @@ namespace
 				++g_nObjects;
 			}
 
-			bool operator == (CCountedObject const &_Right) const
+			bool operator == (CCountedObject const &_Right) const noexcept
 			{
 				return m_Value == _Right.m_Value;
 			}
 
-			COrdering_Weak operator <=> (CCountedObject const &_Right) const
+			COrdering_Weak operator <=> (CCountedObject const &_Right) const noexcept
 			{
 				return m_Value <=> _Right.m_Value;
 			}

@@ -20,14 +20,14 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CStr>
-	COrdering_Partial TCRegistryKeyStr<t_CKey, t_CStr>::operator <=> (TCRegistryKeyStr const &_Right) const
+	COrdering_Partial TCRegistryKeyStr<t_CKey, t_CStr>::operator <=> (TCRegistryKeyStr const &_Right) const noexcept
 	{
 		return m_Name <=> _Right.m_Name;
 	}
 
 	template <typename t_CKey, typename t_CStr>
 	template <typename tf_CKey>
-	COrdering_Partial TCRegistryKeyStr<t_CKey, t_CStr>::operator <=> (tf_CKey const &_Right) const
+	COrdering_Partial TCRegistryKeyStr<t_CKey, t_CStr>::operator <=> (tf_CKey const &_Right) const noexcept
 	{
 		return m_Name <=> _Right;
 	}
@@ -118,7 +118,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CStr>
-	COrdering_Partial TCRegistryKeyStrMulti<t_CKey, t_CStr>::operator <=> (TCRegistryKeyStrMulti const &_Right) const
+	COrdering_Partial TCRegistryKeyStrMulti<t_CKey, t_CStr>::operator <=> (TCRegistryKeyStrMulti const &_Right) const noexcept
 	{
 		if (auto Result = m_Name <=> _Right.m_Name; Result != 0)
 			return Result;
@@ -128,7 +128,7 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CStr>
 	template <typename tf_CKey>
-	COrdering_Partial TCRegistryKeyStrMulti<t_CKey, t_CStr>::operator <=> (tf_CKey const &_Right) const
+	COrdering_Partial TCRegistryKeyStrMulti<t_CKey, t_CStr>::operator <=> (tf_CKey const &_Right) const noexcept
 	{
 		if (auto Result = m_Name <=> _Right; Result != 0)
 			return Result;
@@ -250,7 +250,7 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>
 	template <typename tf_CKey>
-	COrdering_Partial TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::operator <=> (tf_CKey const &_Right) const
+	COrdering_Partial TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::operator <=> (tf_CKey const &_Right) const noexcept
 	{
 		if (auto Result = m_Name <=> _Right; Result != 0)
 			return Result;
@@ -262,7 +262,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>
-	COrdering_Partial TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::operator <=> (TCRegistryKeyStrPreserve const &_Right) const
+	COrdering_Partial TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::operator <=> (TCRegistryKeyStrPreserve const &_Right) const noexcept
 	{
 		if (auto Result = m_Name <=> _Right.m_Name; Result != 0)
 			return Result;

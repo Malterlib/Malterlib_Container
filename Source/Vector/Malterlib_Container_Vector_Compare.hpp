@@ -7,7 +7,10 @@ namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-	bool TCVector<t_CData, t_CAllocator, t_COptions>::operator == (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const
+	bool TCVector<t_CData, t_CAllocator, t_COptions>::operator == (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const noexcept
+		(
+			noexcept(fg_GetType<const t_CData &>() == fg_GetType<const tf_CData &>())
+		)
 	{
 		mint Len = f_GetLen();
 		if (Len != _Other.f_GetLen())
@@ -27,7 +30,10 @@ namespace NMib::NContainer
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-	auto TCVector<t_CData, t_CAllocator, t_COptions>::operator <=> (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const
+	auto TCVector<t_CData, t_CAllocator, t_COptions>::operator <=> (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const noexcept
+		(
+			noexcept(fg_GetType<const t_CData &>() <=> fg_GetType<const tf_CData &>())
+		)
 	{
 		using COrdering = decltype(fg_GetType<const t_CData &>() <=> fg_GetType<const tf_CData &>());
 

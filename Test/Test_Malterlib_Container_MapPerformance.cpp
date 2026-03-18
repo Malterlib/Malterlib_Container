@@ -837,7 +837,7 @@ namespace NMib::NMisc
 				mint m_Key = 0;
 				mint m_Value = 0;
 
-				auto operator <=> (CKeyValue const &_Right) const = default;
+				auto operator <=> (CKeyValue const &_Right) const noexcept = default;
 			};
 
 			bool m_bRandom;

@@ -1079,7 +1079,10 @@ namespace NMib::NContainer
 			return m_Data.m_List.f_GetLen();
 		}
 
-		bool operator == (const TCLinkedList &_Other) const
+		bool operator == (const TCLinkedList &_Other) const noexcept
+			(
+				noexcept(fg_GetType<t_CData const &>() == fg_GetType<t_CData const &>())
+			)
 		{
 			CIteratorConst Iter0 = *this;
 			CIteratorConst Iter1 = _Other;
@@ -1100,7 +1103,10 @@ namespace NMib::NContainer
 			return true;
 		}
 
-		auto operator <=> (const TCLinkedList &_Other) const
+		auto operator <=> (const TCLinkedList &_Other) const noexcept
+			(
+				noexcept(fg_GetType<t_CData const &>() <=> fg_GetType<t_CData const &>())
+			)
 		{
 			using COrdering = decltype(fg_GetType<t_CData const &>() <=> fg_GetType<t_CData const &>());
 

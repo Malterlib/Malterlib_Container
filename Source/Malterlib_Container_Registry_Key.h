@@ -14,7 +14,7 @@ namespace NMib::NContainer
 		using CStr = t_CStr;
 
 		void f_Move(TCRegistryKeyStr &&_Other);
-		COrdering_Partial operator <=> (TCRegistryKeyStr const &_Right) const;
+		COrdering_Partial operator <=> (TCRegistryKeyStr const &_Right) const noexcept;
 		void f_Copy(TCRegistryKeyStr const &_Src);
 		void f_Set(t_CKey const &_Str);
 		t_CKey const &f_GetName() const;
@@ -23,7 +23,7 @@ namespace NMib::NContainer
 		TCRegistryKeyStr(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
 		template <typename tf_CKey>
-		COrdering_Partial operator <=> (tf_CKey const &_Right) const;
+		COrdering_Partial operator <=> (tf_CKey const &_Right) const noexcept;
 
 		template <typename tf_CStream>
 		void f_Feed(tf_CStream &_Stream) const;
@@ -67,7 +67,7 @@ namespace NMib::NContainer
 		};
 
 		void f_Move(TCRegistryKeyStrMulti &&_Other);
-		COrdering_Partial operator <=> (TCRegistryKeyStrMulti const &_Right) const;
+		COrdering_Partial operator <=> (TCRegistryKeyStrMulti const &_Right) const noexcept;
 		void f_Copy(TCRegistryKeyStrMulti const &_Src);
 		void f_Set(t_CStr const &_Str);
 		t_CKey const &f_GetName() const;
@@ -79,7 +79,7 @@ namespace NMib::NContainer
 		void f_NewSequence(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
 		template <typename tf_CKey>
-		COrdering_Partial operator <=> (tf_CKey const &_Right) const;
+		COrdering_Partial operator <=> (tf_CKey const &_Right) const noexcept;
 
 		template <typename tf_CStream>
 		void f_Feed(tf_CStream &_Stream) const;
@@ -127,7 +127,7 @@ namespace NMib::NContainer
 		using CLocation = NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>;
 
 		void f_Move(TCRegistryKeyStrPreserve &&_Other);
-		COrdering_Partial operator <=> (TCRegistryKeyStrPreserve const &_Right) const;
+		COrdering_Partial operator <=> (TCRegistryKeyStrPreserve const &_Right) const noexcept;
 		void f_Copy(TCRegistryKeyStrPreserve const &_Src);
 		void f_Set(t_CKey const &_Str);
 		t_CKey const &f_GetName() const;
@@ -151,7 +151,7 @@ namespace NMib::NContainer
 		void f_NewSequence(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
 		template <typename tf_CKey>
-		COrdering_Partial operator <=> (tf_CKey const &_Right) const;
+		COrdering_Partial operator <=> (tf_CKey const &_Right) const noexcept;
 
 		template <typename tf_CStream>
 		void f_Feed(tf_CStream &_Stream) const;

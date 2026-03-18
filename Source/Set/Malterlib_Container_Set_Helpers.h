@@ -7,7 +7,7 @@ namespace NMib::NContainer
 {
 	struct CMapSet
 	{
-		constexpr auto operator <=> (CMapSet const &_Other) const = default;
+		constexpr auto operator <=> (CMapSet const &_Other) const noexcept = default;
 	};
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>

@@ -8,7 +8,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
-	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::operator == (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const
+	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::operator == (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const noexcept
 	{
 		if (!(f_GetName() == _Other.f_GetName()))
 			return false;
@@ -31,7 +31,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::operator <=> (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::operator <=> (TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Other) const noexcept
 	{
 		using COrdering = TCCommonOrderingType<decltype(f_GetName() <=> _Other.f_GetName()), decltype(f_GetThisValue() <=> _Other.f_GetThisValue())>;
 
