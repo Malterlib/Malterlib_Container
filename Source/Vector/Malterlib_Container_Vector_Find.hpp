@@ -39,16 +39,16 @@ namespace NMib::NContainer
 	template <typename tf_CCompare, typename tf_CFind>
 	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearch(tf_CCompare &&_fCompare, const tf_CFind &_ToFind, aint _nMax) const
 	{
-		mint Len = f_GetLen();
+		umint Len = f_GetLen();
 		if (_nMax >= 0)
-			Len = fg_Min(mint(_nMax), Len);
-		mint Low = 0;
-		mint High = Len;
+			Len = fg_Min(umint(_nMax), Len);
+		umint Low = 0;
+		umint High = Len;
 		t_CData const *pArray = f_GetArray();
 
 		while(Low < High)
 		{
-			mint Mid = (Low + High) >> 1;
+			umint Mid = (Low + High) >> 1;
 			if (fg_CheckOrdering(_fCompare(pArray[Mid], _ToFind)) < 0)
 				Low = Mid + 1;
 			else
@@ -71,8 +71,8 @@ namespace NMib::NContainer
 	template <typename tf_CCompare, typename tf_CFind>
 	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearchLowerBound(tf_CCompare &&_fCompare, const tf_CFind &_ToFind) const
 	{
-		mint Low = 0;
-		mint High = f_GetLen();
+		umint Low = 0;
+		umint High = f_GetLen();
 		t_CData const *pArray = f_GetArray();
 
 		if (High == 0)
@@ -80,7 +80,7 @@ namespace NMib::NContainer
 
 		while(Low < High)
 		{
-			mint Mid = (Low + High) >> 1;
+			umint Mid = (Low + High) >> 1;
 			if (fg_CheckOrdering(_fCompare(pArray[Mid] , _ToFind)) < 0)
 				Low = Mid + 1;
 			else
@@ -101,8 +101,8 @@ namespace NMib::NContainer
 	template <typename tf_CCompare, typename tf_CFind>
 	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearchUpperBound(tf_CCompare &&_fCompare, const tf_CFind &_ToFind) const
 	{
-		mint Low = 0;
-		mint High = f_GetLen();
+		umint Low = 0;
+		umint High = f_GetLen();
 		t_CData const *pArray = f_GetArray();
 
 		if (High == 0)
@@ -110,7 +110,7 @@ namespace NMib::NContainer
 
 		while(Low < High)
 		{
-			mint Mid = (Low + High) >> 1;
+			umint Mid = (Low + High) >> 1;
 			if (fg_CheckOrdering(_fCompare(pArray[Mid] , _ToFind)) <= 0)
 				Low = Mid + 1;
 			else

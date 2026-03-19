@@ -595,9 +595,9 @@ namespace
 	class CSetPerformance_Tests : public NMib::NTest::CTest
 	{
 	public:
-		using CTestVector = TCVector<mint>;
+		using CTestVector = TCVector<umint>;
 
-		static CTestVector fs_CreateVector(mint _Value)
+		static CTestVector fs_CreateVector(umint _Value)
 		{
 			CTestVector Result;
 			Result.f_SetLen(1); // Force allocation
@@ -606,10 +606,10 @@ namespace
 		}
 
 		template <typename tf_CSet = TCSet<CTestVector>>
-		tf_CSet f_CreateSet(mint _Start, mint _Count)
+		tf_CSet f_CreateSet(umint _Start, umint _Count)
 		{
 			tf_CSet Result;
-			for (mint i = 0; i < _Count; ++i)
+			for (umint i = 0; i < _Count; ++i)
 				Result[fs_CreateVector(_Start + i)];
 			return Result;
 		}
@@ -626,11 +626,11 @@ namespace
 			DMibTestSuite(NTest::CTestCategory("MoveSemantics") << NTest::CTestGroup("Performance"))
 			{
 #if defined(DMibDebug) || defined(DMibSanitizerEnabled)
-				constexpr static mint c_nNumElements = 10000;
-				constexpr static mint c_nNumIterations = 5;
+				constexpr static umint c_nNumElements = 10000;
+				constexpr static umint c_nNumIterations = 5;
 #else
-				constexpr static mint c_nNumElements = 1000000;
-				constexpr static mint c_nNumIterations = 5;
+				constexpr static umint c_nNumElements = 1000000;
+				constexpr static umint c_nNumIterations = 5;
 #endif
 				constexpr static pfp64 AllowedPerformance = 1.001;
 
@@ -641,7 +641,7 @@ namespace
 					{
 						DMibTestPath("Move");
 						NTest::CTestPerformanceMeasure MoveMeasure("Move");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<>(0, c_nNumElements);
@@ -666,7 +666,7 @@ namespace
 					{
 						DMibTestPath("MoveLeft");
 						NTest::CTestPerformanceMeasure MoveMeasure("MoveLeft");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<>(0, c_nNumElements);
@@ -691,7 +691,7 @@ namespace
 					{
 						DMibTestPath("MoveRight");
 						NTest::CTestPerformanceMeasure MoveMeasure("MoveRight");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<>(0, c_nNumElements);
@@ -716,7 +716,7 @@ namespace
 					{
 						DMibTestPath("Copy");
 						NTest::CTestPerformanceMeasure CopyMeasure("Copy");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto LeftCopy = f_CreateSet<>(0, c_nNumElements);
@@ -751,7 +751,7 @@ namespace
 							{
 								DMibTestPath("MapMove" + PolicySuffix);
 								NTest::CTestPerformanceMeasure MoveMeasure("MapMove" + PolicySuffix);
-								for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 								{
 									fp_GarbageCollect();
 									auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -776,7 +776,7 @@ namespace
 							{
 								DMibTestPath("MapMoveLeft" + PolicySuffix);
 								NTest::CTestPerformanceMeasure MoveMeasure("MapMoveLeft" + PolicySuffix);
-								for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 								{
 									fp_GarbageCollect();
 									auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -801,7 +801,7 @@ namespace
 							{
 								DMibTestPath("MapMoveRight" + PolicySuffix);
 								NTest::CTestPerformanceMeasure MoveMeasure("MapMoveRight" + PolicySuffix);
-								for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 								{
 									fp_GarbageCollect();
 									auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -826,7 +826,7 @@ namespace
 							{
 								DMibTestPath("MapCopy" + PolicySuffix);
 								NTest::CTestPerformanceMeasure CopyMeasure("MapCopy" + PolicySuffix);
-								for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 								{
 									fp_GarbageCollect();
 									auto LeftCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -864,7 +864,7 @@ namespace
 					{
 						DMibTestPath("Move");
 						NTest::CTestPerformanceMeasure MoveMeasure("Move");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<>(0, c_nNumElements);
@@ -889,7 +889,7 @@ namespace
 					{
 						DMibTestPath("MoveLeft");
 						NTest::CTestPerformanceMeasure MoveMeasure("MoveLeft");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<>(0, c_nNumElements);
@@ -914,7 +914,7 @@ namespace
 					{
 						DMibTestPath("MoveRight");
 						NTest::CTestPerformanceMeasure MoveMeasure("MoveRight");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<>(0, c_nNumElements);
@@ -939,7 +939,7 @@ namespace
 					{
 						DMibTestPath("Copy");
 						NTest::CTestPerformanceMeasure CopyMeasure("Copy");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto LeftCopy = f_CreateSet<>(0, c_nNumElements);
@@ -974,7 +974,7 @@ namespace
 							{
 								DMibTestPath("MapMove" + PolicySuffix);
 								NTest::CTestPerformanceMeasure MoveMeasure("MapMove" + PolicySuffix);
-								for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 								{
 									fp_GarbageCollect();
 									auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -999,7 +999,7 @@ namespace
 							{
 								DMibTestPath("MapMoveLeft" + PolicySuffix);
 								NTest::CTestPerformanceMeasure MoveMeasure("MapMoveLeft" + PolicySuffix);
-								for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 								{
 									fp_GarbageCollect();
 									auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -1024,7 +1024,7 @@ namespace
 							{
 								DMibTestPath("MapMoveRight" + PolicySuffix);
 								NTest::CTestPerformanceMeasure MoveMeasure("MapMoveRight" + PolicySuffix);
-								for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 								{
 									fp_GarbageCollect();
 									auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -1049,7 +1049,7 @@ namespace
 							{
 								DMibTestPath("MapCopy" + PolicySuffix);
 								NTest::CTestPerformanceMeasure CopyMeasure("MapCopy" + PolicySuffix);
-								for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 								{
 									fp_GarbageCollect();
 									auto LeftCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -1087,7 +1087,7 @@ namespace
 					{
 						DMibTestPath("Move");
 						NTest::CTestPerformanceMeasure MoveMeasure("Move");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<>(0, c_nNumElements);
@@ -1112,7 +1112,7 @@ namespace
 					{
 						DMibTestPath("MoveLeft");
 						NTest::CTestPerformanceMeasure MoveMeasure("MoveLeft");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<>(0, c_nNumElements);
@@ -1137,7 +1137,7 @@ namespace
 					{
 						DMibTestPath("MoveRight");
 						NTest::CTestPerformanceMeasure MoveMeasure("MoveRight");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<>(0, c_nNumElements);
@@ -1162,7 +1162,7 @@ namespace
 					{
 						DMibTestPath("Copy");
 						NTest::CTestPerformanceMeasure CopyMeasure("Copy");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto LeftCopy = f_CreateSet<>(0, c_nNumElements);
@@ -1187,7 +1187,7 @@ namespace
 					{
 						DMibTestPath("MapMove");
 						NTest::CTestPerformanceMeasure MoveMeasure("MapMove");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -1212,7 +1212,7 @@ namespace
 					{
 						DMibTestPath("MapMoveLeft");
 						NTest::CTestPerformanceMeasure MoveMeasure("MapMoveLeft");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -1237,7 +1237,7 @@ namespace
 					{
 						DMibTestPath("MapMoveRight");
 						NTest::CTestPerformanceMeasure MoveMeasure("MapMoveRight");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -1262,7 +1262,7 @@ namespace
 					{
 						DMibTestPath("MapCopy");
 						NTest::CTestPerformanceMeasure CopyMeasure("MapCopy");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto LeftCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -1294,7 +1294,7 @@ namespace
 					{
 						DMibTestPath("Move");
 						NTest::CTestPerformanceMeasure MoveMeasure("Move");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet(0, c_nNumElements);
@@ -1319,7 +1319,7 @@ namespace
 					{
 						DMibTestPath("MoveLeft");
 						NTest::CTestPerformanceMeasure MoveMeasure("MoveLeft");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet(0, c_nNumElements);
@@ -1344,7 +1344,7 @@ namespace
 					{
 						DMibTestPath("MoveRight");
 						NTest::CTestPerformanceMeasure MoveMeasure("MoveRight");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet(0, c_nNumElements);
@@ -1369,7 +1369,7 @@ namespace
 					{
 						DMibTestPath("Copy");
 						NTest::CTestPerformanceMeasure CopyMeasure("Copy");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto LeftCopy = f_CreateSet(0, c_nNumElements);
@@ -1394,7 +1394,7 @@ namespace
 					{
 						DMibTestPath("MapMove");
 						NTest::CTestPerformanceMeasure MoveMeasure("MapMove");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -1419,7 +1419,7 @@ namespace
 					{
 						DMibTestPath("MapMoveLeft");
 						NTest::CTestPerformanceMeasure MoveMeasure("MapMoveLeft");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -1444,7 +1444,7 @@ namespace
 					{
 						DMibTestPath("MapMoveRight");
 						NTest::CTestPerformanceMeasure MoveMeasure("MapMoveRight");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
@@ -1469,7 +1469,7 @@ namespace
 					{
 						DMibTestPath("MapCopy");
 						NTest::CTestPerformanceMeasure CopyMeasure("MapCopy");
-						for (mint iIter = 0; iIter < c_nNumIterations; ++iIter)
+						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
 						{
 							fp_GarbageCollect();
 							auto LeftCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);

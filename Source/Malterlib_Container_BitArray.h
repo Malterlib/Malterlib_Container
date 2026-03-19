@@ -5,7 +5,7 @@
 
 namespace NMib::NContainer
 {
-	template <mint t_nBits>
+	template <umint t_nBits>
 	class TCBitArray
 	{
 	public:
@@ -19,48 +19,48 @@ namespace NMib::NContainer
 		template <typename tf_CStream>
 		void f_Consume(tf_CStream &_Stream);
 
-		void f_SetBit(mint _Bit, bool _bValue);
+		void f_SetBit(umint _Bit, bool _bValue);
 		template <bool tf_bValue>
-		void f_SetBit(mint _Bit);
+		void f_SetBit(umint _Bit);
 
 		template <bool tf_bValue>
-		void f_SetBitRange(mint _StartBit, mint _nBits);
-		void f_SetBitRange(mint _StartBit, mint _nBits, bool _bValue);
+		void f_SetBitRange(umint _StartBit, umint _nBits);
+		void f_SetBitRange(umint _StartBit, umint _nBits, bool _bValue);
 
 		template <bool tf_bValue>
-		bool f_SetBitRangeWholeEntrySet(mint _StartBit, mint _nBits);
+		bool f_SetBitRangeWholeEntrySet(umint _StartBit, umint _nBits);
 
 		template <bool tf_bValue>
-		bool f_SetBitWholeEntrySet(mint _Bit);
-		bool f_SetBitWholeEntrySet(mint _Bit, bool _bValue);
+		bool f_SetBitWholeEntrySet(umint _Bit);
+		bool f_SetBitWholeEntrySet(umint _Bit, bool _bValue);
 
-		bool f_GetBit(mint _Bit) const;
-		bool f_GetWholeEntrySet(mint _Bit) const;
+		bool f_GetBit(umint _Bit) const;
+		bool f_GetWholeEntrySet(umint _Bit) const;
 
 		aint f_FindFreeBit() const;
-		aint f_FindFreeBit(mint _StartBitApproximately) const;
-		aint f_FindFreeBitAndSet(mint _StartBitApproximately);
+		aint f_FindFreeBit(umint _StartBitApproximately) const;
+		aint f_FindFreeBitAndSet(umint _StartBitApproximately);
 
 		aint f_FindFreeBitReverse() const;
-		aint f_FindFreeBitReverse(mint _StartBitApproximately) const;
-		aint f_FindFreeBitReverseAndSet(mint _StartBitApproximately);
+		aint f_FindFreeBitReverse(umint _StartBitApproximately) const;
+		aint f_FindFreeBitReverseAndSet(umint _StartBitApproximately);
 
 		bool f_IsFullySet() const;
 		bool f_IsFullyFree() const;
 
 		template <typename t_CFunctor>
-		void f_EnumFreeBits(t_CFunctor &&_Functor, mint _StartBit = 0, mint _EndBit = t_nBits) const;
+		void f_EnumFreeBits(t_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
 		template <typename t_CFunctor>
-		void f_EnumFreeBitRanges(t_CFunctor &&_Functor, mint _StartBit = 0, mint _EndBit = t_nBits) const;
+		void f_EnumFreeBitRanges(t_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
 
 		template <typename t_CFunctor>
-		void f_EnumSetBits(t_CFunctor &&_Functor, mint _StartBit = 0, mint _EndBit = t_nBits) const;
+		void f_EnumSetBits(t_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
 		template <typename t_CFunctor>
-		void f_EnumSetBitRanges(t_CFunctor &&_Functor, mint _StartBit = 0, mint _EndBit = t_nBits) const;
+		void f_EnumSetBitRanges(t_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
 
 		aint f_FindFreeBitAndSet();
 		aint f_FindFreeBitReverseAndSet();
-		aint f_FindUpperBound(mint _StartBit) const;
+		aint f_FindUpperBound(umint _StartBit) const;
 
 	private:
 		template <bool t_bIsSmaller, typename t_CDummy = void>
@@ -82,17 +82,17 @@ namespace NMib::NContainer
 
 	private:
 
-		aint fp_FindFreeBit(mint &_iEntry) const;
-		aint fp_FindFreeBit(mint _StartBitApproximately, mint &_iEntry) const;
+		aint fp_FindFreeBit(umint &_iEntry) const;
+		aint fp_FindFreeBit(umint _StartBitApproximately, umint &_iEntry) const;
 
-		aint fp_FindFreeBitReverse(mint &_iEntry) const;
-		aint fp_FindFreeBitReverse(mint _StartBitApproximately, mint &_iEntry) const;
+		aint fp_FindFreeBitReverse(umint &_iEntry) const;
+		aint fp_FindFreeBitReverse(umint _StartBitApproximately, umint &_iEntry) const;
 
 		template <bool tf_bValue>
-		CEntryType fp_SetBit(CEntryType _Entry, mint _Bit);
-		CEntryType fp_SetBit(CEntryType _Entry, mint _Bit, bool _bValue);
+		CEntryType fp_SetBit(CEntryType _Entry, umint _Bit);
+		CEntryType fp_SetBit(CEntryType _Entry, umint _Bit, bool _bValue);
 		template <bool tf_bValue>
-		CEntryType fp_SetBitRange(CEntryType _Entry, mint _Bit, mint _nBits);
+		CEntryType fp_SetBitRange(CEntryType _Entry, umint _Bit, umint _nBits);
 
 		enum
 		{

@@ -11,11 +11,11 @@ namespace NMib::NContainer
 	{
 		//static_assert(NTraits::cIsNothrowConstructibleWith<t_CData, t_CData &&>, "For exception safety type must be noexcept movable");
 
-		mint AddLen = _Vector.f_GetLen();
+		umint AddLen = _Vector.f_GetLen();
 		t_CData *pArray = fp_MakeRoomBegin(AddLen);
 		tf_CData const *pSrcArray = _Vector.f_GetArray();
 
-		mint nCopied = 0;
+		umint nCopied = 0;
 
 		auto Cleanup = g_OnScopeExit / [&]
 			{
@@ -41,12 +41,12 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirst(const t_CData *_pData, mint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirst(const t_CData *_pData, umint _Len)
 	{
 		//static_assert(NTraits::cIsNothrowConstructibleWith<t_CData, t_CData &&>, "For exception safety type must be noexcept movable");
 		t_CData *pArray = fp_MakeRoomBegin(_Len);
 
-		mint nCopied = 0;
+		umint nCopied = 0;
 
 		auto Cleanup = g_OnScopeExit / [&]
 			{
@@ -65,7 +65,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirstMove(t_CData *_pData, mint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirstMove(t_CData *_pData, umint _Len)
 	{
 		t_CData *pArray = fp_MakeRoomBegin(_Len);
 
@@ -75,7 +75,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirst(t_CData *_pData, mint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirst(t_CData *_pData, umint _Len)
 	{
 		return f_InsertFirst((t_CData const *)_pData, _Len);
 	}

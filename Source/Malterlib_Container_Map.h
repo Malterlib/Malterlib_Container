@@ -404,8 +404,8 @@ namespace NMib::NContainer
 		bool f_IsEmpty() const;
 		bool f_HasOneElement() const;
 		bool f_HasMoreThanOneElement() const;
-		mint f_GetLen() const;
-		mint f_GetDepth() const;
+		umint f_GetLen() const;
+		umint f_GetDepth() const;
 
 		CEntries f_Entries() &;
 		CEntriesConst f_Entries() const &;
@@ -502,7 +502,7 @@ namespace NMib::NContainer
 		template <typename tf_CSource>
 		inline_always void fp_MoveAddAll(tf_CSource && _Other);
 
-		template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams, mint... tp_IndicesAllocator, mint... tp_IndicesCompare>
+		template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams, umint... tp_IndicesAllocator, umint... tp_IndicesCompare>
 		TCMap
 			(
 				NMeta::TCIndices<tp_IndicesAllocator...> const &_IndexSequenceAllocator

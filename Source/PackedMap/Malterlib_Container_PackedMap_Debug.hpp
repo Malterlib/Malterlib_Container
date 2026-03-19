@@ -16,7 +16,7 @@ namespace NMib::NContainer
 		auto const *pMeta = pData->m_pSegmentMeta;
 		auto const *pKeys = pData->m_pKeys;
 		auto const *pIndex = pData->m_pIndex;
-		mint nSegments = pData->m_nSegments;
+		umint nSegments = pData->m_nSegments;
 
 		auto fFail = [&](ch8 const *_pMsg) -> bool
 			{
@@ -36,10 +36,10 @@ namespace NMib::NContainer
 		;
 
 		// Check counts and total elements
-		mint nTotal = 0;
-		for (mint iSeg = 0; iSeg < nSegments; ++iSeg)
+		umint nTotal = 0;
+		for (umint iSeg = 0; iSeg < nSegments; ++iSeg)
 		{
-			mint Count = pMeta[iSeg].m_Count;
+			umint Count = pMeta[iSeg].m_Count;
 			if (Count > mcp_SegmentSize)
 				return fFail("Segment count exceeds segment size");
 			nTotal += Count;
@@ -50,16 +50,16 @@ namespace NMib::NContainer
 
 		// Check per-segment ordering and global ordering
 		t_CKey const *pPrevKey = nullptr;
-		mint iPrevSeg = 0;
-		mint iPrevLocal = 0;
-		for (mint iSeg = 0; iSeg < nSegments; ++iSeg)
+		umint iPrevSeg = 0;
+		umint iPrevLocal = 0;
+		for (umint iSeg = 0; iSeg < nSegments; ++iSeg)
 		{
-			mint Count = pMeta[iSeg].m_Count;
+			umint Count = pMeta[iSeg].m_Count;
 			if (Count == 0)
 				continue;
 
-			mint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
-			for (mint iKey = 0; iKey < Count; ++iKey)
+			umint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
+			for (umint iKey = 0; iKey < Count; ++iKey)
 			{
 				t_CKey const &Key = pKeys[iFirst + iKey];
 				if (iKey > 0)
@@ -92,9 +92,9 @@ namespace NMib::NContainer
 		}
 
 		// Validate static index leaf separators (min keys)
-		for (mint iSeg = 0; iSeg < nSegments; ++iSeg)
+		for (umint iSeg = 0; iSeg < nSegments; ++iSeg)
 		{
-			mint Count = pMeta[iSeg].m_Count;
+			umint Count = pMeta[iSeg].m_Count;
 			bool bValid = pData->f_GetIndexEntryValid(iSeg);
 			if (Count == 0)
 			{
@@ -106,7 +106,7 @@ namespace NMib::NContainer
 			if (!bValid)
 				return fFail("Index leaf invalid for non-empty segment");
 
-			mint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
+			umint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
 			t_CKey const &MinKey = pKeys[iFirst];
 
 			if constexpr (mcp_bIndexStoresKeys)
@@ -116,7 +116,7 @@ namespace NMib::NContainer
 			}
 			else
 			{
-				mint iSlot = pIndex[iSeg];
+				umint iSlot = pIndex[iSeg];
 				if (iSlot != iFirst)
 					return fFail("Index leaf slot mismatch (min key)");
 			}
@@ -124,26 +124,26 @@ namespace NMib::NContainer
 
 		// Validate density invariants at each calibrator tree level
 		// According to the RMA paper, each window at each level should have density within [ρ(h), τ(h)]
-		mint nLevels = fp_CalibratorLevelCount(nSegments);
+		umint nLevels = fp_CalibratorLevelCount(nSegments);
 		if (nLevels > 0 && nTotal > 0)
 		{
 			// Calculate total capacity - lower bounds only apply when we have enough elements
-			mint TotalCapacity = nSegments * mcp_SegmentSize;
+			umint TotalCapacity = nSegments * mcp_SegmentSize;
 
 			// Check density bounds at each calibrator tree level
-			for (mint iLevel = 0; iLevel < nLevels; ++iLevel)
+			for (umint iLevel = 0; iLevel < nLevels; ++iLevel)
 			{
-				mint WindowSize = (mint)1 << iLevel;
-				for (mint iWin = 0; iWin < nSegments; iWin += WindowSize)
+				umint WindowSize = (umint)1 << iLevel;
+				for (umint iWin = 0; iWin < nSegments; iWin += WindowSize)
 				{
-					mint iEnd = fg_Min(iWin + WindowSize, nSegments);
-					mint nWinElements = 0;
-					for (mint iSegment = iWin; iSegment < iEnd; ++iSegment)
+					umint iEnd = fg_Min(iWin + WindowSize, nSegments);
+					umint nWinElements = 0;
+					for (umint iSegment = iWin; iSegment < iEnd; ++iSegment)
 						nWinElements += pMeta[iSegment].m_Count;
 
-					mint WinCapacity = (iEnd - iWin) * mcp_SegmentSize;
+					umint WinCapacity = (iEnd - iWin) * mcp_SegmentSize;
 
-					mint ScaledLowerBound, ScaledUpperBound;
+					umint ScaledLowerBound, ScaledUpperBound;
 					fp_GetLevelThresholds(iLevel, nLevels, ScaledLowerBound, ScaledUpperBound);
 
 					if (nWinElements > fsp_ScaledMulFloor(ScaledUpperBound + ScaledUpperBound / 100, WinCapacity))  // Allow 1% tolerance for edge cases
@@ -158,8 +158,8 @@ namespace NMib::NContainer
 					// 2. The global density is above the root lower bound (structure has enough elements)
 					// 3. The expected elements in this window (based on proportional fill) would be >= 1
 					// This prevents false failures when inserting into a nearly-empty structure
-					mint nWindowSegments = iEnd - iWin;
-					mint nScaledExpectedWindowElements;
+					umint nWindowSegments = iEnd - iWin;
+					umint nScaledExpectedWindowElements;
 					bool bExpectedWindowCouldContainElement = fg_MultiplyOverflow(nTotal, nWindowSegments, nScaledExpectedWindowElements) || (nScaledExpectedWindowElements >= nSegments);
 					bool bCheckLowerBound = (ScaledLowerBound > 0) && (nTotal >= fsp_ScaledMulCeil(mcp_RootLowerBoundScaled, TotalCapacity)) && bExpectedWindowCouldContainElement;
 
@@ -175,22 +175,22 @@ namespace NMib::NContainer
 
 		// Validate upper index levels (parent = min valid child)
 		CIndexLayout Layout = fsp_ComputeIndexLayout(nSegments);
-		for (mint iLevel = 1; iLevel < pData->m_nStaticIndexLevels; ++iLevel)
+		for (umint iLevel = 1; iLevel < pData->m_nStaticIndexLevels; ++iLevel)
 		{
-			mint iChildLevel = iLevel - 1;
-			mint ChildSize = Layout.m_LevelSizes[iChildLevel];
-			mint iChildOffset = Layout.m_LevelOffsets[iChildLevel];
-			mint ThisSize = Layout.m_LevelSizes[iLevel];
-			mint iThisOffset = Layout.m_LevelOffsets[iLevel];
+			umint iChildLevel = iLevel - 1;
+			umint ChildSize = Layout.m_LevelSizes[iChildLevel];
+			umint iChildOffset = Layout.m_LevelOffsets[iChildLevel];
+			umint ThisSize = Layout.m_LevelSizes[iLevel];
+			umint iThisOffset = Layout.m_LevelOffsets[iLevel];
 
-			for (mint iParent = 0; iParent < ThisSize; ++iParent)
+			for (umint iParent = 0; iParent < ThisSize; ++iParent)
 			{
-				mint iChildStart = iParent * mcp_Fanout;
-				mint iChildEnd = fg_Min(iChildStart + mcp_Fanout, ChildSize);
+				umint iChildStart = iParent * mcp_Fanout;
+				umint iChildEnd = fg_Min(iChildStart + mcp_Fanout, ChildSize);
 
-				mint iMinChild = 0;
+				umint iMinChild = 0;
 				bool bFoundValid = false;
-				for (mint iChild = iChildStart; iChild < iChildEnd; ++iChild)
+				for (umint iChild = iChildStart; iChild < iChildEnd; ++iChild)
 				{
 					if (pData->f_GetIndexEntryValid(iChildOffset + iChild))
 					{
@@ -200,7 +200,7 @@ namespace NMib::NContainer
 					}
 				}
 
-				mint iParentEntry = iThisOffset + iParent;
+				umint iParentEntry = iThisOffset + iParent;
 				bool bParentValid = pData->f_GetIndexEntryValid(iParentEntry);
 
 				if (!bFoundValid)
@@ -235,38 +235,38 @@ namespace NMib::NContainer
 	constexpr bool TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_ValidateRedistributeDensityBounds
 		(
 			CPackedMapData const *_pData
-			, mint _iStartSeg
-			, mint _iEndSeg
-			, mint _nTotalElements
-			, mint _nGlobalLevels
+			, umint _iStartSeg
+			, umint _iEndSeg
+			, umint _nTotalElements
+			, umint _nGlobalLevels
 			, ch8 const *_pLabel
 		)
 		const noexcept
 	{
 		auto const *pMeta = _pData->m_pSegmentMeta;
-		mint nSegments = _iEndSeg - _iStartSeg;
-		mint nLevels = fp_CalibratorLevelCount(nSegments);
+		umint nSegments = _iEndSeg - _iStartSeg;
+		umint nLevels = fp_CalibratorLevelCount(nSegments);
 
-		for (mint iLevel = 0; iLevel < nLevels; ++iLevel)
+		for (umint iLevel = 0; iLevel < nLevels; ++iLevel)
 		{
-			mint WindowSize = (mint)1 << iLevel;
+			umint WindowSize = (umint)1 << iLevel;
 
-			for (mint iWin = 0; iWin < nSegments; iWin += WindowSize)
+			for (umint iWin = 0; iWin < nSegments; iWin += WindowSize)
 			{
-				mint iEnd = fg_Min(iWin + WindowSize, nSegments);
-				mint nWinElements = 0;
-				for (mint iSegment = iWin; iSegment < iEnd; ++iSegment)
+				umint iEnd = fg_Min(iWin + WindowSize, nSegments);
+				umint nWinElements = 0;
+				for (umint iSegment = iWin; iSegment < iEnd; ++iSegment)
 					nWinElements += pMeta[_iStartSeg + iSegment].m_Count;
 
-				mint WinCapacity = (iEnd - iWin) * mcp_SegmentSize;
+				umint WinCapacity = (iEnd - iWin) * mcp_SegmentSize;
 
-				mint ScaledLowerBound, ScaledUpperBound;
+				umint ScaledLowerBound, ScaledUpperBound;
 				// iLevel is already the absolute calibrator level within the map:
 				// level 0 = single segment, increasing toward root.
 				fp_GetLevelThresholds(iLevel, _nGlobalLevels, ScaledLowerBound, ScaledUpperBound);
 
-				mint nMinElems = fsp_ScaledMulCeil(ScaledLowerBound, WinCapacity);
-				mint nMaxElems = fsp_ScaledMulFloor(ScaledUpperBound, WinCapacity);
+				umint nMinElems = fsp_ScaledMulCeil(ScaledLowerBound, WinCapacity);
+				umint nMaxElems = fsp_ScaledMulFloor(ScaledUpperBound, WinCapacity);
 
 				// Upper bound: allow 1-element slack for rounding
 				if (nWinElements > nMaxElems + 1)
@@ -281,9 +281,9 @@ namespace NMib::NContainer
 				}
 
 				// Check lower bound only when meaningful
-				mint TotalCapacity = nSegments * mcp_SegmentSize;
-				mint nWindowSegments = iEnd - iWin;
-				mint nScaledExpectedWindowElements;
+				umint TotalCapacity = nSegments * mcp_SegmentSize;
+				umint nWindowSegments = iEnd - iWin;
+				umint nScaledExpectedWindowElements;
 				bool bExpectedWindowCouldContainElement = fg_MultiplyOverflow
 					(
 						_nTotalElements

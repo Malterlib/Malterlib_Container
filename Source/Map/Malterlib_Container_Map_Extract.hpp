@@ -23,7 +23,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Extract(CUserData *_pData) -> CNodeHandle
 	{
-		mint Offset = CNode::fs_GetOffset();
+		umint Offset = CNode::fs_GetOffset();
 		CNodeDestructive *pNode = (CNodeDestructive *)(((uint8 *)_pData) - Offset);
 		mp_Tree.f_Remove(pNode, mp_Compare);
 		return CNodeHandle(pNode, mp_Allocator);

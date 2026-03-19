@@ -11,7 +11,7 @@ namespace NMib::NStream
 	public:
 		static constexpr void fs_Feed(t_CStream &_Stream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> const &_Data)
 		{
-			mint nItems = _Data.f_GetLen();
+			umint nItems = _Data.f_GetLen();
 
 			fg_FeedLenToStream(_Stream, nItems);
 
@@ -21,7 +21,7 @@ namespace NMib::NStream
 
 		static constexpr void fs_Feed(t_CStream &_Stream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> &&_Data)
 		{
-			mint nItems = _Data.f_GetLen();
+			umint nItems = _Data.f_GetLen();
 
 			fg_FeedLenToStream(_Stream, nItems);
 
@@ -50,7 +50,7 @@ namespace NMib::NStream
 	public:\
 		static void fs_Feed(t_CStream &_Stream, NContainer::TCVector<_DataType, t_CAllocator, t_COptions> const &_Data)\
 		{\
-			mint nItems = _Data.f_GetLen();\
+			umint nItems = _Data.f_GetLen();\
 			fg_FeedLenToStream(_Stream, nItems);\
 			if constexpr (sizeof(_DataType) != 1)\
 				fg_FeedEndianArrayToStream(_Stream, _Data.f_GetArray(), nItems, _Stream.f_Endian());\

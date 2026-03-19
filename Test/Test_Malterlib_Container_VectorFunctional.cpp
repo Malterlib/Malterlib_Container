@@ -101,7 +101,7 @@ namespace
 				{
 					TCVector<CStr> Vector = {"a", "b", "c"};
 
-					auto WithIndex = Vector.f_Map([](CStr const &_Value, mint _Index) -> CStr { return "{}:{}"_f << _Index << _Value; });
+					auto WithIndex = Vector.f_Map([](CStr const &_Value, umint _Index) -> CStr { return "{}:{}"_f << _Index << _Value; });
 
 					DMibExpect(WithIndex, ==, TCVector<CStr>({"0:a", "1:b", "2:c"}));
 				};
@@ -112,7 +112,7 @@ namespace
 
 					auto Result = Vector.f_Map
 						(
-							[](int32 _Value, mint _Index, TCVector<int32> const &_Array) -> int32
+							[](int32 _Value, umint _Index, TCVector<int32> const &_Array) -> int32
 							{
 								return _Value + (int32)_Array.f_GetLen() + (int32)_Index;
 							}
@@ -193,7 +193,7 @@ namespace
 				{
 					TCVector<CStr> Vector = {"a", "b", "c", "d", "e"};
 
-					auto EvenIndices = Vector.f_Filter([](CStr const &, mint _Index) { return _Index % 2 == 0; });
+					auto EvenIndices = Vector.f_Filter([](CStr const &, umint _Index) { return _Index % 2 == 0; });
 
 					DMibExpect(EvenIndices, ==, TCVector<CStr>({"a", "c", "e"}));
 				};
@@ -204,7 +204,7 @@ namespace
 
 					auto Result = Vector.f_Filter
 						(
-							[](int32 _Value, mint _Index, TCVector<int32> const &_Array)
+							[](int32 _Value, umint _Index, TCVector<int32> const &_Array)
 							{
 								return _Value > (int32)_Array.f_GetLen() * 5 && _Index > 1;
 							}
@@ -277,7 +277,7 @@ namespace
 				{
 					TCVector<int32> Vector = {0, 1, 2, 3, 4};
 
-					bool bIndexMatches = Vector.f_Every([](int32 _Value, mint _Index) { return _Value == (int32)_Index; });
+					bool bIndexMatches = Vector.f_Every([](int32 _Value, umint _Index) { return _Value == (int32)_Index; });
 
 					DMibExpectTrue(bIndexMatches);
 				};
@@ -288,7 +288,7 @@ namespace
 
 					bool bResult = Vector.f_Every
 						(
-							[](int32 _Value, mint _Index, TCVector<int32> const &_Array)
+							[](int32 _Value, umint _Index, TCVector<int32> const &_Array)
 							{
 								return _Value <= (int32)_Array.f_GetLen();
 							}
@@ -301,7 +301,7 @@ namespace
 				DMibTestCategory("Short circuit")
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5};
-					mint nCallCount = 0;
+					umint nCallCount = 0;
 
 					bool bResult = Vector.f_Every
 						(
@@ -355,7 +355,7 @@ namespace
 				{
 					TCVector<int32> Vector = {0, 10, 20, 30, 40};
 
-					bool bHasMatchingIndex = Vector.f_Some([](int32 _Value, mint _Index) { return _Value == (int32)_Index * 10; });
+					bool bHasMatchingIndex = Vector.f_Some([](int32 _Value, umint _Index) { return _Value == (int32)_Index * 10; });
 
 					DMibExpectTrue(bHasMatchingIndex);
 				};
@@ -366,7 +366,7 @@ namespace
 
 					bool bResult = Vector.f_Some
 						(
-							[](int32 _Value, mint _Index, TCVector<int32> const &_Array)
+							[](int32 _Value, umint _Index, TCVector<int32> const &_Array)
 							{
 								return _Value == (int32)_Array.f_GetLen();
 							}
@@ -379,7 +379,7 @@ namespace
 				DMibTestCategory("Short circuit")
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5};
-					mint nCallCount = 0;
+					umint nCallCount = 0;
 
 					bool bResult = Vector.f_Some
 						(
@@ -471,7 +471,7 @@ namespace
 
 					int32 Sum = Vector.f_Reduce
 						(
-							[](int32 &&_Acc, int32 _Value, mint _Index)
+							[](int32 &&_Acc, int32 _Value, umint _Index)
 							{
 								return _Acc + _Value + (int32)_Index;
 							}
@@ -489,7 +489,7 @@ namespace
 
 					int32 Sum = Vector.f_Reduce
 						(
-							[](int32 &&_Acc, int32 _Value, mint _Index, TCVector<int32> const &_Array)
+							[](int32 &&_Acc, int32 _Value, umint _Index, TCVector<int32> const &_Array)
 							{
 								return _Acc + _Value * (int32)_Array.f_GetLen();
 							}
@@ -636,7 +636,7 @@ namespace
 
 					CStr Result = Vector.f_ReduceRight
 						(
-							[](CStr &&_Acc, CStr const &_Value, mint _Index) -> CStr
+							[](CStr &&_Acc, CStr const &_Value, umint _Index) -> CStr
 							{
 								if (_Acc.f_IsEmpty())
 									return "{}:{}"_f << _Index << _Value;
@@ -656,7 +656,7 @@ namespace
 
 					int32 Sum = Vector.f_ReduceRight
 						(
-							[](int32 &&_Acc, int32 _Value, mint _Index, TCVector<int32> const &_Array)
+							[](int32 &&_Acc, int32 _Value, umint _Index, TCVector<int32> const &_Array)
 							{
 								return _Acc + _Value * (int32)_Array.f_GetLen() + (int32)_Index;
 							}

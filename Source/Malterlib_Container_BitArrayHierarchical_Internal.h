@@ -5,7 +5,7 @@
 
 namespace NMib::NContainer::NPrivate
 {
-	template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal, bool t_bLast = (t_nBitsInternal == 0)>
+	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal, bool t_bLast = (t_nBitsInternal == 0)>
 	struct TCBitArrayHierarchicalInternalArray : public TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>
 	{
 		enum
@@ -32,14 +32,14 @@ namespace NMib::NContainer::NPrivate
 		bool f_IsFullyFree() const;
 
 		template <bool tf_bValue>
-		void f_SetBit(mint _Bit);
-		void f_SetBit(mint _Bit, bool _bValue);
+		void f_SetBit(umint _Bit);
+		void f_SetBit(umint _Bit, bool _bValue);
 
 		template <bool tf_bValue>
-		void f_SetBitRange(mint _StartBit, mint _nBits);
-		void f_SetBitRange(mint _StartBit, mint _nBits, bool _bValue);
+		void f_SetBitRange(umint _StartBit, umint _nBits);
+		void f_SetBitRange(umint _StartBit, umint _nBits, bool _bValue);
 
-		bool f_GetBit(mint _Bit) const;
+		bool f_GetBit(umint _Bit) const;
 
 		aint f_FindFreeBit() const;
 		aint f_FindFreeBitAndSet();
@@ -47,20 +47,20 @@ namespace NMib::NContainer::NPrivate
 		aint f_FindFreeBitReverse() const;
 		aint f_FindFreeBitReverseAndSet();
 
-		aint f_FindUpperBound(mint _StartBit) const;
+		aint f_FindUpperBound(umint _StartBit) const;
 		template <typename t_CFunctor>
-		void f_EnumFreeBits(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		void f_EnumFreeBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 		template <typename t_CFunctor>
-		void f_EnumFreeBitRanges(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		void f_EnumFreeBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 
 		template <typename t_CFunctor>
-		void f_EnumSetBitRanges(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		void f_EnumSetBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 
 		template <typename t_CFunctor>
-		void f_EnumSetBits(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		void f_EnumSetBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 	};
 
-	template <mint t_nBitsPerEntry, mint t_nBits, mint t_nBitsInternal>
+	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal>
 	struct TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, true>
 	{
 		constexpr TCBitArrayHierarchicalInternalArray(bool _bInitValues);
@@ -72,17 +72,17 @@ namespace NMib::NContainer::NPrivate
 		void f_Consume(tf_CStream &_Stream);
 
 		template <bool tf_bValue>
-		void f_SetBit(mint _Bit);
-		void f_SetBit(mint _Bit, bool _bValue);
+		void f_SetBit(umint _Bit);
+		void f_SetBit(umint _Bit, bool _bValue);
 
 		template <bool tf_bValue>
-		void f_SetBitRange(mint _StartBit, mint _nBits);
-		void f_SetBitRange(mint _StartBit, mint _nBits, bool _bValue);
+		void f_SetBitRange(umint _StartBit, umint _nBits);
+		void f_SetBitRange(umint _StartBit, umint _nBits, bool _bValue);
 
 		bool f_IsFullySet() const;
 		bool f_IsFullyFree() const;
 
-		bool f_GetBit(mint _Bit) const;
+		bool f_GetBit(umint _Bit) const;
 
 		aint f_FindFreeBit() const;
 		aint f_FindFreeBitAndSet();
@@ -90,7 +90,7 @@ namespace NMib::NContainer::NPrivate
 		aint f_FindFreeBitReverse() const;
 		aint f_FindFreeBitReverseAndSet();
 
-		aint f_FindUpperBound(mint _StartBit) const;
+		aint f_FindUpperBound(umint _StartBit) const;
 	};
 }
 

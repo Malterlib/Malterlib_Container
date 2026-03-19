@@ -8,7 +8,7 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(std::initializer_list<t_CData> const &_Elements)
 	{
-		mint iFirstElement = f_GetLen();
+		umint iFirstElement = f_GetLen();
 		for (auto &Element : _Elements)
 			f_Insert(Element);
 		return f_GetArray() + iFirstElement;
@@ -18,15 +18,15 @@ namespace NMib::NContainer
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector)
 	{
-		mint PrevLen = f_GetLen();
-		mint AddLen = _Vector.f_GetLen();
-		mint NewLen = PrevLen + AddLen;
+		umint PrevLen = f_GetLen();
+		umint AddLen = _Vector.f_GetLen();
+		umint NewLen = PrevLen + AddLen;
 		if (NewLen < PrevLen)
 			DMibErrorListBoundCheck("Vector length would have overflowed");
 		t_CData *pArray = fp_MakeRoom(NewLen);
 		tf_CData const *pSrcArray = _Vector.f_GetArray();
 
-		mint nCopied = 0;
+		umint nCopied = 0;
 
 		auto Cleanup = g_OnScopeExit / [&]
 			{
@@ -53,15 +53,15 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(const t_CData *_pData, mint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(const t_CData *_pData, umint _Len)
 	{
-		mint PrevLen = f_GetLen();
-		mint NewLen = PrevLen + _Len;
+		umint PrevLen = f_GetLen();
+		umint NewLen = PrevLen + _Len;
 		if (NewLen < PrevLen)
 			DMibErrorListBoundCheck("Vector length would have overflowed");
 		t_CData *pArray = fp_MakeRoom(NewLen);
 
-		mint nCopied = 0;
+		umint nCopied = 0;
 
 		auto Cleanup = g_OnScopeExit / [&]
 			{
@@ -81,10 +81,10 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertMove(t_CData *_pData, mint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertMove(t_CData *_pData, umint _Len)
 	{
-		mint PrevLen = f_GetLen();
-		mint NewLen = PrevLen + _Len;
+		umint PrevLen = f_GetLen();
+		umint NewLen = PrevLen + _Len;
 		if (NewLen < PrevLen)
 			DMibErrorListBoundCheck("Vector length would have overflowed");
 		t_CData *pArray = fp_MakeRoom(NewLen);
@@ -98,7 +98,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(t_CData *_pData, mint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(t_CData *_pData, umint _Len)
 	{
 		return f_Insert((t_CData const *)_pData, _Len);
 	}
@@ -106,8 +106,8 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	inline_never t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::fp_Insert(t_CData const &_Data)
 	{
-		mint PrevLen = f_GetLen();
-		DMibFastCheck(PrevLen < TCLimitsInt<mint>::mc_Max);
+		umint PrevLen = f_GetLen();
+		DMibFastCheck(PrevLen < TCLimitsInt<umint>::mc_Max);
 		t_CData *pArray = fp_MakeRoom(PrevLen + 1) + PrevLen;
 		new((void *)(pArray)) t_CData(_Data);
 		++mp_StaticData.m_pData->m_Length;
@@ -117,7 +117,7 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(const t_CData &_Data)
 	{
-		mint PrevLen = f_GetLen();
+		umint PrevLen = f_GetLen();
 		auto pData = mp_StaticData.m_pData;
 		if (fsp_CanGrow(PrevLen + 1, pData))
 		{

@@ -13,7 +13,7 @@ namespace NMib::NContainer
 		if (_This.f_IsEmpty())
 			return Ret;
 
-		mint iElement = 0;
+		umint iElement = 0;
 		for (auto &Element : _This)
 		{
 			if (NPrivate::fg_InvokeVectorIteratorFunctor(_fPredicate, fg_ForwardAs<tf_CThis>(Element), iElement, fg_Forward<tf_CThis>(_This)))

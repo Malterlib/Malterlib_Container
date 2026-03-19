@@ -6,7 +6,7 @@
 namespace NMib::NContainer::NPrivate
 {
 	template <typename tf_FFunctor, typename tf_CElement, typename tf_CArray>
-	inline_small auto fg_InvokeVectorIteratorFunctor(tf_FFunctor &&_fFunctor, tf_CElement &&_Element, mint _Index, tf_CArray &&_Array)
+	inline_small auto fg_InvokeVectorIteratorFunctor(tf_FFunctor &&_fFunctor, tf_CElement &&_Element, umint _Index, tf_CArray &&_Array)
 	{
 		if constexpr
 		(
@@ -33,7 +33,7 @@ namespace NMib::NContainer::NPrivate
 	}
 
 	template <typename tf_FReducer, typename tf_CAccumulator, typename tf_CElement, typename tf_CArray>
-	inline_small auto fg_InvokeVectorReduceFunctor(tf_FReducer &&_fReducer, tf_CAccumulator &&_Accumulator, tf_CElement &&_Element, mint _Index, tf_CArray &&_Array)
+	inline_small auto fg_InvokeVectorReduceFunctor(tf_FReducer &&_fReducer, tf_CAccumulator &&_Accumulator, tf_CElement &&_Element, umint _Index, tf_CArray &&_Array)
 	{
 		if constexpr
 		(

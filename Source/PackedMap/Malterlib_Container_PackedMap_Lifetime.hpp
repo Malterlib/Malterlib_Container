@@ -43,9 +43,9 @@ namespace NMib::NContainer
 		t_CValue *pValues = pData->m_pValues;
 		CSegmentMeta *pMeta = pData->m_pSegmentMeta;
 
-		for (mint iSeg = 0; iSeg < pData->m_nSegments; ++iSeg)
+		for (umint iSeg = 0; iSeg < pData->m_nSegments; ++iSeg)
 		{
-			mint Count = pMeta[iSeg].m_Count;
+			umint Count = pMeta[iSeg].m_Count;
 			if (Count == 0)
 			{
 				if constexpr (t_Options.m_bAdaptive)
@@ -54,10 +54,10 @@ namespace NMib::NContainer
 				continue;
 			}
 
-			mint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
-			for (mint iSegmentSlot = 0; iSegmentSlot < Count; ++iSegmentSlot)
+			umint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
+			for (umint iSegmentSlot = 0; iSegmentSlot < Count; ++iSegmentSlot)
 			{
-				mint iSlot = iFirst + iSegmentSlot;
+				umint iSlot = iFirst + iSegmentSlot;
 				pKeys[iSlot].~t_CKey();
 				pValues[iSlot].~t_CValue();
 			}
@@ -81,7 +81,7 @@ namespace NMib::NContainer
 		else
 		{
 			// Destroy segment metadata (needed for optional detector keys)
-			for (mint iSegmentSlot = 0; iSegmentSlot < pData->m_nSegments; ++iSegmentSlot)
+			for (umint iSegmentSlot = 0; iSegmentSlot < pData->m_nSegments; ++iSegmentSlot)
 				pData->m_pSegmentMeta[iSegmentSlot].~CSegmentMeta();
 
 			pData->f_DestroyIndexEntries();
@@ -116,8 +116,8 @@ namespace NMib::NContainer
 		auto const *pOtherData = _Other.mp_pData;
 
 		// Track the current segment and how many elements were placed in it for cleanup
-		mint iCleanupSeg = 0;
-		mint nCleanupPlacedInSeg = 0;
+		umint iCleanupSeg = 0;
+		umint nCleanupPlacedInSeg = 0;
 
 		// If copy throws, destructor won't run (C++ rule for constructors), so clean up manually
 		auto CtorCleanup = g_OnScopeExit / [&]
@@ -125,13 +125,13 @@ namespace NMib::NContainer
 				if constexpr (!mcp_bNothrowElementCopy)
 				{
 					// Destroy elements in fully completed segments (m_Count already set)
-					for (mint iSeg = 0; iSeg < iCleanupSeg; ++iSeg)
+					for (umint iSeg = 0; iSeg < iCleanupSeg; ++iSeg)
 					{
-						mint SegCount = pData->m_pSegmentMeta[iSeg].m_Count;
+						umint SegCount = pData->m_pSegmentMeta[iSeg].m_Count;
 						if (SegCount == 0)
 							continue;
-						mint iSegFirst = fsp_GetSegmentFirstSlot(iSeg, SegCount);
-						for (mint i = 0; i < SegCount; ++i)
+						umint iSegFirst = fsp_GetSegmentFirstSlot(iSeg, SegCount);
+						for (umint i = 0; i < SegCount; ++i)
 						{
 							pData->m_pKeys[iSegFirst + i].~t_CKey();
 							pData->m_pValues[iSegFirst + i].~t_CValue();
@@ -141,16 +141,16 @@ namespace NMib::NContainer
 					// They were placed at positions based on the FULL count layout
 					if (nCleanupPlacedInSeg > 0)
 					{
-						mint FullCount = pOtherData->m_pSegmentMeta[iCleanupSeg].m_Count;
-						mint iSegFirst = fsp_GetSegmentFirstSlot(iCleanupSeg, FullCount);
-						for (mint i = 0; i < nCleanupPlacedInSeg; ++i)
+						umint FullCount = pOtherData->m_pSegmentMeta[iCleanupSeg].m_Count;
+						umint iSegFirst = fsp_GetSegmentFirstSlot(iCleanupSeg, FullCount);
+						for (umint i = 0; i < nCleanupPlacedInSeg; ++i)
 						{
 							pData->m_pKeys[iSegFirst + i].~t_CKey();
 							pData->m_pValues[iSegFirst + i].~t_CValue();
 						}
 					}
 					// Destroy segment metadata and index entries, free allocation
-					for (mint iSeg = 0; iSeg < pData->m_nSegments; ++iSeg)
+					for (umint iSeg = 0; iSeg < pData->m_nSegments; ++iSeg)
 						pData->m_pSegmentMeta[iSeg].~CSegmentMeta();
 					pData->f_DestroyIndexEntries();
 					mp_Allocator.f_Free(pData, pData->m_AllocSize);
@@ -159,18 +159,18 @@ namespace NMib::NContainer
 			}
 		;
 
-		for (mint iSeg = 0; iSeg < pOtherData->m_nSegments; ++iSeg)
+		for (umint iSeg = 0; iSeg < pOtherData->m_nSegments; ++iSeg)
 		{
-			mint Count = pOtherData->m_pSegmentMeta[iSeg].m_Count;
+			umint Count = pOtherData->m_pSegmentMeta[iSeg].m_Count;
 			if (Count == 0)
 				continue;
 
-			mint iFirst = _Other.fsp_GetSegmentFirstSlot(iSeg, Count);
-			mint iMyFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
+			umint iFirst = _Other.fsp_GetSegmentFirstSlot(iSeg, Count);
+			umint iMyFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
 
 			if constexpr (mcp_bNothrowElementCopy)
 			{
-				for (mint iSegmentSlot = 0; iSegmentSlot < Count; ++iSegmentSlot)
+				for (umint iSegmentSlot = 0; iSegmentSlot < Count; ++iSegmentSlot)
 				{
 					new(&pData->m_pKeys[iMyFirst + iSegmentSlot]) t_CKey(pOtherData->m_pKeys[iFirst + iSegmentSlot]);
 					new(&pData->m_pValues[iMyFirst + iSegmentSlot]) t_CValue(pOtherData->m_pValues[iFirst + iSegmentSlot]);
@@ -181,7 +181,7 @@ namespace NMib::NContainer
 				iCleanupSeg = iSeg;
 				nCleanupPlacedInSeg = 0;
 
-				for (mint iSegmentSlot = 0; iSegmentSlot < Count; ++iSegmentSlot)
+				for (umint iSegmentSlot = 0; iSegmentSlot < Count; ++iSegmentSlot)
 				{
 					new(&pData->m_pKeys[iMyFirst + iSegmentSlot]) t_CKey(pOtherData->m_pKeys[iFirst + iSegmentSlot]);
 					auto KeyGuard = g_OnScopeExit / [&]
@@ -241,7 +241,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, mint ...tp_IndicesAllocator, mint ...tp_IndicesCompare>
+	template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, umint ...tp_IndicesAllocator, umint ...tp_IndicesCompare>
 	constexpr TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::TCPackedMap
 		(
 			NMeta::TCIndices<tp_IndicesAllocator...> const &_IndexSequenceAllocator
@@ -432,21 +432,21 @@ namespace NMib::NContainer
 		auto const *pOtherData = _Other.mp_pData;
 
 		// Track placement for exception cleanup (same position issue as copy ctor)
-		mint iAssignCleanupSeg = 0;
-		mint nAssignCleanupPlacedInSeg = 0;
+		umint iAssignCleanupSeg = 0;
+		umint nAssignCleanupPlacedInSeg = 0;
 
 		auto AssignCleanup = g_OnScopeExit / [&]
 			{
 				if constexpr (!mcp_bNothrowElementCopy)
 				{
 					// Destroy fully completed segments
-					for (mint iSeg = 0; iSeg < iAssignCleanupSeg; ++iSeg)
+					for (umint iSeg = 0; iSeg < iAssignCleanupSeg; ++iSeg)
 					{
-						mint SegCount = pData->m_pSegmentMeta[iSeg].m_Count;
+						umint SegCount = pData->m_pSegmentMeta[iSeg].m_Count;
 						if (SegCount == 0)
 							continue;
-						mint iSegFirst = fsp_GetSegmentFirstSlot(iSeg, SegCount);
-						for (mint i = 0; i < SegCount; ++i)
+						umint iSegFirst = fsp_GetSegmentFirstSlot(iSeg, SegCount);
+						for (umint i = 0; i < SegCount; ++i)
 						{
 							pData->m_pKeys[iSegFirst + i].~t_CKey();
 							pData->m_pValues[iSegFirst + i].~t_CValue();
@@ -456,9 +456,9 @@ namespace NMib::NContainer
 					// Destroy partially placed elements in current segment
 					if (nAssignCleanupPlacedInSeg > 0)
 					{
-						mint FullCount = pOtherData->m_pSegmentMeta[iAssignCleanupSeg].m_Count;
-						mint iSegFirst = fsp_GetSegmentFirstSlot(iAssignCleanupSeg, FullCount);
-						for (mint i = 0; i < nAssignCleanupPlacedInSeg; ++i)
+						umint FullCount = pOtherData->m_pSegmentMeta[iAssignCleanupSeg].m_Count;
+						umint iSegFirst = fsp_GetSegmentFirstSlot(iAssignCleanupSeg, FullCount);
+						for (umint i = 0; i < nAssignCleanupPlacedInSeg; ++i)
 						{
 							pData->m_pKeys[iSegFirst + i].~t_CKey();
 							pData->m_pValues[iSegFirst + i].~t_CValue();
@@ -469,18 +469,18 @@ namespace NMib::NContainer
 			}
 		;
 
-		for (mint iSeg = 0; iSeg < pOtherData->m_nSegments; ++iSeg)
+		for (umint iSeg = 0; iSeg < pOtherData->m_nSegments; ++iSeg)
 		{
-			mint Count = pOtherData->m_pSegmentMeta[iSeg].m_Count;
+			umint Count = pOtherData->m_pSegmentMeta[iSeg].m_Count;
 			if (Count == 0)
 				continue;
 
-			mint iFirst = _Other.fsp_GetSegmentFirstSlot(iSeg, Count);
-			mint iMyFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
+			umint iFirst = _Other.fsp_GetSegmentFirstSlot(iSeg, Count);
+			umint iMyFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
 
 			if constexpr (mcp_bNothrowElementCopy)
 			{
-				for (mint iSegmentSlot = 0; iSegmentSlot < Count; ++iSegmentSlot)
+				for (umint iSegmentSlot = 0; iSegmentSlot < Count; ++iSegmentSlot)
 				{
 					new(&pData->m_pKeys[iMyFirst + iSegmentSlot]) t_CKey(pOtherData->m_pKeys[iFirst + iSegmentSlot]);
 					new(&pData->m_pValues[iMyFirst + iSegmentSlot]) t_CValue(pOtherData->m_pValues[iFirst + iSegmentSlot]);
@@ -491,7 +491,7 @@ namespace NMib::NContainer
 				iAssignCleanupSeg = iSeg;
 				nAssignCleanupPlacedInSeg = 0;
 
-				for (mint iSegmentSlot = 0; iSegmentSlot < Count; ++iSegmentSlot)
+				for (umint iSegmentSlot = 0; iSegmentSlot < Count; ++iSegmentSlot)
 				{
 					new(&pData->m_pKeys[iMyFirst + iSegmentSlot]) t_CKey(pOtherData->m_pKeys[iFirst + iSegmentSlot]);
 					auto KeyGuard = g_OnScopeExit / [&]

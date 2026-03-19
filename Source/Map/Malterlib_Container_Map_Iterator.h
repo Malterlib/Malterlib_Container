@@ -107,7 +107,7 @@ namespace NMib::NContainer::NPrivate
 			requires (!(t_Flags & EMapIteratorFlags_Destructive))
 		;
 
-		inline_medium mint f_GetLen() const;
+		inline_medium umint f_GetLen() const;
 		inline_medium void f_Next();
 		inline_medium void f_Prev()
 			requires (!!(t_Flags & EMapIteratorFlags_Bidirectional))

@@ -225,7 +225,7 @@ namespace NMib::NContainer
 		m_bForceEscapedKey = _Other.m_bForceEscapedKey;
 		m_bForceEscapedValue = _Other.m_bForceEscapedValue;
 		m_Location = fg_Move(_Other.m_Location);
-		for (mint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
+		for (umint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
 			m_WhiteSpace[i] = fg_Move(_Other.m_WhiteSpace[i]);
 	}
 
@@ -279,7 +279,7 @@ namespace NMib::NContainer
 		m_bForceEscapedKey = _Src.m_bForceEscapedKey;
 		m_bForceEscapedValue = _Src.m_bForceEscapedValue;
 
-		for (mint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
+		for (umint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
 			m_WhiteSpace[i] = _Src.m_WhiteSpace[i];
 	}
 
@@ -318,7 +318,7 @@ namespace NMib::NContainer
 			_Stream << Flags;
 		}
 
-		for (mint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
+		for (umint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
 			_Stream << m_WhiteSpace[i];
 
 		_Stream << m_Parsed;
@@ -352,7 +352,7 @@ namespace NMib::NContainer
 			m_bForceEscapedValue = (Flags & DMibBitRangeTyped(31, 31, uint32)) >> 31;
 		}
 
-		for (mint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
+		for (umint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
 			_Stream >> m_WhiteSpace[i];
 
 		_Stream >> m_Parsed;
@@ -387,7 +387,7 @@ namespace NMib::NContainer
 			_Stream << Flags;
 		}
 
-		for (mint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
+		for (umint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
 			_StringTable.f_FeedString(_Stream, m_WhiteSpace[i]);
 
 		_Stream << m_Parsed;
@@ -427,7 +427,7 @@ namespace NMib::NContainer
 			m_bForceEscapedValue = (Flags & DMibBitRangeTyped(31, 31, uint32)) >> 31;
 		}
 
-		for (mint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
+		for (umint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
 			_StringTable.f_ConsumeString(_Stream, m_WhiteSpace[i]);
 
 		_Stream >> m_Parsed;

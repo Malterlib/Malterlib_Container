@@ -35,7 +35,7 @@ namespace NMib::NContainer
 		if (!FindResult.m_bExists)
 			return CKeyIterator();
 
-		mint Rank = TCPackedMap::fsp_ComputeRank(mp_Map.mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
+		umint Rank = TCPackedMap::fsp_ComputeRank(mp_Map.mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
 		CKeyIterator Iter(&mp_Map, mp_Map.f_GetLen());
 		Iter.m_iSegment = FindResult.m_iSegment;
 		Iter.m_iLocalPos = FindResult.m_iLocalPos;
@@ -73,7 +73,7 @@ namespace NMib::NContainer
 		if (!FindResult.m_bExists)
 			return CKeyIteratorConst();
 
-		mint Rank = TCPackedMap::fsp_ComputeRank(mp_Map.mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
+		umint Rank = TCPackedMap::fsp_ComputeRank(mp_Map.mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
 		CKeyIteratorConst Iter(&mp_Map, mp_Map.f_GetLen());
 		Iter.m_iSegment = FindResult.m_iSegment;
 		Iter.m_iLocalPos = FindResult.m_iLocalPos;
@@ -111,7 +111,7 @@ namespace NMib::NContainer
 		if (!FindResult.m_bExists)
 			return CKeyValueIterator();
 
-		mint Rank = TCPackedMap::fsp_ComputeRank(mp_Map.mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
+		umint Rank = TCPackedMap::fsp_ComputeRank(mp_Map.mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
 		CKeyValueIterator Iter(&mp_Map, mp_Map.f_GetLen());
 		Iter.m_iSegment = FindResult.m_iSegment;
 		Iter.m_iLocalPos = FindResult.m_iLocalPos;
@@ -149,7 +149,7 @@ namespace NMib::NContainer
 		if (!FindResult.m_bExists)
 			return CKeyValueIteratorConst();
 
-		mint Rank = TCPackedMap::fsp_ComputeRank(mp_Map.mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
+		umint Rank = TCPackedMap::fsp_ComputeRank(mp_Map.mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
 		CKeyValueIteratorConst Iter(&mp_Map, mp_Map.f_GetLen());
 		Iter.m_iSegment = FindResult.m_iSegment;
 		Iter.m_iLocalPos = FindResult.m_iLocalPos;

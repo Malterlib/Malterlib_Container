@@ -45,7 +45,7 @@ namespace NMib::NContainer
 	{
 		mp_Key.f_Feed(_Stream, _StringTable);
 		_StringTable.f_FeedString(_Stream, mp_Data);
-		mint Len = mp_Children.m_Tree.f_GetLen();
+		umint Len = mp_Children.m_Tree.f_GetLen();
 		fg_FeedLenToStream(_Stream, Len);
 
 		for (auto iChild = mp_Children.f_GetIterator()

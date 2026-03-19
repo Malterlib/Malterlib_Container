@@ -6,12 +6,12 @@
 namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Move(mint _FromPosition, mint _ToPosition, mint _Len)
+	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Move(umint _FromPosition, umint _ToPosition, umint _Len)
 	{
 		if (_ToPosition == _FromPosition || _Len == 0)
 			return;
 
-		mint OldLen = f_GetLen();
+		umint OldLen = f_GetLen();
 
 		fsp_CheckOverlapping(_FromPosition, _ToPosition, _Len, _Len);
 		fsp_CheckBounds(OldLen+1, _FromPosition + _Len);
@@ -27,12 +27,12 @@ namespace NMib::NContainer
 		{
 			NPrivate::fg_MoveArray(pNewArray, pOldArray, _FromPosition);
 
-			mint MiddleCopyLen = _ToPosition - (_FromPosition + _Len);
-			mint End = _FromPosition + MiddleCopyLen;
+			umint MiddleCopyLen = _ToPosition - (_FromPosition + _Len);
+			umint End = _FromPosition + MiddleCopyLen;
 			if (End > _FromPosition)
 				NPrivate::fg_MoveArray(pNewArray + _FromPosition, pOldArray + _FromPosition + _Len, (End - _FromPosition));
 
-			mint End2 = End + _Len;
+			umint End2 = End + _Len;
 			if (End2 > End)
 				NPrivate::fg_MoveArray(pNewArray + End, pOldArray + End - MiddleCopyLen, (End2 - End));
 
@@ -43,12 +43,12 @@ namespace NMib::NContainer
 		{
 			NPrivate::fg_MoveArray(pNewArray, pOldArray, (_ToPosition));
 
-			mint Diff = _FromPosition - _ToPosition;
-			mint End = _ToPosition + _Len;
+			umint Diff = _FromPosition - _ToPosition;
+			umint End = _ToPosition + _Len;
 			if (End > _ToPosition)
 				NPrivate::fg_MoveArray(pNewArray + _ToPosition, pOldArray + Diff + _ToPosition, (End - _ToPosition));
 
-			mint End2 = End + _FromPosition - _ToPosition;
+			umint End2 = End + _FromPosition - _ToPosition;
 
 			if (End2 > End)
 				NPrivate::fg_MoveArray(pNewArray + End, pOldArray + End - _Len, (End2 - End));

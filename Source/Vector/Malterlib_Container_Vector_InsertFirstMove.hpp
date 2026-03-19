@@ -10,7 +10,7 @@ namespace NMib::NContainer
 	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirst(TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Vector)
 	{
 		//static_assert(NTraits::cIsNothrowConstructibleWith<t_CData, NTraits::TCAddRValueReference<t_CData>>, "For exception safety type must be noexcept movable");
-		mint AddLen = _Vector.f_GetLen();
+		umint AddLen = _Vector.f_GetLen();
 		t_CData *pArray = fp_MakeRoomBegin(AddLen);
 		tf_CData *pSrcArray = _Vector.f_GetArray();
 

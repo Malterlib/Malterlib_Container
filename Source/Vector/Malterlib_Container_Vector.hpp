@@ -47,7 +47,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	TCVector<t_CData, t_CAllocator, t_COptions>::TCVector(t_CData const *_pItems, mint _nItems)
+	TCVector<t_CData, t_CAllocator, t_COptions>::TCVector(t_CData const *_pItems, umint _nItems)
 	{
 		auto Cleanup = g_OnScopeExit / [&]
 			{
@@ -79,7 +79,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_GetArray(mint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_GetArray(umint _Len)
 	{
 		f_SetLen(_Len);
 		return f_GetArray();
@@ -110,7 +110,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	mint TCVector<t_CData, t_CAllocator, t_COptions>::f_GetLen() const
+	umint TCVector<t_CData, t_CAllocator, t_COptions>::f_GetLen() const
 	{
 		if (mp_StaticData.m_pData)
 			return mp_StaticData.m_pData->m_Length;
@@ -131,7 +131,7 @@ namespace NMib::NContainer
 	auto TCVector<t_CData, t_CAllocator, t_COptions>::f_Reverse() const & -> TCVector
 	{
 		TCVector Ret;
-		mint Len = f_GetLen();
+		umint Len = f_GetLen();
 		if (!Len)
 			return Ret;
 
@@ -143,7 +143,7 @@ namespace NMib::NContainer
 		auto pSrc = f_GetArray();
 
 		auto &NewLen = Ret.mp_StaticData.m_pData->m_Length;
-		for (mint i = 0; i < Len; ++i)
+		for (umint i = 0; i < Len; ++i)
 		{
 			new((void *)(pDst + i)) t_CData(pSrc[Len - i - 1]);
 			++NewLen;
@@ -155,7 +155,7 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	auto TCVector<t_CData, t_CAllocator, t_COptions>::f_Reverse() && -> TCVector
 	{
-		mint Len = f_GetLen();
+		umint Len = f_GetLen();
 		if (Len <= 1)
 			return fg_Move(*this);
 
@@ -169,7 +169,7 @@ namespace NMib::NContainer
 		auto pSrc = f_GetArray();
 
 		auto &NewLen = Ret.mp_StaticData.m_pData->m_Length;
-		for (mint i = 0; i < Len; ++i)
+		for (umint i = 0; i < Len; ++i)
 		{
 			new((void *)(pDst + i)) t_CData(fg_Move(pSrc[Len - i - 1]));
 			++NewLen;

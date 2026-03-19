@@ -224,7 +224,7 @@ namespace NMib::NContainer::NPrivate
 	}
 
 	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
-	inline_medium mint TCMapIterator<t_CMap, t_Access, t_Flags>::f_GetLen() const
+	inline_medium umint TCMapIterator<t_CMap, t_Access, t_Flags>::f_GetLen() const
 	{
 		return mp_Iter.f_GetLen();
 	}

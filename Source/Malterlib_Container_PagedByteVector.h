@@ -16,7 +16,7 @@ namespace NMib::NContainer
 			, EMatchResult_Full
 		};
 
-		inline CPagedByteVector(mint _PageSize = 1024);
+		inline CPagedByteVector(umint _PageSize = 1024);
 		~CPagedByteVector();
 
 		CPagedByteVector(CPagedByteVector &&) = delete;
@@ -25,54 +25,54 @@ namespace NMib::NContainer
 		CPagedByteVector &operator = (CPagedByteVector const &) = delete;
 
 		inline bool f_IsEmpty() const;
-		inline mint f_GetLen() const;
+		inline umint f_GetLen() const;
 
-		inline mint f_GetPageSize() const;
+		inline umint f_GetPageSize() const;
 
-		inline mint f_GetFirstPageSpace() const;
+		inline umint f_GetFirstPageSpace() const;
 
-		void f_InsertFront(uint8 const *_pPtr, mint _nBytes);
-		void f_InsertBack(uint8 const *_pPtr, mint _nBytes);
+		void f_InsertFront(uint8 const *_pPtr, umint _nBytes);
+		void f_InsertBack(uint8 const *_pPtr, umint _nBytes);
 
-		void f_RemoveFront(mint _nBytes);
-		void f_RemoveBack(mint _nBytes);
+		void f_RemoveFront(umint _nBytes);
+		void f_RemoveBack(umint _nBytes);
 
 		// If _pMatch is found at the front it is removed and this returns true.
 		// else this returns false and the data is untouched.
-		bool f_ExpectAndRemoveFront(uint8 const *_pMatch, mint _nMatchBytes);
+		bool f_ExpectAndRemoveFront(uint8 const *_pMatch, umint _nMatchBytes);
 
 		// If _pMatch is found at the front it is removed and this returns EMatchResult_Full.
 		// If the buffer ends before a whole _pMatch is found (but all existing buffer bytes match
 		// _pMatch) then EMatchResult_Partial is returned and the buffer is untouched.
 		// If the buffer cannot match _pMatch then EMatchResult_None is returned and the buffer
 		// is untouched.
-		EMatchResult f_ExpectAndRemoveFrontEx(uint8 const *_pMatch, mint _nMatchBytes);
+		EMatchResult f_ExpectAndRemoveFrontEx(uint8 const *_pMatch, umint _nMatchBytes);
 
-		// tf_FReader is of the format: void (mint _iStart, uint8 const *_pPtr, mint _nBytes)
+		// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes)
 		template <typename tf_FReader>
-		inline bool f_Read(mint _iStart, mint _nBytes, tf_FReader &&_fReader) const;
+		inline bool f_Read(umint _iStart, umint _nBytes, tf_FReader &&_fReader) const;
 
-		// tf_FReader is of the format: void (mint _iStart, uint8  *_pPtr, mint _nBytes)
+		// tf_FReader is of the format: void (umint _iStart, uint8  *_pPtr, umint _nBytes)
 		template <typename tf_FReader>
-		inline bool f_Mutate(mint _iStart, mint _nBytes, tf_FReader &&_fReader) const;
+		inline bool f_Mutate(umint _iStart, umint _nBytes, tf_FReader &&_fReader) const;
 
-		// tf_FReader is of the format: void (mint _iStart, uint8 const *_pPtr, mint _nBytes)
+		// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes)
 		template <typename tf_FReader>
-		inline bool f_ReadFront(mint _nBytes, tf_FReader &&_fReader) const;
+		inline bool f_ReadFront(umint _nBytes, tf_FReader &&_fReader) const;
 
-		// tf_FReader is of the format: void (mint _iStart, uint8 const *_pPtr, mint _nBytes, mint _nTotalBytes)
+		// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes, umint _nTotalBytes)
 		template <typename tf_FReader>
 		inline bool f_ReadFront(tf_FReader &&_fReader) const;
 
-		// tf_FReader is of the format: void (mint _iStart, uint8 const *_pPtr, mint _nBytes)
+		// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes)
 		template <typename tf_FReader>
-		inline bool f_ReadBack(mint _nBytes, tf_FReader &&_fReader) const;
+		inline bool f_ReadBack(umint _nBytes, tf_FReader &&_fReader) const;
 
-		bool f_FindFront(uint8 const *_pMatch, mint _nMatchBytes, mint &_oPos) const;
+		bool f_FindFront(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos) const;
 
-		// tf_FReader is of the format: void (mint _iStart, uint8 const *_pPtr, mint _nBytes, mint _nTotalBytes)
+		// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes, umint _nTotalBytes)
 		template <typename tf_FReader>
-		inline bool f_ReadFrontUntil(uint8 const *_pMatch, mint _nMatchBytes, mint &_oPos, tf_FReader &&_fReader) const;
+		inline bool f_ReadFrontUntil(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos, tf_FReader &&_fReader) const;
 
 		// Searches from the front for _pMatch.
 		// If a full match is found EMatchResult_Full is returned and _oPos is set to the offset of
@@ -83,21 +83,21 @@ namespace NMib::NContainer
 			// just that it could.
 		// If the buffer does not contain either a full match of _pMatch or end with a partial match
 		// then EMatchResult_None is returned and _oPos is unchanged.
-		EMatchResult f_FindFrontEx(uint8 const *_pMatch, mint _nMatchBytes, mint &_oPos) const;
+		EMatchResult f_FindFrontEx(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos) const;
 
-		// tf_FReader is of the format: void (mint _iStart, uint8 const *_pPtr, mint _nBytes, mint _nTotalBytes)
+		// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes, umint _nTotalBytes)
 		// Reads bytes (fed to _fReader) until either a full match of _pMatch is found or the buffer ends
 		// with a partial match for _pMatch, or (differing from f_ReadFrontUntil above) the buffer ends.
 		// Return value works the same as for f_FindFrontEx
 		template <typename tf_FReader>
-		inline EMatchResult f_ReadFrontUntilEx(uint8 const *_pMatch, mint _nMatchBytes, mint &_oPos, tf_FReader &&_fReader) const;
+		inline EMatchResult f_ReadFrontUntilEx(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos, tf_FReader &&_fReader) const;
 
-		EMatchResult f_StartsWithEx(uint8 const *_pMatch, mint _nMatchBytes);
+		EMatchResult f_StartsWithEx(uint8 const *_pMatch, umint _nMatchBytes);
 
 	private:
 		struct CPageSizeScope
 		{
-			CPageSizeScope(mint _PageSize);
+			CPageSizeScope(umint _PageSize);
 			~CPageSizeScope();
 
 			DMibThreadLocalScopeDebugMember;
@@ -109,18 +109,18 @@ namespace NMib::NContainer
 			{
 				mc_bIsDefault = false
 			};
-			only_parameters_aliased static void f_Free(void *_pBlock, mint _Size);
+			only_parameters_aliased static void f_Free(void *_pBlock, umint _Size);
 		};
 
 		uint8 *fp_InsertPage(bool _bFront);
-		void fp_InsertWhenEmpty(uint8 const *_pPtr, mint _nBytes);
-		inline void fp_GetPageInfo(mint _iPage, mint &_oPageSize, mint &_oPageStart);
+		void fp_InsertWhenEmpty(uint8 const *_pPtr, umint _nBytes);
+		inline void fp_GetPageInfo(umint _iPage, umint &_oPageSize, umint &_oPageStart);
 
 		NContainer::TCVector<NStorage::TCUniquePointer<uint8, CPageAllocator>> mp_Pages;
-		mint mp_PageSize;
-		mint mp_nBytes;
-		mint mp_iFirstPageStart;
-		mint mp_iLastPageEnd;
+		umint mp_PageSize;
+		umint mp_nBytes;
+		umint mp_iFirstPageStart;
+		umint mp_iLastPageEnd;
 	};
 
 	template <typename t_CInherit = NStream::CBinaryStreamLittleEndian>
@@ -133,8 +133,8 @@ namespace NMib::NContainer
 		~TCBinaryStreamPagedByteVector();
 		void f_ResetStream();
 		void f_Clear();
-		void f_FeedBytes(const void *_pMem, mint _nBytes);
-		void f_ConsumeBytes(void *_pMem, mint _nBytes);
+		void f_FeedBytes(const void *_pMem, umint _nBytes);
+		void f_ConsumeBytes(void *_pMem, umint _nBytes);
 		bool f_IsValid() const;
 		bool f_IsAtEndOfStream() const;
 		NStream::CFilePos f_GetPosition() const;
@@ -144,16 +144,16 @@ namespace NMib::NContainer
 		bool f_IsValidReadPosition(NStream::CFilePos _Pos) const;
 		void f_Flush(bool _bLocalCacheOnly);
 		NStream::CFilePos f_GetLength() const;
-		mint f_ContainerLengthLimit() const;
+		umint f_ContainerLengthLimit() const;
 		void f_SetLength(NStream::CFilePos _Length);
-		void f_SetCacheSize(mint _CacheSize);
+		void f_SetCacheSize(umint _CacheSize);
 
 	protected:
 		void fp_SetPositionInternal(NStream::CFilePos _Pos);
 		DMibStreamImplementProtected(TCBinaryStreamPagedByteVector);
 
-		mint m_Position;
-		mint m_Length;
+		umint m_Position;
+		umint m_Length;
 		CPagedByteVector &m_Buffer;
 
 	private:

@@ -7,15 +7,15 @@ namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(mint _Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(umint _Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector)
 	{
-		mint PrevLen = f_GetLen();
+		umint PrevLen = f_GetLen();
 		fsp_CheckBounds(PrevLen + 1, _Position);
-		mint AddLen = _Vector.f_GetLen();
+		umint AddLen = _Vector.f_GetLen();
 		t_CData *pArray = fp_MakeRoomMiddle(_Position, AddLen);
 		tf_CData const *pSrcArray = _Vector.f_GetArray();
 
-		mint nCopied = 0;
+		umint nCopied = 0;
 
 		auto Cleanup = g_OnScopeExit / [&]
 			{
@@ -35,19 +35,19 @@ namespace NMib::NContainer
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(mint _Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &_Vector)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(umint _Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &_Vector)
 	{
 		return f_InsertBefore(_Position, fg_Const(_Vector));
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(mint _Position, const t_CData *_pData, mint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(umint _Position, const t_CData *_pData, umint _Len)
 	{
-		mint PrevLen = f_GetLen();
+		umint PrevLen = f_GetLen();
 		fsp_CheckBounds(PrevLen + 1, _Position);
 		t_CData *pArray = fp_MakeRoomMiddle(_Position, _Len);
 
-		mint nCopied = 0;
+		umint nCopied = 0;
 
 		auto Cleanup = g_OnScopeExit / [&]
 			{
@@ -66,9 +66,9 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBeforeMove(mint _Position, t_CData *_pData, mint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBeforeMove(umint _Position, t_CData *_pData, umint _Len)
 	{
-		mint PrevLen = f_GetLen();
+		umint PrevLen = f_GetLen();
 		fsp_CheckBounds(PrevLen + 1, _Position);
 		t_CData *pArray = fp_MakeRoomMiddle(_Position, _Len);
 
@@ -78,15 +78,15 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(mint _Position, t_CData *_pData, mint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(umint _Position, t_CData *_pData, umint _Len)
 	{
 		return f_InsertBefore(_Position, (t_CData const *)_pData, _Len);
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(mint _Position, const t_CData &_Data)
+	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(umint _Position, const t_CData &_Data)
 	{
-		mint PrevLen = f_GetLen();
+		umint PrevLen = f_GetLen();
 		fsp_CheckBounds(PrevLen + 1, _Position);
 		t_CData *pArray = fp_MakeRoomMiddle(_Position, 1);
 
@@ -104,7 +104,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(mint _Position, t_CData &_Data)
+	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(umint _Position, t_CData &_Data)
 	{
 		return f_InsertBefore(_Position, fg_Const(_Data));
 	}

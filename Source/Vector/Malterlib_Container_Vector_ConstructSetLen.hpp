@@ -6,18 +6,18 @@
 namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	TCVector<t_CData, t_CAllocator, t_COptions>::TCVector(mint _nItems)
+	TCVector<t_CData, t_CAllocator, t_COptions>::TCVector(umint _nItems)
 	{
-		mint NewLen = _nItems;
+		umint NewLen = _nItems;
 
 		if (NewLen == 0)
 			return;
 
-		mint AllocSize = NewLen;
+		umint AllocSize = NewLen;
 		CVectorData *pNewData = fp_AllocData(AllocSize);
 		t_CData *pNewArray = pNewData->f_GetData();
 
-		mint nConstructed = 0;
+		umint nConstructed = 0;
 
 		auto Cleanup = g_OnScopeExit / [&]
 			{

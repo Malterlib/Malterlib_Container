@@ -53,7 +53,7 @@ namespace NMib::NContainer
 		using CKey = t_CKey;
 		using CValue = t_CValue;
 
-		inline_small static mint fs_GetOffset();
+		inline_small static umint fs_GetOffset();
 
 		template <typename tf_CStream>
 		void f_Feed(tf_CStream &_Stream) const;
@@ -67,11 +67,11 @@ namespace NMib::NContainer
 
 		constexpr static bool mc_bHasValue = true;
 
-		template <mint tf_iValue>
+		template <umint tf_iValue>
 		constexpr decltype(auto) get() const & noexcept;
-		template <mint tf_iValue>
+		template <umint tf_iValue>
 		constexpr decltype(auto) get() & noexcept;
-		template <mint tf_iValue>
+		template <umint tf_iValue>
 		constexpr decltype(auto) get() && noexcept;
 
 	private:

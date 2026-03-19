@@ -89,7 +89,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CIteratorData>
-	inline_small mint TCVectorIterator<t_CIteratorData>::f_GetLen() const
+	inline_small umint TCVectorIterator<t_CIteratorData>::f_GetLen() const
 	{
 		return m_pEnd - m_pBegin;
 	}

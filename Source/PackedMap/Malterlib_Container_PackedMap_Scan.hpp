@@ -23,15 +23,15 @@ namespace NMib::NContainer
 		auto const *pMeta = pData->m_pSegmentMeta;
 		auto const *pKeys = pData->m_pKeys;
 		auto const *pValues = pData->m_pValues;
-		mint nSegments = pData->m_nSegments;
+		umint nSegments = pData->m_nSegments;
 
-		for (mint iSeg = 0; iSeg < nSegments; iSeg += 2)
+		for (umint iSeg = 0; iSeg < nSegments; iSeg += 2)
 		{
-			mint iSeg0 = iSeg;
-			mint iSeg1 = iSeg + 1;
+			umint iSeg0 = iSeg;
+			umint iSeg1 = iSeg + 1;
 
-			mint Count0 = pMeta[iSeg0].m_Count;
-			mint Count1 = (iSeg1 < nSegments) ? pMeta[iSeg1].m_Count : 0;
+			umint Count0 = pMeta[iSeg0].m_Count;
+			umint Count1 = (iSeg1 < nSegments) ? pMeta[iSeg1].m_Count : 0;
 
 			if (Count0 == 0 && Count1 == 0)
 				continue;
@@ -41,10 +41,10 @@ namespace NMib::NContainer
 				if (Count0 == 0)
 					continue;
 
-				mint iFirst0 = fsp_GetSegmentFirstSlot(iSeg0, Count0);
-				for (mint iSegmentSlot = 0; iSegmentSlot < Count0; ++iSegmentSlot)
+				umint iFirst0 = fsp_GetSegmentFirstSlot(iSeg0, Count0);
+				for (umint iSegmentSlot = 0; iSegmentSlot < Count0; ++iSegmentSlot)
 				{
-					mint iSlot = iFirst0 + iSegmentSlot;
+					umint iSlot = iFirst0 + iSegmentSlot;
 					if constexpr (c_bEarlyExit)
 					{
 						if (!_fOnEntry(pKeys[iSlot], pValues[iSlot]))
@@ -58,10 +58,10 @@ namespace NMib::NContainer
 
 			if (Count0 == 0)
 			{
-				mint iFirst1 = fsp_GetSegmentFirstSlot(iSeg1, Count1);
-				for (mint iSegmentSlot = 0; iSegmentSlot < Count1; ++iSegmentSlot)
+				umint iFirst1 = fsp_GetSegmentFirstSlot(iSeg1, Count1);
+				for (umint iSegmentSlot = 0; iSegmentSlot < Count1; ++iSegmentSlot)
 				{
-					mint iSlot = iFirst1 + iSegmentSlot;
+					umint iSlot = iFirst1 + iSegmentSlot;
 					if constexpr (c_bEarlyExit)
 					{
 						if (!_fOnEntry(pKeys[iSlot], pValues[iSlot]))
@@ -73,12 +73,12 @@ namespace NMib::NContainer
 				continue;
 			}
 
-			mint iFirst0 = fsp_GetSegmentFirstSlot(iSeg0, Count0);
-			mint iFirst1 = fsp_GetSegmentFirstSlot(iSeg1, Count1);
-			mint iLast1 = iFirst1 + Count1 - 1;
+			umint iFirst0 = fsp_GetSegmentFirstSlot(iSeg0, Count0);
+			umint iFirst1 = fsp_GetSegmentFirstSlot(iSeg1, Count1);
+			umint iLast1 = iFirst1 + Count1 - 1;
 
 			// Segments are clustered: this range is contiguous in memory
-			for (mint iSlot = iFirst0; iSlot <= iLast1; ++iSlot)
+			for (umint iSlot = iFirst0; iSlot <= iLast1; ++iSlot)
 			{
 				if constexpr (c_bEarlyExit)
 				{

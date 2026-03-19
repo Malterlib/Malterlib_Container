@@ -142,7 +142,7 @@ namespace NMib::NContainer
 
 			struct CDLinkTranslatorm_Link
 			{
-				template <typename t_CClass, mint t_Offset = sizeof(CRegistryKey) + sizeof(t_CData) + sizeof(NIntrusive::TCAVLLink<>)>
+				template <typename t_CClass, umint t_Offset = sizeof(CRegistryKey) + sizeof(t_CData) + sizeof(NIntrusive::TCAVLLink<>)>
 				struct TCOffset
 				{
 					enum
@@ -430,7 +430,7 @@ namespace NMib::NContainer
 		void fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
 		void fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation _Location);
 		template <bool tf_bIncludeFileLine, bool tf_bEscapeNewLines, typename tf_CStr>
-		static void fspr_GenerateStr(tf_CStr &_Stream, mint _Level, TCRegistry const *_pReg, ch8 const *_pNewLine);
+		static void fspr_GenerateStr(tf_CStr &_Stream, umint _Level, TCRegistry const *_pReg, ch8 const *_pNewLine);
 		static t_CStr fsp_AppendPath(t_CStr const &_Path, t_CStr const &_Append);
 
 #ifdef DMibDebug

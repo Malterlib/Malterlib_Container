@@ -5,7 +5,7 @@
 
 namespace NMib::NContainer
 {
-	CPagedByteVector::CPagedByteVector(mint _PageSize)
+	CPagedByteVector::CPagedByteVector(umint _PageSize)
 		: mp_PageSize(_PageSize)
 		, mp_nBytes(0)
 		, mp_iFirstPageStart(0)
@@ -22,17 +22,17 @@ namespace NMib::NContainer
 			return false;
 	}
 
-	mint CPagedByteVector::f_GetLen() const
+	umint CPagedByteVector::f_GetLen() const
 	{
 		return mp_nBytes;
 	}
 
-	mint CPagedByteVector::f_GetPageSize() const
+	umint CPagedByteVector::f_GetPageSize() const
 	{
 		return mp_PageSize;
 	}
 
-	mint CPagedByteVector::f_GetFirstPageSpace() const
+	umint CPagedByteVector::f_GetFirstPageSpace() const
 	{
 		if (f_IsEmpty())
 			return mp_PageSize;
@@ -40,25 +40,25 @@ namespace NMib::NContainer
 			return mp_PageSize - mp_iFirstPageStart;
 	}
 
-	// tf_FReader is of the format: bool (mint _iStart, uint8 const *_pPtr, mint _nBytes)
+	// tf_FReader is of the format: bool (umint _iStart, uint8 const *_pPtr, umint _nBytes)
 	template<typename tf_FReader>
-	bool CPagedByteVector::f_Read(mint _iStart, mint _nBytes, tf_FReader &&_fReader) const
+	bool CPagedByteVector::f_Read(umint _iStart, umint _nBytes, tf_FReader &&_fReader) const
 	{
 		if ((_nBytes + _iStart) > mp_nBytes)
 			return false;
 
-		mint iLastPage = mp_Pages.f_GetLen() - 1;
+		umint iLastPage = mp_Pages.f_GetLen() - 1;
 
-		mint iCurPage = (_iStart + mp_iFirstPageStart) / mp_PageSize;
-		mint iCurPagePos = (_iStart + mp_iFirstPageStart) - (iCurPage * mp_PageSize);
+		umint iCurPage = (_iStart + mp_iFirstPageStart) / mp_PageSize;
+		umint iCurPagePos = (_iStart + mp_iFirstPageStart) - (iCurPage * mp_PageSize);
 
 		while (_nBytes)
 		{
-			mint nPageBytes = mp_PageSize - iCurPagePos;
+			umint nPageBytes = mp_PageSize - iCurPagePos;
 			if (iCurPage == iLastPage)
 				nPageBytes -= (mp_PageSize - mp_iLastPageEnd);
 
-			mint nBlockBytes = fg_Min(_nBytes, nPageBytes);
+			umint nBlockBytes = fg_Min(_nBytes, nPageBytes);
 
 			if (!_fReader(_iStart, (uint8 const *)mp_Pages[iCurPage].f_Get() + iCurPagePos, nBlockBytes))
 				break;
@@ -72,25 +72,25 @@ namespace NMib::NContainer
 		return true;
 	}
 
-	// tf_FReader is of the format: bool (mint _iStart, uint8 const *_pPtr, mint _nBytes)
+	// tf_FReader is of the format: bool (umint _iStart, uint8 const *_pPtr, umint _nBytes)
 	template<typename tf_FMutate>
-	bool CPagedByteVector::f_Mutate(mint _iStart, mint _nBytes, tf_FMutate &&_fMutate) const
+	bool CPagedByteVector::f_Mutate(umint _iStart, umint _nBytes, tf_FMutate &&_fMutate) const
 	{
 		if ((_nBytes + _iStart) > mp_nBytes)
 			return false;
 
-		mint iLastPage = mp_Pages.f_GetLen() - 1;
+		umint iLastPage = mp_Pages.f_GetLen() - 1;
 
-		mint iCurPage = (_iStart + mp_iFirstPageStart) / mp_PageSize;
-		mint iCurPagePos = (_iStart + mp_iFirstPageStart) - (iCurPage * mp_PageSize);
+		umint iCurPage = (_iStart + mp_iFirstPageStart) / mp_PageSize;
+		umint iCurPagePos = (_iStart + mp_iFirstPageStart) - (iCurPage * mp_PageSize);
 
 		while (_nBytes)
 		{
-			mint nPageBytes = mp_PageSize - iCurPagePos;
+			umint nPageBytes = mp_PageSize - iCurPagePos;
 			if (iCurPage == iLastPage)
 				nPageBytes -= (mp_PageSize - mp_iLastPageEnd);
 
-			mint nBlockBytes = fg_Min(_nBytes, nPageBytes);
+			umint nBlockBytes = fg_Min(_nBytes, nPageBytes);
 
 			if (!_fMutate(_iStart, mp_Pages[iCurPage].f_Get() + iCurPagePos, nBlockBytes))
 				break;
@@ -104,39 +104,39 @@ namespace NMib::NContainer
 		return true;
 	}
 
-	// tf_FReader is of the format: bool (mint _iStart, uint8 const *_pPtr, mint _nBytes)
+	// tf_FReader is of the format: bool (umint _iStart, uint8 const *_pPtr, umint _nBytes)
 	template <typename tf_FReader>
-	bool CPagedByteVector::f_ReadFront(mint _nBytes, tf_FReader &&_fReader) const
+	bool CPagedByteVector::f_ReadFront(umint _nBytes, tf_FReader &&_fReader) const
 	{
 		return f_Read(0, _nBytes, fg_Forward<tf_FReader>(_fReader));
 	}
 
-	// tf_FReader is of the format: bool (mint _iStart, uint8 const *_pPtr, mint _nBytes)
+	// tf_FReader is of the format: bool (umint _iStart, uint8 const *_pPtr, umint _nBytes)
 	template <typename tf_FReader>
 	bool CPagedByteVector::f_ReadFront(tf_FReader &&_fReader) const
 	{
 		return f_Read(0, mp_nBytes, fg_Forward<tf_FReader>(_fReader));
 	}
 
-	// tf_FReader is of the format: bool (mint _iStart, uint8 const *_pPtr, mint _nBytes)
+	// tf_FReader is of the format: bool (umint _iStart, uint8 const *_pPtr, umint _nBytes)
 	template <typename tf_FReader>
-	bool CPagedByteVector::f_ReadBack(mint _nBytes, tf_FReader &&_fReader) const
+	bool CPagedByteVector::f_ReadBack(umint _nBytes, tf_FReader &&_fReader) const
 	{
 		return f_Read(mp_nBytes - _nBytes, _nBytes, fg_Forward<tf_FReader>(_fReader));
 	}
 
-	// tf_FReader is of the format: void (mint _iStart, uint8 const *_pPtr, mint _nBytes, mint _nTotalBytes)
+	// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes, umint _nTotalBytes)
 	template <typename tf_FReader>
-	bool CPagedByteVector::f_ReadFrontUntil(uint8 const *_pMatch, mint _nMatchBytes, mint &_oPos, tf_FReader &&_fReader) const
+	bool CPagedByteVector::f_ReadFrontUntil(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos, tf_FReader &&_fReader) const
 	{
-		mint iEnd;
+		umint iEnd;
 
 		if (f_FindFront(_pMatch, _nMatchBytes, iEnd))
 		{
 			f_ReadFront
 				(
 					iEnd
-					, [&](mint _iStart, uint8 const *_pPtr, mint _nBytes) -> bool
+					, [&](umint _iStart, uint8 const *_pPtr, umint _nBytes) -> bool
 					{
 						return fg_Forward<tf_FReader>(_fReader)(_iStart, _pPtr, _nBytes, iEnd);
 					}
@@ -150,7 +150,7 @@ namespace NMib::NContainer
 			return false;
 	}
 
-	void CPagedByteVector::fp_GetPageInfo(mint _iPage, mint &_oPageSize, mint &_oPageStart)
+	void CPagedByteVector::fp_GetPageInfo(umint _iPage, umint &_oPageSize, umint &_oPageStart)
 	{
 		_oPageSize = mp_PageSize;
 		_oPageStart = 0;
@@ -167,11 +167,11 @@ namespace NMib::NContainer
 		}
 	}
 
-	// tf_FReader is of the format: void (mint _iStart, uint8 const *_pPtr, mint _nBytes, mint _nTotalBytes)
+	// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes, umint _nTotalBytes)
 	template <typename tf_FReader>
-	CPagedByteVector::EMatchResult CPagedByteVector::f_ReadFrontUntilEx(uint8 const *_pMatch, mint _nMatchBytes, mint &_oPos, tf_FReader &&_fReader) const
+	CPagedByteVector::EMatchResult CPagedByteVector::f_ReadFrontUntilEx(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos, tf_FReader &&_fReader) const
 	{
-		mint iEnd = f_GetLen();
+		umint iEnd = f_GetLen();
 		EMatchResult Result = f_FindFrontEx(_pMatch, _nMatchBytes, iEnd);
 
 		// The return value does not matter here. Either iEnd is set to the start of a (potential)
@@ -180,7 +180,7 @@ namespace NMib::NContainer
 		f_ReadFront
 			(
 				iEnd
-				, [&](mint _iStart, uint8 const *_pPtr, mint _nBytes) -> bool
+				, [&](umint _iStart, uint8 const *_pPtr, umint _nBytes) -> bool
 				{
 					return fg_Forward<tf_FReader>(_fReader)(_iStart, _pPtr, _nBytes, iEnd);
 				}
@@ -198,8 +198,8 @@ namespace NMib::NContainer
 	template <typename t_CInherit>
 	void TCBinaryStreamPagedByteVector<t_CInherit>::fp_SetPositionInternal(NStream::CFilePos _Pos)
 	{
-		if ((_Pos < 0) || fg_SafeLargerThan(_Pos, TCLimitsInt<mint>::mc_Max))
-			DMibError("Memory stream positions are limited to 0 -> TCLimitsInt<mint>::mc_Max");
+		if ((_Pos < 0) || fg_SafeLargerThan(_Pos, TCLimitsInt<umint>::mc_Max))
+			DMibError("Memory stream positions are limited to 0 -> TCLimitsInt<umint>::mc_Max");
 
 		m_Position = _Pos;
 	}
@@ -232,7 +232,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CInherit>
-	void TCBinaryStreamPagedByteVector<t_CInherit>::f_FeedBytes(const void *_pMem, mint _nBytes)
+	void TCBinaryStreamPagedByteVector<t_CInherit>::f_FeedBytes(const void *_pMem, umint _nBytes)
 	{
 		m_Buffer.f_InsertBack((uint8 const *)_pMem, _nBytes);
 		m_Position += _nBytes;
@@ -242,7 +242,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CInherit>
-	void TCBinaryStreamPagedByteVector<t_CInherit>::f_ConsumeBytes(void *_pMem, mint _nBytes)
+	void TCBinaryStreamPagedByteVector<t_CInherit>::f_ConsumeBytes(void *_pMem, umint _nBytes)
 	{
 		DMibPDebugBreak; // Not supported
 	}
@@ -302,7 +302,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CInherit>
-	mint TCBinaryStreamPagedByteVector<t_CInherit>::f_ContainerLengthLimit() const
+	umint TCBinaryStreamPagedByteVector<t_CInherit>::f_ContainerLengthLimit() const
 	{
 		return NStream::fg_CapLengthLimit(f_GetLength() - f_GetPosition());
 	}
@@ -314,7 +314,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CInherit>
-	void TCBinaryStreamPagedByteVector<t_CInherit>::f_SetCacheSize(mint _CacheSize)
+	void TCBinaryStreamPagedByteVector<t_CInherit>::f_SetCacheSize(umint _CacheSize)
 	{
 	}
 }

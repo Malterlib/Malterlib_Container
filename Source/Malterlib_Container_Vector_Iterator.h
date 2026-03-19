@@ -19,7 +19,7 @@ namespace NMib::NContainer
 		inline_small TCVectorIterator& operator ++ ();
 		inline_small TCVectorIterator& operator += (smint _Offset);
 
-		inline_small mint f_GetLen() const;
+		inline_small umint f_GetLen() const;
 		inline_small TCVectorIterator f_GetIterator() const;
 
 	private:

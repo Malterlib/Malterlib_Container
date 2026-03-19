@@ -26,11 +26,11 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr inline_small void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::CPackedMapData::f_SetIndexEntryValid(mint _iEntry, bool _bValid) noexcept
+	constexpr inline_small void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::CPackedMapData::f_SetIndexEntryValid(umint _iEntry, bool _bValid) noexcept
 	{
 		if constexpr (mcp_bIndexStoresKeys)
 		{
-			mint iByte = _iEntry / 8;
+			umint iByte = _iEntry / 8;
 			uint8 Bit = 1u << (_iEntry % 8);
 
 			if (_bValid)
@@ -41,11 +41,11 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr inline_small bool TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::CPackedMapData::f_GetIndexEntryValid(mint _iEntry) const noexcept
+	constexpr inline_small bool TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::CPackedMapData::f_GetIndexEntryValid(umint _iEntry) const noexcept
 	{
 		if constexpr (mcp_bIndexStoresKeys)
 		{
-			mint iByte = _iEntry / 8;
+			umint iByte = _iEntry / 8;
 			uint8 Bit = 1u << (_iEntry % 8);
 
 			return (m_IndexValidStorage[iByte] & Bit) != 0;
@@ -59,7 +59,7 @@ namespace NMib::NContainer
 	{
 		if constexpr (mcp_bIndexStoresKeys)
 		{
-			for (mint iEntry = 0; iEntry < m_nStaticIndexTotalEntries; ++iEntry)
+			for (umint iEntry = 0; iEntry < m_nStaticIndexTotalEntries; ++iEntry)
 			{
 				if (!f_GetIndexEntryValid(iEntry))
 					continue;
@@ -71,7 +71,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr inline_small void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::CPackedMapData::f_SetIndexEntry(mint _iEntry, CIndexEntry const &_Entry) noexcept
+	constexpr inline_small void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::CPackedMapData::f_SetIndexEntry(umint _iEntry, CIndexEntry const &_Entry) noexcept
 	{
 		if constexpr (mcp_bIndexStoresKeys)
 		{
@@ -88,7 +88,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr inline_small void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::CPackedMapData::f_ClearIndexEntry(mint _iEntry) noexcept
+	constexpr inline_small void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::CPackedMapData::f_ClearIndexEntry(umint _iEntry) noexcept
 	{
 		if constexpr (mcp_bIndexStoresKeys)
 		{
@@ -103,7 +103,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr mint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_GetLen() const noexcept
+	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_GetLen() const noexcept
 	{
 		if (!mp_pData)
 			return 0;
@@ -112,7 +112,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr mint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_GetCapacity() const noexcept
+	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_GetCapacity() const noexcept
 	{
 		if (!mp_pData)
 			return 0;
@@ -170,37 +170,37 @@ namespace NMib::NContainer
 	constexpr TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::CReciprocalTable::CReciprocalTable() noexcept
 	{
 		m_Values[0] = 0;
-		for (mint i = 1; i < mcp_MaxCalibratorLevels; ++i)
-			m_Values[i] = ((mint(1) << mcp_ReciprocalShift) + i - 1) / i;
+		for (umint i = 1; i < mcp_MaxCalibratorLevels; ++i)
+			m_Values[i] = ((umint(1) << mcp_ReciprocalShift) + i - 1) / i;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr mint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_ReciprocalDivide(mint _Dividend, mint _Divisor) noexcept
+	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_ReciprocalDivide(umint _Dividend, umint _Divisor) noexcept
 	{
 		return (_Dividend * mcp_ReciprocalTable.m_Values[_Divisor]) >> mcp_ReciprocalShift;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr mint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_ScaledMulFloor(mint _ScaledDensity, mint _Capacity) noexcept
+	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_ScaledMulFloor(umint _ScaledDensity, umint _Capacity) noexcept
 	{
-		mint Quotient = _Capacity / mcp_DensityScale;
-		mint Remainder = _Capacity % mcp_DensityScale;
+		umint Quotient = _Capacity / mcp_DensityScale;
+		umint Remainder = _Capacity % mcp_DensityScale;
 		return _ScaledDensity * Quotient + (_ScaledDensity * Remainder) / mcp_DensityScale;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr mint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_ScaledMulCeil(mint _ScaledDensity, mint _Capacity) noexcept
+	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_ScaledMulCeil(umint _ScaledDensity, umint _Capacity) noexcept
 	{
-		mint Quotient = _Capacity / mcp_DensityScale;
-		mint Remainder = _Capacity % mcp_DensityScale;
+		umint Quotient = _Capacity / mcp_DensityScale;
+		umint Remainder = _Capacity % mcp_DensityScale;
 		return _ScaledDensity * Quotient + (_ScaledDensity * Remainder + mcp_DensityScale - 1) / mcp_DensityScale;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr mint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_ScaledDivCeil(mint _nElements, mint _ScaledDensity) noexcept
+	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_ScaledDivCeil(umint _nElements, umint _ScaledDensity) noexcept
 	{
-		mint Quotient = _nElements / _ScaledDensity;
-		mint Remainder = _nElements % _ScaledDensity;
+		umint Quotient = _nElements / _ScaledDensity;
+		umint Remainder = _nElements % _ScaledDensity;
 		return Quotient * mcp_DensityScale + (Remainder * mcp_DensityScale + _ScaledDensity - 1) / _ScaledDensity;
 	}
 
@@ -210,17 +210,17 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_DistributeElements
 		(
-			mint *_pTargets
-			, mint _iStart
-			, mint _iEnd
-			, mint _nElements
-			, mint _iLocalLevel
-			, mint _iWindowLevel
-			, mint _nGlobalLevels
+			umint *_pTargets
+			, umint _iStart
+			, umint _iEnd
+			, umint _nElements
+			, umint _iLocalLevel
+			, umint _iWindowLevel
+			, umint _nGlobalLevels
 		)
 		const noexcept
 	{
-		mint nSegs = _iEnd - _iStart;
+		umint nSegs = _iEnd - _iStart;
 		if (nSegs <= 0)
 			return;
 
@@ -230,34 +230,34 @@ namespace NMib::NContainer
 			return;
 		}
 
-		mint iMid = _iStart + nSegs / 2;
-		mint nLeftSegs = iMid - _iStart;
-		mint nRightSegs = _iEnd - iMid;
+		umint iMid = _iStart + nSegs / 2;
+		umint nLeftSegs = iMid - _iStart;
+		umint nRightSegs = _iEnd - iMid;
 
-		mint CapLeft = nLeftSegs * mcp_SegmentSize;
-		mint CapRight = nRightSegs * mcp_SegmentSize;
+		umint CapLeft = nLeftSegs * mcp_SegmentSize;
+		umint CapRight = nRightSegs * mcp_SegmentSize;
 
 		// Children of a node at level L are constrained by level L-1 thresholds.
 		// _iLocalLevel = 0 means we're splitting the root window, so use (_iWindowLevel - 1).
-		mint iGlobalLevel = _iWindowLevel - _iLocalLevel - 1;
+		umint iGlobalLevel = _iWindowLevel - _iLocalLevel - 1;
 		if (iGlobalLevel < 0)
 			iGlobalLevel = 0;
 
 		auto DensityBounds = fp_GetLevelDensityBounds(iGlobalLevel, _nGlobalLevels);
-		mint nMinLeft, nMaxLeft;
+		umint nMinLeft, nMaxLeft;
 		fp_ElementBoundsFromDensity(DensityBounds, CapLeft, nMinLeft, nMaxLeft);
-		mint nMinRight, nMaxRight;
+		umint nMinRight, nMaxRight;
 		fp_ElementBoundsFromDensity(DensityBounds, CapRight, nMinRight, nMaxRight);
 
 		// Capacity-based feasible interval for left count
-		mint CapLeftMin = (_nElements > CapRight) ? (_nElements - CapRight) : (mint)0;
-		mint CapLeftMax = fg_Min(CapLeft, _nElements);
+		umint CapLeftMin = (_nElements > CapRight) ? (_nElements - CapRight) : (umint)0;
+		umint CapLeftMax = fg_Min(CapLeft, _nElements);
 
 		// Intersect density bounds (both sides) with capacity bounds.
-		mint nLeftMin = fg_Max(nMinLeft, CapLeftMin);
-		mint nLeftMax = fg_Min(nMaxLeft, CapLeftMax);
-		mint nLeftFromRightMax = (_nElements > nMaxRight) ? (_nElements - nMaxRight) : (mint)0;
-		mint nLeftFromRightMin = (_nElements > nMinRight) ? (_nElements - nMinRight) : (mint)0;
+		umint nLeftMin = fg_Max(nMinLeft, CapLeftMin);
+		umint nLeftMax = fg_Min(nMaxLeft, CapLeftMax);
+		umint nLeftFromRightMax = (_nElements > nMaxRight) ? (_nElements - nMaxRight) : (umint)0;
+		umint nLeftFromRightMin = (_nElements > nMinRight) ? (_nElements - nMinRight) : (umint)0;
 		nLeftMin = fg_Max(nLeftMin, nLeftFromRightMax);
 		nLeftMax = fg_Min(nLeftMax, nLeftFromRightMin);
 
@@ -265,15 +265,15 @@ namespace NMib::NContainer
 		{
 			// Density bounds can become integer-infeasible for tiny windows.
 			// Retry with one-element slack before falling back to capacity-only.
-			mint nMinLeftSlack = (nMinLeft > 0) ? (nMinLeft - 1) : (mint)0;
-			mint nMaxLeftSlack = (nMaxLeft < CapLeft) ? (nMaxLeft + 1) : CapLeft;
-			mint nMinRightSlack = (nMinRight > 0) ? (nMinRight - 1) : (mint)0;
-			mint nMaxRightSlack = (nMaxRight < CapRight) ? (nMaxRight + 1) : CapRight;
+			umint nMinLeftSlack = (nMinLeft > 0) ? (nMinLeft - 1) : (umint)0;
+			umint nMaxLeftSlack = (nMaxLeft < CapLeft) ? (nMaxLeft + 1) : CapLeft;
+			umint nMinRightSlack = (nMinRight > 0) ? (nMinRight - 1) : (umint)0;
+			umint nMaxRightSlack = (nMaxRight < CapRight) ? (nMaxRight + 1) : CapRight;
 
 			nLeftMin = fg_Max(nMinLeftSlack, CapLeftMin);
 			nLeftMax = fg_Min(nMaxLeftSlack, CapLeftMax);
-			mint nLeftFromRightMaxSlack = (_nElements > nMaxRightSlack) ? (_nElements - nMaxRightSlack) : (mint)0;
-			mint nLeftFromRightMinSlack = (_nElements > nMinRightSlack) ? (_nElements - nMinRightSlack) : (mint)0;
+			umint nLeftFromRightMaxSlack = (_nElements > nMaxRightSlack) ? (_nElements - nMaxRightSlack) : (umint)0;
+			umint nLeftFromRightMinSlack = (_nElements > nMinRightSlack) ? (_nElements - nMinRightSlack) : (umint)0;
 			nLeftMin = fg_Max(nLeftMin, nLeftFromRightMaxSlack);
 			nLeftMax = fg_Min(nLeftMax, nLeftFromRightMinSlack);
 
@@ -286,7 +286,7 @@ namespace NMib::NContainer
 
 		// Proportional split: nLeftSegs == nSegs >> 1, so the ratio is
 		// always ~1/2. Use _nElements >> 1 and let clamping adjust.
-		mint nLeft = _nElements >> 1;
+		umint nLeft = _nElements >> 1;
 		nLeft = fg_Min(fg_Max(nLeft, nLeftMin), nLeftMax);
 
 		fp_DistributeElements(_pTargets, _iStart, iMid, nLeft, _iLocalLevel + 1, _iWindowLevel, _nGlobalLevels);

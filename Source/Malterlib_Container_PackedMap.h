@@ -118,50 +118,50 @@ namespace NMib::NContainer
 
 		struct CStats
 		{
-			constexpr static mint mc_nRebalanceLevelHistSize = 32;
+			constexpr static umint mc_nRebalanceLevelHistSize = 32;
 
-			mint m_nElementMoves = 0;
-			mint m_nShiftMoves = 0;
-			mint m_nRebalanceMoves = 0;
-			mint m_nResizeMoves = 0;
-			mint m_nRebalances = 0;
-			mint m_nResizes = 0;
-			mint m_nRebalanceWindowElements = 0;
-			mint m_nRebalanceWindowSegments = 0;
-			mint m_nRebalanceWindowMaxSegments = 0;
-			mint m_nEvenRedistributes = 0;
-			mint m_nAdaptiveRedistributes = 0;
-			mint m_nMarkedIntervals = 0;
-			mint m_nMarkedIntervalElements = 0;
-			mint m_nMarkedSegments = 0;
-			mint m_nAdaptiveTwoElementIntervals = 0;
-			mint m_nAdaptiveWholeSegmentIntervals = 0;
-			mint m_nAdaptiveBackwardRunLengthTriggered = 0;
-			mint m_nAdaptiveForwardRunLengthTriggered = 0;
-			mint m_nAdaptiveTwoElementIntervalFailures = 0;
-			mint m_nAdaptiveSplitNoIntervals = 0;
-			mint m_nAdaptiveSplitTooBig = 0;
-			mint m_nAdaptiveWindows = 0;
-			mint m_nAdaptiveWindowsWithTimestamps = 0;
-			mint m_nAdaptiveTotalTimestamps = 0;
-			mint m_nAdaptiveSegmentsWithTimestamps = 0;
-			mint m_nAdaptiveSegmentsAnyAbovePercentile = 0;
-			mint m_nAdaptiveSegmentsHalfAbovePercentile = 0;
-			mint m_nAdaptiveSegmentsThreeQuarterAbovePercentile = 0;
-			mint m_nAdaptiveHotSegments = 0;
-			mint m_nAdaptivePercentileIsMax = 0;
-			mint m_nDetectorRemapWindows = 0;
-			mint m_nDetectorRemapSegments = 0;
-			mint m_nDetectorRemapOverlapChecks = 0;
-			mint m_nDetectorRemapTransfers = 0;
-			mint m_nRebalanceHeapAllocs = 0;
-			mint m_nRebalanceStackAllocs = 0;
-			mint m_nRebalanceInsertTriggers = 0;
-			mint m_nRebalanceDeleteTriggers = 0;
-			mint m_nRebalanceChosenLevelSum = 0;
-			mint m_nRebalanceFirstViolationLevelSum = 0;
-			mint m_RebalanceChosenLevelHist[mc_nRebalanceLevelHistSize] = {};
-			mint m_RebalanceFirstViolationLevelHist[mc_nRebalanceLevelHistSize] = {};
+			umint m_nElementMoves = 0;
+			umint m_nShiftMoves = 0;
+			umint m_nRebalanceMoves = 0;
+			umint m_nResizeMoves = 0;
+			umint m_nRebalances = 0;
+			umint m_nResizes = 0;
+			umint m_nRebalanceWindowElements = 0;
+			umint m_nRebalanceWindowSegments = 0;
+			umint m_nRebalanceWindowMaxSegments = 0;
+			umint m_nEvenRedistributes = 0;
+			umint m_nAdaptiveRedistributes = 0;
+			umint m_nMarkedIntervals = 0;
+			umint m_nMarkedIntervalElements = 0;
+			umint m_nMarkedSegments = 0;
+			umint m_nAdaptiveTwoElementIntervals = 0;
+			umint m_nAdaptiveWholeSegmentIntervals = 0;
+			umint m_nAdaptiveBackwardRunLengthTriggered = 0;
+			umint m_nAdaptiveForwardRunLengthTriggered = 0;
+			umint m_nAdaptiveTwoElementIntervalFailures = 0;
+			umint m_nAdaptiveSplitNoIntervals = 0;
+			umint m_nAdaptiveSplitTooBig = 0;
+			umint m_nAdaptiveWindows = 0;
+			umint m_nAdaptiveWindowsWithTimestamps = 0;
+			umint m_nAdaptiveTotalTimestamps = 0;
+			umint m_nAdaptiveSegmentsWithTimestamps = 0;
+			umint m_nAdaptiveSegmentsAnyAbovePercentile = 0;
+			umint m_nAdaptiveSegmentsHalfAbovePercentile = 0;
+			umint m_nAdaptiveSegmentsThreeQuarterAbovePercentile = 0;
+			umint m_nAdaptiveHotSegments = 0;
+			umint m_nAdaptivePercentileIsMax = 0;
+			umint m_nDetectorRemapWindows = 0;
+			umint m_nDetectorRemapSegments = 0;
+			umint m_nDetectorRemapOverlapChecks = 0;
+			umint m_nDetectorRemapTransfers = 0;
+			umint m_nRebalanceHeapAllocs = 0;
+			umint m_nRebalanceStackAllocs = 0;
+			umint m_nRebalanceInsertTriggers = 0;
+			umint m_nRebalanceDeleteTriggers = 0;
+			umint m_nRebalanceChosenLevelSum = 0;
+			umint m_nRebalanceFirstViolationLevelSum = 0;
+			umint m_RebalanceChosenLevelHist[mc_nRebalanceLevelHistSize] = {};
+			umint m_RebalanceFirstViolationLevelHist[mc_nRebalanceLevelHistSize] = {};
 		};
 
 		// Key accessor helpers
@@ -263,8 +263,8 @@ namespace NMib::NContainer
 		constexpr TCPackedMap &operator = (TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options> &&_Other);
 
 		constexpr void f_Clear(bool _bKeepBacking = false);
-		constexpr mint f_GetLen() const noexcept;
-		constexpr mint f_GetCapacity() const noexcept;
+		constexpr umint f_GetLen() const noexcept;
+		constexpr umint f_GetCapacity() const noexcept;
 		constexpr bool f_IsEmpty() const noexcept;
 
 		// Exception safety for insertion is limited:
@@ -279,14 +279,14 @@ namespace NMib::NContainer
 		// The caller invokes the functor exactly _Count times with key-value pairs
 		// The map must not be accessed from within the populate functor.
 		template <typename tf_CPopulate>
-		constexpr void f_BulkLoad(mint _Count, tf_CPopulate &&_fPopulate);
+		constexpr void f_BulkLoad(umint _Count, tf_CPopulate &&_fPopulate);
 
 		// Bulk insert (expects sorted unique keys, may be non-empty)
 		// Same interface as f_BulkLoad: _fPopulate receives an insert functor
 		// The map must not be accessed from within the populate functor.
 		// Same exception-safety guarantee as f_Insert().
 		template <typename tf_CPopulate>
-		constexpr void f_BulkInsert(mint _Count, tf_CPopulate &&_fPopulate);
+		constexpr void f_BulkInsert(umint _Count, tf_CPopulate &&_fPopulate);
 
 		// Find operations
 		template <typename tf_CKey>
@@ -435,7 +435,7 @@ namespace NMib::NContainer
 
 		static_assert(t_Options.m_MinSegments > 0, "PackedMap mc_MinSegments must be greater than 0");
 		static_assert(t_Options.m_DetectorQueueSize > 0, "PackedMap mc_DetectorQueueSize must be greater than 0");
-		static_assert(t_Options.m_MaxCapacityBits < sizeof(mint) * 8, "PackedMap mc_MaxCapacityBits must be smaller than the number of bits in mint");
+		static_assert(t_Options.m_MaxCapacityBits < sizeof(umint) * 8, "PackedMap mc_MaxCapacityBits must be smaller than the number of bits in umint");
 
 		constexpr static uint16 mcp_MaxCalibratorLevels = t_Options.m_MaxCapacityBits; // Supports up to 2^mc_MaxCapacityBits segments
 
@@ -443,35 +443,35 @@ namespace NMib::NContainer
 		{
 			constexpr CReciprocalTable() noexcept;
 
-			mint m_Values[mcp_MaxCalibratorLevels] = {};
+			umint m_Values[mcp_MaxCalibratorLevels] = {};
 		};
 
 		// Marked interval in element positions (global positions within the window)
 		// Per paper: either a 2-element interval (kbwd/kfwd hotspot) or whole segment range
 		struct CMarkedInterval
 		{
-			mint m_iStartElem; // Start element position (inclusive)
-			mint m_iEndElem; // End element position (exclusive)
+			umint m_iStartElem; // Start element position (inclusive)
+			umint m_iEndElem; // End element position (exclusive)
 			smint m_SignedScore; // +1 insert-heavy, -1 delete-heavy
 		};
 
-		constexpr static mint mcp_DetectorQueueSize = t_Options.m_DetectorQueueSize; // Number of timestamps per segment (ring buffer Q)
+		constexpr static umint mcp_DetectorQueueSize = t_Options.m_DetectorQueueSize; // Number of timestamps per segment (ring buffer Q)
 		constexpr static uint16 mcp_RunLengthCap = 1000; // Saturation cap for backward/forward run-length counters
 		constexpr static uint16 mcp_NetBalanceCap = 1000; // Saturation cap for sc counter
 		constexpr static uint16 mcp_RunLengthHotnessThreshold = 8; // θSC threshold for run-length counters
 
 		// Fixed-point density representation: density = ScaledValue / mcp_DensityScale
 		// All runtime density math uses integer arithmetic with this scale factor.
-		constexpr static mint mcp_DensityScaleBits = fg_Min(mint(20), mint(sizeof(void *) * 8) / 2 - 1);
-		constexpr static mint mcp_DensityScale = mint(1) << mcp_DensityScaleBits;
+		constexpr static umint mcp_DensityScaleBits = fg_Min(umint(20), umint(sizeof(void *) * 8) / 2 - 1);
+		constexpr static umint mcp_DensityScale = umint(1) << mcp_DensityScaleBits;
 		// Truncate (floor) scaled constants so they are always <= the exact float value.
 		// This ensures fsp_ScaledMulCeil for lower bounds and fsp_ScaledMulFloor for upper
 		// bounds produce element counts identical to the original floating-point code.
-		constexpr static mint mcp_LeafLowerBoundScaled = (mint)(mc_LeafLowerBound * mcp_DensityScale);
-		constexpr static mint mcp_RootLowerBoundScaled = (mint)(mc_RootLowerBound * mcp_DensityScale);
-		constexpr static mint mcp_LeafUpperBoundScaled = (mint)(mc_LeafUpperBound * mcp_DensityScale);
-		constexpr static mint mcp_RootUpperBoundScaled = (mint)(mc_RootUpperBound * mcp_DensityScale);
-		constexpr static mint mcp_ResizeThresholdScaled = (mint)(mc_ResizeThreshold * mcp_DensityScale);
+		constexpr static umint mcp_LeafLowerBoundScaled = (umint)(mc_LeafLowerBound * mcp_DensityScale);
+		constexpr static umint mcp_RootLowerBoundScaled = (umint)(mc_RootLowerBound * mcp_DensityScale);
+		constexpr static umint mcp_LeafUpperBoundScaled = (umint)(mc_LeafUpperBound * mcp_DensityScale);
+		constexpr static umint mcp_RootUpperBoundScaled = (umint)(mc_RootUpperBound * mcp_DensityScale);
+		constexpr static umint mcp_ResizeThresholdScaled = (umint)(mc_ResizeThreshold * mcp_DensityScale);
 
 		constexpr static bool mcp_bUseReciprocalDivide = false; // sizeof(void *) >= 8; // Not safe for 32 bit
 		// Use fixed-point density math when max capacity exceeds pfp64 precision (53-bit mantissa).
@@ -502,8 +502,8 @@ namespace NMib::NContainer
 		static_assert(mcp_RootUpperBoundScaled > 0, "Root upper bound must remain positive after fixed-point scaling");
 
 		// Precomputed unsigned deltas for interpolation (signs are known at compile time)
-		constexpr static mint mcp_LowerBoundDeltaScaled = mcp_RootLowerBoundScaled - mcp_LeafLowerBoundScaled; // >= 0
-		constexpr static mint mcp_UpperBoundDeltaScaled = mcp_LeafUpperBoundScaled - mcp_RootUpperBoundScaled; // >= 0
+		constexpr static umint mcp_LowerBoundDeltaScaled = mcp_RootLowerBoundScaled - mcp_LeafLowerBoundScaled; // >= 0
+		constexpr static umint mcp_UpperBoundDeltaScaled = mcp_LeafUpperBoundScaled - mcp_RootUpperBoundScaled; // >= 0
 
 		constexpr static uint16 mcp_Fanout = 8; // Branching factor (cache line friendly)
 		constexpr static uint16 mcp_FanoutBits = gc_HighestBitSet<mcp_Fanout>; // log2(fanout)
@@ -512,10 +512,10 @@ namespace NMib::NContainer
 		// Reciprocal table for divide-free threshold interpolation.
 		// Replaces division by Divisor in [1, mcp_MaxCalibratorLevels) with
 		// multiply+shift: floor(|x| / d) == (|x| * R[d]) >> S.
-		// The shift is sized so that the intermediate |x| * R[d] fits in signed mint.
+		// The shift is sized so that the intermediate |x| * R[d] fits in signed umint.
 		// Max dividend: mcp_DensityScale * (mcp_MaxCalibratorLevels - 1).
 		// Exact when max dividend <= 2^mcp_ReciprocalShift.
-		constexpr static mint mcp_ReciprocalShift = (mint)sizeof(mint) * 8 - 2 - mcp_DensityScaleBits - gc_HighestBitSet<mcp_MaxCalibratorLevels>;
+		constexpr static umint mcp_ReciprocalShift = (umint)sizeof(umint) * 8 - 2 - mcp_DensityScaleBits - gc_HighestBitSet<mcp_MaxCalibratorLevels>;
 
 		constexpr static CReciprocalTable mcp_ReciprocalTable = {};
 
@@ -533,7 +533,7 @@ namespace NMib::NContainer
 		using CScratchAllocator = TCConditional<NTraits::cIsEmpty<t_CAllocator> && NTraits::cIsConstructibleWith<t_CAllocator>, t_CAllocator, NMemory::CAllocator_Heap>;
 
 		// Static allocator sizing for rebalance temporaries (covers up to ~64 segments without heap)
-		constexpr static mint mcp_nMarkedIntervalStaticSize = 64 * sizeof(CMarkedInterval);
+		constexpr static umint mcp_nMarkedIntervalStaticSize = 64 * sizeof(CMarkedInterval);
 
 		using CMarkedIntervalAllocator = NMemory::TCAllocator_Static<mcp_nMarkedIntervalStaticSize, 16, CScratchAllocator>;
 		using CMarkedIntervalVector = TCVector<CMarkedInterval, CMarkedIntervalAllocator>;
@@ -541,7 +541,7 @@ namespace NMib::NContainer
 		// Precomputed density bounds for a given calibrator level, independent of capacity.
 		struct CLevelDensityBounds
 		{
-			using CThreshold = TCConditional<!mcp_bUseFixedPoint, pfp64, mint>;
+			using CThreshold = TCConditional<!mcp_bUseFixedPoint, pfp64, umint>;
 
 			CThreshold m_LowerBound;
 			CThreshold m_UpperBound;
@@ -555,8 +555,8 @@ namespace NMib::NContainer
 
 		struct CDetectorKeys_StoreSlot
 		{
-			NStorage::TCOptional<mint> m_BackwardRunLengthSlot;
-			NStorage::TCOptional<mint> m_ForwardRunLengthSlot;
+			NStorage::TCOptional<umint> m_BackwardRunLengthSlot;
+			NStorage::TCOptional<umint> m_ForwardRunLengthSlot;
 		};
 
 		using CDetectorKeysStorage = TCConditional<mcp_bDetectorStoresKeys, CDetectorKeys, CDetectorKeys_StoreSlot>;
@@ -587,37 +587,37 @@ namespace NMib::NContainer
 
 		using CStatsStorage = TCConditional<t_Options.m_bStats, CStats, CStats_Empty>;
 
-		using CIndexEntry = TCConditional<mcp_bIndexStoresKeys, t_CKey, mint>;
+		using CIndexEntry = TCConditional<mcp_bIndexStoresKeys, t_CKey, umint>;
 		using CIndexValidStorage = TCConditional<mcp_bIndexStoresKeys, uint8 *, CEmpty>;
-		using CCalibratorCount = mint;
+		using CCalibratorCount = umint;
 
 		using CTimeCounterStorage = TCConditional<t_Options.m_bAdaptive, uint32, CEmpty>;
 
 		// Main data header - all arrays in one allocation
 		struct CPackedMapData
 		{
-			constexpr inline_small void f_SetIndexEntryValid(mint _iEntry, bool _bValid) noexcept;
-			constexpr inline_small bool f_GetIndexEntryValid(mint _iEntry) const noexcept;
+			constexpr inline_small void f_SetIndexEntryValid(umint _iEntry, bool _bValid) noexcept;
+			constexpr inline_small bool f_GetIndexEntryValid(umint _iEntry) const noexcept;
 			constexpr inline_small void f_DestroyIndexEntries() noexcept;
-			constexpr inline_small void f_SetIndexEntry(mint _iEntry, CIndexEntry const &_Entry) noexcept;
-			constexpr inline_small void f_ClearIndexEntry(mint _iEntry) noexcept;
+			constexpr inline_small void f_SetIndexEntry(umint _iEntry, CIndexEntry const &_Entry) noexcept;
+			constexpr inline_small void f_ClearIndexEntry(umint _iEntry) noexcept;
 
 			// Cached pointers (set on allocation)
 			t_CKey *m_pKeys = nullptr;
 			t_CValue *m_pValues = nullptr;
 			CIndexEntry *m_pIndex = nullptr;                              // All index entries (all levels packed)
-			mint *m_pLevelOffsets = nullptr;                              // Offset into m_pIndex for each level
+			umint *m_pLevelOffsets = nullptr;                              // Offset into m_pIndex for each level
 			DMibNoUniqueAddress CIndexValidStorage m_IndexValidStorage{}; // Validity bitmask for key-stored entries (1 bit per entry)
 			CCalibratorCount *m_pCalibratorCounts = nullptr;              // Calibrator tree counts (all levels packed)
-			mint *m_pCalibratorOffsets = nullptr;                         // Offset into m_pCalibratorCounts for each level
+			umint *m_pCalibratorOffsets = nullptr;                         // Offset into m_pCalibratorCounts for each level
 			CSegmentMeta *m_pSegmentMeta = nullptr;
 
-			mint m_nElements = 0;                                         // Total element count
-			mint m_nSegments = 0;                                         // Number of segments
-			mint m_AllocSize = 0;                                         // Size of allocation
-			mint m_Capacity = 0;                                          // Total capacity (m_nSegments * SegmentSize)
-			mint m_nStaticIndexTotalEntries = 0;                          // Total entries across all levels
-			mint m_nCalibratorTreeTotalEntries = 0;                       // Total entries across all levels (~2*nSegments)
+			umint m_nElements = 0;                                         // Total element count
+			umint m_nSegments = 0;                                         // Number of segments
+			umint m_AllocSize = 0;                                         // Size of allocation
+			umint m_Capacity = 0;                                          // Total capacity (m_nSegments * SegmentSize)
+			umint m_nStaticIndexTotalEntries = 0;                          // Total entries across all levels
+			umint m_nCalibratorTreeTotalEntries = 0;                       // Total entries across all levels (~2*nSegments)
 			DMibNoUniqueAddress CTimeCounterStorage m_TimeCounter = {};   // Global monotonic counter for detector timestamps
 			uint16 m_nStaticIndexLevels = 0;                              // Number of levels (1 = leaf only)
 			uint16 m_nCalibratorTreeLevels = 0;                           // Number of levels (ceil(log2(nSegments)) + 1)
@@ -626,38 +626,38 @@ namespace NMib::NContainer
 		// Static index helpers (multi-level B+-tree-like index)
 		struct CIndexLayout
 		{
-			mint m_LevelSizes[mcp_MaxLevels];       // Size of each level
-			mint m_LevelOffsets[mcp_MaxLevels];     // Offset for each level in packed array
-			mint m_nTotalEntries;                   // Total entries across all levels
+			umint m_LevelSizes[mcp_MaxLevels];       // Size of each level
+			umint m_LevelOffsets[mcp_MaxLevels];     // Offset for each level in packed array
+			umint m_nTotalEntries;                   // Total entries across all levels
 			uint16 m_nLevels;                       // Number of levels
 		};
 
 		// Binary search within segment
 		struct CSearchResult
 		{
-			mint m_iLocalPos;                       // Position within segment (relative to first element)
+			umint m_iLocalPos;                       // Position within segment (relative to first element)
 			bool m_bExists;                         // Whether key was found
 		};
 
 		// Find global position (segment + local position)
 		struct CFindResult
 		{
-			mint m_iSegment;
-			mint m_iLocalPos;                       // Position relative to first element in segment
-			mint m_iSlot;                           // Absolute slot index in keys/values array
+			umint m_iSegment;
+			umint m_iLocalPos;                       // Position relative to first element in segment
+			umint m_iSlot;                           // Absolute slot index in keys/values array
 			bool m_bExists;
 		};
 
 		// Calibrator tree layout (binary tree of element counts for O(log n) density queries)
 		struct CCalibratorLayout
 		{
-			mint m_LevelSizes[mcp_MaxCalibratorLevels];        // Size of each level
-			mint m_LevelOffsets[mcp_MaxCalibratorLevels];      // Offset for each level in packed array
-			mint m_nTotalEntries;                              // Total entries across all levels
+			umint m_LevelSizes[mcp_MaxCalibratorLevels];        // Size of each level
+			umint m_LevelOffsets[mcp_MaxCalibratorLevels];      // Offset for each level in packed array
+			umint m_nTotalEntries;                              // Total entries across all levels
 			uint16 m_nLevels;                                  // Number of levels
 		};
 
-		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, mint ...tp_IndicesAllocator, mint ...tp_IndicesCompare>
+		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, umint ...tp_IndicesAllocator, umint ...tp_IndicesCompare>
 		constexpr TCPackedMap
 			(
 				NMeta::TCIndices<tp_IndicesAllocator...> const &_IndexSequenceAllocator
@@ -670,131 +670,131 @@ namespace NMib::NContainer
 		;
 
 		// floor(density * capacity) — dispatches to fixed-point or float based on mcp_bUseFixedPoint
-		constexpr static mint fsp_ScaledMulFloor(mint _ScaledDensity, mint _Capacity) noexcept;
+		constexpr static umint fsp_ScaledMulFloor(umint _ScaledDensity, umint _Capacity) noexcept;
 
 		// ceil(density * capacity) — dispatches to fixed-point or float based on mcp_bUseFixedPoint
-		constexpr static mint fsp_ScaledMulCeil(mint _ScaledDensity, mint _Capacity) noexcept;
+		constexpr static umint fsp_ScaledMulCeil(umint _ScaledDensity, umint _Capacity) noexcept;
 
 		// ceil(nElements / density) — dispatches to fixed-point or float based on mcp_bUseFixedPoint
-		constexpr static mint fsp_ScaledDivCeil(mint _nElements, mint _ScaledDensity) noexcept;
+		constexpr static umint fsp_ScaledDivCeil(umint _nElements, umint _ScaledDensity) noexcept;
 
 		// Exact unsigned integer division via reciprocal multiply for small dividends.
 		// Precondition: _Dividend <= DensityScale * (MaxCalibratorLevels - 1), _Divisor in [1, MaxCalibratorLevels)
-		constexpr static mint fsp_ReciprocalDivide(mint _Dividend, mint _Divisor) noexcept;
+		constexpr static umint fsp_ReciprocalDivide(umint _Dividend, umint _Divisor) noexcept;
 
 		// Remove helper (shared by key and pointer remove overloads)
-		constexpr void fp_RemoveAtPosition(CPackedMapData *_pData, mint _iSegment, mint _iLocalPos);
+		constexpr void fp_RemoveAtPosition(CPackedMapData *_pData, umint _iSegment, umint _iLocalPos);
 		constexpr void fp_Clear(bool _bKeepBacking, t_CAllocator &_Allocator);
 
 		// Segment helpers
-		constexpr static mint fsp_GetSegmentStart(mint _iSegment) noexcept;
-		constexpr static mint fsp_GetSegmentEnd(mint _iSegment) noexcept;
-		constexpr static bool fsp_IsOddSegment(mint _iSegment) noexcept;
-		constexpr static mint fsp_GetSegmentFirstSlot(mint _iSegment, mint _Count) noexcept;
+		constexpr static umint fsp_GetSegmentStart(umint _iSegment) noexcept;
+		constexpr static umint fsp_GetSegmentEnd(umint _iSegment) noexcept;
+		constexpr static bool fsp_IsOddSegment(umint _iSegment) noexcept;
+		constexpr static umint fsp_GetSegmentFirstSlot(umint _iSegment, umint _Count) noexcept;
 
 		// Allocation helpers
-		constexpr mint fp_CalculateAllocSize(mint _nSegments, mint &o_Alignment) const noexcept;
-		constexpr void fp_AllocInitial(mint _nSegments = 0);
-		constexpr void fp_ReserveForElementCount(mint _nElements);
-		constexpr void fp_Resize(mint _nNewSegments);
+		constexpr umint fp_CalculateAllocSize(umint _nSegments, umint &o_Alignment) const noexcept;
+		constexpr void fp_AllocInitial(umint _nSegments = 0);
+		constexpr void fp_ReserveForElementCount(umint _nElements);
+		constexpr void fp_Resize(umint _nNewSegments);
 		constexpr void fp_SetupCachedPointers(CPackedMapData *_pData) noexcept;
 
-		constexpr static CIndexLayout fsp_ComputeIndexLayout(mint _nSegments) noexcept;
-		constexpr static mint fsp_StaticIndexSizeBytes(mint _nSegments) noexcept;
+		constexpr static CIndexLayout fsp_ComputeIndexLayout(umint _nSegments) noexcept;
+		constexpr static umint fsp_StaticIndexSizeBytes(umint _nSegments) noexcept;
 		template <typename tf_CKey>
-		constexpr static mint fsp_FindSegmentForKey(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key) noexcept;
-		constexpr static mint fsp_FindPrevNonEmptySegment(CPackedMapData const *_pData, mint _iSegment) noexcept;
-		constexpr static mint fsp_FindNextNonEmptySegment(CPackedMapData const *_pData, mint _iSegment) noexcept;
-		constexpr static mint fsp_FindLeftmostValidLeaf(CPackedMapData const *_pData, mint _iLevel, mint _iEntry) noexcept;
-		constexpr static mint fsp_FindRightmostValidLeaf(CPackedMapData const *_pData, mint _iLevel, mint _iEntry) noexcept;
+		constexpr static umint fsp_FindSegmentForKey(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key) noexcept;
+		constexpr static umint fsp_FindPrevNonEmptySegment(CPackedMapData const *_pData, umint _iSegment) noexcept;
+		constexpr static umint fsp_FindNextNonEmptySegment(CPackedMapData const *_pData, umint _iSegment) noexcept;
+		constexpr static umint fsp_FindLeftmostValidLeaf(CPackedMapData const *_pData, umint _iLevel, umint _iEntry) noexcept;
+		constexpr static umint fsp_FindRightmostValidLeaf(CPackedMapData const *_pData, umint _iLevel, umint _iEntry) noexcept;
 		constexpr void fp_RebuildStaticIndex(CPackedMapData *_pData) noexcept;
-		constexpr void fp_RebuildStaticIndexRange(CPackedMapData *_pData, mint _iStartSeg, mint _iEndSeg) noexcept;
-		constexpr void fp_UpdateStaticIndexEntry(CPackedMapData *_pData, mint _iSegment) noexcept;
-		constexpr void fp_BuildIndexLevel(CPackedMapData *_pData, mint _iLevel) noexcept;
-		constexpr bool fp_CompareIndexEntry(CPackedMapData const *_pData, mint _iEntry, t_CKey const &_Key) const noexcept;  // Returns true if entry < key
+		constexpr void fp_RebuildStaticIndexRange(CPackedMapData *_pData, umint _iStartSeg, umint _iEndSeg) noexcept;
+		constexpr void fp_UpdateStaticIndexEntry(CPackedMapData *_pData, umint _iSegment) noexcept;
+		constexpr void fp_BuildIndexLevel(CPackedMapData *_pData, umint _iLevel) noexcept;
+		constexpr bool fp_CompareIndexEntry(CPackedMapData const *_pData, umint _iEntry, t_CKey const &_Key) const noexcept;  // Returns true if entry < key
 
 		// Validity bitmask helpers (for key-stored entries)
-		constexpr static mint fsp_IndexValidityArraySizeBytes(mint _nTotalEntries) noexcept;
+		constexpr static umint fsp_IndexValidityArraySizeBytes(umint _nTotalEntries) noexcept;
 
 		template <typename tf_CKey>
-		constexpr static CSearchResult fsp_BinarySearchInSegment(CPackedMapData const *_pData, t_CCompare const &_Compare, mint _iSegment, tf_CKey const &_Key) noexcept;
+		constexpr static CSearchResult fsp_BinarySearchInSegment(CPackedMapData const *_pData, t_CCompare const &_Compare, umint _iSegment, tf_CKey const &_Key) noexcept;
 
 		template <typename tf_CKey>
 		constexpr static CFindResult fsp_Find(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key) noexcept;
 
 		template <typename tf_CKey>
-		constexpr static mint fsp_FindEqualSlot(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key) noexcept;
+		constexpr static umint fsp_FindEqualSlot(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key) noexcept;
 
-		constexpr static mint fsp_ComputeRank(CPackedMapData const *_pData, mint _iSegment, mint _iLocalPos) noexcept;
-		constexpr static mint fsp_FindSlotByRank(CPackedMapData const *_pData, mint _Rank) noexcept;
+		constexpr static umint fsp_ComputeRank(CPackedMapData const *_pData, umint _iSegment, umint _iLocalPos) noexcept;
+		constexpr static umint fsp_FindSlotByRank(CPackedMapData const *_pData, umint _Rank) noexcept;
 
 		// Shift operations
-		constexpr mint fp_ShiftRightInSegment(CPackedMapData *_pData, mint _iSegment, mint _iLocalPos);
-		constexpr void fp_ShiftLeftInSegment(CPackedMapData *_pData, mint _iSegment, mint _iLocalPos);
+		constexpr umint fp_ShiftRightInSegment(CPackedMapData *_pData, umint _iSegment, umint _iLocalPos);
+		constexpr void fp_ShiftLeftInSegment(CPackedMapData *_pData, umint _iSegment, umint _iLocalPos);
 
 		// Calibrator tree helpers (density thresholds by level)
-		constexpr mint fp_CalibratorLevelCount(mint _nSegments) const noexcept;
-		constexpr void fp_GetLevelThresholds(mint _iLevel, mint _nLevels, mint &o_ScaledLowerBound, mint &o_ScaledUpperBound) const noexcept;
-		constexpr mint fp_GetLevelLowerThreshold(mint _iLevel, mint _nLevels) const noexcept;
-		constexpr mint fp_GetLevelUpperThreshold(mint _iLevel, mint _nLevels) const noexcept;
+		constexpr umint fp_CalibratorLevelCount(umint _nSegments) const noexcept;
+		constexpr void fp_GetLevelThresholds(umint _iLevel, umint _nLevels, umint &o_ScaledLowerBound, umint &o_ScaledUpperBound) const noexcept;
+		constexpr umint fp_GetLevelLowerThreshold(umint _iLevel, umint _nLevels) const noexcept;
+		constexpr umint fp_GetLevelUpperThreshold(umint _iLevel, umint _nLevels) const noexcept;
 
 		// Compute density bounds for a given level (independent of capacity).
-		constexpr CLevelDensityBounds fp_GetLevelDensityBounds(mint _iLevel, mint _nLevels) const noexcept;
+		constexpr CLevelDensityBounds fp_GetLevelDensityBounds(umint _iLevel, umint _nLevels) const noexcept;
 
 		// Apply precomputed density bounds to a specific capacity.
-		constexpr void fp_ElementBoundsFromDensity(CLevelDensityBounds const &_DensityBounds, mint _Capacity, mint &o_nMinElements, mint &o_nMaxElements) const noexcept;
+		constexpr void fp_ElementBoundsFromDensity(CLevelDensityBounds const &_DensityBounds, umint _Capacity, umint &o_nMinElements, umint &o_nMaxElements) const noexcept;
 
 		// Compute element bounds directly for a given level and capacity.
 		// When mcp_bUseFixedPoint=false, uses the original direct pfp64 computation (no scaled integer round-trip).
-		constexpr void fp_GetLevelElementBounds(mint _iLevel, mint _nLevels, mint _Capacity, mint &o_nMinElements, mint &o_nMaxElements) const noexcept;
+		constexpr void fp_GetLevelElementBounds(umint _iLevel, umint _nLevels, umint _Capacity, umint &o_nMinElements, umint &o_nMaxElements) const noexcept;
 
-		constexpr CCalibratorLayout fp_ComputeCalibratorLayout(mint _nSegments) const noexcept;
-		constexpr mint fp_CalibratorTreeSizeBytes(mint _nSegments) const noexcept;
+		constexpr CCalibratorLayout fp_ComputeCalibratorLayout(umint _nSegments) const noexcept;
+		constexpr umint fp_CalibratorTreeSizeBytes(umint _nSegments) const noexcept;
 		constexpr void fp_InitializeCalibratorCounts(CPackedMapData *_pData) noexcept;
-		constexpr void fp_UpdateCalibratorCountsRange(CPackedMapData *_pData, mint _iStartSeg, mint _iEndSeg) noexcept;
-		constexpr void fp_UpdateCalibratorCountOnDelta(CPackedMapData *_pData, mint _iSegment, int32 _nDelta) noexcept;
-		constexpr mint fp_GetCalibratorWindowCount(CPackedMapData const *_pData, mint _iLevel, mint _iWindowIndex) const noexcept;
+		constexpr void fp_UpdateCalibratorCountsRange(CPackedMapData *_pData, umint _iStartSeg, umint _iEndSeg) noexcept;
+		constexpr void fp_UpdateCalibratorCountOnDelta(CPackedMapData *_pData, umint _iSegment, int32 _nDelta) noexcept;
+		constexpr umint fp_GetCalibratorWindowCount(CPackedMapData const *_pData, umint _iLevel, umint _iWindowIndex) const noexcept;
 
 		// Rebalancing
-		constexpr bool fp_SegmentNeedsRebalance(CPackedMapData const *_pData, mint _iSegment) const noexcept;
-		constexpr bool fp_SegmentNeedsRebalanceAfterDelete(CPackedMapData const *_pData, mint _iSegment) const noexcept;
-		constexpr void fp_RebalanceFromSegment(CPackedMapData *_pData, mint _iSegment);
-		constexpr NStorage::TCTuple<mint, mint, mint> fp_FindRebalanceWindow(CPackedMapData const *_pData, mint _iSegment) const noexcept;
-		constexpr void fp_EvenRedistribute(CPackedMapData *_pData, mint _iStartSeg, mint _iEndSeg, mint _iWindowLevel, mint _nGlobalLevels);
-		constexpr bool fp_ValidateRedistributeDensityBounds(CPackedMapData const *_pData, mint _iStartSeg, mint _iEndSeg, mint _nTotalElements, mint _nGlobalLevels, ch8 const *_pLabel) const noexcept;
+		constexpr bool fp_SegmentNeedsRebalance(CPackedMapData const *_pData, umint _iSegment) const noexcept;
+		constexpr bool fp_SegmentNeedsRebalanceAfterDelete(CPackedMapData const *_pData, umint _iSegment) const noexcept;
+		constexpr void fp_RebalanceFromSegment(CPackedMapData *_pData, umint _iSegment);
+		constexpr NStorage::TCTuple<umint, umint, umint> fp_FindRebalanceWindow(CPackedMapData const *_pData, umint _iSegment) const noexcept;
+		constexpr void fp_EvenRedistribute(CPackedMapData *_pData, umint _iStartSeg, umint _iEndSeg, umint _iWindowLevel, umint _nGlobalLevels);
+		constexpr bool fp_ValidateRedistributeDensityBounds(CPackedMapData const *_pData, umint _iStartSeg, umint _iEndSeg, umint _nTotalElements, umint _nGlobalLevels, ch8 const *_pLabel) const noexcept;
 
 		// Adaptive rebalancing (optional, implements RMA paper's Detector + Calibrator tree)
-		constexpr void fp_RecordInsertion(CPackedMapData *_pData, mint _iSegment, t_CKey const *_pPrevKey, t_CKey const *_pNextKey) noexcept;
-		constexpr void fp_RecordDeletion(CPackedMapData *_pData, mint _iSegment, t_CKey const *_pPrevKey, t_CKey const *_pNextKey) noexcept;
-		constexpr void fp_ResetDetectorState(CPackedMapData *_pData, mint _iSegment);
-		constexpr void fp_CopyDetectorStateScaled(CSegmentMeta &_Out, CSegmentMeta const &_In, mint _Overlap, mint _SourceCount);
-		constexpr bool fp_IsSegmentMarked(CPackedMapData const *_pData, mint _iSegment) const noexcept;
+		constexpr void fp_RecordInsertion(CPackedMapData *_pData, umint _iSegment, t_CKey const *_pPrevKey, t_CKey const *_pNextKey) noexcept;
+		constexpr void fp_RecordDeletion(CPackedMapData *_pData, umint _iSegment, t_CKey const *_pPrevKey, t_CKey const *_pNextKey) noexcept;
+		constexpr void fp_ResetDetectorState(CPackedMapData *_pData, umint _iSegment);
+		constexpr void fp_CopyDetectorStateScaled(CSegmentMeta &_Out, CSegmentMeta const &_In, umint _Overlap, umint _SourceCount);
+		constexpr bool fp_IsSegmentMarked(CPackedMapData const *_pData, umint _iSegment) const noexcept;
 
-		constexpr void fp_FindMarkedIntervals(CPackedMapData const *_pData, mint _iStartSeg, mint _iEndSeg, CMarkedIntervalVector &_OutIntervals);
-		constexpr void fp_AdaptiveRedistribute(CPackedMapData *_pData, mint _iStartSeg, mint _iEndSeg, mint _iWindowLevel, mint _nGlobalLevels);
+		constexpr void fp_FindMarkedIntervals(CPackedMapData const *_pData, umint _iStartSeg, umint _iEndSeg, CMarkedIntervalVector &_OutIntervals);
+		constexpr void fp_AdaptiveRedistribute(CPackedMapData *_pData, umint _iStartSeg, umint _iEndSeg, umint _iWindowLevel, umint _nGlobalLevels);
 
-		constexpr bool fp_GetPrevNextKeys(CPackedMapData const *_pData, mint _iSegment, mint _iLocalPos, t_CKey const *&_pPrevKey, t_CKey const *&_pNextKey) const noexcept;
-		constexpr void fp_AdjustDetectorSlotsOnShift(CPackedMapData *_pData, mint _iSegment, mint _iStartSlot, mint _iEndSlot, mint _Delta) noexcept;
-		constexpr void fp_ClearDetectorSlotAt(CPackedMapData *_pData, mint _iSegment, mint _iSlot) noexcept;
+		constexpr bool fp_GetPrevNextKeys(CPackedMapData const *_pData, umint _iSegment, umint _iLocalPos, t_CKey const *&_pPrevKey, t_CKey const *&_pNextKey) const noexcept;
+		constexpr void fp_AdjustDetectorSlotsOnShift(CPackedMapData *_pData, umint _iSegment, umint _iStartSlot, umint _iEndSlot, umint _Delta) noexcept;
+		constexpr void fp_ClearDetectorSlotAt(CPackedMapData *_pData, umint _iSegment, umint _iSlot) noexcept;
 
 		// Stats helpers
-		constexpr void fp_StatsAddMoves(mint _nMoves) noexcept;
-		constexpr void fp_StatsAddShiftMoves(mint _nMoves) noexcept;
-		constexpr void fp_StatsAddRebalanceMoves(mint _nMoves) noexcept;
-		constexpr void fp_StatsAddResizeMoves(mint _nMoves) noexcept;
-		constexpr void fp_StatsAddRebalanceWindow(mint _nElements, mint _nSegments) noexcept;
+		constexpr void fp_StatsAddMoves(umint _nMoves) noexcept;
+		constexpr void fp_StatsAddShiftMoves(umint _nMoves) noexcept;
+		constexpr void fp_StatsAddRebalanceMoves(umint _nMoves) noexcept;
+		constexpr void fp_StatsAddResizeMoves(umint _nMoves) noexcept;
+		constexpr void fp_StatsAddRebalanceWindow(umint _nElements, umint _nSegments) noexcept;
 		constexpr void fp_StatsAddRebalance() noexcept;
 		constexpr void fp_StatsAddResize() noexcept;
 		constexpr void fp_StatsAddEvenRedistribute() noexcept;
 		constexpr void fp_StatsAddAdaptiveRedistribute() noexcept;
-		constexpr void fp_StatsAddMarkedIntervals(mint _nIntervals, mint _nIntervalElements, mint _nSegments) noexcept;
+		constexpr void fp_StatsAddMarkedIntervals(umint _nIntervals, umint _nIntervalElements, umint _nSegments) noexcept;
 		constexpr void fp_StatsAddAdaptiveIntervalKinds
 			(
-				mint _nTwoElementIntervals
-				, mint _nWholeSegmentIntervals
-				, mint _nBackwardRunLengthTriggered
-				, mint _nForwardRunLengthTriggered
-				, mint _nTwoElementIntervalFailures
+				umint _nTwoElementIntervals
+				, umint _nWholeSegmentIntervals
+				, umint _nBackwardRunLengthTriggered
+				, umint _nForwardRunLengthTriggered
+				, umint _nTwoElementIntervalFailures
 			)
 			noexcept
 		;
@@ -802,30 +802,30 @@ namespace NMib::NContainer
 		constexpr void fp_StatsAddAdaptiveSplitTooBig() noexcept;
 		constexpr void fp_StatsAddAdaptiveWindow
 			(
-				mint _nTimestamps
-				, mint _nSegmentsWithTimestamps
-				, mint _nSegmentsAnyAbovePercentile
-				, mint _nSegmentsHalfAbovePercentile
-				, mint _nSegmentsThreeQuarterAbovePercentile
-				, mint _nHotSegments
+				umint _nTimestamps
+				, umint _nSegmentsWithTimestamps
+				, umint _nSegmentsAnyAbovePercentile
+				, umint _nSegmentsHalfAbovePercentile
+				, umint _nSegmentsThreeQuarterAbovePercentile
+				, umint _nHotSegments
 				, bool _bPercentileIsMax
 			)
 			noexcept
 		;
-		constexpr void fp_StatsAddDetectorRemap(mint _nSegments, mint _nOverlapChecks, mint _nTransfers) noexcept;
-		constexpr void fp_StatsAddRebalanceDecision(bool _bInsertTrigger, mint _iFirstViolationLevel, mint _iChosenLevel) noexcept;
+		constexpr void fp_StatsAddDetectorRemap(umint _nSegments, umint _nOverlapChecks, umint _nTransfers) noexcept;
+		constexpr void fp_StatsAddRebalanceDecision(bool _bInsertTrigger, umint _iFirstViolationLevel, umint _iChosenLevel) noexcept;
 		constexpr void fp_StatsAddRebalanceAlloc(bool _bHeap) noexcept;
 
 		// Density-bounded recursive distribution of elements across segments
-		constexpr void fp_DistributeElements(mint *_pTargets, mint _iStart, mint _iEnd, mint _nElements, mint _iLocalLevel, mint _iWindowLevel, mint _nGlobalLevels) const noexcept;
+		constexpr void fp_DistributeElements(umint *_pTargets, umint _iStart, umint _iEnd, umint _nElements, umint _iLocalLevel, umint _iWindowLevel, umint _nGlobalLevels) const noexcept;
 
-		constexpr static mint mcp_SegmentSize = [] -> mint
+		constexpr static umint mcp_SegmentSize = [] -> umint
 			{
 				if constexpr (t_Options.m_SegmentBytes > 0)
 				{
-					constexpr mint c_ElementBytes = (mint)sizeof(t_CKey) + (mint)sizeof(t_CValue);
-					constexpr mint c_ByBytes = (c_ElementBytes > 0) ? (t_Options.m_SegmentBytes / c_ElementBytes) : (mint)0;
-					return (c_ByBytes > 0) ? c_ByBytes : (mint)1;
+					constexpr umint c_ElementBytes = (umint)sizeof(t_CKey) + (umint)sizeof(t_CValue);
+					constexpr umint c_ByBytes = (c_ElementBytes > 0) ? (t_Options.m_SegmentBytes / c_ElementBytes) : (umint)0;
+					return (c_ByBytes > 0) ? c_ByBytes : (umint)1;
 				}
 				else
 					return t_Options.m_SegmentSize;

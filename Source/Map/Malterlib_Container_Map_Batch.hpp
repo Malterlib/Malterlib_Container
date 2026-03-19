@@ -73,7 +73,7 @@ namespace NMib::NContainer
 			(
 				sizeof(CNodeDestructive)
 				, alignof(CNodeDestructive)
-				, [&](void * _pAlloc, mint _Size) -> bool
+				, [&](void * _pAlloc, umint _Size) -> bool
 				{
 					auto Cleanup = mp_Allocator.f_MakeSafe(_pAlloc, _Size);
 					CMapper Mapper(_pAlloc);
@@ -95,7 +95,7 @@ namespace NMib::NContainer
 			(
 				sizeof(CNodeDestructive)
 				, alignof(CNodeDestructive)
-				, [&](void * _pAlloc, mint _Size) -> bool
+				, [&](void * _pAlloc, umint _Size) -> bool
 				{
 					auto Cleanup = mp_Allocator.f_MakeSafe(_pAlloc, _Size);
 

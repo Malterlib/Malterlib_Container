@@ -32,7 +32,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::TCPackedMapIterator(CMapPointer _pMap, mint _nElements) noexcept
+	constexpr TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::TCPackedMapIterator(CMapPointer _pMap, umint _nElements) noexcept
 		: mp_pMap(_pMap)
 		, m_iSegment(0)
 		, m_iLocalPos(0)
@@ -53,8 +53,8 @@ namespace NMib::NContainer
 				{
 					m_iCurrent = m_nElements - 1;
 					// Start from the last element
-					// Safe reverse loop for unsigned mint
-					for (mint iSeg = pData->m_nSegments; iSeg-- > 0; )
+					// Safe reverse loop for unsigned umint
+					for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
 					{
 						if (pMeta[iSeg].m_Count > 0)
 						{
@@ -88,7 +88,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr inline_small mint TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::f_GetLen() const noexcept
+	constexpr inline_small umint TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::f_GetLen() const noexcept
 	{
 		if (!m_bValid)
 			return 0;
@@ -121,9 +121,9 @@ namespace NMib::NContainer
 	constexpr auto TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::operator * () const noexcept -> CValueRef
 	{
 		auto const *pData = mp_pMap->mp_pData;
-		mint Count = pData->m_pSegmentMeta[m_iSegment].m_Count;
-		mint iFirst = mp_pMap->fsp_GetSegmentFirstSlot(m_iSegment, Count);
-		mint iSlot = iFirst + m_iLocalPos;
+		umint Count = pData->m_pSegmentMeta[m_iSegment].m_Count;
+		umint iFirst = mp_pMap->fsp_GetSegmentFirstSlot(m_iSegment, Count);
+		umint iSlot = iFirst + m_iLocalPos;
 
 		return pData->m_pValues[iSlot];
 	}
@@ -205,7 +205,7 @@ namespace NMib::NContainer
 			else
 			{
 				m_iCurrent = m_nElements - 1;
-				for (mint iSeg = pData->m_nSegments; iSeg-- > 0; )
+				for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
 				{
 					if (pMeta[iSeg].m_Count > 0)
 					{
@@ -285,12 +285,12 @@ namespace NMib::NContainer
 			--m_iLocalPos;
 		else
 		{
-			// Move to previous segment - safe check for unsigned mint
+			// Move to previous segment - safe check for unsigned umint
 			if (m_iSegment == 0)
 				return;  // Can't retreat further
 
-			// Safe reverse search for unsigned mint
-			for (mint iSeg = m_iSegment; iSeg-- > 0; )
+			// Safe reverse search for unsigned umint
+			for (umint iSeg = m_iSegment; iSeg-- > 0; )
 			{
 				if (pMeta[iSeg].m_Count > 0)
 				{
@@ -329,7 +329,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::TCPackedMapKeyIterator(CMapPointer _pMap, mint _nElements) noexcept
+	constexpr TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::TCPackedMapKeyIterator(CMapPointer _pMap, umint _nElements) noexcept
 		: mp_pMap(_pMap)
 		, m_iSegment(0)
 		, m_iLocalPos(0)
@@ -348,8 +348,8 @@ namespace NMib::NContainer
 				if constexpr (t_bReverse)
 				{
 					m_iCurrent = m_nElements - 1;
-					// Safe reverse loop for unsigned mint
-					for (mint iSeg = pData->m_nSegments; iSeg-- > 0; )
+					// Safe reverse loop for unsigned umint
+					for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
 					{
 						if (pMeta[iSeg].m_Count > 0)
 						{
@@ -382,7 +382,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr inline_small mint TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::f_GetLen() const noexcept
+	constexpr inline_small umint TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::f_GetLen() const noexcept
 	{
 		if (!m_bValid)
 			return 0;
@@ -415,9 +415,9 @@ namespace NMib::NContainer
 	constexpr auto TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::operator * () const noexcept -> CKeyRef
 	{
 		auto const *pData = mp_pMap->mp_pData;
-		mint Count = pData->m_pSegmentMeta[m_iSegment].m_Count;
-		mint iFirst = mp_pMap->fsp_GetSegmentFirstSlot(m_iSegment, Count);
-		mint iSlot = iFirst + m_iLocalPos;
+		umint Count = pData->m_pSegmentMeta[m_iSegment].m_Count;
+		umint iFirst = mp_pMap->fsp_GetSegmentFirstSlot(m_iSegment, Count);
+		umint iSlot = iFirst + m_iLocalPos;
 
 		return pData->m_pKeys[iSlot];
 	}
@@ -499,7 +499,7 @@ namespace NMib::NContainer
 			else
 			{
 				m_iCurrent = m_nElements - 1;
-				for (mint iSeg = pData->m_nSegments; iSeg-- > 0; )
+				for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
 				{
 					if (pMeta[iSeg].m_Count > 0)
 					{
@@ -578,12 +578,12 @@ namespace NMib::NContainer
 			--m_iLocalPos;
 		else
 		{
-			// Move to previous segment - safe check for unsigned mint
+			// Move to previous segment - safe check for unsigned umint
 			if (m_iSegment == 0)
 				return;  // Can't retreat further
 
-			// Safe reverse search for unsigned mint
-			for (mint iSeg = m_iSegment; iSeg-- > 0; )
+			// Safe reverse search for unsigned umint
+			for (umint iSeg = m_iSegment; iSeg-- > 0; )
 			{
 				if (pMeta[iSeg].m_Count > 0)
 				{
@@ -622,7 +622,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::TCPackedMapKeyValueIterator(CMapPointer _pMap, mint _nElements) noexcept
+	constexpr TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::TCPackedMapKeyValueIterator(CMapPointer _pMap, umint _nElements) noexcept
 		: mp_pMap(_pMap)
 		, m_iSegment(0)
 		, m_iLocalPos(0)
@@ -641,8 +641,8 @@ namespace NMib::NContainer
 				if constexpr (t_bReverse)
 				{
 					m_iCurrent = m_nElements - 1;
-					// Safe reverse loop for unsigned mint
-					for (mint iSeg = pData->m_nSegments; iSeg-- > 0; )
+					// Safe reverse loop for unsigned umint
+					for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
 					{
 						if (pMeta[iSeg].m_Count > 0)
 						{
@@ -675,7 +675,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr inline_small mint TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::f_GetLen() const noexcept
+	constexpr inline_small umint TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::f_GetLen() const noexcept
 	{
 		if (!m_bValid)
 			return 0;
@@ -712,9 +712,9 @@ namespace NMib::NContainer
 	constexpr auto TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::operator * () const noexcept -> CRef
 	{
 		auto const *pData = mp_pMap->mp_pData;
-		mint Count = pData->m_pSegmentMeta[m_iSegment].m_Count;
-		mint iFirst = mp_pMap->fsp_GetSegmentFirstSlot(m_iSegment, Count);
-		mint iSlot = iFirst + m_iLocalPos;
+		umint Count = pData->m_pSegmentMeta[m_iSegment].m_Count;
+		umint iFirst = mp_pMap->fsp_GetSegmentFirstSlot(m_iSegment, Count);
+		umint iSlot = iFirst + m_iLocalPos;
 
 		return CRef{pData->m_pKeys[iSlot], pData->m_pValues[iSlot]};
 	}
@@ -790,7 +790,7 @@ namespace NMib::NContainer
 			else
 			{
 				m_iCurrent = m_nElements - 1;
-				for (mint iSeg = pData->m_nSegments; iSeg-- > 0; )
+				for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
 				{
 					if (pMeta[iSeg].m_Count > 0)
 					{
@@ -869,12 +869,12 @@ namespace NMib::NContainer
 			--m_iLocalPos;
 		else
 		{
-			// Move to previous segment - safe check for unsigned mint
+			// Move to previous segment - safe check for unsigned umint
 			if (m_iSegment == 0)
 				return;  // Can't retreat further
 
-			// Safe reverse search for unsigned mint
-			for (mint iSeg = m_iSegment; iSeg-- > 0; )
+			// Safe reverse search for unsigned umint
+			for (umint iSeg = m_iSegment; iSeg-- > 0; )
 			{
 				if (pMeta[iSeg].m_Count > 0)
 				{
@@ -922,7 +922,7 @@ namespace NMib::NContainer
 		if (!FindResult.m_bExists)
 			return CIterator();
 
-		mint Rank = fsp_ComputeRank(mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
+		umint Rank = fsp_ComputeRank(mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
 		CIterator Iter(this, f_GetLen());
 		Iter.m_iSegment = FindResult.m_iSegment;
 		Iter.m_iLocalPos = FindResult.m_iLocalPos;
@@ -938,7 +938,7 @@ namespace NMib::NContainer
 		if (!FindResult.m_bExists)
 			return CIteratorConst();
 
-		mint Rank = fsp_ComputeRank(mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
+		umint Rank = fsp_ComputeRank(mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
 		CIteratorConst Iter(this, f_GetLen());
 		Iter.m_iSegment = FindResult.m_iSegment;
 		Iter.m_iLocalPos = FindResult.m_iLocalPos;
@@ -959,13 +959,13 @@ namespace NMib::NContainer
 		auto *pValues = pData->m_pValues;
 		auto *pMeta = pData->m_pSegmentMeta;
 
-		mint iSlot = pValue - pValues;
-		mint iSegment = iSlot / mcp_SegmentSize;
-		mint Count = pMeta[iSegment].m_Count;
-		mint iFirst = fsp_GetSegmentFirstSlot(iSegment, Count);
-		mint iLocalPos = iSlot - iFirst;
+		umint iSlot = pValue - pValues;
+		umint iSegment = iSlot / mcp_SegmentSize;
+		umint Count = pMeta[iSegment].m_Count;
+		umint iFirst = fsp_GetSegmentFirstSlot(iSegment, Count);
+		umint iLocalPos = iSlot - iFirst;
 
-		mint Rank = fsp_ComputeRank(pData, iSegment, iLocalPos);
+		umint Rank = fsp_ComputeRank(pData, iSegment, iLocalPos);
 		CIterator Iter(this, f_GetLen());
 		Iter.m_iSegment = iSegment;
 		Iter.m_iLocalPos = iLocalPos;
@@ -985,12 +985,12 @@ namespace NMib::NContainer
 		auto *pValues = pData->m_pValues;
 		auto *pMeta = pData->m_pSegmentMeta;
 
-		mint iSlot = pValue - pValues;
-		mint iSegment = iSlot / mcp_SegmentSize;
-		mint Count = pMeta[iSegment].m_Count;
-		mint iFirst = fsp_GetSegmentFirstSlot(iSegment, Count);
-		mint iLocalPos = iSlot - iFirst;
-		mint Rank = fsp_ComputeRank(pData, iSegment, iLocalPos);
+		umint iSlot = pValue - pValues;
+		umint iSegment = iSlot / mcp_SegmentSize;
+		umint Count = pMeta[iSegment].m_Count;
+		umint iFirst = fsp_GetSegmentFirstSlot(iSegment, Count);
+		umint iLocalPos = iSlot - iFirst;
+		umint Rank = fsp_ComputeRank(pData, iSegment, iLocalPos);
 
 		CIteratorConst Iter(this, f_GetLen());
 		Iter.m_iSegment = iSegment;
@@ -1011,13 +1011,13 @@ namespace NMib::NContainer
 		auto *pValues = pData->m_pValues;
 		auto *pMeta = pData->m_pSegmentMeta;
 
-		mint iSlot = pValue - pValues;
-		mint iSegment = iSlot / mcp_SegmentSize;
-		mint Count = pMeta[iSegment].m_Count;
-		mint iFirst = fsp_GetSegmentFirstSlot(iSegment, Count);
-		mint iLocalPos = iSlot - iFirst;
+		umint iSlot = pValue - pValues;
+		umint iSegment = iSlot / mcp_SegmentSize;
+		umint Count = pMeta[iSegment].m_Count;
+		umint iFirst = fsp_GetSegmentFirstSlot(iSegment, Count);
+		umint iLocalPos = iSlot - iFirst;
 
-		mint Rank = fsp_ComputeRank(pData, iSegment, iLocalPos);
+		umint Rank = fsp_ComputeRank(pData, iSegment, iLocalPos);
 		CIterator Iter(this, f_GetLen());
 		Iter.m_iSegment = iSegment;
 		Iter.m_iLocalPos = iLocalPos;
@@ -1037,12 +1037,12 @@ namespace NMib::NContainer
 		auto *pValues = pData->m_pValues;
 		auto *pMeta = pData->m_pSegmentMeta;
 
-		mint iSlot = pValue - pValues;
-		mint iSegment = iSlot / mcp_SegmentSize;
-		mint Count = pMeta[iSegment].m_Count;
-		mint iFirst = fsp_GetSegmentFirstSlot(iSegment, Count);
-		mint iLocalPos = iSlot - iFirst;
-		mint Rank = fsp_ComputeRank(pData, iSegment, iLocalPos);
+		umint iSlot = pValue - pValues;
+		umint iSegment = iSlot / mcp_SegmentSize;
+		umint Count = pMeta[iSegment].m_Count;
+		umint iFirst = fsp_GetSegmentFirstSlot(iSegment, Count);
+		umint iLocalPos = iSlot - iFirst;
+		umint Rank = fsp_ComputeRank(pData, iSegment, iLocalPos);
 
 		CIteratorConst Iter(this, f_GetLen());
 		Iter.m_iSegment = iSegment;

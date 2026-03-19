@@ -8,8 +8,8 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	inline_never t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::fp_Insert()
 	{
-		mint PrevLen = f_GetLen();
-		DMibFastCheck(PrevLen < TCLimitsInt<mint>::mc_Max);
+		umint PrevLen = f_GetLen();
+		DMibFastCheck(PrevLen < TCLimitsInt<umint>::mc_Max);
 		t_CData *pArray = fp_MakeRoom(PrevLen + 1);
 		new((void *)(pArray + PrevLen)) t_CData();
 		++mp_StaticData.m_pData->m_Length;
@@ -19,7 +19,7 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert()
 	{
-		mint PrevLen = f_GetLen();
+		umint PrevLen = f_GetLen();
 		auto pData = mp_StaticData.m_pData;
 		if (fsp_CanGrow(PrevLen + 1, pData))
 		{
@@ -36,8 +36,8 @@ namespace NMib::NContainer
 	template <typename tf_CType, typename... tfp_CParams>
 	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::fp_Insert(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams)
 	{
-		mint PrevLen = f_GetLen();
-		DMibFastCheck(PrevLen < TCLimitsInt<mint>::mc_Max);
+		umint PrevLen = f_GetLen();
+		DMibFastCheck(PrevLen < TCLimitsInt<umint>::mc_Max);
 		t_CData *pArray = fp_MakeRoom(PrevLen + 1) + PrevLen;
 		_CreateParams.template f_Create<t_CData>(NMemory::TCAllocator_Placement<sizeof(t_CData)>((void *)(pArray)));
 		++mp_StaticData.m_pData->m_Length;
@@ -49,7 +49,7 @@ namespace NMib::NContainer
 	template <typename tf_CType, typename... tfp_CParams>
 	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams)
 	{
-		mint PrevLen = f_GetLen();
+		umint PrevLen = f_GetLen();
 		auto pData = mp_StaticData.m_pData;
 		if (fsp_CanGrow(PrevLen + 1, pData))
 		{
@@ -63,15 +63,15 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_AddArrayAtEnd(mint _Size)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_AddArrayAtEnd(umint _Size)
 	{
-		mint PrevLen = f_GetLen();
-		mint NewLen = PrevLen + _Size;
+		umint PrevLen = f_GetLen();
+		umint NewLen = PrevLen + _Size;
 		if (NewLen < PrevLen)
 			DMibErrorListBoundCheck("Vector length would have overflowed");
 
 		t_CData *pArray = fp_MakeRoom(NewLen);
-		mint nAdded = 0;
+		umint nAdded = 0;
 
 		auto Cleanup = g_OnScopeExit / [&]
 			{
@@ -80,7 +80,7 @@ namespace NMib::NContainer
 			}
 		;
 
-		for (mint i = 0; i < _Size; ++i)
+		for (umint i = 0; i < _Size; ++i)
 		{
 			new((void *)(pArray + PrevLen + i)) t_CData();
 			++nAdded;

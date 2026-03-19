@@ -28,11 +28,11 @@ namespace NMib::NContainer
 
 		constexpr TCPackedMapIterator() noexcept;
 		constexpr TCPackedMapIterator(TCPackedMapIterator const &_ToCopy) noexcept;
-		constexpr TCPackedMapIterator(CMapPointer _Map, mint _nElements) noexcept;
+		constexpr TCPackedMapIterator(CMapPointer _Map, umint _nElements) noexcept;
 
 		constexpr TCPackedMapIterator &operator = (TCPackedMapIterator const &_ToCopy) noexcept;
 
-		constexpr inline_small mint f_GetLen() const noexcept;
+		constexpr inline_small umint f_GetLen() const noexcept;
 		constexpr inline_small TCPackedMapIterator f_GetIterator() const noexcept;
 
 		constexpr inline_small operator bool() const noexcept;
@@ -52,10 +52,10 @@ namespace NMib::NContainer
 		constexpr void fp_RetreatToPrevElement() noexcept;
 
 		CMapPointer mp_pMap = nullptr;
-		mint m_iSegment = 0;           // Current segment
-		mint m_iLocalPos = 0;          // Position within segment (relative to first element)
-		mint m_iCurrent = 0;           // Absolute position in forward order
-		mint m_nElements = 0;          // Total number of elements
+		umint m_iSegment = 0;           // Current segment
+		umint m_iLocalPos = 0;          // Position within segment (relative to first element)
+		umint m_iCurrent = 0;           // Absolute position in forward order
+		umint m_nElements = 0;          // Total number of elements
 		bool m_bValid = false;
 	};
 
@@ -71,11 +71,11 @@ namespace NMib::NContainer
 
 		constexpr TCPackedMapKeyIterator() noexcept;
 		constexpr TCPackedMapKeyIterator(TCPackedMapKeyIterator const &_ToCopy) noexcept;
-		constexpr TCPackedMapKeyIterator(CMapPointer _Map, mint _nElements) noexcept;
+		constexpr TCPackedMapKeyIterator(CMapPointer _Map, umint _nElements) noexcept;
 
 		constexpr TCPackedMapKeyIterator &operator = (TCPackedMapKeyIterator const &_ToCopy) noexcept;
 
-		constexpr inline_small mint f_GetLen() const noexcept;
+		constexpr inline_small umint f_GetLen() const noexcept;
 		constexpr inline_small TCPackedMapKeyIterator f_GetIterator() const noexcept;
 
 		constexpr inline_small operator bool() const noexcept;
@@ -95,10 +95,10 @@ namespace NMib::NContainer
 		constexpr void fp_RetreatToPrevElement() noexcept;
 
 		CMapPointer mp_pMap = nullptr;
-		mint m_iSegment = 0;
-		mint m_iLocalPos = 0;
-		mint m_iCurrent = 0;
-		mint m_nElements = 0;
+		umint m_iSegment = 0;
+		umint m_iLocalPos = 0;
+		umint m_iCurrent = 0;
+		umint m_nElements = 0;
 		bool m_bValid = false;
 	};
 
@@ -114,11 +114,11 @@ namespace NMib::NContainer
 
 		constexpr TCPackedMapKeyValueIterator() noexcept;
 		constexpr TCPackedMapKeyValueIterator(TCPackedMapKeyValueIterator const &_ToCopy) noexcept;
-		constexpr TCPackedMapKeyValueIterator(CMapPointer _Map, mint _nElements) noexcept;
+		constexpr TCPackedMapKeyValueIterator(CMapPointer _Map, umint _nElements) noexcept;
 
 		constexpr TCPackedMapKeyValueIterator &operator = (TCPackedMapKeyValueIterator const &_ToCopy) noexcept;
 
-		constexpr inline_small mint f_GetLen() const noexcept;
+		constexpr inline_small umint f_GetLen() const noexcept;
 		constexpr inline_small TCPackedMapKeyValueIterator f_GetIterator() const noexcept;
 
 		constexpr inline_small operator bool() const noexcept;
@@ -137,10 +137,10 @@ namespace NMib::NContainer
 		constexpr void fp_RetreatToPrevElement() noexcept;
 
 		CMapPointer mp_pMap = nullptr;
-		mint m_iSegment = 0;
-		mint m_iLocalPos = 0;
-		mint m_iCurrent = 0;
-		mint m_nElements = 0;
+		umint m_iSegment = 0;
+		umint m_iLocalPos = 0;
+		umint m_iCurrent = 0;
+		umint m_nElements = 0;
 		bool m_bValid = false;
 	};
 }

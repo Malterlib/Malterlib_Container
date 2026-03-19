@@ -70,7 +70,7 @@ namespace NMib::NContainer
 		{
 			f_SetForceEscapedKey(_Source.f_GetForceEscapedKey());
 			f_SetForceEscapedValue(_Source.f_GetForceEscapedValue());
-			for (mint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
+			for (umint i = 0; i < ERegistryWhiteSpaceLocation_Max; ++i)
 			{
 				f_SetWhiteSpace((ERegistryWhiteSpaceLocation)i, _Source.f_GetWhiteSpace((ERegistryWhiteSpaceLocation)i));
 				mp_Key.f_SetParsed((ERegistryWhiteSpaceLocation)i, _Source.mp_Key.f_GetParsed((ERegistryWhiteSpaceLocation)i));

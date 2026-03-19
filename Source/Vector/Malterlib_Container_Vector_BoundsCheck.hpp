@@ -6,7 +6,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	inline_small void TCVector<t_CData, t_CAllocator, t_COptions>::fsp_CheckBounds(mint _Len, mint _Position)
+	inline_small void TCVector<t_CData, t_CAllocator, t_COptions>::fsp_CheckBounds(umint _Len, umint _Position)
 	{
 		if constexpr (t_COptions::mc_bCheckBounds)
 		{
@@ -16,7 +16,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	inline_small void TCVector<t_CData, t_CAllocator, t_COptions>::fsp_CheckOverlapping(mint _Start0, mint _Start1, mint _Len0, mint _Len1)
+	inline_small void TCVector<t_CData, t_CAllocator, t_COptions>::fsp_CheckOverlapping(umint _Start0, umint _Start1, umint _Len0, umint _Len1)
 	{
 		if constexpr (t_COptions::mc_bCheckBounds)
 		{

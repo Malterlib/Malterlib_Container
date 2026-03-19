@@ -5,7 +5,7 @@
 
 namespace NMib::NContainer::NPrivate
 {
-	template <mint t_nBits, mint t_nBitsInternal, mint t_nLevel, template <mint t_nBits2> class t_TCBitArray, mint t_nMaxLevels, bool t_bLast = (t_nBitsInternal == 0 || t_nLevel == t_nMaxLevels)>
+	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels, bool t_bLast = (t_nBitsInternal == 0 || t_nLevel == t_nMaxLevels)>
 	struct TCBitArrayPowerTwoInternalArray : public TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>
 	{
 		enum
@@ -34,10 +34,10 @@ namespace NMib::NContainer::NPrivate
 
 
 		template <bool tf_bValue>
-		void f_SetBit(mint _Bit);
-		void f_SetBit(mint _Bit, bool _bValue);
+		void f_SetBit(umint _Bit);
+		void f_SetBit(umint _Bit, bool _bValue);
 
-		bool f_GetBit(mint _Bit) const;
+		bool f_GetBit(umint _Bit) const;
 
 		aint f_FindFreeBit() const;
 		aint f_FindFreeBitAndSet();
@@ -45,49 +45,49 @@ namespace NMib::NContainer::NPrivate
 		aint f_FindFreeBitReverse() const;
 		aint f_FindFreeBitReverseAndSet();
 
-		aint f_FindUpperBound(mint _StartBit) const;
+		aint f_FindUpperBound(umint _StartBit) const;
 
 		template <typename t_CFunctor>
-		void f_EnumFreeBits(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		void f_EnumFreeBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 		template <typename t_CFunctor>
-		void f_EnumFreeBitRanges(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		void f_EnumFreeBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 		template <typename t_CFunctor>
-		void f_EnumSetBits(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		void f_EnumSetBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 		template <typename t_CFunctor>
-		void f_EnumSetBitRanges(t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		void f_EnumSetBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 
 		template <bool tf_bValue>
-		void f_SetBit(mint _Level, mint _Bit);
-		void f_SetBit(mint _Level, mint _Bit, bool _bValue);
+		void f_SetBit(umint _Level, umint _Bit);
+		void f_SetBit(umint _Level, umint _Bit, bool _bValue);
 
-		bool f_GetBit(mint _Level, mint _Bit) const;
+		bool f_GetBit(umint _Level, umint _Bit) const;
 
-		aint f_FindFreeBit(mint _Level) const;
-		aint f_FindFreeBitAndSet(mint _Level);
-		aint f_FindFreeBitReverse(mint _Level) const;
-		aint f_FindFreeBitReverseAndSet(mint _Level);
-		aint f_FindUpperBoundAtLevel(mint _Level, mint _StartBit) const;
+		aint f_FindFreeBit(umint _Level) const;
+		aint f_FindFreeBitAndSet(umint _Level);
+		aint f_FindFreeBitReverse(umint _Level) const;
+		aint f_FindFreeBitReverseAndSet(umint _Level);
+		aint f_FindUpperBoundAtLevel(umint _Level, umint _StartBit) const;
 
-		bool f_IsFullySet(mint _Level) const;
+		bool f_IsFullySet(umint _Level) const;
 		bool fp_IsFullyFree() const;
-		bool f_IsFullyFree(mint _Level) const;
+		bool f_IsFullyFree(umint _Level) const;
 
 		template <typename t_CFunctor>
-		void f_EnumFreeBits(mint _Level, t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		void f_EnumFreeBits(umint _Level, t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 		template <typename t_CFunctor>
-		void f_EnumFreeBitRanges(mint _Level, t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		void f_EnumFreeBitRanges(umint _Level, t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 
 		template <typename t_CFunctor>
-		void f_EnumSetBits(mint _Level, t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		void f_EnumSetBits(umint _Level, t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 		template <typename t_CFunctor>
-		void f_EnumSetBitRanges(mint _Level, t_CFunctor &&_Functor, mint _StartBit, mint _EndBit) const;
+		void f_EnumSetBitRanges(umint _Level, t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 
 	};
 
-	template <mint t_nBits, mint t_nBitsInternal, mint t_nLevel, template <mint t_nBits2> class t_TCBitArray, mint t_nMaxLevels>
+	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels>
 	struct TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, true>
 	{
-		static constexpr mint mc_nLevels = t_nLevel;
+		static constexpr umint mc_nLevels = t_nLevel;
 		static constexpr bool mc_bIsLastLevelCalc = true;
 
 		TCBitArrayPowerTwoInternalArray(bool _bInitValues);
@@ -97,28 +97,28 @@ namespace NMib::NContainer::NPrivate
 		template <typename tf_CStream>
 		void f_Consume(tf_CStream &_Stream);
 		template <bool tf_bValue>
-		void f_SetBit(mint _Bit);
-		void f_SetBit(mint _Bit, bool _bValue);
+		void f_SetBit(umint _Bit);
+		void f_SetBit(umint _Bit, bool _bValue);
 		bool fp_IsFullyFree() const;
 		bool f_IsFullySet() const;
 		bool f_IsFullyFree() const;
-		bool f_GetBit(mint _Bit) const;
+		bool f_GetBit(umint _Bit) const;
 		aint f_FindFreeBit() const;
 		aint f_FindFreeBitAndSet();
 		aint f_FindFreeBitReverse() const;
 		aint f_FindFreeBitReverseAndSet();
-		aint f_FindUpperBound(mint _StartBit) const;
-		void f_SetBit(mint _Level, mint _Bit, bool _bValue);
+		aint f_FindUpperBound(umint _StartBit) const;
+		void f_SetBit(umint _Level, umint _Bit, bool _bValue);
 		template <bool tf_bValue>
-		void f_SetBit(mint _Level, mint _Bit);
-		bool f_IsFullySet(mint _Level) const;
-		bool f_IsFullyFree(mint _Level) const;
-		bool f_GetBit(mint _Level, mint _Bit) const;
-		aint f_FindFreeBit(mint _Level) const;
-		aint f_FindFreeBitAndSet(mint _Level);
-		aint f_FindFreeBitReverse(mint _Level) const;
-		aint f_FindFreeBitReverseAndSet(mint _Level);
-		aint f_FindUpperBoundAtLevel(mint _Level, mint _StartBit) const;
+		void f_SetBit(umint _Level, umint _Bit);
+		bool f_IsFullySet(umint _Level) const;
+		bool f_IsFullyFree(umint _Level) const;
+		bool f_GetBit(umint _Level, umint _Bit) const;
+		aint f_FindFreeBit(umint _Level) const;
+		aint f_FindFreeBitAndSet(umint _Level);
+		aint f_FindFreeBitReverse(umint _Level) const;
+		aint f_FindFreeBitReverseAndSet(umint _Level);
+		aint f_FindUpperBoundAtLevel(umint _Level, umint _StartBit) const;
 	};
 }
 

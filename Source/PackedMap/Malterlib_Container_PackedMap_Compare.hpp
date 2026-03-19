@@ -9,22 +9,22 @@ namespace NMib::NContainer
 	template <typename tf_FGetFirstSlot>
 	constexpr void fsg_PackedMapAdvanceScanRange
 		(
-			mint &_iSeg
-			, mint &_iSlot
-			, mint &_iSlotEnd
+			umint &_iSeg
+			, umint &_iSlot
+			, umint &_iSlotEnd
 			, auto const *_pMeta
-			, mint _nSegments
+			, umint _nSegments
 			, tf_FGetFirstSlot &&_fGetFirstSlot
 		)
 	{
 		while (_iSeg < _nSegments)
 		{
-			mint iSeg0 = _iSeg;
-			mint iSeg1 = _iSeg + 1;
+			umint iSeg0 = _iSeg;
+			umint iSeg1 = _iSeg + 1;
 			_iSeg += 2;
 
-			mint Count0 = _pMeta[iSeg0].m_Count;
-			mint Count1 = (iSeg1 < _nSegments) ? _pMeta[iSeg1].m_Count : 0;
+			umint Count0 = _pMeta[iSeg0].m_Count;
+			umint Count1 = (iSeg1 < _nSegments) ? _pMeta[iSeg1].m_Count : 0;
 
 			if (Count0 == 0 && Count1 == 0)
 				continue;
@@ -67,8 +67,8 @@ namespace NMib::NContainer
 		auto *pData = mp_pData;
 		auto *pDataOther = _Other.mp_pData;
 
-		mint nLen = pData ? pData->m_nElements : 0;
-		mint nLenOther = pDataOther ? pDataOther->m_nElements : 0;
+		umint nLen = pData ? pData->m_nElements : 0;
+		umint nLenOther = pDataOther ? pDataOther->m_nElements : 0;
 		if (nLen != nLenOther)
 			return false;
 		if (nLen == 0)
@@ -81,10 +81,10 @@ namespace NMib::NContainer
 
 		using COtherMap = TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options>;
 
-		mint iSeg = 0, iSlot = 0, iSlotEnd = 0;
-		mint iOtherSeg = 0, iOtherSlot = 0, iOtherSlotEnd = 0;
+		umint iSeg = 0, iSlot = 0, iSlotEnd = 0;
+		umint iOtherSeg = 0, iOtherSlot = 0, iOtherSlotEnd = 0;
 
-		for (mint iEntry = 0; iEntry < nLen; ++iEntry)
+		for (umint iEntry = 0; iEntry < nLen; ++iEntry)
 		{
 			if (iSlot >= iSlotEnd)
 				fsg_PackedMapAdvanceScanRange(iSeg, iSlot, iSlotEnd, pData->m_pSegmentMeta, pData->m_nSegments, fsp_GetSegmentFirstSlot);
@@ -127,8 +127,8 @@ namespace NMib::NContainer
 		auto *pData = mp_pData;
 		auto *pDataOther = _Other.mp_pData;
 
-		mint nLen = pData ? pData->m_nElements : 0;
-		mint nLenOther = pDataOther ? pDataOther->m_nElements : 0;
+		umint nLen = pData ? pData->m_nElements : 0;
+		umint nLenOther = pDataOther ? pDataOther->m_nElements : 0;
 
 		auto LenResult = nLen <=> nLenOther;
 		if (LenResult != 0)
@@ -144,10 +144,10 @@ namespace NMib::NContainer
 
 		using COtherMap = TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options>;
 
-		mint iSeg = 0, iSlot = 0, iSlotEnd = 0;
-		mint iOtherSeg = 0, iOtherSlot = 0, iOtherSlotEnd = 0;
+		umint iSeg = 0, iSlot = 0, iSlotEnd = 0;
+		umint iOtherSeg = 0, iOtherSlot = 0, iOtherSlotEnd = 0;
 
-		for (mint iEntry = 0; iEntry < nLen; ++iEntry)
+		for (umint iEntry = 0; iEntry < nLen; ++iEntry)
 		{
 			if (iSlot >= iSlotEnd)
 				fsg_PackedMapAdvanceScanRange(iSeg, iSlot, iSlotEnd, pData->m_pSegmentMeta, pData->m_nSegments, fsp_GetSegmentFirstSlot);
@@ -192,8 +192,8 @@ namespace NMib::NContainer
 		auto *pData = mp_pData;
 		auto *pDataOther = _Other.mp_pData;
 
-		mint nLen = pData ? pData->m_nElements : 0;
-		mint nLenOther = pDataOther ? pDataOther->m_nElements : 0;
+		umint nLen = pData ? pData->m_nElements : 0;
+		umint nLenOther = pDataOther ? pDataOther->m_nElements : 0;
 		if (nLen == 0 || nLenOther == 0)
 			return COrdering(nLen <=> nLenOther);
 
@@ -204,11 +204,11 @@ namespace NMib::NContainer
 
 		using COtherMap = TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options>;
 
-		mint iSeg = 0, iSlot = 0, iSlotEnd = 0;
-		mint iOtherSeg = 0, iOtherSlot = 0, iOtherSlotEnd = 0;
+		umint iSeg = 0, iSlot = 0, iSlotEnd = 0;
+		umint iOtherSeg = 0, iOtherSlot = 0, iOtherSlotEnd = 0;
 
-		mint nMinLen = nLen < nLenOther ? nLen : nLenOther;
-		for (mint iEntry = 0; iEntry < nMinLen; ++iEntry)
+		umint nMinLen = nLen < nLenOther ? nLen : nLenOther;
+		for (umint iEntry = 0; iEntry < nMinLen; ++iEntry)
 		{
 			if (iSlot >= iSlotEnd)
 				fsg_PackedMapAdvanceScanRange(iSeg, iSlot, iSlotEnd, pData->m_pSegmentMeta, pData->m_nSegments, fsp_GetSegmentFirstSlot);

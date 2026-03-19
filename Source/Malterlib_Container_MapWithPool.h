@@ -11,7 +11,7 @@ namespace NMib::NContainer
 		, typename t_CValue
 		, typename t_CCompare = NMib::CSort_Default
 		, typename t_CAllocator = NMib::NMemory::CAllocator_Virtual
-		, mint t_GrowSize = 128
+		, umint t_GrowSize = 128
 		, typename t_CPoolType = NMib::NMemory::CPoolType_FreeableSmall
 		, typename t_CLockType = NMib::NThread::CNoLock
 	>
@@ -57,7 +57,7 @@ namespace NMib::NContainer
 
 namespace NMib::NContainer::NPrivate
 {
-	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, mint t_GrowSize, typename t_CPoolType, typename t_CLockType>
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, umint t_GrowSize, typename t_CPoolType, typename t_CLockType>
 	struct TCIsMap<TCMapWithPool<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_GrowSize, t_CPoolType, t_CLockType>>
 	{
 		static constexpr bool mc_bValue = true;

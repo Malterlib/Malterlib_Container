@@ -10,7 +10,7 @@ namespace NMib::NContainer
 	template <typename tf_CStream>
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_Feed(tf_CStream &_Stream) const
 	{
-		mint nItems = f_GetLen();
+		umint nItems = f_GetLen();
 		fg_FeedLenToStream(_Stream, nItems);
 
 		auto *pData = mp_pData;
@@ -49,7 +49,7 @@ namespace NMib::NContainer
 			return;
 
 		// Reserve capacity accounting for density upper bound
-		fp_ReserveForElementCount((mint)nItems);
+		fp_ReserveForElementCount((umint)nItems);
 
 		while (nItems)
 		{

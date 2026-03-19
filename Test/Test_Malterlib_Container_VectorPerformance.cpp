@@ -94,7 +94,7 @@ namespace NMib
 		inline_always t_CData *fg_InsertSortTryReverse(t_CData *_pLow, t_CData *_pHigh, tf_CType &&_fCompare)
 		{
 			//return _pHigh;
-			mint Swaps = 0;
+			umint Swaps = 0;
 			t_CData *pI = _pHigh - 2;
 			for (; pI >= _pLow; pI--)
 			{
@@ -102,12 +102,12 @@ namespace NMib
 
 				if (COrdering_Partial(_fCompare(*pI, *pJ)) < 0)
 				{
-					if (Swaps >= mint(_pHigh - pI))
+					if (Swaps >= umint(_pHigh - pI))
 						break; // Brake if we are above n*2
 					t_CData Temp(fg_Move(*pI));
 					pJ[-1] = fg_Move(*pJ);
 					pJ++;
-					mint SwapsBefore = Swaps;
+					umint SwapsBefore = Swaps;
 					++Swaps;
 					for (; pJ < _pHigh && COrdering_Partial(_fCompare(Temp, *pJ)) < 0; pJ++)
 					{
@@ -133,14 +133,14 @@ namespace NMib
 		inline_always t_CData *fg_InsertSortTry(t_CData *_pLow, t_CData *_pHigh, tf_CType &&_fCompare)
 		{
 			//return _pLow;
-			mint Swaps = 0;
+			umint Swaps = 0;
 			t_CData *pL = _pLow;
 			t_CData *pEnd = _pHigh - 1;
 
 			auto fl_Swap
 				= [&](t_CData *pL) -> bool
 				{
-					if (Swaps >= mint(pL - _pLow) + EInsertSortTryMaxSwaps)
+					if (Swaps >= umint(pL - _pLow) + EInsertSortTryMaxSwaps)
 						return true;
 					t_CData *pJ = pL;
 
@@ -148,7 +148,7 @@ namespace NMib
 					pJ[1] = fg_Move(*pJ);
 					pJ--;
 
-					mint SwapsBefore = Swaps;
+					umint SwapsBefore = Swaps;
 
 					++Swaps;
 
@@ -253,15 +253,15 @@ namespace NMib
 				EIntrospective_InsertionSortLimit = 20,
 			};
 
-			inline_always static mint fg_TI7Rand(mint _Old)
+			inline_always static umint fg_TI7Rand(umint _Old)
 			{
 				return (_Old * 69069 + 362437);
 			}
 
 			template <typename tf_CIterator, typename tf_CCompare>
-			inline_always static void fg_TI7InsertionSort(tf_CIterator _Iterator, mint _Length, tf_CCompare &&_Comp)
+			inline_always static void fg_TI7InsertionSort(tf_CIterator _Iterator, umint _Length, tf_CCompare &&_Comp)
 			{
-				// mint counter;
+				// umint counter;
 
 				if (_Length > 1)
 				{
@@ -300,10 +300,10 @@ namespace NMib
 			}
 
 			template <typename tf_CIterator, typename tf_CCompare>
-			inline_always static void fg_TI7SiftDownMiddle(tf_CIterator _Iterator, mint _i, mint _n, tf_CCompare &&_Comp)
+			inline_always static void fg_TI7SiftDownMiddle(tf_CIterator _Iterator, umint _i, umint _n, tf_CCompare &&_Comp)
 			{
-				mint p = _i;
-				mint c = p * 2;
+				umint p = _i;
+				umint c = p * 2;
 				auto temp = _Iterator[p];
 
 				while(_n - p > p)
@@ -330,11 +330,11 @@ namespace NMib
 			}
 
 			template <typename tf_CIterator, typename tf_CCompare>
-			inline_never static void fg_TI7HeapSort(tf_CIterator _Iterator, mint _Length, tf_CCompare &&_Comp)
+			inline_never static void fg_TI7HeapSort(tf_CIterator _Iterator, umint _Length, tf_CCompare &&_Comp)
 			{
 				if (_Length > 1)
 				{
-					mint i = --_Length / 2;
+					umint i = --_Length / 2;
 					do
 					{
 						fg_TI7SiftDownMiddle(_Iterator, i, _Length, _Comp);
@@ -351,7 +351,7 @@ namespace NMib
 			}
 
 			template <typename tf_CIterator, typename tf_CCompare>
-			static mint fg_TI7Loop(tf_CIterator _Iterator, mint _Length, mint _DepthLeft, mint _Random, tf_CCompare &&_Comp)
+			static umint fg_TI7Loop(tf_CIterator _Iterator, umint _Length, umint _DepthLeft, umint _Random, tf_CCompare &&_Comp)
 			{
 				static_assert(ETI7_InsertionSortLimit >= 4, "what");
 
@@ -367,7 +367,7 @@ namespace NMib
 						return _Random;
 					}
 					_Random = fg_TI7Rand(_Random);
-					NMib::fg_Swap(*_Iterator, *(_Iterator + mint(_Random % mint(--_Length))));
+					NMib::fg_Swap(*_Iterator, *(_Iterator + umint(_Random % umint(--_Length))));
 					tf_CIterator iFirst = _Iterator + 1;
 					tf_CIterator iLast = _Iterator + _Length;
 					NMib::NAlgorithm::fg_Sort3(*iFirst, *_Iterator, *iLast, _Comp);
@@ -406,7 +406,7 @@ namespace NMib
 				return _Random;
 			}
 			template <typename tf_CIterator, typename tf_CCompare>
-			inline_never static mint fg_IntrospectiveLoop(tf_CIterator _Iterator, mint _Length, mint _DepthLeft, mint _Random, tf_CCompare &&_Comp)
+			inline_never static umint fg_IntrospectiveLoop(tf_CIterator _Iterator, umint _Length, umint _DepthLeft, umint _Random, tf_CCompare &&_Comp)
 			{
 				static_assert(EIntrospective_InsertionSortLimit >= 4, "what");
 				if (_Length > EIntrospective_InsertionSortLimit)
@@ -461,7 +461,7 @@ namespace NMib
 							return _Random;
 						}
 						//_Random = fg_TI7Rand(_Random);
-						//NMib::fg_Swap(*_Iterator, *(_Iterator + mint(_Random % mint(--_Length))));
+						//NMib::fg_Swap(*_Iterator, *(_Iterator + umint(_Random % umint(--_Length))));
 						--_Length;
 						NMib::fg_Swap(*_Iterator, *(_Iterator + _Length / 2));
 						tf_CIterator iFirst = _Iterator + 1;
@@ -506,14 +506,14 @@ namespace NMib
 		}
 
 		template <typename tf_CIterator, typename tf_CCompare>
-		inline void fg_TI7Sort(tf_CIterator _Iterator, mint _Count, tf_CCompare &&_Comp)
+		inline void fg_TI7Sort(tf_CIterator _Iterator, umint _Count, tf_CCompare &&_Comp)
 		{
 			if (_Count > 1 && !fg_IsSorted(_Iterator, _Iterator+_Count, _Comp))
 			{
 				if (!fg_IsReverseSorted(_Iterator, _Iterator + _Count, _Comp))
 				{
-					mint MaxDepth = 2;
-					for (mint n = _Count / 4; n; n /= 2)
+					umint MaxDepth = 2;
+					for (umint n = _Count / 4; n; n /= 2)
 						++MaxDepth;
 					MaxDepth *= 2;
 					NPrivate::fg_TI7Loop(_Iterator, _Count, MaxDepth, NPrivate::ETI7_RandomSeed, _Comp);
@@ -526,7 +526,7 @@ namespace NMib
 		}
 
 		template <typename tf_CIterator, typename tf_CCompare>
-		inline_small void fg_SortIntrospective(tf_CIterator _Iterator, mint _Count, tf_CCompare &&_Comp)
+		inline_small void fg_SortIntrospective(tf_CIterator _Iterator, umint _Count, tf_CCompare &&_Comp)
 		{
 			if (_Count < 16)
 			{
@@ -534,12 +534,12 @@ namespace NMib
 				return;
 			}
 
-			mint MaxDepth = (2 + fg_GetHighestBitSetNoZero(_Count / 4)) * 2;
+			umint MaxDepth = (2 + fg_GetHighestBitSetNoZero(_Count / 4)) * 2;
 			NPrivate::fg_IntrospectiveLoop(_Iterator, _Count, MaxDepth, NPrivate::ETI7_RandomSeed, _Comp);
 		}
 
 		template <typename tf_CIterator>
-		inline_small void fg_SortIntrospective(tf_CIterator _Iterator, mint _Count)
+		inline_small void fg_SortIntrospective(tf_CIterator _Iterator, umint _Count)
 		{
 			fg_SortIntrospective(_Iterator, _Count, CSort_Default());
 		}

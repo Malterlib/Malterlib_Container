@@ -27,7 +27,7 @@ namespace NMib::NContainer
 			return true;
 
 		t_CData const *pArray = f_GetArray();
-		for (mint i = 0, j = 1; j != Length; ++i, ++j)
+		for (umint i = 0, j = 1; j != Length; ++i, ++j)
 		{
 			if (fg_CheckOrdering(_fCompare(pArray[j], pArray[i])) < 0)
 				return false;
@@ -52,7 +52,7 @@ namespace NMib::NContainer
 
 		t_CData const *pArray = f_GetArray();
 
-		for (mint i = 0, j = 1; j != Length; ++i, ++j)
+		for (umint i = 0, j = 1; j != Length; ++i, ++j)
 		{
 			if (fg_CheckOrdering(_fCompare(pArray[i], pArray[j])) >= 0)
 				return false;
@@ -86,7 +86,7 @@ namespace NMib::NContainer
 		}
 		++iUniqueFinish;
 
-		mint iPos = iUniqueFinish ? iUniqueFinish - f_GetIterator() : f_GetLen();
+		umint iPos = iUniqueFinish ? iUniqueFinish - f_GetIterator() : f_GetLen();
 		f_SetLen(iPos);
 	}
 

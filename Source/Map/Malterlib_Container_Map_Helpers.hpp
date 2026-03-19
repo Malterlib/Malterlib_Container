@@ -133,7 +133,7 @@ namespace NMib::NContainer::NPrivate
 				(
 					sizeof(CNode)
 					, alignof(CNode)
-					, [&](void * _pAlloc, mint _Size) -> bool
+					, [&](void * _pAlloc, umint _Size) -> bool
 					{
 						auto Cleanup = _Map.mp_Allocator.f_MakeSafe(_pAlloc, _Size);
 						auto pData = (CNode *)_pAlloc;
@@ -216,7 +216,7 @@ namespace NMib::NContainer::NPrivate
 				(
 					sizeof(CNode)
 					, alignof(CNode)
-					, [&](void * _pAlloc, mint _Size) -> bool
+					, [&](void * _pAlloc, umint _Size) -> bool
 					{
 						auto Cleanup = _Map.mp_Allocator.f_MakeSafe(_pAlloc, _Size);
 						auto pData = (CNode *)_pAlloc;

@@ -7,13 +7,13 @@ namespace NMib::NContainer
 {
 	// Calibrator tree level count (binary tree over segments)
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr mint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_CalibratorLevelCount(mint _nSegments) const noexcept
+	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_CalibratorLevelCount(umint _nSegments) const noexcept
 	{
 		if (_nSegments <= 1)
 			return 1;
 
-		mint nLevels = 1;
-		mint Size = _nSegments;
+		umint nLevels = 1;
+		umint Size = _nSegments;
 		while (Size > 1)
 		{
 			Size = (Size + 1) / 2;
@@ -27,10 +27,10 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetLevelThresholds
 		(
-			mint _iLevel
-			, mint _nLevels
-			, mint &o_ScaledLowerBound
-			, mint &o_ScaledUpperBound
+			umint _iLevel
+			, umint _nLevels
+			, umint &o_ScaledLowerBound
+			, umint &o_ScaledUpperBound
 		) const noexcept
 	{
 		o_ScaledLowerBound = fp_GetLevelLowerThreshold(_iLevel, _nLevels);
@@ -38,7 +38,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr mint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetLevelLowerThreshold(mint _iLevel, mint _nLevels) const noexcept
+	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetLevelLowerThreshold(umint _iLevel, umint _nLevels) const noexcept
 	{
 		if (_nLevels <= 1)
 			return mcp_LeafLowerBoundScaled;
@@ -46,7 +46,7 @@ namespace NMib::NContainer
 		if constexpr (!mcp_bUseFixedPoint)
 		{
 			pfp64 Threshold = pfp64(_iLevel) / pfp64(_nLevels - 1);
-			return (mint)((mc_LeafLowerBound + (mc_RootLowerBound - mc_LeafLowerBound) * Threshold) * mcp_DensityScale);
+			return (umint)((mc_LeafLowerBound + (mc_RootLowerBound - mc_LeafLowerBound) * Threshold) * mcp_DensityScale);
 		}
 		else if constexpr (mcp_bUseReciprocalDivide)
 			return mcp_LeafLowerBoundScaled + fsp_ReciprocalDivide(mcp_LowerBoundDeltaScaled * _iLevel, _nLevels - 1);
@@ -55,7 +55,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr mint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetLevelUpperThreshold(mint _iLevel, mint _nLevels) const noexcept
+	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetLevelUpperThreshold(umint _iLevel, umint _nLevels) const noexcept
 	{
 		if (_nLevels <= 1)
 			return mcp_LeafUpperBoundScaled;
@@ -63,7 +63,7 @@ namespace NMib::NContainer
 		if constexpr (!mcp_bUseFixedPoint)
 		{
 			pfp64 Threshold = pfp64(_iLevel) / pfp64(_nLevels - 1);
-			return (mint)((mc_LeafUpperBound + (mc_RootUpperBound - mc_LeafUpperBound) * Threshold) * mcp_DensityScale);
+			return (umint)((mc_LeafUpperBound + (mc_RootUpperBound - mc_LeafUpperBound) * Threshold) * mcp_DensityScale);
 		}
 		else if constexpr (mcp_bUseReciprocalDivide)
 			return mcp_LeafUpperBoundScaled - fsp_ReciprocalDivide(mcp_UpperBoundDeltaScaled * _iLevel, _nLevels - 1);
@@ -74,8 +74,8 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetLevelDensityBounds
 		(
-			mint _iLevel
-			, mint _nLevels
+			umint _iLevel
+			, umint _nLevels
 		) const noexcept -> CLevelDensityBounds
 	{
 		if constexpr (!mcp_bUseFixedPoint)
@@ -106,17 +106,17 @@ namespace NMib::NContainer
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_ElementBoundsFromDensity
 		(
 			CLevelDensityBounds const &_DensityBounds
-			, mint _Capacity
-			, mint &o_nMinElements
-			, mint &o_nMaxElements
+			, umint _Capacity
+			, umint &o_nMinElements
+			, umint &o_nMaxElements
 		) const noexcept
 	{
 		if constexpr (!mcp_bUseFixedPoint)
 		{
-			o_nMaxElements = (mint)(_DensityBounds.m_UpperBound * pfp64(_Capacity));
+			o_nMaxElements = (umint)(_DensityBounds.m_UpperBound * pfp64(_Capacity));
 
 			pfp64 LowerProduct = _DensityBounds.m_LowerBound * pfp64(_Capacity);
-			o_nMinElements = (mint)LowerProduct;
+			o_nMinElements = (umint)LowerProduct;
 			if (pfp64(o_nMinElements) < LowerProduct)
 				++o_nMinElements;
 		}
@@ -130,11 +130,11 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetLevelElementBounds
 		(
-			mint _iLevel
-			, mint _nLevels
-			, mint _Capacity
-			, mint &o_nMinElements
-			, mint &o_nMaxElements
+			umint _iLevel
+			, umint _nLevels
+			, umint _Capacity
+			, umint &o_nMinElements
+			, umint &o_nMaxElements
 		) const noexcept
 	{
 		fp_ElementBoundsFromDensity(fp_GetLevelDensityBounds(_iLevel, _nLevels), _Capacity, o_nMinElements, o_nMaxElements);
@@ -144,7 +144,7 @@ namespace NMib::NContainer
 	// Level 0: one entry per segment
 	// Level k: ceil(level[k-1] / 2) entries, each storing sum of 2 children
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_ComputeCalibratorLayout(mint _nSegments) const noexcept -> CCalibratorLayout
+	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_ComputeCalibratorLayout(umint _nSegments) const noexcept -> CCalibratorLayout
 	{
 		CCalibratorLayout Layout = {};
 
@@ -157,13 +157,13 @@ namespace NMib::NContainer
 		Layout.m_nLevels = 1;
 
 		// Build upper levels until we reach a single root entry
-		mint PrevSize = _nSegments;
-		mint Offset = _nSegments;
+		umint PrevSize = _nSegments;
+		umint Offset = _nSegments;
 
 		while (PrevSize > 1 && Layout.m_nLevels < mcp_MaxCalibratorLevels)
 		{
 			// Next level size = ceil(prevSize / 2)
-			mint NextSize = (PrevSize + 1) / 2;
+			umint NextSize = (PrevSize + 1) / 2;
 
 			Layout.m_LevelSizes[Layout.m_nLevels] = NextSize;
 			Layout.m_LevelOffsets[Layout.m_nLevels] = Offset;
@@ -179,7 +179,7 @@ namespace NMib::NContainer
 
 	// Calculate calibrator tree size in bytes (counts + level offsets)
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr mint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_CalibratorTreeSizeBytes(mint _nSegments) const noexcept
+	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_CalibratorTreeSizeBytes(umint _nSegments) const noexcept
 	{
 		if (_nSegments == 0)
 			return 0;
@@ -187,11 +187,11 @@ namespace NMib::NContainer
 		CCalibratorLayout Layout = fp_ComputeCalibratorLayout(_nSegments);
 
 		// Size for all count entries
-		mint Size = Layout.m_nTotalEntries * sizeof(CCalibratorCount);
+		umint Size = Layout.m_nTotalEntries * sizeof(CCalibratorCount);
 
 		// Size for level offsets array
-		Size = fg_AlignUp(Size, (mint)alignof(mint));
-		Size += Layout.m_nLevels * sizeof(mint);
+		Size = fg_AlignUp(Size, (umint)alignof(umint));
+		Size += Layout.m_nLevels * sizeof(umint);
 
 		return Size;
 	}
@@ -202,15 +202,15 @@ namespace NMib::NContainer
 	{
 		auto const *pMeta = _pData->m_pSegmentMeta;
 		CCalibratorCount *pCounts = _pData->m_pCalibratorCounts;
-		mint const *pOffsets = _pData->m_pCalibratorOffsets;
+		umint const *pOffsets = _pData->m_pCalibratorOffsets;
 		uint16 nLevels = _pData->m_nCalibratorTreeLevels;
-		mint nSegments = _pData->m_nSegments;
+		umint nSegments = _pData->m_nSegments;
 
 		if (nLevels == 0)
 			return;
 
 		// Level 0: copy segment counts
-		for (mint iSegment = 0; iSegment < nSegments; ++iSegment)
+		for (umint iSegment = 0; iSegment < nSegments; ++iSegment)
 			pCounts[pOffsets[0] + iSegment] = pMeta[iSegment].m_Count;
 
 		// Upper levels: sum children
@@ -218,15 +218,15 @@ namespace NMib::NContainer
 
 		for (uint16 iLevel = 1; iLevel < nLevels; ++iLevel)
 		{
-			mint ThisSize = Layout.m_LevelSizes[iLevel];
-			mint ChildSize = Layout.m_LevelSizes[iLevel - 1];
-			mint iThisOffset = pOffsets[iLevel];
-			mint iChildOffset = pOffsets[iLevel - 1];
+			umint ThisSize = Layout.m_LevelSizes[iLevel];
+			umint ChildSize = Layout.m_LevelSizes[iLevel - 1];
+			umint iThisOffset = pOffsets[iLevel];
+			umint iChildOffset = pOffsets[iLevel - 1];
 
-			for (mint iEntry = 0; iEntry < ThisSize; ++iEntry)
+			for (umint iEntry = 0; iEntry < ThisSize; ++iEntry)
 			{
-				mint iChild0 = iEntry * 2;
-				mint iChild1 = iEntry * 2 + 1;
+				umint iChild0 = iEntry * 2;
+				umint iChild1 = iEntry * 2 + 1;
 
 				CCalibratorCount nSum = pCounts[iChildOffset + iChild0];
 				if (iChild1 < ChildSize)
@@ -240,40 +240,40 @@ namespace NMib::NContainer
 	// Update calibrator counts for a range of segments
 	// Complexity: O(W + W/2 + W/4 + ...) = O(W) for the window, O(log n) for ancestor path
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_UpdateCalibratorCountsRange(CPackedMapData *_pData, mint _iStartSeg, mint _iEndSeg) noexcept
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_UpdateCalibratorCountsRange(CPackedMapData *_pData, umint _iStartSeg, umint _iEndSeg) noexcept
 	{
 		auto const *pMeta = _pData->m_pSegmentMeta;
 		CCalibratorCount *pCounts = _pData->m_pCalibratorCounts;
-		mint const *pOffsets = _pData->m_pCalibratorOffsets;
+		umint const *pOffsets = _pData->m_pCalibratorOffsets;
 		uint16 nLevels = _pData->m_nCalibratorTreeLevels;
 
 		if (nLevels == 0)
 			return;
 
 		// Level 0: update leaf counts in range
-		for (mint iSegment = _iStartSeg; iSegment < _iEndSeg; ++iSegment)
+		for (umint iSegment = _iStartSeg; iSegment < _iEndSeg; ++iSegment)
 			pCounts[pOffsets[0] + iSegment] = pMeta[iSegment].m_Count;
 
 		// Upper levels: update parent range that covers affected children
 		CCalibratorLayout Layout = fp_ComputeCalibratorLayout(_pData->m_nSegments);
 
-		mint iRangeStart = _iStartSeg;
-		mint iRangeEnd = _iEndSeg;
+		umint iRangeStart = _iStartSeg;
+		umint iRangeEnd = _iEndSeg;
 
 		for (uint16 iLevel = 1; iLevel < nLevels; ++iLevel)
 		{
 			// Parent indices covering child range
-			mint iParentStart = iRangeStart / 2;
-			mint iParentEnd = (iRangeEnd + 1) / 2;
+			umint iParentStart = iRangeStart / 2;
+			umint iParentEnd = (iRangeEnd + 1) / 2;
 
-			mint ChildSize = Layout.m_LevelSizes[iLevel - 1];
-			mint iChildOffset = pOffsets[iLevel - 1];
-			mint iThisOffset = pOffsets[iLevel];
+			umint ChildSize = Layout.m_LevelSizes[iLevel - 1];
+			umint iChildOffset = pOffsets[iLevel - 1];
+			umint iThisOffset = pOffsets[iLevel];
 
-			for (mint iChild = iParentStart; iChild < iParentEnd; ++iChild)
+			for (umint iChild = iParentStart; iChild < iParentEnd; ++iChild)
 			{
-				mint iChild0 = iChild * 2;
-				mint iChild1 = iChild * 2 + 1;
+				umint iChild0 = iChild * 2;
+				umint iChild1 = iChild * 2 + 1;
 
 				CCalibratorCount nSum = pCounts[iChildOffset + iChild0];
 				if (iChild1 < ChildSize)
@@ -291,17 +291,17 @@ namespace NMib::NContainer
 	// Update calibrator counts when a segment count changes by delta
 	// Updates path from leaf to root: O(log n)
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_UpdateCalibratorCountOnDelta(CPackedMapData *_pData, mint _iSegment, int32 _nDelta) noexcept
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_UpdateCalibratorCountOnDelta(CPackedMapData *_pData, umint _iSegment, int32 _nDelta) noexcept
 	{
 		CCalibratorCount *pCounts = _pData->m_pCalibratorCounts;
-		mint const *pOffsets = _pData->m_pCalibratorOffsets;
+		umint const *pOffsets = _pData->m_pCalibratorOffsets;
 		uint16 nLevels = _pData->m_nCalibratorTreeLevels;
 
 		// Update path from leaf to root
-		mint iIndex = _iSegment;
+		umint iIndex = _iSegment;
 		for (uint16 iLevel = 0; iLevel < nLevels; ++iLevel)
 		{
-			mint iEntry = pOffsets[iLevel] + iIndex;
+			umint iEntry = pOffsets[iLevel] + iIndex;
 
 			if (_nDelta > 0)
 				pCounts[iEntry] += (CCalibratorCount)_nDelta;
@@ -316,15 +316,15 @@ namespace NMib::NContainer
 	// Get element count for a window at a given level
 	// Window at level k starting at segment i has index = i / (2^k)
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr mint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetCalibratorWindowCount
+	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetCalibratorWindowCount
 		(
 			CPackedMapData const *_pData
-			, mint _iLevel
-			, mint _iWindowIndex
+			, umint _iLevel
+			, umint _iWindowIndex
 		)
 		const noexcept
 	{
-		mint const *pOffsets = _pData->m_pCalibratorOffsets;
+		umint const *pOffsets = _pData->m_pCalibratorOffsets;
 		CCalibratorCount const *pCounts = _pData->m_pCalibratorCounts;
 
 		return pCounts[pOffsets[_iLevel] + _iWindowIndex];
@@ -334,7 +334,7 @@ namespace NMib::NContainer
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_RecordInsertion
 		(
 			CPackedMapData *_pData
-			, mint _iSegment
+			, umint _iSegment
 			, t_CKey const *_pPrevKey
 			, t_CKey const *_pNextKey
 		)
@@ -350,7 +350,7 @@ namespace NMib::NContainer
 		// Increment global time counter
 		uint32 CurrentTime = ++_pData->m_TimeCounter;
 
-		mint iQueuePos = Meta.m_iQueueHead;
+		umint iQueuePos = Meta.m_iQueueHead;
 		Meta.m_Timestamps[iQueuePos] = CurrentTime;
 		Meta.m_iQueueHead = (uint8)((iQueuePos + 1) % mcp_DetectorQueueSize);
 		if (Meta.m_QueueCount < mcp_DetectorQueueSize)
@@ -495,7 +495,7 @@ namespace NMib::NContainer
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_RecordDeletion
 		(
 			CPackedMapData *_pData
-			, mint _iSegment
+			, umint _iSegment
 			, t_CKey const *_pPrevKey
 			, t_CKey const *_pNextKey
 		)
@@ -509,7 +509,7 @@ namespace NMib::NContainer
 		auto *pKeys = _pData->m_pKeys;
 
 		uint32 CurrentTime = ++_pData->m_TimeCounter;
-		mint iQueuePos = Meta.m_iQueueHead;
+		umint iQueuePos = Meta.m_iQueueHead;
 		Meta.m_Timestamps[iQueuePos] = CurrentTime;
 		Meta.m_iQueueHead = (uint8)((iQueuePos + 1) % mcp_DetectorQueueSize);
 		if (Meta.m_QueueCount < mcp_DetectorQueueSize)
@@ -637,7 +637,7 @@ namespace NMib::NContainer
 
 	// Reset detector state for a segment after rebalancing
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_ResetDetectorState(CPackedMapData *_pData, mint _iSegment)
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_ResetDetectorState(CPackedMapData *_pData, umint _iSegment)
 	{
 		auto &Meta = _pData->m_pSegmentMeta[_iSegment];
 		Meta.m_BackwardRunLength = 0;
@@ -657,7 +657,7 @@ namespace NMib::NContainer
 			Meta.m_DetectorKeys.m_ForwardRunLengthSlot.f_Clear();
 		}
 
-		for (mint iTimestamp = 0; iTimestamp < mcp_DetectorQueueSize; ++iTimestamp)
+		for (umint iTimestamp = 0; iTimestamp < mcp_DetectorQueueSize; ++iTimestamp)
 			Meta.m_Timestamps[iTimestamp] = 0;
 	}
 
@@ -666,8 +666,8 @@ namespace NMib::NContainer
 		(
 			CSegmentMeta &_Out
 			, CSegmentMeta const &_In
-			, mint _Overlap
-			, mint _SourceCount
+			, umint _Overlap
+			, umint _SourceCount
 		)
 	{
 		_Out.m_BackwardRunLength = 0;
@@ -688,7 +688,7 @@ namespace NMib::NContainer
 			_Out.m_DetectorKeys.m_ForwardRunLengthSlot.f_Clear();
 		}
 
-		for (mint iTimestamp = 0; iTimestamp < mcp_DetectorQueueSize; ++iTimestamp)
+		for (umint iTimestamp = 0; iTimestamp < mcp_DetectorQueueSize; ++iTimestamp)
 			_Out.m_Timestamps[iTimestamp] = 0;
 
 		if (_Overlap <= 0 || _SourceCount <= 0)
@@ -696,7 +696,7 @@ namespace NMib::NContainer
 
 		auto fScaleUnsigned = [&](uint16 _Value) -> uint16
 			{
-				return (uint16)(((mint)_Value * _Overlap) / _SourceCount);
+				return (uint16)(((umint)_Value * _Overlap) / _SourceCount);
 			}
 		;
 
@@ -705,7 +705,7 @@ namespace NMib::NContainer
 				if (_Value == 0)
 					return 0;
 
-				mint AbsScaled = ((mint)fg_Abs((int)_Value) * _Overlap) / _SourceCount;
+				umint AbsScaled = ((umint)fg_Abs((int)_Value) * _Overlap) / _SourceCount;
 				if (AbsScaled == 0)
 					return 0;
 
@@ -735,14 +735,14 @@ namespace NMib::NContainer
 
 		// Preserve only a compact recent sketch across redistribution.
 		// Carrying the full queue forward makes detector history effectively immortal.
-		constexpr mint c_nRemapTimestampCap = 8;
-		mint QueueScaled = ((mint)_In.m_QueueCount * _Overlap) / _SourceCount;
-		mint nQueueCopy = fg_Min((mint)_In.m_QueueCount, fg_Min((mint)c_nRemapTimestampCap, QueueScaled));
+		constexpr umint c_nRemapTimestampCap = 8;
+		umint QueueScaled = ((umint)_In.m_QueueCount * _Overlap) / _SourceCount;
+		umint nQueueCopy = fg_Min((umint)_In.m_QueueCount, fg_Min((umint)c_nRemapTimestampCap, QueueScaled));
 		if (nQueueCopy <= 0)
 			return;
 
-		mint iStart = (_In.m_iQueueHead + _In.m_QueueCount - nQueueCopy) % mcp_DetectorQueueSize;
-		for (mint iTimestamp = 0; iTimestamp < nQueueCopy; ++iTimestamp)
+		umint iStart = (_In.m_iQueueHead + _In.m_QueueCount - nQueueCopy) % mcp_DetectorQueueSize;
+		for (umint iTimestamp = 0; iTimestamp < nQueueCopy; ++iTimestamp)
 			_Out.m_Timestamps[iTimestamp] = _In.m_Timestamps[(iStart + iTimestamp) % mcp_DetectorQueueSize];
 
 		_Out.m_QueueCount = (uint8)nQueueCopy;
@@ -750,7 +750,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr bool TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_IsSegmentMarked(CPackedMapData const *_pData, mint _iSegment) const noexcept
+	constexpr bool TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_IsSegmentMarked(CPackedMapData const *_pData, umint _iSegment) const noexcept
 	{
 		auto const &Meta = _pData->m_pSegmentMeta[_iSegment];
 
@@ -762,8 +762,8 @@ namespace NMib::NContainer
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_FindMarkedIntervals
 		(
 			CPackedMapData const *_pData
-			, mint _iStartSeg
-			, mint _iEndSeg
+			, umint _iStartSeg
+			, umint _iEndSeg
 			, CMarkedIntervalVector &_OutIntervals
 		)
 	{
@@ -771,7 +771,7 @@ namespace NMib::NContainer
 
 		auto const *pMeta = _pData->m_pSegmentMeta;
 
-		mint nSegments = _iEndSeg - _iStartSeg;
+		umint nSegments = _iEndSeg - _iStartSeg;
 		if (nSegments == 0)
 			return;
 
@@ -783,10 +783,10 @@ namespace NMib::NContainer
 		AllTimestamps.f_Reserve(nSegments * mcp_DetectorQueueSize);
 		uint32 MaxTimestamp = 0;
 
-		for (mint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
+		for (umint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
 		{
 			auto const &Meta = pMeta[iSeg];
-			for (mint iTimestamp = 0; iTimestamp < Meta.m_QueueCount; ++iTimestamp)
+			for (umint iTimestamp = 0; iTimestamp < Meta.m_QueueCount; ++iTimestamp)
 			{
 				if constexpr (t_Options.m_bStats)
 					MaxTimestamp = fg_Max(MaxTimestamp, Meta.m_Timestamps[iTimestamp]);
@@ -804,8 +804,8 @@ namespace NMib::NContainer
 		// Compute a high percentile using linear-time selection: O(QW).
 		// Avoid picking the absolute maximum for typical window sizes, otherwise
 		// the ">= percentile" hotness test degenerates and hot segments vanish.
-		mint nTimestamps = AllTimestamps.f_GetLen();
-		mint iPercentileIdx = (nTimestamps * 9) / 10;  // ~90th percentile
+		umint nTimestamps = AllTimestamps.f_GetLen();
+		umint iPercentileIdx = (nTimestamps * 9) / 10;  // ~90th percentile
 		if (iPercentileIdx >= nTimestamps - 1)
 			iPercentileIdx = nTimestamps - 2;
 		AllTimestamps.f_Sort();
@@ -814,14 +814,14 @@ namespace NMib::NContainer
 		// Hotness test: a segment is hot if it contains any very recent timestamp.
 		// After redistribution, queues are intentionally compact sketches, so a
 		// "fraction of queue" rule becomes too strict and suppresses hotspots entirely.
-		auto fIsSegmentHot = [&](mint _iSeg) -> bool
+		auto fIsSegmentHot = [&](umint _iSeg) -> bool
 			{
 				auto const &Meta = pMeta[_iSeg];
 				if (Meta.m_QueueCount == 0)
 					return false;
 
-				mint nAbovePercentile = 0;
-				for (mint iTimestamp = 0; iTimestamp < Meta.m_QueueCount; ++iTimestamp)
+				umint nAbovePercentile = 0;
+				for (umint iTimestamp = 0; iTimestamp < Meta.m_QueueCount; ++iTimestamp)
 				{
 					if (Meta.m_Timestamps[iTimestamp] >= Percentile)
 						++nAbovePercentile;
@@ -833,20 +833,20 @@ namespace NMib::NContainer
 
 		if constexpr (t_Options.m_bStats)
 		{
-			mint nSegmentsWithTimestamps = 0;
-			mint nSegmentsAnyAbovePercentile = 0;
-			mint nSegmentsHalfAbovePercentile = 0;
-			mint nSegmentsThreeQuarterAbovePercentile = 0;
-			mint nHotSegments = 0;
-			for (mint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
+			umint nSegmentsWithTimestamps = 0;
+			umint nSegmentsAnyAbovePercentile = 0;
+			umint nSegmentsHalfAbovePercentile = 0;
+			umint nSegmentsThreeQuarterAbovePercentile = 0;
+			umint nHotSegments = 0;
+			for (umint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
 			{
 				auto const &Meta = pMeta[iSeg];
 				if (Meta.m_QueueCount > 0)
 				{
 					++nSegmentsWithTimestamps;
 
-					mint nAbovePercentile = 0;
-					for (mint iTimestamp = 0; iTimestamp < Meta.m_QueueCount; ++iTimestamp)
+					umint nAbovePercentile = 0;
+					for (umint iTimestamp = 0; iTimestamp < Meta.m_QueueCount; ++iTimestamp)
 					{
 						if (Meta.m_Timestamps[iTimestamp] >= Percentile)
 							++nAbovePercentile;
@@ -876,23 +876,23 @@ namespace NMib::NContainer
 			;
 		}
 
-		mint nTwoElementIntervals = 0;
-		mint nWholeSegmentIntervals = 0;
-		mint nBackwardRunLengthTriggered = 0;
-		mint nForwardRunLengthTriggered = 0;
-		mint nTwoElementIntervalFailures = 0;
+		umint nTwoElementIntervals = 0;
+		umint nWholeSegmentIntervals = 0;
+		umint nBackwardRunLengthTriggered = 0;
+		umint nForwardRunLengthTriggered = 0;
+		umint nTwoElementIntervalFailures = 0;
 
 		// Precompute cumulative element counts: O(W)
-		TCVector<mint, NMemory::TCAllocator_Static<(128 + 1) * sizeof(mint), 16, CScratchAllocator>> CumulativeCounts;
+		TCVector<umint, NMemory::TCAllocator_Static<(128 + 1) * sizeof(umint), 16, CScratchAllocator>> CumulativeCounts;
 		CumulativeCounts.f_Reserve(nSegments + 1);
-		CumulativeCounts.f_InsertLast((mint)0);
-		for (mint iSegment = 0; iSegment < nSegments; ++iSegment)
-			CumulativeCounts.f_InsertLast((mint)(CumulativeCounts[iSegment] + pMeta[_iStartSeg + iSegment].m_Count));
+		CumulativeCounts.f_InsertLast((umint)0);
+		for (umint iSegment = 0; iSegment < nSegments; ++iSegment)
+			CumulativeCounts.f_InsertLast((umint)(CumulativeCounts[iSegment] + pMeta[_iStartSeg + iSegment].m_Count));
 
 		// O(1) lookup using prefix sums
-		auto fGetWindowElementOffset = [&](mint _iSeg) -> mint
+		auto fGetWindowElementOffset = [&](umint _iSeg) -> umint
 			{
-				mint iRelSeg = _iSeg - _iStartSeg;
+				umint iRelSeg = _iSeg - _iStartSeg;
 				if (iRelSeg < 0 || iRelSeg >= nSegments)
 					return CumulativeCounts[nSegments];  // Total elements
 				return CumulativeCounts[iRelSeg];
@@ -900,7 +900,7 @@ namespace NMib::NContainer
 		;
 
 		// O(log n) lookup using fp_Find + prefix sums
-		auto fFindKeyElementPos = [&](t_CKey const &_Key) -> mint
+		auto fFindKeyElementPos = [&](t_CKey const &_Key) -> umint
 			{
 				auto FindResult = fsp_Find(_pData, mp_Compare, _Key);
 				if (!FindResult.m_bExists)
@@ -911,12 +911,12 @@ namespace NMib::NContainer
 					return -1;
 
 				// Element position = prefix sum up to segment + local position
-				mint iRelSeg = FindResult.m_iSegment - _iStartSeg;
+				umint iRelSeg = FindResult.m_iSegment - _iStartSeg;
 				return CumulativeCounts[iRelSeg] + FindResult.m_iLocalPos;
 			}
 		;
 
-		for (mint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
+		for (umint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
 		{
 			auto const &Meta = pMeta[iSeg];
 			bool bHotByPercentile = fIsSegmentHot(iSeg);
@@ -931,7 +931,7 @@ namespace NMib::NContainer
 			if (!bHotByPercentile && fg_Abs((int)Meta.m_NetBalance) < (int)mcp_RunLengthHotnessThreshold)
 				continue;
 
-			mint Count = Meta.m_Count;
+			umint Count = Meta.m_Count;
 			if (Count == 0)
 				continue;
 
@@ -939,8 +939,8 @@ namespace NMib::NContainer
 			smint SignedScore = (Meta.m_NetBalance > 0) ? (smint)1 : (Meta.m_NetBalance < 0 ? (smint)-1 : (Meta.m_LastOpSign >= 0 ? (smint)1 : (smint)-1));
 
 			// Compute element range for this segment within the window
-			mint iSegElemStart = fGetWindowElementOffset(iSeg);
-			mint iSegElemEnd = iSegElemStart + Count;
+			umint iSegElemStart = fGetWindowElementOffset(iSeg);
+			umint iSegElemEnd = iSegElemStart + Count;
 
 			// Paper Algorithm 1: check if kbwd or kfwd exceeds θSC
 			// If so, create a 2-element interval using the stored predecessor/successor key
@@ -956,8 +956,8 @@ namespace NMib::NContainer
 					++nForwardRunLengthTriggered;
 			}
 
-			mint iIntStart = iSegElemStart;
-			mint iIntEnd = iSegElemEnd;
+			umint iIntStart = iSegElemStart;
+			umint iIntEnd = iSegElemEnd;
 
 			if (bBackwardRunLengthTriggered || bForwardRunLengthTriggered)
 			{
@@ -969,7 +969,7 @@ namespace NMib::NContainer
 					// kbwd stores the successor key (next key after inserted element)
 					if (bBackwardRunLengthTriggered && Meta.m_DetectorKeys.m_BackwardRunLengthValue)
 					{
-						mint iKeyPos = fFindKeyElementPos(*Meta.m_DetectorKeys.m_BackwardRunLengthValue);
+						umint iKeyPos = fFindKeyElementPos(*Meta.m_DetectorKeys.m_BackwardRunLengthValue);
 						if (iKeyPos >= 0 && iKeyPos > 0)
 						{
 							// 2-element interval: [predecessor, successor]
@@ -988,11 +988,11 @@ namespace NMib::NContainer
 					// kfwd stores the predecessor key (prev key before inserted element)
 					else if (bForwardRunLengthTriggered && Meta.m_DetectorKeys.m_ForwardRunLengthValue)
 					{
-						mint iKeyPos = fFindKeyElementPos(*Meta.m_DetectorKeys.m_ForwardRunLengthValue);
+						umint iKeyPos = fFindKeyElementPos(*Meta.m_DetectorKeys.m_ForwardRunLengthValue);
 						if (iKeyPos >= 0)
 						{
 							// 2-element interval: [predecessor, successor]
-							mint nTotalElements = fGetWindowElementOffset(_iEndSeg);
+							umint nTotalElements = fGetWindowElementOffset(_iEndSeg);
 							iIntStart = iKeyPos;
 							iIntEnd = fg_Min(iKeyPos + 2, nTotalElements);
 							bCreated2ElemInterval = true;
@@ -1001,7 +1001,7 @@ namespace NMib::NContainer
 					else if (bForwardRunLengthTriggered && !Meta.m_DetectorKeys.m_ForwardRunLengthValue)
 					{
 						// Stable "no predecessor" boundary: hotspot is at the left edge.
-						mint nTotalElements = fGetWindowElementOffset(_iEndSeg);
+						umint nTotalElements = fGetWindowElementOffset(_iEndSeg);
 						iIntStart = iSegElemStart;
 						iIntEnd = fg_Min(iSegElemStart + 2, nTotalElements);
 						bCreated2ElemInterval = true;
@@ -1013,7 +1013,7 @@ namespace NMib::NContainer
 					if (bBackwardRunLengthTriggered && Meta.m_DetectorKeys.m_BackwardRunLengthSlot && *Meta.m_DetectorKeys.m_BackwardRunLengthSlot < _pData->m_Capacity)
 					{
 						t_CKey const &Key = pKeys[*Meta.m_DetectorKeys.m_BackwardRunLengthSlot];
-						mint iKeyPos = fFindKeyElementPos(Key);
+						umint iKeyPos = fFindKeyElementPos(Key);
 						if (iKeyPos >= 0 && iKeyPos > 0)
 						{
 							iIntStart = iKeyPos - 1;
@@ -1030,10 +1030,10 @@ namespace NMib::NContainer
 					else if (bForwardRunLengthTriggered && Meta.m_DetectorKeys.m_ForwardRunLengthSlot && *Meta.m_DetectorKeys.m_ForwardRunLengthSlot < _pData->m_Capacity)
 					{
 						t_CKey const &Key = pKeys[*Meta.m_DetectorKeys.m_ForwardRunLengthSlot];
-						mint iKeyPos = fFindKeyElementPos(Key);
+						umint iKeyPos = fFindKeyElementPos(Key);
 						if (iKeyPos >= 0)
 						{
-							mint nTotalElements = fGetWindowElementOffset(_iEndSeg);
+							umint nTotalElements = fGetWindowElementOffset(_iEndSeg);
 							iIntStart = iKeyPos;
 							iIntEnd = fg_Min(iKeyPos + 2, nTotalElements);
 							bCreated2ElemInterval = true;
@@ -1041,7 +1041,7 @@ namespace NMib::NContainer
 					}
 					else if (bForwardRunLengthTriggered && !Meta.m_DetectorKeys.m_ForwardRunLengthSlot)
 					{
-						mint nTotalElements = fGetWindowElementOffset(_iEndSeg);
+						umint nTotalElements = fGetWindowElementOffset(_iEndSeg);
 						iIntStart = iSegElemStart;
 						iIntEnd = fg_Min(iSegElemStart + 2, nTotalElements);
 						bCreated2ElemInterval = true;
@@ -1085,7 +1085,7 @@ namespace NMib::NContainer
 			CMarkedIntervalVector Merged;
 			auto *pLastMerged = &Merged.f_InsertLast(pOutIntervals[0]);
 
-			for (mint iInterval = 1; iInterval < nOutIntervals; ++iInterval)
+			for (umint iInterval = 1; iInterval < nOutIntervals; ++iInterval)
 			{
 				auto &Last = *pLastMerged;
 				auto const &Current = pOutIntervals[iInterval];
@@ -1108,10 +1108,10 @@ namespace NMib::NContainer
 	constexpr inline_never void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_AdaptiveRedistribute
 		(
 			CPackedMapData *_pData
-			, mint _iStartSeg
-			, mint _iEndSeg
-			, mint _iWindowLevel
-			, mint _nGlobalLevels
+			, umint _iStartSeg
+			, umint _iEndSeg
+			, umint _iWindowLevel
+			, umint _nGlobalLevels
 		)
 	{
 		if constexpr (t_Options.m_bStats)
@@ -1123,15 +1123,15 @@ namespace NMib::NContainer
 		auto *pKeys = pData->m_pKeys;
 		auto *pValues = pData->m_pValues;
 
-		mint nSegments = _iEndSeg - _iStartSeg;
+		umint nSegments = _iEndSeg - _iStartSeg;
 		if (nSegments == 0)
 			return;
 
 		// Count total elements
-		mint nTotalElements = 0;
-		for (mint iSegment = 0; iSegment < nSegments; ++iSegment)
+		umint nTotalElements = 0;
+		for (umint iSegment = 0; iSegment < nSegments; ++iSegment)
 		{
-			mint iSeg = _iStartSeg + iSegment;
+			umint iSeg = _iStartSeg + iSegment;
 			nTotalElements += pMeta[iSeg].m_Count;
 		}
 
@@ -1140,30 +1140,30 @@ namespace NMib::NContainer
 
 		// Allocate combined buffer for all temporary data
 		// Use stack for small rebalances (most delete-triggered rebalances are 2-8 segments)
-		constexpr static mint c_nBufferAlign = fg_Max(alignof(mint), alignof(t_CKey), alignof(t_CValue), alignof(CSegmentMeta));
+		constexpr static umint c_nBufferAlign = fg_Max(alignof(umint), alignof(t_CKey), alignof(t_CValue), alignof(CSegmentMeta));
 
-		mint nTargetsBytes = nSegments * sizeof(mint);
-		mint nKeysBytes = nTotalElements * sizeof(t_CKey);
-		mint nValuesBytes = nTotalElements * sizeof(t_CValue);
-		mint nOldMetaBytes = 0;
-		mint nOldPrefixBytes = 0;
+		umint nTargetsBytes = nSegments * sizeof(umint);
+		umint nKeysBytes = nTotalElements * sizeof(t_CKey);
+		umint nValuesBytes = nTotalElements * sizeof(t_CValue);
+		umint nOldMetaBytes = 0;
+		umint nOldPrefixBytes = 0;
 		if constexpr (mcp_bDetectorStoresKeys)
 		{
 			nOldMetaBytes = nSegments * sizeof(CSegmentMeta);
-			nOldPrefixBytes = (nSegments + 1) * sizeof(mint);
+			nOldPrefixBytes = (nSegments + 1) * sizeof(umint);
 		}
 
-		mint nTargetsAligned = fg_AlignUp(nTargetsBytes, c_nBufferAlign);
-		mint nKeysAligned = fg_AlignUp(nKeysBytes, c_nBufferAlign);
-		mint nValuesAligned = fg_AlignUp(nValuesBytes, c_nBufferAlign);
-		mint nOldMetaAligned = fg_AlignUp(nOldMetaBytes, c_nBufferAlign);
-		mint TotalBufferSize = nTargetsAligned + nKeysAligned + nValuesAligned + nOldMetaAligned + nOldPrefixBytes;
+		umint nTargetsAligned = fg_AlignUp(nTargetsBytes, c_nBufferAlign);
+		umint nKeysAligned = fg_AlignUp(nKeysBytes, c_nBufferAlign);
+		umint nValuesAligned = fg_AlignUp(nValuesBytes, c_nBufferAlign);
+		umint nOldMetaAligned = fg_AlignUp(nOldMetaBytes, c_nBufferAlign);
+		umint TotalBufferSize = nTargetsAligned + nKeysAligned + nValuesAligned + nOldMetaAligned + nOldPrefixBytes;
 
-		constexpr mint c_nStackThreshold = 16384;
+		constexpr umint c_nStackThreshold = 16384;
 		alignas(c_nBufferAlign) uint8 aStackBuffer[c_nStackThreshold];
 
 		uint8 *pBuffer;
-		mint AllocatedBufferSize;
+		umint AllocatedBufferSize;
 		if (TotalBufferSize <= c_nStackThreshold)
 		{
 			pBuffer = aStackBuffer;
@@ -1178,18 +1178,18 @@ namespace NMib::NContainer
 		if constexpr (t_Options.m_bStats)
 			fp_StatsAddRebalanceAlloc(AllocatedBufferSize > 0);
 
-		mint *pTargets = (mint *)pBuffer;
+		umint *pTargets = (umint *)pBuffer;
 		t_CKey *pTempKeys = (t_CKey *)(pBuffer + nTargetsAligned);
 		t_CValue *pTempValues = (t_CValue *)(pBuffer + nTargetsAligned + nKeysAligned);
 
 		CSegmentMeta *pOldMeta = nullptr;
-		mint OldMetaCount = 0;
+		umint OldMetaCount = 0;
 
 		auto CleanupBuffer = g_OnScopeExit / [&]
 			{
 				if constexpr (mcp_bDetectorStoresKeys)
 				{
-					for (mint iSegment = 0; iSegment < OldMetaCount; ++iSegment)
+					for (umint iSegment = 0; iSegment < OldMetaCount; ++iSegment)
 						pOldMeta[iSegment].~CSegmentMeta();
 				}
 				if (AllocatedBufferSize > 0)
@@ -1197,13 +1197,13 @@ namespace NMib::NContainer
 			}
 		;
 
-		mint *pOldPrefix = nullptr;
+		umint *pOldPrefix = nullptr;
 		if constexpr (mcp_bDetectorStoresKeys)
 		{
 			pOldMeta = (CSegmentMeta *)(pBuffer + nTargetsAligned + nKeysAligned + nValuesAligned);
-			pOldPrefix = (mint *)(pBuffer + nTargetsAligned + nKeysAligned + nValuesAligned + nOldMetaAligned);
+			pOldPrefix = (umint *)(pBuffer + nTargetsAligned + nKeysAligned + nValuesAligned + nOldMetaAligned);
 			pOldPrefix[0] = 0;
-			for (mint iSegment = 0; iSegment < nSegments; ++iSegment)
+			for (umint iSegment = 0; iSegment < nSegments; ++iSegment)
 			{
 				new(&pOldMeta[iSegment]) CSegmentMeta(pMeta[_iStartSeg + iSegment]);
 				++OldMetaCount;
@@ -1211,7 +1211,7 @@ namespace NMib::NContainer
 			}
 		}
 
-		for (mint iSegment = 0; iSegment < nSegments; ++iSegment)
+		for (umint iSegment = 0; iSegment < nSegments; ++iSegment)
 			pTargets[iSegment] = 0;
 
 		CMarkedIntervalVector MarkedIntervals;
@@ -1220,12 +1220,12 @@ namespace NMib::NContainer
 		// Debug stats for marking behavior
 		if constexpr (t_Options.m_bStats)
 		{
-			mint nIntervalElements = 0;
+			umint nIntervalElements = 0;
 			for (auto &Interval : MarkedIntervals)
-				nIntervalElements += fg_Max((mint)0, Interval.m_iEndElem - Interval.m_iStartElem);
+				nIntervalElements += fg_Max((umint)0, Interval.m_iEndElem - Interval.m_iStartElem);
 
-			mint nMarkedSegments = 0;
-			for (mint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
+			umint nMarkedSegments = 0;
+			for (umint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
 			{
 				auto const &Meta = pMeta[iSeg];
 
@@ -1243,18 +1243,18 @@ namespace NMib::NContainer
 
 		// Interval query helpers for O(log I) range queries
 		// Allocate all 6 arrays from a single buffer (stack for small counts)
-		mint IntervalCount = MarkedIntervals.f_GetLen();
+		umint IntervalCount = MarkedIntervals.f_GetLen();
 
-		// Layout: [Starts: mint*I] [Ends: mint*I] [PrefixLen: mint*I] [PrefixScore: mint*I] [WeightedPrefixScore: mint*I] [SignedScore: mint*I]
-		mint nIntMintBytes = IntervalCount * sizeof(mint);
-		mint nIntMintAligned = fg_AlignUp(nIntMintBytes, c_nBufferAlign);
-		mint IntervalBufferSize = 6 * nIntMintAligned;
+		// Layout: [Starts: umint*I] [Ends: umint*I] [PrefixLen: umint*I] [PrefixScore: umint*I] [WeightedPrefixScore: umint*I] [SignedScore: umint*I]
+		umint nIntMintBytes = IntervalCount * sizeof(umint);
+		umint nIntMintAligned = fg_AlignUp(nIntMintBytes, c_nBufferAlign);
+		umint IntervalBufferSize = 6 * nIntMintAligned;
 
-		constexpr mint c_nIntervalStackThreshold = 4096;
+		constexpr umint c_nIntervalStackThreshold = 4096;
 		alignas(c_nBufferAlign) uint8 aIntervalStackBuffer[c_nIntervalStackThreshold];
 
 		uint8 *pIntervalBuffer = nullptr;
-		mint IntervalAllocSize = 0;
+		umint IntervalAllocSize = 0;
 		if (IntervalCount > 0)
 		{
 			if (IntervalBufferSize <= c_nIntervalStackThreshold)
@@ -1279,23 +1279,23 @@ namespace NMib::NContainer
 			}
 		;
 
-		mint *pIntervalStarts = IntervalCount > 0 ? (mint *)pIntervalBuffer : nullptr;
-		mint *pIntervalEnds = IntervalCount > 0 ? (mint *)(pIntervalBuffer + nIntMintAligned) : nullptr;
-		mint *pIntervalPrefixLen = IntervalCount > 0 ? (mint *)(pIntervalBuffer + 2 * nIntMintAligned) : nullptr;
+		umint *pIntervalStarts = IntervalCount > 0 ? (umint *)pIntervalBuffer : nullptr;
+		umint *pIntervalEnds = IntervalCount > 0 ? (umint *)(pIntervalBuffer + nIntMintAligned) : nullptr;
+		umint *pIntervalPrefixLen = IntervalCount > 0 ? (umint *)(pIntervalBuffer + 2 * nIntMintAligned) : nullptr;
 		smint *pIntervalPrefixScore = IntervalCount > 0 ? (smint *)(pIntervalBuffer + 3 * nIntMintAligned) : nullptr;
 		smint *pIntervalWeightedPrefixScore = IntervalCount > 0 ? (smint *)(pIntervalBuffer + 4 * nIntMintAligned) : nullptr;
 		smint *pIntervalSignedScore = IntervalCount > 0 ? (smint *)(pIntervalBuffer + 5 * nIntMintAligned) : nullptr;
 
 		if (IntervalCount > 0)
 		{
-			mint nLenSum = 0;
+			umint nLenSum = 0;
 			smint ScoreSum = 0;
 			smint WeightedScoreSum = 0;
 
-			for (mint iInterval = 0; iInterval < IntervalCount; ++iInterval)
+			for (umint iInterval = 0; iInterval < IntervalCount; ++iInterval)
 			{
 				auto const &Int = MarkedIntervals[iInterval];
-				mint nLen = fg_Max((mint)0, Int.m_iEndElem - Int.m_iStartElem);
+				umint nLen = fg_Max((umint)0, Int.m_iEndElem - Int.m_iStartElem);
 				pIntervalStarts[iInterval] = Int.m_iStartElem;
 				pIntervalEnds[iInterval] = Int.m_iEndElem;
 				pIntervalSignedScore[iInterval] = Int.m_SignedScore;
@@ -1310,14 +1310,14 @@ namespace NMib::NContainer
 		}
 
 		// Binary search helpers for sorted interval arrays
-		auto fLowerBound = [](mint const *_pArray, mint _nLen, mint _Value) -> mint
+		auto fLowerBound = [](umint const *_pArray, umint _nLen, umint _Value) -> umint
 			{
-				mint iLow = 0;
-				mint iHigh = _nLen;
+				umint iLow = 0;
+				umint iHigh = _nLen;
 
 				while (iLow < iHigh)
 				{
-					mint iMid = iLow + (iHigh - iLow) / 2;
+					umint iMid = iLow + (iHigh - iLow) / 2;
 					if (_pArray[iMid] < _Value)
 						iLow = iMid + 1;
 					else
@@ -1328,14 +1328,14 @@ namespace NMib::NContainer
 			}
 		;
 
-		auto fUpperBound = [](mint const *_pArray, mint _nLen, mint _Value) -> mint
+		auto fUpperBound = [](umint const *_pArray, umint _nLen, umint _Value) -> umint
 			{
-				mint iLow = 0;
-				mint iHigh = _nLen;
+				umint iLow = 0;
+				umint iHigh = _nLen;
 
 				while (iLow < iHigh)
 				{
-					mint iMid = iLow + (iHigh - iLow) / 2;
+					umint iMid = iLow + (iHigh - iLow) / 2;
 					if (_pArray[iMid] <= _Value)
 						iLow = iMid + 1;
 					else
@@ -1346,10 +1346,10 @@ namespace NMib::NContainer
 			}
 		;
 
-		auto fIntervalOverlapLen = [&](mint _iInterval, mint _iStart, mint _iEnd) -> mint
+		auto fIntervalOverlapLen = [&](umint _iInterval, umint _iStart, umint _iEnd) -> umint
 			{
-				mint iOverlapStart = fg_Max(_iStart, pIntervalStarts[_iInterval]);
-				mint iOverlapEnd = fg_Min(_iEnd, pIntervalEnds[_iInterval]);
+				umint iOverlapStart = fg_Max(_iStart, pIntervalStarts[_iInterval]);
+				umint iOverlapEnd = fg_Min(_iEnd, pIntervalEnds[_iInterval]);
 
 				return (iOverlapEnd > iOverlapStart) ? (iOverlapEnd - iOverlapStart) : 0;
 			}
@@ -1357,48 +1357,48 @@ namespace NMib::NContainer
 
 		// Returns (nOverlapElements, element-weighted score) — score uses SignedScore * overlap for edges
 		// and weighted prefix sums for full intervals, all in element-weighted integer units.
-		auto fIntervalRangeQuery = [&](mint _iStart, mint _iEnd) -> NStorage::TCTuple<mint, smint>
+		auto fIntervalRangeQuery = [&](umint _iStart, umint _iEnd) -> NStorage::TCTuple<umint, smint>
 			{
 				if (IntervalCount == 0 || _iEnd <= _iStart)
 					return {0, 0};
 
-				mint nIntervals = IntervalCount;
+				umint nIntervals = IntervalCount;
 				auto *pStarts = pIntervalStarts;
 				auto *pEnds = pIntervalEnds;
 
-				mint iFirst = fUpperBound(pEnds, nIntervals, _iStart);
-				mint iLast = fLowerBound(pStarts, nIntervals, _iEnd) - 1;
+				umint iFirst = fUpperBound(pEnds, nIntervals, _iStart);
+				umint iLast = fLowerBound(pStarts, nIntervals, _iEnd) - 1;
 
 				if (iFirst > iLast || iFirst >= nIntervals || iLast < 0)
 					return {0, 0};
 
-				iFirst = fg_Max((mint)0, iFirst);
+				iFirst = fg_Max((umint)0, iFirst);
 				iLast = fg_Min(nIntervals - 1, iLast);
 
-				mint nTotalLen = 0;
+				umint nTotalLen = 0;
 				smint TotalScore = 0;
 
 				if (iFirst == iLast)
 				{
-					mint nOverlap = fIntervalOverlapLen(iFirst, _iStart, _iEnd);
+					umint nOverlap = fIntervalOverlapLen(iFirst, _iStart, _iEnd);
 					nTotalLen = nOverlap;
 					TotalScore = pIntervalSignedScore[iFirst] * (smint)nOverlap;
 					return {nTotalLen, TotalScore};
 				}
 
-				mint nOverlapFirst = fIntervalOverlapLen(iFirst, _iStart, _iEnd);
-				mint nOverlapLast = fIntervalOverlapLen(iLast, _iStart, _iEnd);
+				umint nOverlapFirst = fIntervalOverlapLen(iFirst, _iStart, _iEnd);
+				umint nOverlapLast = fIntervalOverlapLen(iLast, _iStart, _iEnd);
 				nTotalLen += nOverlapFirst + nOverlapLast;
 				TotalScore += pIntervalSignedScore[iFirst] * (smint)nOverlapFirst;
 				TotalScore += pIntervalSignedScore[iLast] * (smint)nOverlapLast;
 
 				if (iFirst + 1 <= iLast - 1)
 				{
-					mint iFullStart = iFirst + 1;
-					mint iFullEnd = iLast - 1;
+					umint iFullStart = iFirst + 1;
+					umint iFullEnd = iLast - 1;
 
-					mint nLenBefore = (iFullStart > 0) ? pIntervalPrefixLen[iFullStart - 1] : 0;
-					mint nLenFull = pIntervalPrefixLen[iFullEnd] - nLenBefore;
+					umint nLenBefore = (iFullStart > 0) ? pIntervalPrefixLen[iFullStart - 1] : 0;
+					umint nLenFull = pIntervalPrefixLen[iFullEnd] - nLenBefore;
 					nTotalLen += nLenFull;
 
 					smint WeightedScoreBefore = (iFullStart > 0) ? pIntervalWeightedPrefixScore[iFullStart - 1] : 0;
@@ -1411,40 +1411,40 @@ namespace NMib::NContainer
 		;
 
 		// Returns (nIntervalsBeforeSplit, interval-count-weighted score)
-		auto fIntervalCountScoreBefore = [&](mint _iStart, mint _iEnd, mint _iSplit) -> NStorage::TCTuple<mint, smint>
+		auto fIntervalCountScoreBefore = [&](umint _iStart, umint _iEnd, umint _iSplit) -> NStorage::TCTuple<umint, smint>
 			{
-				mint nIntervals = IntervalCount;
+				umint nIntervals = IntervalCount;
 				if (nIntervals == 0)
 					return {0, 0};
 
 				auto *pStarts = pIntervalStarts;
 				auto *pEnds = pIntervalEnds;
 
-				mint iFirst = fUpperBound(pEnds, nIntervals, _iStart);
-				mint iLast = fLowerBound(pStarts, nIntervals, _iEnd) - 1;
+				umint iFirst = fUpperBound(pEnds, nIntervals, _iStart);
+				umint iLast = fLowerBound(pStarts, nIntervals, _iEnd) - 1;
 
 				if (iFirst > iLast || iFirst >= nIntervals || iLast < 0)
 					return {0, 0};
 
-				iFirst = fg_Max((mint)0, iFirst);
+				iFirst = fg_Max((umint)0, iFirst);
 				iLast = fg_Min(nIntervals - 1, iLast);
 
-				mint iLeftEnd = fUpperBound(pEnds, nIntervals, _iSplit);
+				umint iLeftEnd = fUpperBound(pEnds, nIntervals, _iSplit);
 				iLeftEnd = fg_Min(iLeftEnd, iLast + 1);
 				if (iLeftEnd <= iFirst)
 					return {0, 0};
 
-				mint Count = iLeftEnd - iFirst;
-				mint iLeftLast = iLeftEnd - 1;
+				umint Count = iLeftEnd - iFirst;
+				umint iLeftLast = iLeftEnd - 1;
 				smint ScoreBefore = (iFirst > 0) ? pIntervalPrefixScore[iFirst - 1] : 0;
 				smint Score = pIntervalPrefixScore[iLeftLast] - ScoreBefore;
 				return {Count, Score};
 			}
 		;
 
-		auto fAdaptiveAssign = [&](this auto &&_fThis, mint _iStart, mint _iEnd, mint _nElements, mint _iLocalLevel, mint _iElemStart, mint _iElemEnd) -> void
+		auto fAdaptiveAssign = [&](this auto &&_fThis, umint _iStart, umint _iEnd, umint _nElements, umint _iLocalLevel, umint _iElemStart, umint _iElemEnd) -> void
 			{
-				mint nSegs = _iEnd - _iStart;
+				umint nSegs = _iEnd - _iStart;
 				if (nSegs <= 0)
 					return;
 
@@ -1455,49 +1455,49 @@ namespace NMib::NContainer
 					return;
 				}
 
-				mint iMid = _iStart + nSegs / 2;
-				mint nLeftSegs = iMid - _iStart;
-				mint nRightSegs = _iEnd - iMid;
+				umint iMid = _iStart + nSegs / 2;
+				umint nLeftSegs = iMid - _iStart;
+				umint nRightSegs = _iEnd - iMid;
 
-				mint CapLeft = nLeftSegs * mcp_SegmentSize;
-				mint CapRight = nRightSegs * mcp_SegmentSize;
-				mint TotalCap = CapLeft + CapRight;
+				umint CapLeft = nLeftSegs * mcp_SegmentSize;
+				umint CapRight = nRightSegs * mcp_SegmentSize;
+				umint TotalCap = CapLeft + CapRight;
 
 				// Children of a node at level L are constrained by level L-1 thresholds.
 				// localLevel = 0 means we're splitting the root window, so use (_iWindowLevel - 1).
-				mint iGlobalLevel = _iWindowLevel - _iLocalLevel - 1;
+				umint iGlobalLevel = _iWindowLevel - _iLocalLevel - 1;
 				if (iGlobalLevel < 0)
 					iGlobalLevel = 0;
 
 				// Compute density bounds for subtrees.
 				// Allow 1-element slack for rounding to avoid infeasible integer bounds.
 				auto DensityBounds = fp_GetLevelDensityBounds(iGlobalLevel, _nGlobalLevels);
-				mint nMinLeftBase, nMaxLeftBase;
+				umint nMinLeftBase, nMaxLeftBase;
 				fp_ElementBoundsFromDensity(DensityBounds, CapLeft, nMinLeftBase, nMaxLeftBase);
-				mint nMinRightBase, nMaxRightBase;
+				umint nMinRightBase, nMaxRightBase;
 				fp_ElementBoundsFromDensity(DensityBounds, CapRight, nMinRightBase, nMaxRightBase);
 
-				mint nMinLeft = (nMinLeftBase > 0) ? (nMinLeftBase - 1) : (mint)0;
-				mint nMaxLeft = (nMaxLeftBase < CapLeft) ? (nMaxLeftBase + 1) : CapLeft;
-				mint nMinRight = (nMinRightBase > 0) ? (nMinRightBase - 1) : (mint)0;
-				mint nMaxRight = (nMaxRightBase < CapRight) ? (nMaxRightBase + 1) : CapRight;
+				umint nMinLeft = (nMinLeftBase > 0) ? (nMinLeftBase - 1) : (umint)0;
+				umint nMaxLeft = (nMaxLeftBase < CapLeft) ? (nMaxLeftBase + 1) : CapLeft;
+				umint nMinRight = (nMinRightBase > 0) ? (nMinRightBase - 1) : (umint)0;
+				umint nMaxRight = (nMaxRightBase < CapRight) ? (nMaxRightBase + 1) : CapRight;
 
 				// Capacity-based feasible interval for left count
-				mint CapLeftMin = (_nElements > CapRight) ? (_nElements - CapRight) : (mint)0;
-				mint CapLeftMax = fg_Min(CapLeft, _nElements);
+				umint CapLeftMin = (_nElements > CapRight) ? (_nElements - CapRight) : (umint)0;
+				umint CapLeftMax = fg_Min(CapLeft, _nElements);
 
 				// Intersect density bounds with capacity bounds
-				mint nLeftMin = fg_Max(nMinLeft, CapLeftMin);
-				mint nLeftMax = fg_Min(nMaxLeft, CapLeftMax);
+				umint nLeftMin = fg_Max(nMinLeft, CapLeftMin);
+				umint nLeftMax = fg_Min(nMaxLeft, CapLeftMax);
 
 				// Right-side bounds translated into left-side constraints
-				mint nRightMin = fg_Max(nMinRight, (_nElements > CapLeft) ? (_nElements - CapLeft) : (mint)0);
-				mint nRightMax = fg_Min(nMaxRight, fg_Min(CapRight, _nElements));
+				umint nRightMin = fg_Max(nMinRight, (_nElements > CapLeft) ? (_nElements - CapLeft) : (umint)0);
+				umint nRightMax = fg_Min(nMaxRight, fg_Min(CapRight, _nElements));
 
-				mint nLeftFromRightMax = (_nElements > nRightMax) ? (_nElements - nRightMax) : (mint)0;
-				mint nLeftFromRightMin = (_nElements > nRightMin) ? (_nElements - nRightMin) : (mint)0;
-				mint nLeftMinFeasible = fg_Max(nLeftMin, nLeftFromRightMax);
-				mint nLeftMaxFeasible = fg_Min(nLeftMax, nLeftFromRightMin);
+				umint nLeftFromRightMax = (_nElements > nRightMax) ? (_nElements - nRightMax) : (umint)0;
+				umint nLeftFromRightMin = (_nElements > nRightMin) ? (_nElements - nRightMin) : (umint)0;
+				umint nLeftMinFeasible = fg_Max(nLeftMin, nLeftFromRightMax);
+				umint nLeftMaxFeasible = fg_Min(nLeftMax, nLeftFromRightMin);
 
 				if (nLeftMinFeasible > nLeftMaxFeasible)
 				{
@@ -1516,22 +1516,22 @@ namespace NMib::NContainer
 							fp_StatsAddAdaptiveSplitNoIntervals();
 						// nLeftSegs == nSegs >> 1, so the ratio is always ~1/2.
 						// Use _nElements >> 1 and let clamping adjust.
-						mint nLeft = _nElements >> 1;
+						umint nLeft = _nElements >> 1;
 						nLeft = fg_Min(fg_Max(nLeft, nLeftMinFeasible), nLeftMaxFeasible);
-						mint nRight = _nElements - nLeft;
+						umint nRight = _nElements - nLeft;
 
 						if (nRight < nMinRightBase)
 						{
-							mint nMove = nMinRightBase - nRight;
-							mint nCanMove = (nLeft > nLeftMinFeasible) ? (nLeft - nLeftMinFeasible) : (mint)0;
+							umint nMove = nMinRightBase - nRight;
+							umint nCanMove = (nLeft > nLeftMinFeasible) ? (nLeft - nLeftMinFeasible) : (umint)0;
 							nMove = fg_Min(nMove, nCanMove);
 							nLeft -= nMove;
 							nRight += nMove;
 						}
 						else if (nRight > nMaxRightBase)
 						{
-							mint nMove = nRight - nMaxRightBase;
-							mint nCanMove = (nLeft < nLeftMaxFeasible) ? (nLeftMaxFeasible - nLeft) : (mint)0;
+							umint nMove = nRight - nMaxRightBase;
+							umint nCanMove = (nLeft < nLeftMaxFeasible) ? (nLeftMaxFeasible - nLeft) : (umint)0;
 							nMove = fg_Min(nMove, nCanMove);
 							nLeft += nMove;
 							nRight -= nMove;
@@ -1545,11 +1545,11 @@ namespace NMib::NContainer
 
 				// Paper Algorithm 2: partition marked intervals to balance count and score
 				// nLeftSegs == nSegs >> 1, so the ratio is always ~1/2.
-				mint iElemSplitBase = _iElemStart + (_nElements >> 1);
+				umint iElemSplitBase = _iElemStart + (_nElements >> 1);
 				iElemSplitBase = fg_Min(fg_Max(iElemSplitBase, _iElemStart), _iElemEnd);
 
-				mint nIntervals = IntervalCount;
-				mint iBestSplit = iElemSplitBase;
+				umint nIntervals = IntervalCount;
+				umint iBestSplit = iElemSplitBase;
 				smint BestScoreA = 0;
 				smint BestScoreB = 0;
 				bool bBestSet = false;
@@ -1559,9 +1559,9 @@ namespace NMib::NContainer
 				{
 					if (nSegs == 2 && nIntervals == 1)
 					{
-						mint iIntStart = pIntervalStarts[0];
-						mint iIntEnd = pIntervalEnds[0];
-						mint nIntLen = fg_Max((mint)0, iIntEnd - iIntStart);
+						umint iIntStart = pIntervalStarts[0];
+						umint iIntEnd = pIntervalEnds[0];
+						umint nIntLen = fg_Max((umint)0, iIntEnd - iIntStart);
 						if (iIntStart < _iElemEnd && iIntEnd > _iElemStart && nIntLen > (_iElemEnd - _iElemStart) / 2)
 						{
 							bAllowSplitInside = true;
@@ -1577,18 +1577,18 @@ namespace NMib::NContainer
 				// - negative score: pack the hot delete edge more densely
 				if (nIntervals == 1 && !bAllowSplitInside && nSegs >= 8)
 				{
-					mint nIntervalsLocal = IntervalCount;
+					umint nIntervalsLocal = IntervalCount;
 					auto *pStarts = pIntervalStarts;
 					auto *pEnds = pIntervalEnds;
 
-					mint iFirst = fUpperBound(pEnds, nIntervalsLocal, _iElemStart);
-					mint iLast = fLowerBound(pStarts, nIntervalsLocal, _iElemEnd) - 1;
+					umint iFirst = fUpperBound(pEnds, nIntervalsLocal, _iElemStart);
+					umint iLast = fLowerBound(pStarts, nIntervalsLocal, _iElemEnd) - 1;
 
 					if (iFirst == iLast && iFirst >= 0 && iFirst < nIntervalsLocal)
 					{
-						mint iIntStart = fg_Max(_iElemStart, pIntervalStarts[iFirst]);
-						mint iIntEnd = fg_Min(_iElemEnd, pIntervalEnds[iFirst]);
-						mint nIntervalLen = (iIntEnd > iIntStart) ? (iIntEnd - iIntStart) : (mint)0;
+						umint iIntStart = fg_Max(_iElemStart, pIntervalStarts[iFirst]);
+						umint iIntEnd = fg_Min(_iElemEnd, pIntervalEnds[iFirst]);
+						umint nIntervalLen = (iIntEnd > iIntStart) ? (iIntEnd - iIntStart) : (umint)0;
 
 						if (nIntervalLen > 0 && nIntervalLen <= 2)
 						{
@@ -1598,12 +1598,12 @@ namespace NMib::NContainer
 
 							if ((bEdgeLeft || bEdgeRight) && EdgeScore != 0)
 							{
-								mint nLeft;
+								umint nLeft;
 								if (EdgeScore > 0)
 								{
 									if (bEdgeRight)
 									{
-										mint nRightTarget = fg_Max(nIntervalLen, nMinRightBase);
+										umint nRightTarget = fg_Max(nIntervalLen, nMinRightBase);
 										if (nRightTarget > _nElements)
 											nRightTarget = _nElements;
 										nLeft = _nElements - nRightTarget;
@@ -1620,7 +1620,7 @@ namespace NMib::NContainer
 								}
 
 								nLeft = fg_Min(fg_Max(nLeft, nLeftMinFeasible), nLeftMaxFeasible);
-								mint nRight = _nElements - nLeft;
+								umint nRight = _nElements - nLeft;
 
 								_fThis(_iStart, iMid, nLeft, _iLocalLevel + 1, _iElemStart, _iElemStart + nLeft);
 								_fThis(iMid, _iEnd, nRight, _iLocalLevel + 1, _iElemStart + nLeft, _iElemEnd);
@@ -1630,14 +1630,14 @@ namespace NMib::NContainer
 					}
 				}
 
-				auto fEvalSplit = [&](mint _iSplit) -> void
+				auto fEvalSplit = [&](umint _iSplit) -> void
 					{
 						_iSplit = fg_Min(fg_Max(_iSplit, _iElemStart), _iElemEnd);
 
 						auto [nLeftIntervals, LeftScore] = fIntervalCountScoreBefore(_iElemStart, _iElemEnd, _iSplit);
 						auto [nSubtreeIntervals, SubtreeScore] = fIntervalCountScoreBefore(_iElemStart, _iElemEnd, _iElemEnd);
 
-						mint nRightIntervals = nSubtreeIntervals - nLeftIntervals;
+						umint nRightIntervals = nSubtreeIntervals - nLeftIntervals;
 						smint RightScore = SubtreeScore - LeftScore;
 
 						if (bAllowSplitInside)
@@ -1653,7 +1653,7 @@ namespace NMib::NContainer
 							RightScore = RightSplitScore;
 						}
 
-						mint nLeftElems = _iSplit - _iElemStart;
+						umint nLeftElems = _iSplit - _iElemStart;
 						smint ScoreA = fg_Abs((int)(nLeftIntervals - nRightIntervals));
 						smint ScoreB = fg_Abs(LeftScore - RightScore);
 						smint ScoreC = fg_Abs((int)(nLeftElems - (iElemSplitBase - _iElemStart)));
@@ -1683,17 +1683,17 @@ namespace NMib::NContainer
 
 				// Candidate splits: base and interval boundaries within range
 				fEvalSplit(iElemSplitBase);
-				for (mint iInterval = 0; iInterval < nIntervals; ++iInterval)
+				for (umint iInterval = 0; iInterval < nIntervals; ++iInterval)
 				{
-					mint iStart = pIntervalStarts[iInterval];
-					mint iEnd = pIntervalEnds[iInterval];
+					umint iStart = pIntervalStarts[iInterval];
+					umint iEnd = pIntervalEnds[iInterval];
 					if (iStart > _iElemStart && iStart < _iElemEnd)
 						fEvalSplit(iStart);
 					if (iEnd > _iElemStart && iEnd < _iElemEnd)
 						fEvalSplit(iEnd);
 				}
 
-				mint iElemSplit = iBestSplit;
+				umint iElemSplit = iBestSplit;
 
 				auto [nLeftIntervalElems, LeftScore] = fIntervalRangeQuery(_iElemStart, iElemSplit);
 				auto [nRightIntervalElems, RightScore] = fIntervalRangeQuery(iElemSplit, _iElemEnd);
@@ -1701,11 +1701,11 @@ namespace NMib::NContainer
 				(void)RightScore;
 
 				// Compute free elements (not assigned to intervals)
-				mint nIntervalElems = nLeftIntervalElems + nRightIntervalElems;
-				mint nFreeElems = _nElements - fg_Min(nIntervalElems, _nElements);
+				umint nIntervalElems = nLeftIntervalElems + nRightIntervalElems;
+				umint nFreeElems = _nElements - fg_Min(nIntervalElems, _nElements);
 
 				// Assign free elements to minimize cardinality imbalance (Algorithm 2)
-				mint nLeft;
+				umint nLeft;
 				if (nFreeElems == 0)
 					nLeft = nLeftIntervalElems; // All elements are interval elements
 				else
@@ -1723,28 +1723,28 @@ namespace NMib::NContainer
 					if (nLeftFreeSigned > (int64)nFreeElems)
 						nLeftFreeSigned = (int64)nFreeElems;
 
-					mint nLeftFree = (mint)nLeftFreeSigned;
+					umint nLeftFree = (umint)nLeftFreeSigned;
 
 					nLeft = nLeftIntervalElems + nLeftFree;
 				}
 
 				// Clamp by density bounds
 				nLeft = fg_Min(fg_Max(nLeft, nLeftMinFeasible), nLeftMaxFeasible);
-				mint nRight = _nElements - nLeft;
+				umint nRight = _nElements - nLeft;
 
 				// Adjust if right violates density bounds
 				if (nRight < nMinRightBase)
 				{
-					mint nMove = nMinRightBase - nRight;
-					mint nCanMove = (nLeft > nLeftMinFeasible) ? (nLeft - nLeftMinFeasible) : (mint)0;
+					umint nMove = nMinRightBase - nRight;
+					umint nCanMove = (nLeft > nLeftMinFeasible) ? (nLeft - nLeftMinFeasible) : (umint)0;
 					nMove = fg_Min(nMove, nCanMove);
 					nLeft -= nMove;
 					nRight += nMove;
 				}
 				else if (nRight > nMaxRightBase)
 				{
-					mint nMove = nRight - nMaxRightBase;
-					mint nCanMove = (nLeft < nLeftMaxFeasible) ? (nLeftMaxFeasible - nLeft) : (mint)0;
+					umint nMove = nRight - nMaxRightBase;
+					umint nCanMove = (nLeft < nLeftMaxFeasible) ? (nLeftMaxFeasible - nLeft) : (umint)0;
 					nMove = fg_Min(nMove, nCanMove);
 					nLeft += nMove;
 					nRight -= nMove;
@@ -1759,19 +1759,19 @@ namespace NMib::NContainer
 
 		fAdaptiveAssign(0, nSegments, nTotalElements, 0, 0, nTotalElements);
 
-		mint iTempPos = 0;
+		umint iTempPos = 0;
 		if constexpr (mcp_bNothrowElementMove)
 		{
-			for (mint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
+			for (umint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
 			{
-				mint Count = pMeta[iSeg].m_Count;
+				umint Count = pMeta[iSeg].m_Count;
 				if (Count == 0)
 					continue;
 
-				mint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
-				for (mint iLocal = 0; iLocal < Count; ++iLocal)
+				umint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
+				for (umint iLocal = 0; iLocal < Count; ++iLocal)
 				{
-					mint iSlot = iFirst + iLocal;
+					umint iSlot = iFirst + iLocal;
 					new(&pTempKeys[iTempPos]) t_CKey(fg_Move(pKeys[iSlot]));
 					new(&pTempValues[iTempPos]) t_CValue(fg_Move(pValues[iSlot]));
 					if constexpr (t_Options.m_bStats)
@@ -1788,7 +1788,7 @@ namespace NMib::NContainer
 		{
 			auto CollectCleanup = g_OnScopeExit / [&]
 				{
-					for (mint i = 0; i < iTempPos; ++i)
+					for (umint i = 0; i < iTempPos; ++i)
 					{
 						pTempKeys[i].~t_CKey();
 						pTempValues[i].~t_CValue();
@@ -1796,16 +1796,16 @@ namespace NMib::NContainer
 				}
 			;
 
-			for (mint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
+			for (umint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
 			{
-				mint Count = pMeta[iSeg].m_Count;
+				umint Count = pMeta[iSeg].m_Count;
 				if (Count == 0)
 					continue;
 
-				mint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
-				for (mint iLocal = 0; iLocal < Count; ++iLocal)
+				umint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
+				for (umint iLocal = 0; iLocal < Count; ++iLocal)
 				{
-					mint iSlot = iFirst + iLocal;
+					umint iSlot = iFirst + iLocal;
 					new(&pTempKeys[iTempPos]) t_CKey(fg_Move(pKeys[iSlot]));
 					auto KeyGuard = g_OnScopeExit / [&]
 						{
@@ -1823,16 +1823,16 @@ namespace NMib::NContainer
 			CollectCleanup.f_Clear();
 
 			// Destroy sources now that all are safely in temp
-			for (mint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
+			for (umint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
 			{
-				mint Count = pMeta[iSeg].m_Count;
+				umint Count = pMeta[iSeg].m_Count;
 				if (Count == 0)
 					continue;
 
-				mint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
-				for (mint iLocal = 0; iLocal < Count; ++iLocal)
+				umint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
+				for (umint iLocal = 0; iLocal < Count; ++iLocal)
 				{
-					mint iSlot = iFirst + iLocal;
+					umint iSlot = iFirst + iLocal;
 					pKeys[iSlot].~t_CKey();
 					pValues[iSlot].~t_CValue();
 				}
@@ -1843,33 +1843,33 @@ namespace NMib::NContainer
 		// Redistribute elements according to target cardinalities
 		iTempPos = 0;
 
-		mint nElementsOutsideWindow = _pData->m_nElements - nTotalElements;
+		umint nElementsOutsideWindow = _pData->m_nElements - nTotalElements;
 		auto PlaceCleanup = g_OnScopeExit / [&]
 			{
 				if constexpr (!mcp_bNothrowElementMove)
 				{
-					for (mint i = iTempPos; i < nTotalElements; ++i)
+					for (umint i = iTempPos; i < nTotalElements; ++i)
 					{
 						pTempKeys[i].~t_CKey();
 						pTempValues[i].~t_CValue();
 					}
-					mint nActual = 0;
-					for (mint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
+					umint nActual = 0;
+					for (umint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
 						nActual += pMeta[iSeg].m_Count;
 					_pData->m_nElements = nElementsOutsideWindow + nActual;
 				}
 			}
 		;
 
-		mint iOldOverlapStart = 0;
-		mint nRemapOverlapChecks = 0;
-		mint nRemapTransfers = 0;
-		for (mint iRelSeg = 0; iRelSeg < nSegments; ++iRelSeg)
+		umint iOldOverlapStart = 0;
+		umint nRemapOverlapChecks = 0;
+		umint nRemapTransfers = 0;
+		for (umint iRelSeg = 0; iRelSeg < nSegments; ++iRelSeg)
 		{
-			mint iSeg = _iStartSeg + iRelSeg;
-			mint TargetCount = pTargets[iRelSeg];
-			mint iElemStart = iTempPos;
-			mint iElemEnd = iElemStart + TargetCount;
+			umint iSeg = _iStartSeg + iRelSeg;
+			umint TargetCount = pTargets[iRelSeg];
+			umint iElemStart = iTempPos;
+			umint iElemEnd = iElemStart + TargetCount;
 
 			// Don't place more than we have remaining
 			TargetCount = fg_Min(TargetCount, nTotalElements - iTempPos);
@@ -1877,13 +1877,13 @@ namespace NMib::NContainer
 
 			if (TargetCount > 0)
 			{
-				mint iFirst = fsp_GetSegmentFirstSlot(iSeg, TargetCount);
+				umint iFirst = fsp_GetSegmentFirstSlot(iSeg, TargetCount);
 
 				if constexpr (mcp_bNothrowElementMove)
 				{
-					for (mint iLocal = 0; iLocal < TargetCount; ++iLocal)
+					for (umint iLocal = 0; iLocal < TargetCount; ++iLocal)
 					{
-						mint iSlot = iFirst + iLocal;
+						umint iSlot = iFirst + iLocal;
 						new(&pKeys[iSlot]) t_CKey(fg_Move(pTempKeys[iTempPos]));
 						new(&pValues[iSlot]) t_CValue(fg_Move(pTempValues[iTempPos]));
 						if constexpr (t_Options.m_bStats)
@@ -1896,10 +1896,10 @@ namespace NMib::NContainer
 				else
 				{
 					pMeta[iSeg].m_Count = (uint16)TargetCount;
-					mint nPlacedInSeg = 0;
+					umint nPlacedInSeg = 0;
 					auto SegCleanup = g_OnScopeExit / [&]
 						{
-							for (mint i = 0; i < nPlacedInSeg; ++i)
+							for (umint i = 0; i < nPlacedInSeg; ++i)
 							{
 								pKeys[iFirst + i].~t_CKey();
 								pValues[iFirst + i].~t_CValue();
@@ -1907,9 +1907,9 @@ namespace NMib::NContainer
 							pMeta[iSeg].m_Count = 0;
 						}
 					;
-					for (mint iLocal = 0; iLocal < TargetCount; ++iLocal)
+					for (umint iLocal = 0; iLocal < TargetCount; ++iLocal)
 					{
-						mint iSlot = iFirst + iLocal;
+						umint iSlot = iFirst + iLocal;
 						new(&pKeys[iSlot]) t_CKey(fg_Move(pTempKeys[iTempPos]));
 						auto KeyGuard = g_OnScopeExit / [&]
 							{
@@ -1937,16 +1937,16 @@ namespace NMib::NContainer
 					while (iOldOverlapStart < nSegments && pOldPrefix[iOldOverlapStart + 1] <= iElemStart)
 						++iOldOverlapStart;
 
-					mint iBestOld = 0;
+					umint iBestOld = 0;
 					bool bBestFound = false;
-					mint nBestOverlap = 0;
-					for (mint iOld = iOldOverlapStart; iOld < nSegments && pOldPrefix[iOld] < iElemEnd; ++iOld)
+					umint nBestOverlap = 0;
+					for (umint iOld = iOldOverlapStart; iOld < nSegments && pOldPrefix[iOld] < iElemEnd; ++iOld)
 					{
 						if constexpr (t_Options.m_bStats)
 							++nRemapOverlapChecks;
-						mint iOverlapStart = fg_Max(pOldPrefix[iOld], iElemStart);
-						mint iOverlapEnd = fg_Min(pOldPrefix[iOld + 1], iElemEnd);
-						mint nOverlap = (iOverlapEnd > iOverlapStart) ? (iOverlapEnd - iOverlapStart) : (mint)0;
+						umint iOverlapStart = fg_Max(pOldPrefix[iOld], iElemStart);
+						umint iOverlapEnd = fg_Min(pOldPrefix[iOld + 1], iElemEnd);
+						umint nOverlap = (iOverlapEnd > iOverlapStart) ? (iOverlapEnd - iOverlapStart) : (umint)0;
 						if (nOverlap > nBestOverlap)
 						{
 							nBestOverlap = nOverlap;

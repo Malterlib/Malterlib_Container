@@ -26,10 +26,10 @@ namespace NMib::NContainer
 
 		if (!bNeedEscape)
 		{
-			mint Len = _Str.f_GetLen();
+			umint Len = _Str.f_GetLen();
 
 			typename t_CStr::CMaxChar Current, Prev = 0;
-			for (mint i = 0; i < Len; ++i, (Prev = Current))
+			for (umint i = 0; i < Len; ++i, (Prev = Current))
 			{
 				Current = _Str.f_GetAt(i);
 				if (Current == '\"' || Current == '{' || Current == '}' || Current == '#' || Current == '\\')
@@ -62,9 +62,9 @@ namespace NMib::NContainer
 		{
 			if constexpr (tf_bEscapeNewLines)
 			{
-				mint Len = _Str.f_GetLen();
-				mint iStart = 0;
-				for (mint i = 0; i < Len; ++i)
+				umint Len = _Str.f_GetLen();
+				umint iStart = 0;
+				for (umint i = 0; i < Len; ++i)
 				{
 					typename t_CStr::CMaxChar Current = _Str.f_GetAt(i);
 					if (Current == '\n')
@@ -88,7 +88,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bIncludeFileLine, bool tf_bEscapeNewLines, typename tf_CStr>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fspr_GenerateStr(tf_CStr &_Stream, mint _Level, const TCRegistry *_pReg, ch8 const *_pNewLine)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fspr_GenerateStr(tf_CStr &_Stream, umint _Level, const TCRegistry *_pReg, ch8 const *_pNewLine)
 	{
 		t_CStr PreData;
 		if constexpr (tf_bIncludeFileLine && mc_bSupportLocation)

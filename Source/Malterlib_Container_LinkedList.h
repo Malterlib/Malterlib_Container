@@ -50,12 +50,12 @@ namespace NMib::NContainer
 		{
 		}
 
-		inline_always static mint fs_GetOffset()
+		inline_always static umint fs_GetOffset()
 		{
 			return DMibPOffsetOf(TCLinkedListMember, m_Object);
 		}
 
-		template <typename tf_CType, typename... tfp_CParams, mint... tfp_Indidies>
+		template <typename tf_CType, typename... tfp_CParams, umint... tfp_Indidies>
 		TCLinkedListMember(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams, NMeta::TCIndices<tfp_Indidies...> const&)
 			: m_Object
 			(
@@ -264,21 +264,21 @@ namespace NMib::NContainer
 
 		inline_always static CMember *fsp_MemberFromData(t_CData &_Data)
 		{
-			mint Offset = CMember::fs_GetOffset();
+			umint Offset = CMember::fs_GetOffset();
 			CMember *pMember = (CMember *)(((uint8 *)&_Data) - Offset);
 			return pMember;
 		}
 
 		inline_always static CMember *fsp_MemberFromData(t_CData const &_Data)
 		{
-			mint Offset = CMember::fs_GetOffset();
+			umint Offset = CMember::fs_GetOffset();
 			CMember *pMember = (CMember *)(((uint8 *)&_Data) - Offset);
 			return pMember;
 		}
 
 		void fp_CopyFrom(TCLinkedList const& _Container)
 		{
-			mint nAdded = 16;
+			umint nAdded = 16;
 			CIteratorConst iSource = _Container.f_GetIterator();
 			while (iSource && nAdded--)
 			{
@@ -292,7 +292,7 @@ namespace NMib::NContainer
 				(
 					sizeof(CMember)
 					, alignof(CMember)
-					, [&](void * _pData, mint _Size) -> bool
+					, [&](void * _pData, umint _Size) -> bool
 					{
 						CMember * pData = new(_pData) CMember(*iSource);
 						m_Data.m_List.f_Insert(pData);
@@ -349,7 +349,7 @@ namespace NMib::NContainer
 				return *this;
 			}
 
-			inline_medium mint f_GetLen() const
+			inline_medium umint f_GetLen() const
 			{
 				return m_Iter.f_GetLen();
 			}
@@ -449,7 +449,7 @@ namespace NMib::NContainer
 				return *this;
 			}
 
-			inline_medium mint f_GetLen() const
+			inline_medium umint f_GetLen() const
 			{
 				return m_Iter.f_GetLen();
 			}
@@ -1074,7 +1074,7 @@ namespace NMib::NContainer
 			return !f_IsEmpty() && !f_HasSingleEntry();
 		}
 
-		mint f_GetLen() const
+		umint f_GetLen() const
 		{
 			return m_Data.m_List.f_GetLen();
 		}

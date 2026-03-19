@@ -12,14 +12,14 @@ namespace NMib::NContainer
 			noexcept(fg_GetType<const t_CData &>() == fg_GetType<const tf_CData &>())
 		)
 	{
-		mint Len = f_GetLen();
+		umint Len = f_GetLen();
 		if (Len != _Other.f_GetLen())
 			return false;
 
 		auto pThisArray = f_GetArray();
 		auto pOtherArray = _Other.f_GetArray();
 
-		for (mint i = 0; i < Len; ++i)
+		for (umint i = 0; i < Len; ++i)
 		{
 			if (!(pThisArray[i] == pOtherArray[i]))
 				return false;
@@ -37,8 +37,8 @@ namespace NMib::NContainer
 	{
 		using COrdering = decltype(fg_GetType<const t_CData &>() <=> fg_GetType<const tf_CData &>());
 
-		mint Len = f_GetLen();
-		mint OtherLen = _Other.f_GetLen();
+		umint Len = f_GetLen();
+		umint OtherLen = _Other.f_GetLen();
 
 		auto LenResult = Len <=> OtherLen;
 		if (LenResult != 0)
@@ -47,7 +47,7 @@ namespace NMib::NContainer
 		auto pThisArray = f_GetArray();
 		auto pOtherArray = _Other.f_GetArray();
 
-		for (mint i = 0; i < Len; ++i)
+		for (umint i = 0; i < Len; ++i)
 		{
 			auto &Left = pThisArray[i];
 			auto &Right = pOtherArray[i];
@@ -65,8 +65,8 @@ namespace NMib::NContainer
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions, typename t_CFunctor>
 	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_Compare(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other, t_CFunctor &&_Functor) const
 	{
-		mint Len0 = f_GetLen();
-		mint Len1 = _Other.f_GetLen();
+		umint Len0 = f_GetLen();
+		umint Len1 = _Other.f_GetLen();
 		if (Len0 > Len1)
 			return 1;
 		else if (Len0 < Len1)
@@ -75,7 +75,7 @@ namespace NMib::NContainer
 		const t_CData *pData0 = f_GetArray();
 		const tf_CData *pData1 = _Other.f_GetArray();
 
-		for (mint i = 0; i < Len0; ++i)
+		for (umint i = 0; i < Len0; ++i)
 		{
 			aint iCompare = _Functor(pData0[i], pData1[i]);
 			if (iCompare)
@@ -88,8 +88,8 @@ namespace NMib::NContainer
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_Compare(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const
 	{
-		mint Len0 = f_GetLen();
-		mint Len1 = _Other.f_GetLen();
+		umint Len0 = f_GetLen();
+		umint Len1 = _Other.f_GetLen();
 		if (Len0 > Len1)
 			return 1;
 		else if (Len0 < Len1)
@@ -98,7 +98,7 @@ namespace NMib::NContainer
 		const t_CData *pData0 = f_GetArray();
 		const tf_CData *pData1 = _Other.f_GetArray();
 
-		for (mint i = 0; i < Len0; ++i)
+		for (umint i = 0; i < Len0; ++i)
 		{
 			if (pData0[i] > pData1[i])
 				return 1;
@@ -112,14 +112,14 @@ namespace NMib::NContainer
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_CompareLexicographical(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const
 	{
-		mint Len0 = f_GetLen();
-		mint Len1 = _Other.f_GetLen();
-		mint Len = fg_Min(Len0, Len1);
+		umint Len0 = f_GetLen();
+		umint Len1 = _Other.f_GetLen();
+		umint Len = fg_Min(Len0, Len1);
 
 		const t_CData *pData0 = f_GetArray();
 		const tf_CData *pData1 = _Other.f_GetArray();
 
-		for (mint iElement = 0; iElement < Len; ++iElement)
+		for (umint iElement = 0; iElement < Len; ++iElement)
 		{
 			if (pData0[iElement] > pData1[iElement])
 				return 1;
@@ -160,8 +160,8 @@ namespace NMib::NContainer
 		{
 			TCVector Sorted = *this;
 			Sorted.f_Sort();
-			mint nItems = _CompareTo.f_GetLen();
-			for (mint i = 0; i < nItems; ++i)
+			umint nItems = _CompareTo.f_GetLen();
+			for (umint i = 0; i < nItems; ++i)
 			{
 				const tf_CData0 &CompareTo = _CompareTo[i];
 				if (Sorted.f_BinarySearch(CompareTo) < 0)
@@ -174,8 +174,8 @@ namespace NMib::NContainer
 		{
 			TCVector<tf_CData0> Sorted = _CompareTo;
 			Sorted.f_Sort();
-			mint nItems = f_GetLen();
-			for (mint i = 0; i < nItems; ++i)
+			umint nItems = f_GetLen();
+			for (umint i = 0; i < nItems; ++i)
 			{
 				const t_CData &CompareTo = (*this)[i];
 				if (Sorted.f_BinarySearch(CompareTo) < 0)

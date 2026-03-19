@@ -18,7 +18,7 @@ namespace
 	using namespace NMib::NContainer;
 	using namespace NMib::NException;
 
-	constinit NAtomic::TCAtomic<mint> g_nObjects = 0;
+	constinit NAtomic::TCAtomic<umint> g_nObjects = 0;
 
 	class CVector_Tests : public NMib::NTest::CTest
 	{
@@ -337,7 +337,7 @@ namespace
 				DMibTest(DMibExpr(TCThrowsException<CException>()) == DMibLExpr(List.f_Move(5, 2, 4)));
 
 				// Overflow
-				DMibExpectException(List.f_AddArrayAtEnd(NMib::TCLimitsInt<mint>::mc_Max), DMibErrorInstanceListBoundCheck("Vector length would have overflowed"));
+				DMibExpectException(List.f_AddArrayAtEnd(NMib::TCLimitsInt<umint>::mc_Max), DMibErrorInstanceListBoundCheck("Vector length would have overflowed"));
 			};
 
 			DMibTestSuite("CTAD")
@@ -425,13 +425,13 @@ namespace
 				TestVector.f_ClearNoTrim();
 			};
 #endif
-			auto fRunReplaceTests = [](mint _DestLen, mint _SourceLen, mint _SourceCopyLen, mint _SourceStart, mint _MinLen, mint _bThrowCopy, bool _bDoMove)
+			auto fRunReplaceTests = [](umint _DestLen, umint _SourceLen, umint _SourceCopyLen, umint _SourceStart, umint _MinLen, umint _bThrowCopy, bool _bDoMove)
 				{
 					auto fDestVector = [&] -> TCVector<CCountedObject>
 						{
 							TCVector<CCountedObject> Vector;
 
-							for (mint i = 0; i < _DestLen; ++i)
+							for (umint i = 0; i < _DestLen; ++i)
 								Vector.f_Insert(CStr("Dst {}"_f << i));
 
 							return Vector;
@@ -441,7 +441,7 @@ namespace
 						{
 							TCVector<CCountedObject> Vector;
 
-							for (mint i = 0; i < _SourceLen; ++i)
+							for (umint i = 0; i < _SourceLen; ++i)
 								Vector.f_Insert(CStr("Src {}"_f << i));
 
 							Vector[fg_Min(_SourceStart + _SourceCopyLen / 2, Vector.f_GetLen() - 1)].m_bThrowCopy = _bThrowCopy;
@@ -470,13 +470,13 @@ namespace
 					struct CExpected
 					{
 						CStr m_Type;
-						mint m_Len = 0;
+						umint m_Len = 0;
 					};
 
 					auto fExpected = [](TCInitializerList<CExpected> _Expected) -> TCVector<CCountedObject>
 						{
-							mint iDest = 0;
-							mint iSource = 0;
+							umint iDest = 0;
+							umint iSource = 0;
 
 							TCVector<CCountedObject> Return;
 
@@ -484,7 +484,7 @@ namespace
 							{
 								if (Expected.m_Type == "D")
 								{
-									for (mint i = 0; i < Expected.m_Len; ++i)
+									for (umint i = 0; i < Expected.m_Len; ++i)
 									{
 										Return.f_Insert().m_Value = "Dst {}"_f << iDest;
 										++iDest;
@@ -492,7 +492,7 @@ namespace
 								}
 								else if (Expected.m_Type == "S")
 								{
-									for (mint i = 0; i < Expected.m_Len; ++i)
+									for (umint i = 0; i < Expected.m_Len; ++i)
 									{
 										Return.f_Insert().m_Value = "Src {}"_f << iSource;
 										++iSource;
@@ -503,7 +503,7 @@ namespace
 									iSource += Expected.m_Len;
 								else
 								{
-									for (mint i = 0; i < Expected.m_Len; ++i)
+									for (umint i = 0; i < Expected.m_Len; ++i)
 									{
 										Return.f_Insert();
 										++iDest;
@@ -515,7 +515,7 @@ namespace
 						}
 					;
 
-					mint CopiedSourceLen = fg_Min(_SourceLen - _SourceStart, _SourceCopyLen);
+					umint CopiedSourceLen = fg_Min(_SourceLen - _SourceStart, _SourceCopyLen);
 
 					DMibTestCategory("At start")
 					{
@@ -538,7 +538,7 @@ namespace
 									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, == , _bDoMove);
 									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, == , !_bDoMove);
 
-									mint EndLen = fg_Max(_MinLen, _DestLen) - _DestLen;
+									umint EndLen = fg_Max(_MinLen, _DestLen) - _DestLen;
 									DMibExpect(TestVector0, == , fExpected({{"SI", _SourceStart}, {"S", CopiedSourceLen}, {"D", _DestLen - CopiedSourceLen}, {"", EndLen}}));
 								}
 							)
@@ -567,7 +567,7 @@ namespace
 									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, == , _bDoMove);
 									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, == , !_bDoMove);
 
-									mint EndLen = fg_Max(_MinLen, _DestLen) - _DestLen;
+									umint EndLen = fg_Max(_MinLen, _DestLen) - _DestLen;
 									DMibExpect
 										(
 											TestVector0
@@ -586,9 +586,9 @@ namespace
 							(
 								[&]
 								{
-									mint CopyEnd = _DestLen - _SourceLen/2 + CopiedSourceLen;
-									mint NewEnd = fg_Max(_DestLen, CopyEnd);
-									mint EndLen = fg_Max(_MinLen, NewEnd) - NewEnd;
+									umint CopyEnd = _DestLen - _SourceLen/2 + CopiedSourceLen;
+									umint NewEnd = fg_Max(_DestLen, CopyEnd);
+									umint EndLen = fg_Max(_MinLen, NewEnd) - NewEnd;
 
 									auto TestVector0 = fDestVector();
 									DMibExpect(g_nObjects.f_Load(), ==, _DestLen);
@@ -623,9 +623,9 @@ namespace
 							(
 								[&]
 								{
-									mint CopyEnd = _DestLen + CopiedSourceLen;
-									mint NewEnd = fg_Max(_DestLen, CopyEnd);
-									mint EndLen = fg_Max(_MinLen, NewEnd) - NewEnd;
+									umint CopyEnd = _DestLen + CopiedSourceLen;
+									umint NewEnd = fg_Max(_DestLen, CopyEnd);
+									umint EndLen = fg_Max(_MinLen, NewEnd) - NewEnd;
 
 									auto TestVector0 = fDestVector();
 									DMibExpect(g_nObjects.f_Load(), ==, _DestLen);
@@ -660,9 +660,9 @@ namespace
 							(
 								[&]
 								{
-									mint CopyEnd = _DestLen + _SourceLen + CopiedSourceLen;
-									mint NewEnd = fg_Max(_DestLen, CopyEnd);
-									mint EndLen = fg_Max(_MinLen, NewEnd) - NewEnd;
+									umint CopyEnd = _DestLen + _SourceLen + CopiedSourceLen;
+									umint NewEnd = fg_Max(_DestLen, CopyEnd);
+									umint EndLen = fg_Max(_MinLen, NewEnd) - NewEnd;
 
 									auto TestVector0 = fDestVector();
 									DMibExpect(g_nObjects.f_Load(), ==, _DestLen);
@@ -716,13 +716,13 @@ namespace
 												{
 													DMibTestCategory(SourceCopyLenCategory)
 													{
-														mint DestLen = 100;
-														mint SourceLen = 20;
-														mint SourceCopyLen = SourceCopyLenCategory == "SourceCopyLenUnrestricted" ? SourceLen : (SourceLen * 2) / 3;
-														mint SourceStart = OffsetSource == "SourceOffset" ? 3 : 0;
+														umint DestLen = 100;
+														umint SourceLen = 20;
+														umint SourceCopyLen = SourceCopyLenCategory == "SourceCopyLenUnrestricted" ? SourceLen : (SourceLen * 2) / 3;
+														umint SourceStart = OffsetSource == "SourceOffset" ? 3 : 0;
 
-														mint MinLen = LenCategory == "No MinLen" ? 0 : 200;
-														mint bThrowCopy = ExceptionCategory == "ThrowCopy";
+														umint MinLen = LenCategory == "No MinLen" ? 0 : 200;
+														umint bThrowCopy = ExceptionCategory == "ThrowCopy";
 														bool bDoMove = MoveCategory == "Move";
 
 														fRunReplaceTests(DestLen, SourceLen, SourceCopyLen, SourceStart, MinLen, bThrowCopy, bDoMove);
@@ -742,7 +742,7 @@ namespace
 		struct CExceptionObject
 		{
 			bool m_bThrowException = false;
-			mint m_Dummy[64];
+			umint m_Dummy[64];
 
 			CExceptionObject() = default;
 
@@ -765,19 +765,19 @@ namespace
 				TCVector<CExceptionObject> TestVector0;
 				TCVector<CExceptionObject> TestVector1;
 
-				DMibExpectExceptionType(TestVector0.f_SetLen(NMib::TCLimitsInt<mint>::mc_Max, false), CExceptionMemory);
+				DMibExpectExceptionType(TestVector0.f_SetLen(NMib::TCLimitsInt<umint>::mc_Max, false), CExceptionMemory);
 				DMibAssert(TestVector0.f_GetLen(), ==, 0);
 
 				{
 					DMibTestPath("Complexity");
-					mint LastAllocSize = 0;
-					TCVector<mint> AllocSizes{0};
-					TCVector<mint> ShrinkSizes;
+					umint LastAllocSize = 0;
+					TCVector<umint> AllocSizes{0};
+					TCVector<umint> ShrinkSizes;
 					// Test grow
-					for (mint i = 0; i < 10000; ++i)
+					for (umint i = 0; i < 10000; ++i)
 					{
 						TestVector0.f_Insert();
-						mint AllocSize = TestVector0.f_GetArrayAllocSize();
+						umint AllocSize = TestVector0.f_GetArrayAllocSize();
 						if (AllocSize != LastAllocSize)
 						{
 							LastAllocSize = AllocSize;
@@ -786,10 +786,10 @@ namespace
 					}
 					ShrinkSizes.f_InsertFirst(TestVector0.f_GetArrayAllocSize());
 					// Test shrink
-					for (mint i = 0; i < 10000; ++i)
+					for (umint i = 0; i < 10000; ++i)
 					{
 						TestVector0.f_PopBack();
-						mint AllocSize = TestVector0.f_GetArrayAllocSize();
+						umint AllocSize = TestVector0.f_GetArrayAllocSize();
 						if (AllocSize != LastAllocSize)
 						{
 							LastAllocSize = AllocSize;
@@ -1016,7 +1016,7 @@ namespace
 					{
 						CVectorStatic VectorA;
 						// Add enough data to overflow the 128-byte static buffer (128 bytes / 4 bytes per int32 = 32, but need header too)
-						for (mint i = 0; i < 50; ++i)
+						for (umint i = 0; i < 50; ++i)
 							VectorA.f_Insert((int32)i);
 
 						int32 *pOriginalData = VectorA.f_GetArray();
@@ -1032,7 +1032,7 @@ namespace
 					DMibTestCategory("MoveAssign")
 					{
 						CVectorStatic VectorA;
-						for (mint i = 0; i < 50; ++i)
+						for (umint i = 0; i < 50; ++i)
 							VectorA.f_Insert((int32)i);
 
 						int32 *pOriginalData = VectorA.f_GetArray();

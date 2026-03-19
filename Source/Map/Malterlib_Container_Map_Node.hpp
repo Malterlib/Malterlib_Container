@@ -14,7 +14,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue>
-	inline_small mint TCMapNode<t_CKey, t_CValue>::fs_GetOffset()
+	inline_small umint TCMapNode<t_CKey, t_CValue>::fs_GetOffset()
 	{
 		return DMibPOffsetOf(TCMapNode, mp_Value);
 	}
@@ -60,7 +60,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue>
-	template <mint tf_iValue>
+	template <umint tf_iValue>
 	constexpr decltype(auto) TCMapNode<t_CKey, t_CValue>::get() const & noexcept
 	{
 		if constexpr (tf_iValue == 0)
@@ -70,7 +70,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue>
-	template <mint tf_iValue>
+	template <umint tf_iValue>
 	constexpr decltype(auto) TCMapNode<t_CKey, t_CValue>::get() & noexcept
 	{
 		if constexpr (tf_iValue == 0)
@@ -80,7 +80,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue>
-	template <mint tf_iValue>
+	template <umint tf_iValue>
 	constexpr decltype(auto) TCMapNode<t_CKey, t_CValue>::get() && noexcept
 	{
 		if constexpr (tf_iValue == 0)

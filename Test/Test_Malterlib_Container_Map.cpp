@@ -1233,7 +1233,7 @@ namespace
 					}
 				}
 
-				auto fInitSet = []<mint tf_ExpectedSize = sizeof(void *) * 2>(auto &_Set, TCCompileTimeConstant<mint, tf_ExpectedSize> _x = TCCompileTimeConstant<mint, sizeof(void *) * 2>())
+				auto fInitSet = []<umint tf_ExpectedSize = sizeof(void *) * 2>(auto &_Set, TCCompileTimeConstant<umint, tf_ExpectedSize> _x = TCCompileTimeConstant<umint, sizeof(void *) * 2>())
 					{
 //						static_assert(sizeof(_Set) == tf_ExpectedSize);
 
@@ -1241,7 +1241,7 @@ namespace
 							_Set[i];
 					}
 				;
-				auto fInitMap = []<mint tf_ExpectedSize = sizeof(void *) * 2>(auto &_Map, TCCompileTimeConstant<mint, tf_ExpectedSize> _x = TCCompileTimeConstant<mint, sizeof(void *) * 2>())
+				auto fInitMap = []<umint tf_ExpectedSize = sizeof(void *) * 2>(auto &_Map, TCCompileTimeConstant<umint, tf_ExpectedSize> _x = TCCompileTimeConstant<umint, sizeof(void *) * 2>())
 					{
 						static_assert(sizeof(_Map) == tf_ExpectedSize);
 
@@ -1661,7 +1661,7 @@ namespace
 									, fg_Construct(CCompare{.m_bReverse = true})
 								)
 							;
-							fInitSet(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+							fInitSet(Testing, TCCompileTimeConstant<umint, sizeof(void *) * 3>());
 							fCheckSetReverse(Testing);
 						}
 						{
@@ -1674,7 +1674,7 @@ namespace
 									, fg_Construct(CCompare{.m_bReverse = true})
 								)
 							;
-							fInitMap(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+							fInitMap(Testing, TCCompileTimeConstant<umint, sizeof(void *) * 3>());
 							fCheckMapReverse(Testing);
 						}
 						{
@@ -1690,7 +1690,7 @@ namespace
 									)
 								;
 								TCSet<int, CCompare, CDiffAllocator> Testing(fg_Move(TestingSource));
-								fInitSet(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+								fInitSet(Testing, TCCompileTimeConstant<umint, sizeof(void *) * 3>());
 								fCheckSetReverse(Testing);
 								{
 									DMibTestPath("Post");
@@ -1710,7 +1710,7 @@ namespace
 									)
 								;
 								TCMap<int, CStr, CCompare, CDiffAllocator> Testing(fg_Move(TestingSource));
-								fInitMap(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+								fInitMap(Testing, TCCompileTimeConstant<umint, sizeof(void *) * 3>());
 								fCheckMapReverse(Testing);
 								{
 									DMibTestPath("Post");
@@ -1727,7 +1727,7 @@ namespace
 								TCSet<int, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
 								TCSet<int, CCompare, CDiffAllocator> Testing(CAllocatorConstructTag(), &MemoryManager);
 								Testing = TestingSource;
-								fInitSet(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+								fInitSet(Testing, TCCompileTimeConstant<umint, sizeof(void *) * 3>());
 								fCheckSetReverse(Testing);
 								{
 									DMibTestPath("Post");
@@ -1742,7 +1742,7 @@ namespace
 								TCMap<int, CStr, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
 								TCMap<int, CStr, CCompare, CDiffAllocator> Testing(CAllocatorConstructTag(), &MemoryManager);
 								Testing = TestingSource;
-								fInitMap(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+								fInitMap(Testing, TCCompileTimeConstant<umint, sizeof(void *) * 3>());
 								fCheckMapReverse(Testing);
 								{
 									DMibTestPath("Post");
@@ -1760,7 +1760,7 @@ namespace
 								TCSet<int, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
 								TCSet<int, CCompare, CDiffAllocator> Testing(CAllocatorConstructTag(), &MemoryManager);
 								Testing = fg_Move(TestingSource);
-								fInitSet(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+								fInitSet(Testing, TCCompileTimeConstant<umint, sizeof(void *) * 3>());
 								fCheckSetReverse(Testing);
 								{
 									DMibTestPath("Post");
@@ -1775,7 +1775,7 @@ namespace
 								TCMap<int, CStr, CCompare> TestingSource(CCompareConstructTag(), CCompare{.m_bReverse = true});
 								TCMap<int, CStr, CCompare, CDiffAllocator> Testing(CAllocatorConstructTag(), &MemoryManager);
 								Testing = fg_Move(TestingSource);
-								fInitMap(Testing, TCCompileTimeConstant<mint, sizeof(void *) * 3>());
+								fInitMap(Testing, TCCompileTimeConstant<umint, sizeof(void *) * 3>());
 								fCheckMapReverse(Testing);
 								{
 									DMibTestPath("Post");

@@ -7,14 +7,14 @@ namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CSource>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Replace(tf_CSource &&_Source, mint _StartInSource, mint _Len, mint _StartInList, mint _MinLen)
+	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Replace(tf_CSource &&_Source, umint _StartInSource, umint _Len, umint _StartInList, umint _MinLen)
 		requires (NTraits::cIsSame<NTraits::TCRemoveReference<tf_CSource>, TCVector>)
 	{
 		constexpr static bool c_bIsMove = NTraits::cIsRValueReference<tf_CSource &&>;
 
-		mint CurrentLength = f_GetLen();
-		mint Len = fg_Min(_Len, _Source.f_GetLen() - _StartInSource);
-		mint NewLen = fg_Max(fg_Max(_StartInList + Len, CurrentLength), _MinLen);
+		umint CurrentLength = f_GetLen();
+		umint Len = fg_Min(_Len, _Source.f_GetLen() - _StartInSource);
+		umint NewLen = fg_Max(fg_Max(_StartInList + Len, CurrentLength), _MinLen);
 
 		CVectorData *pNewData;
 		if (NewLen != CurrentLength)
@@ -26,12 +26,12 @@ namespace NMib::NContainer
 			auto *pSourceArray = _Source.f_GetArray();
 			auto *pNewArray = pNewData->f_GetData();
 
-			mint OldRemainingCells = fg_Min(CurrentLength, _StartInList);
-			mint MaxLen = fg_Max(_StartInList + Len, CurrentLength);
+			umint OldRemainingCells = fg_Min(CurrentLength, _StartInList);
+			umint MaxLen = fg_Max(_StartInList + Len, CurrentLength);
 
-			mint nConstructed0 = 0;
-			mint nConstructed1 = 0;
-			mint nCopied = 0;
+			umint nConstructed0 = 0;
+			umint nConstructed1 = 0;
+			umint nCopied = 0;
 
 			auto Cleanup = g_OnScopeExit / [&]
 				{

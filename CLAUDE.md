@@ -84,9 +84,9 @@ The Container module provides high-performance, STL-compatible container classes
 ### Vector Implementation
 ```cpp
 // Configurable vector options
-template <mint t_MinSize, bool t_bShrink, bool t_bCheckBounds>
+template <umint t_MinSize, bool t_bShrink, bool t_bCheckBounds>
 struct TCVectorOptions {
-    static constexpr mint mc_MinSize = t_MinSize;        // Minimum allocation
+    static constexpr umint mc_MinSize = t_MinSize;        // Minimum allocation
     static constexpr bool mc_bShrink = t_bShrink;        // Auto-shrink on remove
     static constexpr bool mc_bCheckBounds = t_bCheckBounds; // Bounds checking
 };

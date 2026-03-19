@@ -35,9 +35,9 @@ namespace
 		constexpr static bool mc_bUseFixedPoint = t_CMap::mcp_bUseFixedPoint;
 		constexpr static bool mc_bNothrowElementMove = t_CMap::mcp_bNothrowElementMove;
 		constexpr static bool mc_bNothrowElementCopy = t_CMap::mcp_bNothrowElementCopy;
-		constexpr static mint mc_SegmentSize = t_CMap::mcp_SegmentSize;
-		constexpr static mint mc_SegmentMetaSize = sizeof(typename t_CMap::CSegmentMeta);
-		constexpr static mint mc_PackedMapDataSize = sizeof(typename t_CMap::CPackedMapData);
+		constexpr static umint mc_SegmentSize = t_CMap::mcp_SegmentSize;
+		constexpr static umint mc_SegmentMetaSize = sizeof(typename t_CMap::CSegmentMeta);
+		constexpr static umint mc_PackedMapDataSize = sizeof(typename t_CMap::CPackedMapData);
 		using CCalibratorCountPointer = decltype(((typename t_CMap::CPackedMapData *)nullptr)->m_pCalibratorCounts);
 	};
 
@@ -47,7 +47,7 @@ namespace
 	static_assert(CDefaultMap::mc_MaxCalibratorLevels == fg_Min(sizeof(void *) * 8 - 2, 51));
 	static_assert(CDefaultMap::mc_MaxLevels == (fg_Min(sizeof(void *) * 8 - 2, 51) + 2) / 3);
 	static_assert(!CDefaultMap::mc_bUseFixedPoint); // Default options should use floating-point density math
-	static_assert(cIsSame<CDefaultMap::CCalibratorCountPointer, mint *>);
+	static_assert(cIsSame<CDefaultMap::CCalibratorCountPointer, umint *>);
 	static_assert(CDefaultMap::mc_SegmentSize <= TCLimitsInt<uint16>::mc_Max);
 
 	using CDefaultMapNonAdaptive = TCPackedMapConstantsAccess<TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_bAdaptive = false}>>;
@@ -90,7 +90,7 @@ namespace
 	using CMapSegmentMax = TCPackedMapConstantsAccess<TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = TCLimitsInt<uint16>::mc_Max}>>;
 	static_assert(CMapSegmentMax::mc_SegmentSize == TCLimitsInt<uint16>::mc_Max);
 
-	using CMapBytesSegmentMax = TCPackedMapConstantsAccess<TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentBytes = ((mint)sizeof(int32) + (mint)sizeof(int32)) * TCLimitsInt<uint16>::mc_Max}>>;
+	using CMapBytesSegmentMax = TCPackedMapConstantsAccess<TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentBytes = ((umint)sizeof(int32) + (umint)sizeof(int32)) * TCLimitsInt<uint16>::mc_Max}>>;
 	static_assert(CMapBytesSegmentMax::mc_SegmentSize == TCLimitsInt<uint16>::mc_Max);
 
 	static_assert(sizeof(TCPackedMap<int32, int32>) == sizeof(void *));
@@ -305,11 +305,11 @@ namespace
 			, mc_bMethodsStatic = true
 		};
 
-		static inline mint ms_nAllocAfterFail = TCLimitsInt<mint>::mc_Max;
-		static inline mint ms_nAllocations = 0;
-		static inline mint ms_nFrees = 0;
+		static inline umint ms_nAllocAfterFail = TCLimitsInt<umint>::mc_Max;
+		static inline umint ms_nAllocations = 0;
+		static inline umint ms_nFrees = 0;
 
-		static void fs_Reset(mint _nAllocAfterFail = TCLimitsInt<mint>::mc_Max)
+		static void fs_Reset(umint _nAllocAfterFail = TCLimitsInt<umint>::mc_Max)
 		{
 			ms_nAllocAfterFail = _nAllocAfterFail;
 			ms_nAllocations = 0;
@@ -332,31 +332,31 @@ namespace
 				DMibError("AllocFail");
 		}
 
-		only_parameters_aliased malloc_like static void *f_AllocAligned(mint _Size, mint _Alignment, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
+		only_parameters_aliased malloc_like static void *f_AllocAligned(umint _Size, umint _Alignment, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
 		{
 			fp_CheckAlloc();
 			return CAllocator_Heap::f_AllocAligned(_Size, _Alignment, _AllocFlags, _NumaNode);
 		}
 
-		only_parameters_aliased malloc_like static void *f_AllocAlignedWithSize(mint &_Size, mint _Alignment, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
+		only_parameters_aliased malloc_like static void *f_AllocAlignedWithSize(umint &_Size, umint _Alignment, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
 		{
 			fp_CheckAlloc();
 			return CAllocator_Heap::f_AllocAlignedWithSize(_Size, _Alignment, _AllocFlags, _NumaNode);
 		}
 
-		only_parameters_aliased malloc_like static void *f_Alloc(mint _Size, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
+		only_parameters_aliased malloc_like static void *f_Alloc(umint _Size, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
 		{
 			fp_CheckAlloc();
 			return CAllocator_Heap::f_Alloc(_Size, _AllocFlags, _NumaNode);
 		}
 
-		only_parameters_aliased malloc_like static void *f_AllocWithSize(mint &_Size, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
+		only_parameters_aliased malloc_like static void *f_AllocWithSize(umint &_Size, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
 		{
 			fp_CheckAlloc();
 			return CAllocator_Heap::f_AllocWithSize(_Size, _AllocFlags, _NumaNode);
 		}
 
-		only_parameters_aliased static void f_Free(void *_pBlock, mint _Size)
+		only_parameters_aliased static void f_Free(void *_pBlock, umint _Size)
 		{
 			++ms_nFrees;
 			CAllocator_Heap::f_Free(_pBlock, _Size);
@@ -372,17 +372,17 @@ namespace
 			return CAllocator_Heap::f_DeterministicSize();
 		}
 
-		only_parameters_aliased static mint f_Size(void *_pBlock)
+		only_parameters_aliased static umint f_Size(void *_pBlock)
 		{
 			return CAllocator_Heap::f_Size(_pBlock);
 		}
 
-		only_parameters_aliased static mint f_TrySize(void *_pBlock)
+		only_parameters_aliased static umint f_TrySize(void *_pBlock)
 		{
 			return CAllocator_Heap::f_TrySize(_pBlock);
 		}
 
-		static mint f_SizePadded(mint _Size)
+		static umint f_SizePadded(umint _Size)
 		{
 			return CAllocator_Heap::f_SizePadded(_Size);
 		}
@@ -392,13 +392,13 @@ namespace
 			return CAllocator_Heap::f_IsStatic(_pBlock);
 		}
 
-		only_parameters_aliased malloc_like static void *f_Realloc(void *_pMem, mint &_Size, mint _OldSize, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
+		only_parameters_aliased malloc_like static void *f_Realloc(void *_pMem, umint &_Size, umint _OldSize, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
 		{
 			fp_CheckAlloc();
 			return CAllocator_Heap::f_Realloc(_pMem, _Size, _OldSize, _AllocFlags, _NumaNode);
 		}
 
-		only_parameters_aliased static void *f_Resize(void *_pMem, mint &_Size, mint _OldSize, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
+		only_parameters_aliased static void *f_Resize(void *_pMem, umint &_Size, umint _OldSize, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
 		{
 			return CAllocator_Heap::f_Resize(_pMem, _Size, _OldSize, _AllocFlags, _NumaNode);
 		}
@@ -417,7 +417,7 @@ namespace
 	// while catching stale-count bugs that trivially-destructible int32 cannot.
 	struct CNothrowMoveTracked
 	{
-		static inline NAtomic::TCAtomic<mint> ms_nAlive{0};
+		static inline NAtomic::TCAtomic<umint> ms_nAlive{0};
 		int32 m_Value = 0;
 		uint32 m_Magic = 0;
 
@@ -584,13 +584,13 @@ namespace
 
 	struct CDetectMovedFromFreeAllocatorState
 	{
-		mint m_nAllocations = 0;
-		mint m_nFrees = 0;
+		umint m_nAllocations = 0;
+		umint m_nFrees = 0;
 	};
 
 	struct CDetectMovedFromFreeAllocator : CAllocator_Base
 	{
-		static inline mint ms_nFreeCallsFromMovedFrom = 0;
+		static inline umint ms_nFreeCallsFromMovedFrom = 0;
 
 		static void fs_Reset() noexcept
 		{
@@ -619,21 +619,21 @@ namespace
 			return *this;
 		}
 
-		only_parameters_aliased malloc_like void *f_AllocAlignedWithSize(mint &_Size, mint _Alignment, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
+		only_parameters_aliased malloc_like void *f_AllocAlignedWithSize(umint &_Size, umint _Alignment, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
 		{
 			DMibCheck(m_pState);
 			++m_pState->m_nAllocations;
 			return CAllocator_Heap::f_AllocAlignedWithSize(_Size, _Alignment, _AllocFlags, _NumaNode);
 		}
 
-		only_parameters_aliased malloc_like void *f_AllocAligned(mint _Size, mint _Alignment, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
+		only_parameters_aliased malloc_like void *f_AllocAligned(umint _Size, umint _Alignment, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
 		{
 			DMibCheck(m_pState);
 			++m_pState->m_nAllocations;
 			return CAllocator_Heap::f_AllocAligned(_Size, _Alignment, _AllocFlags, _NumaNode);
 		}
 
-		only_parameters_aliased void f_Free(void *_pBlock, mint _Size)
+		only_parameters_aliased void f_Free(void *_pBlock, umint _Size)
 		{
 			if (m_pState)
 				++m_pState->m_nFrees;
@@ -647,15 +647,15 @@ namespace
 	};
 
 	template <typename t_CMap>
-	void fg_RunInsertAndVerify(mint _nCount)
+	void fg_RunInsertAndVerify(umint _nCount)
 	{
 		t_CMap Map;
-		for (mint iTest = 0; iTest < _nCount; ++iTest)
+		for (umint iTest = 0; iTest < _nCount; ++iTest)
 			Map.f_Insert((int32)iTest, (int32)(iTest * 10));
 
 		DMibExpect(Map.f_GetLen(), ==, _nCount);
 
-		mint iExpected = 0;
+		umint iExpected = 0;
 		for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
 		{
 			DMibExpect(*Iter, ==, (int32)iExpected)(ETestFlag_Aggregated);
@@ -665,27 +665,27 @@ namespace
 	}
 
 	template <typename t_CMap>
-	mint fg_RunInsertStats(mint _nCount)
+	umint fg_RunInsertStats(umint _nCount)
 	{
 		t_CMap Map;
 		Map.f_ResetStats();
 
-		for (mint iTest = 0; iTest < _nCount; ++iTest)
+		for (umint iTest = 0; iTest < _nCount; ++iTest)
 			Map.f_Insert((int32)iTest, (int32)iTest);
 
 		return Map.f_GetStats().m_nElementMoves;
 	}
 
 	template <typename t_CMap>
-	void fg_RunRandomStress(mint _nCount)
+	void fg_RunRandomStress(umint _nCount)
 	{
 		t_CMap Map;
 
 		CSecureRandom Random;
 		Random.f_InsecureDeterministicReseed(0x12345678u);
-		for (mint iTest = 0; iTest < _nCount; ++iTest)
+		for (umint iTest = 0; iTest < _nCount; ++iTest)
 		{
-			mint nKey = (mint)(Random.f_GetValue<uint32>() % (uint32)_nCount);
+			umint nKey = (umint)(Random.f_GetValue<uint32>() % (uint32)_nCount);
 			Map.f_Insert((int32)nKey, (int32)nKey);
 
 			NStr::CStr ValidateError;
@@ -725,9 +725,9 @@ namespace
 	}
 
 	template <typename t_CMap>
-	void fg_ExpectIntKeyOrder(t_CMap const &_Map, int32 const *_pExpected, mint _nExpected)
+	void fg_ExpectIntKeyOrder(t_CMap const &_Map, int32 const *_pExpected, umint _nExpected)
 	{
-		mint iExpected = 0;
+		umint iExpected = 0;
 		for (auto Iter = _Map.f_Keys().f_GetIterator(); Iter; ++Iter)
 		{
 			DMibExpect(iExpected, <, _nExpected)(ETestFlag_Aggregated);
@@ -739,15 +739,15 @@ namespace
 	}
 
 	template <typename t_CMap>
-	auto fg_FindIntGapInsertKeyInSegment(t_CMap const &_Map, mint _iSegment, int32 &o_Key) -> bool
+	auto fg_FindIntGapInsertKeyInSegment(t_CMap const &_Map, umint _iSegment, int32 &o_Key) -> bool
 	{
 		auto *pData = _Map.mp_pData;
-		mint Count = pData->m_pSegmentMeta[_iSegment].m_Count;
+		umint Count = pData->m_pSegmentMeta[_iSegment].m_Count;
 		if (Count < 2)
 			return false;
 
-		mint iFirst = t_CMap::fsp_GetSegmentFirstSlot(_iSegment, Count);
-		for (mint iLocal = 0; iLocal + 1 < Count; ++iLocal)
+		umint iFirst = t_CMap::fsp_GetSegmentFirstSlot(_iSegment, Count);
+		for (umint iLocal = 0; iLocal + 1 < Count; ++iLocal)
 		{
 			int32 LeftKey = pData->m_pKeys[iFirst + iLocal];
 			int32 RightKey = pData->m_pKeys[iFirst + iLocal + 1];
@@ -763,7 +763,7 @@ namespace
 
 	struct CProjectedBulkInsertPlan
 	{
-		mint m_nInitialCount = 0;
+		umint m_nInitialCount = 0;
 		int32 m_LeftInsertKey = 0;
 		int32 m_RightInsertKey = 0;
 		bool m_bFound = false;
@@ -772,7 +772,7 @@ namespace
 	template <typename t_CMap>
 	auto fg_FindProjectedBulkInsertPlan(t_CMap &_Map) -> CProjectedBulkInsertPlan
 	{
-		for (mint nInitial = 16; nInitial <= 23; ++nInitial)
+		for (umint nInitial = 16; nInitial <= 23; ++nInitial)
 		{
 			_Map.f_Clear();
 			_Map.f_BulkLoad
@@ -780,7 +780,7 @@ namespace
 					nInitial
 					, [&](auto &&_fInsert)
 					{
-						for (mint iKey = 0; iKey < nInitial; ++iKey)
+						for (umint iKey = 0; iKey < nInitial; ++iKey)
 							_fInsert((int32)(iKey * 10), (int32)(iKey * 100));
 					}
 				)
@@ -793,15 +793,15 @@ namespace
 			if (pfp64(pData->m_nElements + 2) > t_CMap::mc_RootUpperBound * pfp64(pData->m_Capacity))
 				continue;
 
-			mint nLevels = _Map.fp_CalibratorLevelCount(pData->m_nSegments);
-			mint nMinTwoSegment = 0;
-			mint nMaxTwoSegment = 0;
+			umint nLevels = _Map.fp_CalibratorLevelCount(pData->m_nSegments);
+			umint nMinTwoSegment = 0;
+			umint nMaxTwoSegment = 0;
 			_Map.fp_GetLevelElementBounds(1, nLevels, 2 * t_CMap::mcp_SegmentSize, nMinTwoSegment, nMaxTwoSegment);
 
-			for (mint iSegment = 0; iSegment + 1 < pData->m_nSegments; ++iSegment)
+			for (umint iSegment = 0; iSegment + 1 < pData->m_nSegments; ++iSegment)
 			{
-				mint LeftCount = pData->m_pSegmentMeta[iSegment].m_Count;
-				mint RightCount = pData->m_pSegmentMeta[iSegment + 1].m_Count;
+				umint LeftCount = pData->m_pSegmentMeta[iSegment].m_Count;
+				umint RightCount = pData->m_pSegmentMeta[iSegment + 1].m_Count;
 
 				if (LeftCount < 2 || RightCount < 2)
 					continue;
@@ -842,9 +842,9 @@ namespace
 //#define DMibContainerPackedMapDebugStats
 
 	template <typename t_CStats>
-	mint fg_PrintPackedMapStats(char const *_pLabel, t_CStats const &_Stats)
+	umint fg_PrintPackedMapStats(char const *_pLabel, t_CStats const &_Stats)
 	{
-		mint nMoves = _Stats.m_nElementMoves;
+		umint nMoves = _Stats.m_nElementMoves;
 #ifdef DMibContainerPackedMapDebugStats
 		DMibConOut
 			(
@@ -918,7 +918,7 @@ namespace
 		{
 			NStr::CStr ChosenHist;
 			NStr::CStr ViolHist;
-			for (mint iLevel = 0; iLevel < _Stats.mc_nRebalanceLevelHistSize; ++iLevel)
+			for (umint iLevel = 0; iLevel < _Stats.mc_nRebalanceLevelHistSize; ++iLevel)
 			{
 				if (_Stats.m_RebalanceChosenLevelHist[iLevel] > 0)
 					ChosenHist += "{}:{ns } "_f << iLevel << _Stats.m_RebalanceChosenLevelHist[iLevel];
@@ -1082,12 +1082,12 @@ namespace
 				{
 					using CPackedMap = TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_bStats = true}>;
 
-					mint nMovesN;
+					umint nMovesN;
 					{
 						DMibTestPath("Lower");
 						nMovesN = fg_RunInsertStats<CPackedMap>(1000);
 					}
-					mint nMoves2N;
+					umint nMoves2N;
 					{
 						DMibTestPath("Upper");
 						nMoves2N = fg_RunInsertStats<CPackedMap>(2000);
@@ -1338,11 +1338,11 @@ namespace
 						Map.f_Insert(1, 10);
 
 						Map.f_Remove((int32 *)nullptr);
-						mint nAfterMutable = Map.f_GetLen();
+						umint nAfterMutable = Map.f_GetLen();
 						DMibExpect(nAfterMutable, ==, 1);
 
 						Map.f_Remove((int32 const *)nullptr);
-						mint nAfterConst = Map.f_GetLen();
+						umint nAfterConst = Map.f_GetLen();
 						DMibExpect(nAfterConst, ==, 1);
 					};
 					DMibTestCategory("EmptyMap")
@@ -1384,13 +1384,13 @@ namespace
 						auto *pData = Map.mp_pData;
 						// Segment 0 is even with 4 elements in an 8-slot segment
 						// Elements are packed right at [4,5,6,7], gaps at [0,1,2,3]
-						mint Count = pData->m_pSegmentMeta[0].m_Count;
+						umint Count = pData->m_pSegmentMeta[0].m_Count;
 						DMibAssert(Count, >, 0);
-						DMibAssert(Count, <, (mint)CMap::mcp_SegmentSize);
+						DMibAssert(Count, <, (umint)CMap::mcp_SegmentSize);
 
 						// Point to the first slot (a gap in the even segment)
 						int32 *pGapSlot = &pData->m_pValues[0];
-						mint iFirst = CMap::fsp_GetSegmentFirstSlot(0, Count);
+						umint iFirst = CMap::fsp_GetSegmentFirstSlot(0, Count);
 
 						// Only test if there's actually a gap (first element isn't at slot 0)
 						if (iFirst > 0)
@@ -1413,14 +1413,14 @@ namespace
 
 						auto *pData = Map.mp_pData;
 						// Find an odd segment with a gap
-						for (mint iSeg = 1; iSeg < pData->m_nSegments; iSeg += 2)
+						for (umint iSeg = 1; iSeg < pData->m_nSegments; iSeg += 2)
 						{
-							mint Count = pData->m_pSegmentMeta[iSeg].m_Count;
+							umint Count = pData->m_pSegmentMeta[iSeg].m_Count;
 							if (Count > 0 && Count < CMap::mcp_SegmentSize)
 							{
 								// Odd segment packed left: elements at [segStart, segStart+Count-1]
 								// Gap at segStart + Count
-								mint iGapSlot = iSeg * CMap::mcp_SegmentSize + Count;
+								umint iGapSlot = iSeg * CMap::mcp_SegmentSize + Count;
 								int32 *pGapSlot = &pData->m_pValues[iGapSlot];
 
 								DMibExpectViolatesRequire(Map.f_Remove(pGapSlot), "iLocalPos < Count");
@@ -1444,10 +1444,10 @@ namespace
 							Map.f_Remove(iTest);
 
 						auto *pData = Map.mp_pData;
-						mint nLen = Map.f_GetLen();
+						umint nLen = Map.f_GetLen();
 
 						// Find an empty segment
-						for (mint iSeg = 0; iSeg < pData->m_nSegments; ++iSeg)
+						for (umint iSeg = 0; iSeg < pData->m_nSegments; ++iSeg)
 						{
 							if (pData->m_pSegmentMeta[iSeg].m_Count == 0)
 							{
@@ -1484,7 +1484,7 @@ namespace
 
 					auto *pDataBeforeClear = Map.mp_pData;
 					DMibAssertTrue(pDataBeforeClear);
-					mint CapacityBeforeClear = pDataBeforeClear->m_Capacity;
+					umint CapacityBeforeClear = pDataBeforeClear->m_Capacity;
 
 					Map.f_Clear(true);
 
@@ -1494,7 +1494,7 @@ namespace
 					DMibExpectTrue(Map.mp_pData == pDataBeforeClear);
 					DMibExpect(Map.mp_pData->m_Capacity, ==, CapacityBeforeClear);
 
-					for (mint iEntry = 0; iEntry < Map.mp_pData->m_nStaticIndexTotalEntries; ++iEntry)
+					for (umint iEntry = 0; iEntry < Map.mp_pData->m_nStaticIndexTotalEntries; ++iEntry)
 						DMibExpectFalse(Map.mp_pData->f_GetIndexEntryValid(iEntry))(ETestFlag_Aggregated);
 
 					auto Result = Map.f_Insert(5000, 123);
@@ -1562,7 +1562,7 @@ namespace
 					Map["Beta"] = 2;
 					Map["Gamma"] = 3;
 
-					mint nSum = 0;
+					umint nSum = 0;
 					for (auto Iter = Map.f_Entries().f_GetIterator(); Iter; ++Iter)
 					{
 						auto Ref = *Iter;
@@ -1900,7 +1900,7 @@ namespace
 					DMibExpect(*Destination.f_FindEqual(TCLimitsInt<uint32>::mc_Max), ==, 10);
 
 					constexpr static uint32 gc_Expected[] = {0u, TCLimitsInt<uint32>::mc_Max};
-					mint iExpected = 0;
+					umint iExpected = 0;
 					for (auto Iter = Destination.f_Keys().f_GetIterator(); Iter; ++Iter)
 					{
 						DMibExpect(iExpected, <, 2)(ETestFlag_Aggregated);
@@ -1926,7 +1926,7 @@ namespace
 					DMibExpectTrue(Result.m_bInserted);
 
 					constexpr static uint32 gc_Expected[] = {TCLimitsInt<uint32>::mc_Max, 1u, 0u};
-					mint iExpected = 0;
+					umint iExpected = 0;
 					for (auto Iter = Destination.f_Keys().f_GetIterator(); Iter; ++Iter)
 					{
 						DMibExpect(iExpected, <, 3)(ETestFlag_Aggregated);
@@ -1952,7 +1952,7 @@ namespace
 					DMibExpectTrue(Result.m_bInserted);
 
 					constexpr static uint32 gc_Expected[] = {TCLimitsInt<uint32>::mc_Max, 1u, 0u};
-					mint iExpected = 0;
+					umint iExpected = 0;
 					for (auto Iter = Destination.f_Keys().f_GetIterator(); Iter; ++Iter)
 					{
 						DMibExpect(iExpected, <, 3)(ETestFlag_Aggregated);
@@ -2014,12 +2014,12 @@ namespace
 				DMibTestCategory("EqualityCrossSegment")
 				{
 					// 500 elements with segment size 64 spans ~8+ segments
-					mint const nCount = 500;
+					umint const nCount = 500;
 
 					TCPackedMap<int32, int32> Map1;
 					TCPackedMap<int32, int32> Map2;
 
-					for (mint iTest = 0; iTest < nCount; ++iTest)
+					for (umint iTest = 0; iTest < nCount; ++iTest)
 					{
 						Map1.f_Insert((int32)iTest, (int32)(iTest * 10));
 						Map2.f_Insert((int32)iTest, (int32)(iTest * 10));
@@ -2034,26 +2034,26 @@ namespace
 
 					// Differ by value only (same keys), early in the map
 					TCPackedMap<int32, int32> Map3;
-					for (mint iTest = 0; iTest < nCount; ++iTest)
+					for (umint iTest = 0; iTest < nCount; ++iTest)
 						Map3.f_Insert((int32)iTest, iTest == 5 ? 999 : (int32)(iTest * 10));
 
 					DMibExpectFalse(Map1 == Map3);
 
 					// Differ by value only, late in the map (last segment)
 					TCPackedMap<int32, int32> Map4;
-					for (mint iTest = 0; iTest < nCount; ++iTest)
+					for (umint iTest = 0; iTest < nCount; ++iTest)
 						Map4.f_Insert((int32)iTest, iTest == nCount - 1 ? 999 : (int32)(iTest * 10));
 
 					DMibExpectFalse(Map1 == Map4);
 				};
 				DMibTestCategory("ThreeWayCrossSegment")
 				{
-					mint const nCount = 500;
+					umint const nCount = 500;
 
 					TCPackedMap<int32, int32> Map1;
 					TCPackedMap<int32, int32> Map2;
 
-					for (mint iTest = 0; iTest < nCount; ++iTest)
+					for (umint iTest = 0; iTest < nCount; ++iTest)
 					{
 						Map1.f_Insert((int32)iTest, (int32)(iTest * 10));
 						Map2.f_Insert((int32)iTest, (int32)(iTest * 10));
@@ -2063,7 +2063,7 @@ namespace
 
 					// Differ by key in the middle
 					TCPackedMap<int32, int32> Map3;
-					for (mint iTest = 0; iTest < nCount; ++iTest)
+					for (umint iTest = 0; iTest < nCount; ++iTest)
 					{
 						if (iTest == nCount / 2)
 							Map3.f_Insert((int32)(iTest + nCount), (int32)(iTest * 10));
@@ -2076,7 +2076,7 @@ namespace
 
 					// Differ by value only (same keys)
 					TCPackedMap<int32, int32> Map4;
-					for (mint iTest = 0; iTest < nCount; ++iTest)
+					for (umint iTest = 0; iTest < nCount; ++iTest)
 						Map4.f_Insert((int32)iTest, iTest == nCount / 2 ? (int32)(iTest * 10 + 1) : (int32)(iTest * 10));
 
 					DMibExpectTrue((Map1 <=> Map4) < 0);
@@ -2084,7 +2084,7 @@ namespace
 
 					// Different sizes, equal prefix
 					TCPackedMap<int32, int32> MapShort;
-					for (mint iTest = 0; iTest < nCount / 2; ++iTest)
+					for (umint iTest = 0; iTest < nCount / 2; ++iTest)
 						MapShort.f_Insert((int32)iTest, (int32)(iTest * 10));
 
 					DMibExpectTrue((MapShort <=> Map1) < 0);
@@ -2139,12 +2139,12 @@ namespace
 				};
 				DMibTestCategory("LexicographicalCrossSegment")
 				{
-					mint const nCount = 500;
+					umint const nCount = 500;
 
 					TCPackedMap<int32, int32> Map1;
 					TCPackedMap<int32, int32> Map2;
 
-					for (mint iTest = 0; iTest < nCount; ++iTest)
+					for (umint iTest = 0; iTest < nCount; ++iTest)
 					{
 						Map1.f_Insert((int32)iTest, (int32)(iTest * 10));
 						Map2.f_Insert((int32)iTest, (int32)(iTest * 10));
@@ -2155,7 +2155,7 @@ namespace
 
 					// Differ by key in the middle
 					TCPackedMap<int32, int32> Map3;
-					for (mint iTest = 0; iTest < nCount; ++iTest)
+					for (umint iTest = 0; iTest < nCount; ++iTest)
 					{
 						if (iTest == nCount / 2)
 							Map3.f_Insert((int32)(iTest + nCount), (int32)(iTest * 10));
@@ -2168,7 +2168,7 @@ namespace
 
 					// Differ by value only (same keys)
 					TCPackedMap<int32, int32> Map4;
-					for (mint iTest = 0; iTest < nCount; ++iTest)
+					for (umint iTest = 0; iTest < nCount; ++iTest)
 						Map4.f_Insert((int32)iTest, iTest == nCount / 2 ? (int32)(iTest * 10 + 1) : (int32)(iTest * 10));
 
 					DMibExpectTrue(Map1.f_CompareLexicographical(Map4) < 0);
@@ -2176,7 +2176,7 @@ namespace
 
 					// Different sizes, equal prefix (shorter is less)
 					TCPackedMap<int32, int32> MapShort;
-					for (mint iTest = 0; iTest < nCount / 2; ++iTest)
+					for (umint iTest = 0; iTest < nCount / 2; ++iTest)
 						MapShort.f_Insert((int32)iTest, (int32)(iTest * 10));
 
 					DMibExpectTrue(MapShort.f_CompareLexicographical(Map1) < 0);
@@ -2184,7 +2184,7 @@ namespace
 
 					// Differ by value at the end (last segment): Map1 has 4990, Map5 has 999
 					TCPackedMap<int32, int32> Map5;
-					for (mint iTest = 0; iTest < nCount; ++iTest)
+					for (umint iTest = 0; iTest < nCount; ++iTest)
 						Map5.f_Insert((int32)iTest, iTest == nCount - 1 ? 999 : (int32)(iTest * 10));
 
 					DMibExpectTrue(Map1.f_CompareLexicographical(Map5) > 0);
@@ -2238,14 +2238,14 @@ namespace
 					TCPackedMap<int32, int32> Map;
 
 					// Insert many elements
-					mint const nCount = 1000;
-					for (mint iTest = 0; iTest < nCount; ++iTest)
+					umint const nCount = 1000;
+					for (umint iTest = 0; iTest < nCount; ++iTest)
 						Map.f_Insert((int32)iTest, (int32)(iTest * 10));
 
 					DMibExpect(Map.f_GetLen(), ==, nCount);
 
 					// Verify all elements are present and sorted
-					mint iExpected = 0;
+					umint iExpected = 0;
 					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
 					{
 						DMibExpect(*Iter, ==, (int32)iExpected)(ETestFlag_Aggregated);
@@ -2411,7 +2411,7 @@ namespace
 					Map.f_ResetStats();
 
 					// Create a hotspot pattern: insert around a central key
-					mint const nCenter = 500;
+					umint const nCenter = 500;
 					for (int32 iTest = 0; iTest < 500; ++iTest)
 					{
 						// Alternating +1/-1 pattern around center to create directional drift
@@ -2442,7 +2442,7 @@ namespace
 					Random.f_InsecureDeterministicReseed(0x12345678u);
 
 					// Measure for N=500
-					mint nMovesSmall;
+					umint nMovesSmall;
 					{
 						DMibTestPath("N500");
 						CPackedMap Map;
@@ -2454,7 +2454,7 @@ namespace
 					}
 
 					// Measure for N=2000
-					mint nMovesLarge;
+					umint nMovesLarge;
 					{
 						DMibTestPath("N2000");
 						CPackedMap Map;
@@ -2491,7 +2491,7 @@ namespace
 					using CPackedMap = TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_bStats = true, .m_DetectorQueueSize = 128}>;
 
 					// Measure for N=500
-					mint nMovesSmall;
+					umint nMovesSmall;
 					{
 						DMibTestPath("N500");
 						CPackedMap Map;
@@ -2503,7 +2503,7 @@ namespace
 					}
 
 					// Measure for N=2000
-					mint nMovesLarge;
+					umint nMovesLarge;
 					{
 						DMibTestPath("N2000");
 						CPackedMap Map;
@@ -2541,14 +2541,14 @@ namespace
 					CSecureRandom Random;
 					Random.f_InsecureDeterministicReseed(0xDEADBEEFu);
 
-					auto fShuffledKeys = [&Random](mint _nCount) -> TCVector<int32>
+					auto fShuffledKeys = [&Random](umint _nCount) -> TCVector<int32>
 						{
 							TCVector<int32> Keys;
-							for (mint iTest = 0; iTest < _nCount; ++iTest)
+							for (umint iTest = 0; iTest < _nCount; ++iTest)
 								Keys.f_InsertLast((int32)iTest);
-							for (mint iTest = _nCount - 1; iTest > 0; --iTest)
+							for (umint iTest = _nCount - 1; iTest > 0; --iTest)
 							{
-								mint iRandom = (mint)(Random.f_GetValue<uint32>() % (uint32)(iTest + 1));
+								umint iRandom = (umint)(Random.f_GetValue<uint32>() % (uint32)(iTest + 1));
 								int32 Tmp = Keys[iTest];
 								Keys[iTest] = Keys[iRandom];
 								Keys[iRandom] = Tmp;
@@ -2558,7 +2558,7 @@ namespace
 					;
 
 					// Measure for N=500
-					mint nMovesSmall;
+					umint nMovesSmall;
 					{
 						DMibTestPath("N500");
 						CPackedMap Map;
@@ -2573,7 +2573,7 @@ namespace
 					}
 
 					// Measure for N=2000
-					mint nMovesLarge;
+					umint nMovesLarge;
 					{
 						DMibTestPath("N2000");
 						CPackedMap Map;
@@ -2615,7 +2615,7 @@ namespace
 					using CPackedMap = TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_bStats = true, .m_DetectorQueueSize = 128}>;
 
 					// Measure for N=500
-					mint nMovesSmall;
+					umint nMovesSmall;
 					{
 						DMibTestPath("N500");
 						CPackedMap Map;
@@ -2629,7 +2629,7 @@ namespace
 					}
 
 					// Measure for N=2000
-					mint nMovesLarge;
+					umint nMovesLarge;
 					{
 						DMibTestPath("N2000");
 						CPackedMap Map;
@@ -3063,14 +3063,14 @@ namespace
 				};
 				DMibTestCategory("SortedSequence")
 				{
-					mint const nCount = 500;
+					umint const nCount = 500;
 					TCPackedMap<int32, int32> Map;
 					Map.f_BulkLoad
 						(
 							nCount
 							, [&](auto &&_fInsert)
 							{
-								for (mint iTest = 0; iTest < nCount; ++iTest)
+								for (umint iTest = 0; iTest < nCount; ++iTest)
 									_fInsert((int32)iTest, (int32)(iTest * 10));
 							}
 						)
@@ -3079,7 +3079,7 @@ namespace
 					DMibExpect(Map.f_GetLen(), ==, nCount);
 
 					// Verify all elements present with correct values
-					for (mint iTest = 0; iTest < nCount; ++iTest)
+					for (umint iTest = 0; iTest < nCount; ++iTest)
 					{
 						DMibTestPath("{}"_f << iTest);
 						auto *pValue = Map.f_FindEqual((int32)iTest);
@@ -3098,14 +3098,14 @@ namespace
 				DMibTestCategory("Validate")
 				{
 					// Test with enough elements to span multiple segments and calibrator levels
-					mint const nCount = 2000;
+					umint const nCount = 2000;
 					TCPackedMap<int32, int32> Map;
 					Map.f_BulkLoad
 						(
 							nCount
 							, [&](auto &&_fInsert)
 							{
-								for (mint iTest = 0; iTest < nCount; ++iTest)
+								for (umint iTest = 0; iTest < nCount; ++iTest)
 									_fInsert((int32)iTest, (int32)iTest);
 							}
 						)
@@ -3212,14 +3212,14 @@ namespace
 				};
 				DMibTestCategory("LargeScale")
 				{
-					mint const nCount = 10000;
+					umint const nCount = 10000;
 					TCPackedMap<int32, int32> Map;
 					Map.f_BulkLoad
 						(
 							nCount
 							, [&](auto &&_fInsert)
 							{
-								for (mint iTest = 0; iTest < nCount; ++iTest)
+								for (umint iTest = 0; iTest < nCount; ++iTest)
 									_fInsert((int32)iTest, (int32)(iTest * 3));
 							}
 						)
@@ -3740,25 +3740,25 @@ namespace
 					auto *pData = Map.mp_pData;
 					DMibAssertTrue(pData);
 
-					mint iPrevNonEmpty = TCLimitsInt<mint>::mc_Max;
-					mint iPrevGapSegment = 0;
-					mint iNextGapSegment = 0;
+					umint iPrevNonEmpty = TCLimitsInt<umint>::mc_Max;
+					umint iPrevGapSegment = 0;
+					umint iNextGapSegment = 0;
 					int32 ProbeKey = 0;
 					int32 ExpectedLessValue = 0;
 					int32 ExpectedGreaterValue = 0;
 					bool bFoundGap = false;
 
-					for (mint iSeg = 0; iSeg < pData->m_nSegments; ++iSeg)
+					for (umint iSeg = 0; iSeg < pData->m_nSegments; ++iSeg)
 					{
-						mint Count = pData->m_pSegmentMeta[iSeg].m_Count;
+						umint Count = pData->m_pSegmentMeta[iSeg].m_Count;
 						if (Count == 0)
 							continue;
 
-						if (iPrevNonEmpty != TCLimitsInt<mint>::mc_Max && iSeg - iPrevNonEmpty > 1)
+						if (iPrevNonEmpty != TCLimitsInt<umint>::mc_Max && iSeg - iPrevNonEmpty > 1)
 						{
-							mint PrevCount = pData->m_pSegmentMeta[iPrevNonEmpty].m_Count;
-							mint iPrevFirst = CMap::fsp_GetSegmentFirstSlot(iPrevNonEmpty, PrevCount);
-							mint iNextFirst = CMap::fsp_GetSegmentFirstSlot(iSeg, Count);
+							umint PrevCount = pData->m_pSegmentMeta[iPrevNonEmpty].m_Count;
+							umint iPrevFirst = CMap::fsp_GetSegmentFirstSlot(iPrevNonEmpty, PrevCount);
+							umint iNextFirst = CMap::fsp_GetSegmentFirstSlot(iSeg, Count);
 							int32 PrevKey = pData->m_pKeys[iPrevFirst + PrevCount - 1];
 							int32 NextKey = pData->m_pKeys[iNextFirst];
 
@@ -3829,19 +3829,19 @@ namespace
 					DMibExpect(pData->m_nSegments, >, 1);
 					DMibExpect(pData->m_nStaticIndexLevels, ==, 1);
 
-					mint iLookupSegment = 0;
+					umint iLookupSegment = 0;
 					int32 LookupKey = 0;
 					int32 LookupValue = 0;
 					bool bFoundLaterSegment = false;
 
-					for (mint iSeg = 1; iSeg < pData->m_nSegments; ++iSeg)
+					for (umint iSeg = 1; iSeg < pData->m_nSegments; ++iSeg)
 					{
-						mint Count = pData->m_pSegmentMeta[iSeg].m_Count;
+						umint Count = pData->m_pSegmentMeta[iSeg].m_Count;
 						if (Count == 0)
 							continue;
 
 						iLookupSegment = iSeg;
-						mint iFirst = CMap::fsp_GetSegmentFirstSlot(iSeg, Count);
+						umint iFirst = CMap::fsp_GetSegmentFirstSlot(iSeg, Count);
 						LookupKey = pData->m_pKeys[iFirst];
 						LookupValue = pData->m_pValues[iFirst];
 						bFoundLaterSegment = true;
@@ -3966,15 +3966,15 @@ namespace
 
 		struct CThrowingValue
 		{
-			static inline NAtomic::TCAtomic<mint> ms_nAlive{0};
-			static inline mint ms_nThrowAfter = TCLimitsInt<mint>::mc_Max;
-			static inline mint ms_nConstructions = 0;
-			static inline mint ms_nDestructions = 0;
-			static inline mint ms_nTotalConstructions = 0;
+			static inline NAtomic::TCAtomic<umint> ms_nAlive{0};
+			static inline umint ms_nThrowAfter = TCLimitsInt<umint>::mc_Max;
+			static inline umint ms_nConstructions = 0;
+			static inline umint ms_nDestructions = 0;
+			static inline umint ms_nTotalConstructions = 0;
 			int32 m_Value = 0;
 			uint32 m_Magic = 0;
 
-			static void fs_Reset(mint _nThrowAfter = TCLimitsInt<mint>::mc_Max)
+			static void fs_Reset(umint _nThrowAfter = TCLimitsInt<umint>::mc_Max)
 			{
 				ms_nAlive = 0;
 				ms_nThrowAfter = _nThrowAfter;
@@ -4034,7 +4034,7 @@ namespace
 		};
 
 		template <typename t_CMap>
-		auto fg_FindThrowAfterCompletedBulkLoadSegment(mint _nCount) -> mint
+		auto fg_FindThrowAfterCompletedBulkLoadSegment(umint _nCount) -> umint
 		{
 			CThrowingValue::fs_Reset();
 
@@ -4051,11 +4051,11 @@ namespace
 			;
 
 			auto *pData = Map.mp_pData;
-			mint FirstCompletedSegmentCount = 0;
-			mint nNonEmptySegments = 0;
-			for (mint iSegment = 0; iSegment < pData->m_nSegments; ++iSegment)
+			umint FirstCompletedSegmentCount = 0;
+			umint nNonEmptySegments = 0;
+			for (umint iSegment = 0; iSegment < pData->m_nSegments; ++iSegment)
 			{
-				mint SegmentCount = pData->m_pSegmentMeta[iSegment].m_Count;
+				umint SegmentCount = pData->m_pSegmentMeta[iSegment].m_Count;
 				if (SegmentCount <= 0)
 					continue;
 
@@ -4074,13 +4074,13 @@ namespace
 		// Nothrow move, throwing copy - tests c_bNothrowInsert vs mcp_bNothrowElementMove
 		struct CNothrowMoveCopyThrow
 		{
-			static inline NAtomic::TCAtomic<mint> ms_nAlive{0};
-			static inline mint ms_nConstructions = 0;
-			static inline mint ms_nThrowAfter = TCLimitsInt<mint>::mc_Max;
+			static inline NAtomic::TCAtomic<umint> ms_nAlive{0};
+			static inline umint ms_nConstructions = 0;
+			static inline umint ms_nThrowAfter = TCLimitsInt<umint>::mc_Max;
 			int32 m_Value = 0;
 			uint32 m_Magic = 0;
 
-			static void fs_Reset(mint _nThrowAfter = TCLimitsInt<mint>::mc_Max)
+			static void fs_Reset(umint _nThrowAfter = TCLimitsInt<umint>::mc_Max)
 			{
 				ms_nAlive = 0;
 				ms_nConstructions = 0;
@@ -4133,13 +4133,13 @@ namespace
 		// Throwing move, nothrow copy - mcp_bNothrowElementMove is false, but copy-insert is safe
 		struct CThrowMoveNothrowCopy
 		{
-			static inline NAtomic::TCAtomic<mint> ms_nAlive{0};
-			static inline mint ms_nConstructions = 0;
-			static inline mint ms_nThrowAfter = TCLimitsInt<mint>::mc_Max;
+			static inline NAtomic::TCAtomic<umint> ms_nAlive{0};
+			static inline umint ms_nConstructions = 0;
+			static inline umint ms_nThrowAfter = TCLimitsInt<umint>::mc_Max;
 			int32 m_Value = 0;
 			uint32 m_Magic = 0;
 
-			static void fs_Reset(mint _nThrowAfter = TCLimitsInt<mint>::mc_Max)
+			static void fs_Reset(umint _nThrowAfter = TCLimitsInt<umint>::mc_Max)
 			{
 				ms_nAlive = 0;
 				ms_nConstructions = 0;
@@ -4202,7 +4202,7 @@ namespace
 
 			DMibTestCategory("InsertSweep")
 			{
-				auto fInsertAttempt = [&](mint _nThrowAfter)
+				auto fInsertAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
 						CThrowMap Map;
@@ -4211,20 +4211,20 @@ namespace
 						Map.f_Insert(CThrowingValue(25), CThrowingValue(250));
 					}
 				;
-				fInsertAttempt(TCLimitsInt<mint>::mc_Max);
-				mint nTotal = CThrowingValue::ms_nConstructions;
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
-				for (mint i = 1; i <= nTotal; ++i)
+				fInsertAttempt(TCLimitsInt<umint>::mc_Max);
+				umint nTotal = CThrowingValue::ms_nConstructions;
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
+				for (umint i = 1; i <= nTotal; ++i)
 				{
 					DMibTestPath("{}"_f << i);
 					CThrowingValue::fs_Reset();
 					DMibExpectExceptionType(fInsertAttempt(i), CException);
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 				}
 			};
 			DMibTestCategory("RemoveSweep")
 			{
-				auto fRemoveAttempt = [&](mint _nThrowAfter)
+				auto fRemoveAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
 						CThrowMap Map;
@@ -4233,20 +4233,20 @@ namespace
 						Map.f_Remove(CThrowingValue(20));
 					}
 				;
-				fRemoveAttempt(TCLimitsInt<mint>::mc_Max);
-				mint nTotal = CThrowingValue::ms_nConstructions;
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
-				for (mint i = 1; i <= nTotal; ++i)
+				fRemoveAttempt(TCLimitsInt<umint>::mc_Max);
+				umint nTotal = CThrowingValue::ms_nConstructions;
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
+				for (umint i = 1; i <= nTotal; ++i)
 				{
 					DMibTestPath("{}"_f << i);
 					CThrowingValue::fs_Reset();
 					DMibExpectExceptionType(fRemoveAttempt(i), CException);
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 				}
 			};
 			DMibTestCategory("CopySweep")
 			{
-				auto fCopyAttempt = [&](mint _nThrowAfter)
+				auto fCopyAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
 						CThrowMap Map;
@@ -4256,21 +4256,21 @@ namespace
 						(void)Copy;
 					}
 				;
-				fCopyAttempt(TCLimitsInt<mint>::mc_Max);
-				mint nTotal = CThrowingValue::ms_nConstructions;
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
-				for (mint i = 1; i <= nTotal; ++i)
+				fCopyAttempt(TCLimitsInt<umint>::mc_Max);
+				umint nTotal = CThrowingValue::ms_nConstructions;
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
+				for (umint i = 1; i <= nTotal; ++i)
 				{
 					DMibTestPath("{}"_f << i);
 					CThrowingValue::fs_Reset();
 					DMibExpectExceptionType(fCopyAttempt(i), CException);
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 				}
 			};
 			DMibTestCategory("ResizeSweep")
 			{
 				using CSmallCapMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
-				auto fResizeAttempt = [&](mint _nThrowAfter)
+				auto fResizeAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
 						CSmallCapMap Map;
@@ -4279,20 +4279,20 @@ namespace
 						Map.f_Insert(CThrowingValue(15), CThrowingValue(150));
 					}
 				;
-				fResizeAttempt(TCLimitsInt<mint>::mc_Max);
-				mint nTotal = CThrowingValue::ms_nConstructions;
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
-				for (mint i = 1; i <= nTotal; ++i)
+				fResizeAttempt(TCLimitsInt<umint>::mc_Max);
+				umint nTotal = CThrowingValue::ms_nConstructions;
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
+				for (umint i = 1; i <= nTotal; ++i)
 				{
 					DMibTestPath("{}"_f << i);
 					CThrowingValue::fs_Reset();
 					DMibExpectExceptionType(fResizeAttempt(i), CException);
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 				}
 			};
 			DMibTestCategory("BulkLoadSweep")
 			{
-				auto fBulkLoadAttempt = [&](mint _nThrowAfter)
+				auto fBulkLoadAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
 						CThrowMap Map;
@@ -4308,23 +4308,23 @@ namespace
 						;
 					}
 				;
-				fBulkLoadAttempt(TCLimitsInt<mint>::mc_Max);
-				mint nTotal = CThrowingValue::ms_nConstructions;
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
-				for (mint i = 1; i <= nTotal; ++i)
+				fBulkLoadAttempt(TCLimitsInt<umint>::mc_Max);
+				umint nTotal = CThrowingValue::ms_nConstructions;
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
+				for (umint i = 1; i <= nTotal; ++i)
 				{
 					DMibTestPath("{}"_f << i);
 					CThrowingValue::fs_Reset();
 					DMibExpectExceptionType(fBulkLoadAttempt(i), CException);
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 				}
 			};
 			DMibTestCategory("BulkLoadCaughtFailureClearsState")
 			{
-				constexpr mint c_nCount = 10;
+				constexpr umint c_nCount = 10;
 				using CThrowAccessMap = TCPackedMapTestAccess<CThrowMap>;
 
-				mint nThrowAfter = fg_FindThrowAfterCompletedBulkLoadSegment<CThrowMap>(c_nCount);
+				umint nThrowAfter = fg_FindThrowAfterCompletedBulkLoadSegment<CThrowMap>(c_nCount);
 
 				CThrowingValue::fs_Reset(nThrowAfter);
 				CThrowAccessMap Map;
@@ -4345,16 +4345,16 @@ namespace
 				;
 
 				DMibExpect(Map.f_IsEmpty(), ==, true);
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 				fg_ExpectPackedMapValid(Map, "BulkLoadCaughtFailureClearsState");
 			};
 			DMibTestCategory("TemplatedCopyConstructorBulkLoadFailure")
 			{
-				constexpr mint c_nCount = 10;
+				constexpr umint c_nCount = 10;
 				using CSourceMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 				using CDestinationMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
 
-				mint nThrowAfter = fg_FindThrowAfterCompletedBulkLoadSegment<CDestinationMap>(c_nCount);
+				umint nThrowAfter = fg_FindThrowAfterCompletedBulkLoadSegment<CDestinationMap>(c_nCount);
 
 				CThrowingValue::fs_Reset();
 				CSourceMap Source;
@@ -4369,7 +4369,7 @@ namespace
 					)
 				;
 
-				mint nAliveBefore = (mint)CThrowingValue::ms_nAlive;
+				umint nAliveBefore = (umint)CThrowingValue::ms_nAlive;
 				CThrowingValue::ms_nConstructions = 0;
 				CThrowingValue::ms_nThrowAfter = nThrowAfter;
 
@@ -4381,11 +4381,11 @@ namespace
 				;
 
 				DMibExpectExceptionType(fCopyAttempt(), CException);
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, nAliveBefore);
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, nAliveBefore);
 			};
 			DMibTestCategory("TemplatedCopyConstructorBulkLoadFailureFreesAllocation")
 			{
-				constexpr mint c_nCount = 10;
+				constexpr umint c_nCount = 10;
 				using CSourceMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 				using CDestinationMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
 
@@ -4403,7 +4403,7 @@ namespace
 					)
 				;
 
-				mint nAliveBefore = (mint)CThrowingValue::ms_nAlive;
+				umint nAliveBefore = (umint)CThrowingValue::ms_nAlive;
 				CFailingAllocator::fs_Reset();
 				CThrowingValue::ms_nConstructions = 0;
 				CThrowingValue::ms_nThrowAfter = 1;
@@ -4416,14 +4416,14 @@ namespace
 				;
 
 				DMibExpectExceptionType(fCopyAttempt(), CException);
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, nAliveBefore);
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, nAliveBefore);
 				DMibExpect(CFailingAllocator::ms_nAllocations, >, 0);
 				DMibExpect(CFailingAllocator::ms_nFrees, ==, CFailingAllocator::ms_nAllocations);
 				CFailingAllocator::fs_Reset();
 			};
 			DMibTestCategory("TemplatedCopyConstructorInsertFailureFreesAllocation")
 			{
-				constexpr mint c_nCount = 10;
+				constexpr umint c_nCount = 10;
 				using CSourceMap = TCPackedMap<int32, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
 				using CDestinationMap = TCPackedMap<int64, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
 
@@ -4433,7 +4433,7 @@ namespace
 				for (int32 i = 0; i < c_nCount; ++i)
 					Source.f_Insert(i * 10, CThrowingValue(i * 100));
 
-				mint nAliveBefore = (mint)CThrowingValue::ms_nAlive;
+				umint nAliveBefore = (umint)CThrowingValue::ms_nAlive;
 				CFailingAllocator::fs_Reset();
 				CThrowingValue::ms_nConstructions = 0;
 				CThrowingValue::ms_nThrowAfter = 1;
@@ -4446,7 +4446,7 @@ namespace
 				;
 
 				DMibExpectExceptionType(fCopyAttempt(), CException);
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, nAliveBefore);
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, nAliveBefore);
 				DMibExpect(CFailingAllocator::ms_nAllocations, >, 0);
 				DMibExpect(CFailingAllocator::ms_nFrees, ==, CFailingAllocator::ms_nAllocations);
 				CFailingAllocator::fs_Reset();
@@ -4515,14 +4515,14 @@ namespace
 
 						DMibExpect(Map.f_GetLen(), ==, 8);
 					}
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 				}
 
 				// Sweep through all possible throw points to cover populate, merge, and placement
 				{
 					DMibTestPath("ExceptionSweep");
 
-					auto fBulkInsertAttempt = [&](mint _nThrowAfter)
+					auto fBulkInsertAttempt = [&](umint _nThrowAfter)
 						{
 							CThrowingValue::fs_Reset(_nThrowAfter);
 							CThrowMap Map;
@@ -4548,17 +4548,17 @@ namespace
 					;
 
 					// Find the construction count needed for a successful bulk insert
-					fBulkInsertAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotalConstructions = CThrowingValue::ms_nConstructions;
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+					fBulkInsertAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotalConstructions = CThrowingValue::ms_nConstructions;
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 
 					// Throw at every possible point
-					for (mint iThrow = 1; iThrow <= nTotalConstructions; ++iThrow)
+					for (umint iThrow = 1; iThrow <= nTotalConstructions; ++iThrow)
 					{
 						DMibTestPath("{}"_f << iThrow);
 						CThrowingValue::fs_Reset();
 						DMibExpectExceptionType(fBulkInsertAttempt(iThrow), CException);
-						DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+						DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 					}
 				}
 			};
@@ -4566,7 +4566,7 @@ namespace
 			{
 				// Insert sequentially to exercise adaptive paths over multiple resizes
 				using CSmallThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
-				auto fLinearAttempt = [&](mint _nThrowAfter)
+				auto fLinearAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
 						CSmallThrowMap Map;
@@ -4574,22 +4574,22 @@ namespace
 							Map.f_Insert(CThrowingValue(i), CThrowingValue(i * 100));
 					}
 				;
-				fLinearAttempt(TCLimitsInt<mint>::mc_Max);
-				mint nTotal = CThrowingValue::ms_nConstructions;
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
-				for (mint i = 1; i <= nTotal; ++i)
+				fLinearAttempt(TCLimitsInt<umint>::mc_Max);
+				umint nTotal = CThrowingValue::ms_nConstructions;
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
+				for (umint i = 1; i <= nTotal; ++i)
 				{
 					DMibTestPath("{}"_f << i);
 					CThrowingValue::fs_Reset();
 					DMibExpectExceptionType(fLinearAttempt(i), CException);
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 				}
 			};
 			DMibTestCategory("RandomInsertSweep")
 			{
 				// Insert in scrambled order to exercise non-adaptive rebalance paths over multiple resizes
 				using CSmallThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
-				auto fRandomAttempt = [&](mint _nThrowAfter)
+				auto fRandomAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
 						CSmallThrowMap Map;
@@ -4601,22 +4601,22 @@ namespace
 						}
 					}
 				;
-				fRandomAttempt(TCLimitsInt<mint>::mc_Max);
-				mint nTotal = CThrowingValue::ms_nConstructions;
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
-				for (mint i = 1; i <= nTotal; ++i)
+				fRandomAttempt(TCLimitsInt<umint>::mc_Max);
+				umint nTotal = CThrowingValue::ms_nConstructions;
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
+				for (umint i = 1; i <= nTotal; ++i)
 				{
 					DMibTestPath("{}"_f << i);
 					CThrowingValue::fs_Reset();
 					DMibExpectExceptionType(fRandomAttempt(i), CException);
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 				}
 			};
 			DMibTestCategory("LinearRemoveShrinkSweep")
 			{
 				// Insert many elements, then remove sequentially to trigger shrinks via adaptive path
 				using CSmallThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
-				auto fLinearRemoveAttempt = [&](mint _nThrowAfter)
+				auto fLinearRemoveAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
 						CSmallThrowMap Map;
@@ -4626,22 +4626,22 @@ namespace
 							Map.f_Remove(CThrowingValue(i * 10));
 					}
 				;
-				fLinearRemoveAttempt(TCLimitsInt<mint>::mc_Max);
-				mint nTotal = CThrowingValue::ms_nConstructions;
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
-				for (mint i = 1; i <= nTotal; ++i)
+				fLinearRemoveAttempt(TCLimitsInt<umint>::mc_Max);
+				umint nTotal = CThrowingValue::ms_nConstructions;
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
+				for (umint i = 1; i <= nTotal; ++i)
 				{
 					DMibTestPath("{}"_f << i);
 					CThrowingValue::fs_Reset();
 					DMibExpectExceptionType(fLinearRemoveAttempt(i), CException);
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 				}
 			};
 			DMibTestCategory("RandomRemoveShrinkSweep")
 			{
 				// Insert many elements, then remove in scrambled order to trigger non-adaptive rebalance paths
 				using CSmallThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
-				auto fRandomRemoveAttempt = [&](mint _nThrowAfter)
+				auto fRandomRemoveAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
 						CSmallThrowMap Map;
@@ -4655,15 +4655,15 @@ namespace
 						}
 					}
 				;
-				fRandomRemoveAttempt(TCLimitsInt<mint>::mc_Max);
-				mint nTotal = CThrowingValue::ms_nConstructions;
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
-				for (mint i = 1; i <= nTotal; ++i)
+				fRandomRemoveAttempt(TCLimitsInt<umint>::mc_Max);
+				umint nTotal = CThrowingValue::ms_nConstructions;
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
+				for (umint i = 1; i <= nTotal; ++i)
 				{
 					DMibTestPath("{}"_f << i);
 					CThrowingValue::fs_Reset();
 					DMibExpectExceptionType(fRandomRemoveAttempt(i), CException);
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 				}
 			};
 			DMibTestCategory("ResizeException")
@@ -4684,7 +4684,7 @@ namespace
 
 					DMibExpectExceptionType(Map.f_Insert(CThrowingValue(15), CThrowingValue(150)), CException);
 				}
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 			};
 			DMibTestCategory("NothrowMoveThrowCopy")
 			{
@@ -4699,7 +4699,7 @@ namespace
 				// InsertCopySweep: insert via const ref (copy path) with nothrow-move type
 				DMibTestCategory("InsertCopySweep")
 				{
-					auto fInsertCopyAttempt = [&](mint _nThrowAfter)
+					auto fInsertCopyAttempt = [&](umint _nThrowAfter)
 						{
 							CNothrowMoveCopyThrow::fs_Reset(_nThrowAfter);
 							CNMMap Map;
@@ -4711,14 +4711,14 @@ namespace
 							Map.f_Insert(Key, Value);
 						}
 					;
-					fInsertCopyAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CNothrowMoveCopyThrow::ms_nConstructions;
-					DMibExpect((mint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fInsertCopyAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CNothrowMoveCopyThrow::ms_nConstructions;
+					DMibExpect((umint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						DMibExpectExceptionType(fInsertCopyAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
 					}
 				};
 
@@ -4728,7 +4728,7 @@ namespace
 					using CSmallNMMap = TCPackedMap<CNothrowMoveCopyThrow, CNothrowMoveCopyThrow, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 					static_assert(TCPackedMapConstantsAccess<CSmallNMMap>::mc_bNothrowElementMove);
 
-					auto fResizeCopyAttempt = [&](mint _nThrowAfter)
+					auto fResizeCopyAttempt = [&](umint _nThrowAfter)
 						{
 							CNothrowMoveCopyThrow::fs_Reset(_nThrowAfter);
 							CSmallNMMap Map;
@@ -4739,21 +4739,21 @@ namespace
 							Map.f_Insert(Key, Value);
 						}
 					;
-					fResizeCopyAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CNothrowMoveCopyThrow::ms_nConstructions;
-					DMibExpect((mint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fResizeCopyAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CNothrowMoveCopyThrow::ms_nConstructions;
+					DMibExpect((umint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						DMibExpectExceptionType(fResizeCopyAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
 					}
 				};
 
 				// CopySweep: copy construction of map with nothrow-move type
 				DMibTestCategory("CopySweep")
 				{
-					auto fCopyAttempt = [&](mint _nThrowAfter)
+					auto fCopyAttempt = [&](umint _nThrowAfter)
 						{
 							CNothrowMoveCopyThrow::fs_Reset(_nThrowAfter);
 							CNMMap Map;
@@ -4763,20 +4763,20 @@ namespace
 							(void)Copy;
 						}
 					;
-					fCopyAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CNothrowMoveCopyThrow::ms_nConstructions;
-					DMibExpect((mint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fCopyAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CNothrowMoveCopyThrow::ms_nConstructions;
+					DMibExpect((umint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						DMibExpectExceptionType(fCopyAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("LinearInsertCopySweep")
 				{
 					using CSmallNMMap = TCPackedMap<CNothrowMoveCopyThrow, CNothrowMoveCopyThrow, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
-					auto fLinearAttempt = [&](mint _nThrowAfter)
+					auto fLinearAttempt = [&](umint _nThrowAfter)
 						{
 							CNothrowMoveCopyThrow::fs_Reset(_nThrowAfter);
 							CSmallNMMap Map;
@@ -4788,20 +4788,20 @@ namespace
 							}
 						}
 					;
-					fLinearAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CNothrowMoveCopyThrow::ms_nConstructions;
-					DMibExpect((mint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fLinearAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CNothrowMoveCopyThrow::ms_nConstructions;
+					DMibExpect((umint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						DMibExpectExceptionType(fLinearAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("RandomInsertCopySweep")
 				{
 					using CSmallNMMap = TCPackedMap<CNothrowMoveCopyThrow, CNothrowMoveCopyThrow, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
-					auto fRandomAttempt = [&](mint _nThrowAfter)
+					auto fRandomAttempt = [&](umint _nThrowAfter)
 						{
 							CNothrowMoveCopyThrow::fs_Reset(_nThrowAfter);
 							CSmallNMMap Map;
@@ -4814,14 +4814,14 @@ namespace
 							}
 						}
 					;
-					fRandomAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CNothrowMoveCopyThrow::ms_nConstructions;
-					DMibExpect((mint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fRandomAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CNothrowMoveCopyThrow::ms_nConstructions;
+					DMibExpect((umint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						DMibExpectExceptionType(fRandomAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveCopyThrow::ms_nAlive, ==, 0);
 					}
 				};
 			};
@@ -4838,7 +4838,7 @@ namespace
 				// InsertMoveSweep: insert via rvalue (move path, throws)
 				DMibTestCategory("InsertMoveSweep")
 				{
-					auto fInsertMoveAttempt = [&](mint _nThrowAfter)
+					auto fInsertMoveAttempt = [&](umint _nThrowAfter)
 						{
 							CThrowMoveNothrowCopy::fs_Reset(_nThrowAfter);
 							CTMMap Map;
@@ -4847,15 +4847,15 @@ namespace
 							Map.f_Insert(CThrowMoveNothrowCopy(25), CThrowMoveNothrowCopy(250));
 						}
 					;
-					fInsertMoveAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CThrowMoveNothrowCopy::ms_nConstructions;
-					DMibExpect((mint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fInsertMoveAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CThrowMoveNothrowCopy::ms_nConstructions;
+					DMibExpect((umint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CThrowMoveNothrowCopy::fs_Reset();
 						DMibExpectExceptionType(fInsertMoveAttempt(i), CException);
-						DMibExpect((mint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
+						DMibExpect((umint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
 					}
 				};
 
@@ -4875,7 +4875,7 @@ namespace
 						Map.f_Insert(Key, Value);
 						DMibExpect(Map.f_GetLen(), ==, 7);
 					}
-					DMibExpect((mint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
+					DMibExpect((umint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
 				};
 
 				// ResizeCopySweep: insert via const ref (nothrow copy) triggering resize where internal moves throw
@@ -4884,7 +4884,7 @@ namespace
 					using CSmallTMMap = TCPackedMap<CThrowMoveNothrowCopy, CThrowMoveNothrowCopy, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 					static_assert(!TCPackedMapConstantsAccess<CSmallTMMap>::mc_bNothrowElementMove);
 
-					auto fResizeCopyAttempt = [&](mint _nThrowAfter)
+					auto fResizeCopyAttempt = [&](umint _nThrowAfter)
 						{
 							CThrowMoveNothrowCopy::fs_Reset(_nThrowAfter);
 							CSmallTMMap Map;
@@ -4895,21 +4895,21 @@ namespace
 							Map.f_Insert(Key, Value);
 						}
 					;
-					fResizeCopyAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CThrowMoveNothrowCopy::ms_nConstructions;
-					DMibExpect((mint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fResizeCopyAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CThrowMoveNothrowCopy::ms_nConstructions;
+					DMibExpect((umint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CThrowMoveNothrowCopy::fs_Reset();
 						DMibExpectExceptionType(fResizeCopyAttempt(i), CException);
-						DMibExpect((mint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
+						DMibExpect((umint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("LinearInsertCopySweep")
 				{
 					using CSmallTMMap = TCPackedMap<CThrowMoveNothrowCopy, CThrowMoveNothrowCopy, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
-					auto fLinearAttempt = [&](mint _nThrowAfter)
+					auto fLinearAttempt = [&](umint _nThrowAfter)
 						{
 							CThrowMoveNothrowCopy::fs_Reset(_nThrowAfter);
 							CSmallTMMap Map;
@@ -4921,21 +4921,21 @@ namespace
 							}
 						}
 					;
-					fLinearAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CThrowMoveNothrowCopy::ms_nConstructions;
-					DMibExpect((mint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fLinearAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CThrowMoveNothrowCopy::ms_nConstructions;
+					DMibExpect((umint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CThrowMoveNothrowCopy::fs_Reset();
 						DMibExpectExceptionType(fLinearAttempt(i), CException);
-						DMibExpect((mint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
+						DMibExpect((umint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("RandomInsertCopySweep")
 				{
 					using CSmallTMMap = TCPackedMap<CThrowMoveNothrowCopy, CThrowMoveNothrowCopy, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
-					auto fRandomAttempt = [&](mint _nThrowAfter)
+					auto fRandomAttempt = [&](umint _nThrowAfter)
 						{
 							CThrowMoveNothrowCopy::fs_Reset(_nThrowAfter);
 							CSmallTMMap Map;
@@ -4948,15 +4948,15 @@ namespace
 							}
 						}
 					;
-					fRandomAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CThrowMoveNothrowCopy::ms_nConstructions;
-					DMibExpect((mint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fRandomAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CThrowMoveNothrowCopy::ms_nConstructions;
+					DMibExpect((umint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CThrowMoveNothrowCopy::fs_Reset();
 						DMibExpectExceptionType(fRandomAttempt(i), CException);
-						DMibExpect((mint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
+						DMibExpect((umint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
 					}
 				};
 			};
@@ -5047,7 +5047,7 @@ namespace
 			};
 			DMibTestCategory("TemplatedMoveConstructorInsertFailureClearsSourceAndFreesAllocation")
 			{
-				constexpr mint c_nCount = 10;
+				constexpr umint c_nCount = 10;
 				using CSourceMap = TCPackedMap<int32, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
 				using CDestinationMap = TCPackedMap<int64, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
 
@@ -5073,7 +5073,7 @@ namespace
 				;
 
 				DMibExpect(Source.f_IsEmpty(), ==, true);
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 				DMibExpect(CFailingAllocator::ms_nAllocations, >, 0);
 				DMibExpect(CFailingAllocator::ms_nFrees, ==, CFailingAllocator::ms_nAllocations);
 				CFailingAllocator::fs_Reset();
@@ -5127,7 +5127,7 @@ namespace
 					CThrowMap Copy(Map);
 					DMibExpect(Copy.f_GetLen(), ==, 10);
 				}
-				DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+				DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 			};
 			DMibTestCategory("AllocFailSweep")
 			{
@@ -5140,7 +5140,7 @@ namespace
 					using CFailMap = TCPackedMap<CNothrowMoveTracked, CNothrowMoveTracked, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
 
-					auto fResizeAttempt = [&](mint _nAllocAfterFail)
+					auto fResizeAttempt = [&](umint _nAllocAfterFail)
 						{
 							CNothrowMoveTracked::fs_Reset();
 							CFailingAllocator::fs_Reset(_nAllocAfterFail);
@@ -5153,15 +5153,15 @@ namespace
 							Map.f_Insert(CNothrowMoveTracked(15), CNothrowMoveTracked(150));
 						}
 					;
-					fResizeAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CFailingAllocator::ms_nAllocations;
-					DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
-					for (mint i = 0; i <= nTotal; ++i)
+					fResizeAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CFailingAllocator::ms_nAllocations;
+					DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+					for (umint i = 0; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CNothrowMoveTracked::fs_Reset();
 						DMibExpectExceptionType(fResizeAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("BulkLoadAllocSweep")
@@ -5169,7 +5169,7 @@ namespace
 					using CFailMap = TCPackedMap<CNothrowMoveTracked, CNothrowMoveTracked, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
 
-					auto fBulkLoadAttempt = [&](mint _nAllocAfterFail)
+					auto fBulkLoadAttempt = [&](umint _nAllocAfterFail)
 						{
 							CNothrowMoveTracked::fs_Reset();
 							CFailingAllocator::fs_Reset(_nAllocAfterFail);
@@ -5186,15 +5186,15 @@ namespace
 							;
 						}
 					;
-					fBulkLoadAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CFailingAllocator::ms_nAllocations;
-					DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fBulkLoadAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CFailingAllocator::ms_nAllocations;
+					DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CNothrowMoveTracked::fs_Reset();
 						DMibExpectExceptionType(fBulkLoadAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("LinearInsertAllocSweep")
@@ -5203,7 +5203,7 @@ namespace
 					using CFailMap = TCPackedMap<CNothrowMoveTracked, CNothrowMoveTracked, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
 
-					auto fLinearInsertAttempt = [&](mint _nAllocAfterFail)
+					auto fLinearInsertAttempt = [&](umint _nAllocAfterFail)
 						{
 							CNothrowMoveTracked::fs_Reset();
 							CFailingAllocator::fs_Reset(_nAllocAfterFail);
@@ -5212,15 +5212,15 @@ namespace
 								Map.f_Insert(CNothrowMoveTracked(i), CNothrowMoveTracked(i * 100));
 						}
 					;
-					fLinearInsertAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CFailingAllocator::ms_nAllocations;
-					DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fLinearInsertAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CFailingAllocator::ms_nAllocations;
+					DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CNothrowMoveTracked::fs_Reset();
 						DMibExpectExceptionType(fLinearInsertAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("ResizeAllocSweepWithThrowingValue")
@@ -5228,7 +5228,7 @@ namespace
 					// Combine failing allocator with throwing values to verify no element leaks
 					using CFailThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 
-					auto fResizeAttempt = [&](mint _nAllocAfterFail)
+					auto fResizeAttempt = [&](umint _nAllocAfterFail)
 						{
 							CThrowingValue::fs_Reset();
 							CFailingAllocator::fs_Reset();
@@ -5239,15 +5239,15 @@ namespace
 							Map.f_Insert(CThrowingValue(15), CThrowingValue(150));
 						}
 					;
-					fResizeAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CFailingAllocator::ms_nAllocations;
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fResizeAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CFailingAllocator::ms_nAllocations;
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CThrowingValue::fs_Reset();
 						DMibExpectExceptionType(fResizeAttempt(i), CException);
-						DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+						DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("BulkInsertAllocSweep")
@@ -5255,7 +5255,7 @@ namespace
 					using CFailMap = TCPackedMap<CNothrowMoveTracked, CNothrowMoveTracked, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
 
-					auto fBulkInsertAttempt = [&](mint _nAllocAfterFail)
+					auto fBulkInsertAttempt = [&](umint _nAllocAfterFail)
 						{
 							CNothrowMoveTracked::fs_Reset();
 							CFailingAllocator::fs_Reset();
@@ -5277,15 +5277,15 @@ namespace
 							;
 						}
 					;
-					fBulkInsertAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CFailingAllocator::ms_nAllocations;
-					DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fBulkInsertAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CFailingAllocator::ms_nAllocations;
+					DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CNothrowMoveTracked::fs_Reset();
 						DMibExpectExceptionType(fBulkInsertAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("BulkInsertAllocSweepWithThrowingValue")
@@ -5293,7 +5293,7 @@ namespace
 					// Combine failing allocator with throwing values to verify no element leaks
 					using CFailThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 
-					auto fBulkInsertAttempt = [&](mint _nAllocAfterFail)
+					auto fBulkInsertAttempt = [&](umint _nAllocAfterFail)
 						{
 							CThrowingValue::fs_Reset();
 							CFailingAllocator::fs_Reset(_nAllocAfterFail);
@@ -5314,15 +5314,15 @@ namespace
 							;
 						}
 					;
-					fBulkInsertAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CFailingAllocator::ms_nAllocations;
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fBulkInsertAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CFailingAllocator::ms_nAllocations;
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CThrowingValue::fs_Reset();
 						DMibExpectExceptionType(fBulkInsertAttempt(i), CException);
-						DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+						DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("BulkInsertAllocSweepTriggersResize")
@@ -5331,7 +5331,7 @@ namespace
 					using CFailMap = TCPackedMap<CNothrowMoveTracked, CNothrowMoveTracked, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
 
-					auto fBulkInsertResizeAttempt = [&](mint _nAllocAfterFail)
+					auto fBulkInsertResizeAttempt = [&](umint _nAllocAfterFail)
 						{
 							CNothrowMoveTracked::fs_Reset();
 							CFailingAllocator::fs_Reset(_nAllocAfterFail);
@@ -5351,15 +5351,15 @@ namespace
 							;
 						}
 					;
-					fBulkInsertResizeAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CFailingAllocator::ms_nAllocations;
-					DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fBulkInsertResizeAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CFailingAllocator::ms_nAllocations;
+					DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CNothrowMoveTracked::fs_Reset();
 						DMibExpectExceptionType(fBulkInsertResizeAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("BulkInsertAllocSweepTriggersResizeWithThrowingValue")
@@ -5367,7 +5367,7 @@ namespace
 					// Resize inside f_BulkInsert with throwing values to check for element leaks
 					using CFailThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 
-					auto fBulkInsertResizeAttempt = [&](mint _nAllocAfterFail)
+					auto fBulkInsertResizeAttempt = [&](umint _nAllocAfterFail)
 						{
 							CThrowingValue::fs_Reset();
 							CFailingAllocator::fs_Reset(_nAllocAfterFail);
@@ -5386,15 +5386,15 @@ namespace
 							;
 						}
 					;
-					fBulkInsertResizeAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CFailingAllocator::ms_nAllocations;
-					DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fBulkInsertResizeAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CFailingAllocator::ms_nAllocations;
+					DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CThrowingValue::fs_Reset();
 						DMibExpectExceptionType(fBulkInsertResizeAttempt(i), CException);
-						DMibExpect((mint)CThrowingValue::ms_nAlive, ==, 0);
+						DMibExpect((umint)CThrowingValue::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("BulkInsertAllocSweepMultipleWindows")
@@ -5403,7 +5403,7 @@ namespace
 					using CFailMap = TCPackedMap<CNothrowMoveTracked, CNothrowMoveTracked, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
 
-					auto fBulkInsertMultiWindowAttempt = [&](mint _nAllocAfterFail)
+					auto fBulkInsertMultiWindowAttempt = [&](umint _nAllocAfterFail)
 						{
 							CNothrowMoveTracked::fs_Reset();
 							CFailingAllocator::fs_Reset(_nAllocAfterFail);
@@ -5430,15 +5430,15 @@ namespace
 							;
 						}
 					;
-					fBulkInsertMultiWindowAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CFailingAllocator::ms_nAllocations;
-					DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fBulkInsertMultiWindowAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CFailingAllocator::ms_nAllocations;
+					DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CNothrowMoveTracked::fs_Reset();
 						DMibExpectExceptionType(fBulkInsertMultiWindowAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("RandomInsertAllocSweep")
@@ -5447,7 +5447,7 @@ namespace
 					using CFailMap = TCPackedMap<CNothrowMoveTracked, CNothrowMoveTracked, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
 
-					auto fRandomInsertAttempt = [&](mint _nAllocAfterFail)
+					auto fRandomInsertAttempt = [&](umint _nAllocAfterFail)
 						{
 							CNothrowMoveTracked::fs_Reset();
 							CFailingAllocator::fs_Reset(_nAllocAfterFail);
@@ -5460,15 +5460,15 @@ namespace
 							}
 						}
 					;
-					fRandomInsertAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CFailingAllocator::ms_nAllocations;
-					DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fRandomInsertAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CFailingAllocator::ms_nAllocations;
+					DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CNothrowMoveTracked::fs_Reset();
 						DMibExpectExceptionType(fRandomInsertAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("LinearRemoveShrinkAllocSweep")
@@ -5477,7 +5477,7 @@ namespace
 					using CFailMap = TCPackedMap<CNothrowMoveTracked, CNothrowMoveTracked, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
 
-					auto fRemoveShrinkAttempt = [&](mint _nAllocAfterFail)
+					auto fRemoveShrinkAttempt = [&](umint _nAllocAfterFail)
 						{
 							CNothrowMoveTracked::fs_Reset();
 							CFailingAllocator::fs_Reset();
@@ -5490,15 +5490,15 @@ namespace
 								Map.f_Remove(CNothrowMoveTracked(i * 10));
 						}
 					;
-					fRemoveShrinkAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CFailingAllocator::ms_nAllocations;
-					DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fRemoveShrinkAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CFailingAllocator::ms_nAllocations;
+					DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CNothrowMoveTracked::fs_Reset();
 						DMibExpectExceptionType(fRemoveShrinkAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("RandomRemoveShrinkAllocSweep")
@@ -5507,7 +5507,7 @@ namespace
 					using CFailMap = TCPackedMap<CNothrowMoveTracked, CNothrowMoveTracked, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
 
-					auto fRandomRemoveAttempt = [&](mint _nAllocAfterFail)
+					auto fRandomRemoveAttempt = [&](umint _nAllocAfterFail)
 						{
 							CNothrowMoveTracked::fs_Reset();
 							CFailingAllocator::fs_Reset();
@@ -5523,15 +5523,15 @@ namespace
 							}
 						}
 					;
-					fRandomRemoveAttempt(TCLimitsInt<mint>::mc_Max);
-					mint nTotal = CFailingAllocator::ms_nAllocations;
-					DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
-					for (mint i = 1; i <= nTotal; ++i)
+					fRandomRemoveAttempt(TCLimitsInt<umint>::mc_Max);
+					umint nTotal = CFailingAllocator::ms_nAllocations;
+					DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+					for (umint i = 1; i <= nTotal; ++i)
 					{
 						DMibTestPath("{}"_f << i);
 						CNothrowMoveTracked::fs_Reset();
 						DMibExpectExceptionType(fRandomRemoveAttempt(i), CException);
-						DMibExpect((mint)CNothrowMoveTracked::ms_nAlive, ==, 0);
+						DMibExpect((umint)CNothrowMoveTracked::ms_nAlive, ==, 0);
 					}
 				};
 				DMibTestCategory("BulkInsertMultiWindowThrowingMoveElementCountConsistency")
@@ -5580,21 +5580,21 @@ namespace
 					;
 
 					// First: run without throwing to count total move constructions
-					mint nTotalMoves = 0;
+					umint nTotalMoves = 0;
 					{
 						CThrowMoveNothrowCopy::fs_Reset();
 						CMap Map;
 						fPopulateMap(Map);
 						CThrowMoveNothrowCopy::ms_nConstructions = 0;
-						CThrowMoveNothrowCopy::ms_nThrowAfter = TCLimitsInt<mint>::mc_Max;
+						CThrowMoveNothrowCopy::ms_nThrowAfter = TCLimitsInt<umint>::mc_Max;
 						fDoBulkInsert(Map);
 						nTotalMoves = CThrowMoveNothrowCopy::ms_nConstructions;
 					}
-					DMibExpect((mint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
+					DMibExpect((umint)CThrowMoveNothrowCopy::ms_nAlive, ==, 0);
 
 					// Sweep through every throw point during BulkInsert and verify
 					// element count consistency after exception
-					for (mint iThrow = 1; iThrow <= nTotalMoves; ++iThrow)
+					for (umint iThrow = 1; iThrow <= nTotalMoves; ++iThrow)
 					{
 						DMibTestPath("{}"_f << iThrow);
 						CThrowMoveNothrowCopy::fs_Reset();
@@ -5615,8 +5615,8 @@ namespace
 						if (Map.mp_pData)
 						{
 							// Sum actual element count from segment metadata
-							mint nActualElements = 0;
-							for (mint iSeg = 0; iSeg < Map.mp_pData->m_nSegments; ++iSeg)
+							umint nActualElements = 0;
+							for (umint iSeg = 0; iSeg < Map.mp_pData->m_nSegments; ++iSeg)
 								nActualElements += Map.mp_pData->m_pSegmentMeta[iSeg].m_Count;
 
 							// f_GetLen() returns m_nElements which should match the actual count

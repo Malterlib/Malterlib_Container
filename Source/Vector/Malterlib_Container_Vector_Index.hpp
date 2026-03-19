@@ -16,14 +16,14 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	inline_small t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::operator [](mint _Index)
+	inline_small t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::operator [](umint _Index)
 	{
 		fsp_CheckBounds(f_GetLen(), _Index);
 		return (mp_StaticData.m_pData->f_GetData())[_Index];
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	inline_small const t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::operator [](mint _Index) const
+	inline_small const t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::operator [](umint _Index) const
 	{
 		fsp_CheckBounds(f_GetLen(), _Index);
 		return (mp_StaticData.m_pData->f_GetData())[_Index];

@@ -7,11 +7,11 @@ namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(mint _Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Vector)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(umint _Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Vector)
 	{
-		mint PrevLen = f_GetLen();
+		umint PrevLen = f_GetLen();
 		fsp_CheckBounds(PrevLen + 1, _Position);
-		mint AddLen = _Vector.f_GetLen();
+		umint AddLen = _Vector.f_GetLen();
 		t_CData *pArray = fp_MakeRoomMiddle(_Position, AddLen);
 		tf_CData *pSrcArray = _Vector.f_GetArray();
 
@@ -21,9 +21,9 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(mint _Position, t_CData &&_Data)
+	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(umint _Position, t_CData &&_Data)
 	{
-		mint PrevLen = f_GetLen();
+		umint PrevLen = f_GetLen();
 		fsp_CheckBounds(PrevLen + 1, _Position);
 
 		t_CData *pArray = fp_MakeRoomMiddle(_Position, 1);

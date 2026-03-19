@@ -8,7 +8,7 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	void TCVector<t_CData, t_CAllocator, t_COptions>::f_DeleteAll()
 	{
-		mint Len = f_GetLen();
+		umint Len = f_GetLen();
 		t_CData *pArray = f_GetArray();
 		for (smint i = Len - 1; i >= 0; --i)
 		{
@@ -26,7 +26,7 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	void TCVector<t_CData, t_CAllocator, t_COptions>::f_DeleteAllDefiniteType()
 	{
-		mint Len = f_GetLen();
+		umint Len = f_GetLen();
 		t_CData *pArray = f_GetArray();
 		for (smint i = Len - 1; i >= 0; --i)
 		{
@@ -52,7 +52,7 @@ namespace NMib::NContainer
 	template <typename tf_CAllocator>
 	void TCVector<t_CData, t_CAllocator, t_COptions>::f_DeleteAllAllocator()
 	{
-		mint Len = f_GetLen();
+		umint Len = f_GetLen();
 		t_CData *pArray = f_GetArray();
 		for (smint i = Len - 1; i >= 0; --i)
 		{
@@ -78,7 +78,7 @@ namespace NMib::NContainer
 	template <typename tf_CAllocator>
 	void TCVector<t_CData, t_CAllocator, t_COptions>::f_DeleteAllAllocatorDefiniteType()
 	{
-		mint Len = f_GetLen();
+		umint Len = f_GetLen();
 		t_CData *pArray = f_GetArray();
 		for (smint i = Len - 1; i >= 0; --i)
 		{
@@ -97,7 +97,7 @@ namespace NMib::NContainer
 	template <typename tf_CDeleter>
 	void TCVector<t_CData, t_CAllocator, t_COptions>::f_DeleteAllDeleter()
 	{
-		mint Len = f_GetLen();
+		umint Len = f_GetLen();
 		t_CData *pArray = f_GetArray();
 		for (smint i = Len - 1; i >= 0; --i)
 		{

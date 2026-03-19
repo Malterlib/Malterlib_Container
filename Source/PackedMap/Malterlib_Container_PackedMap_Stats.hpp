@@ -6,14 +6,14 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddMoves(mint _nMoves) noexcept
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddMoves(umint _nMoves) noexcept
 	{
 		if constexpr (t_Options.m_bStats)
 			mp_Stats.m_nElementMoves += _nMoves;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddShiftMoves(mint _nMoves) noexcept
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddShiftMoves(umint _nMoves) noexcept
 	{
 		if constexpr (t_Options.m_bStats)
 		{
@@ -23,7 +23,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddRebalanceMoves(mint _nMoves) noexcept
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddRebalanceMoves(umint _nMoves) noexcept
 	{
 		if constexpr (t_Options.m_bStats)
 		{
@@ -33,7 +33,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddResizeMoves(mint _nMoves) noexcept
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddResizeMoves(umint _nMoves) noexcept
 	{
 		if constexpr (t_Options.m_bStats)
 		{
@@ -43,7 +43,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddRebalanceWindow(mint _nElements, mint _nSegments) noexcept
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddRebalanceWindow(umint _nElements, umint _nSegments) noexcept
 	{
 		if constexpr (t_Options.m_bStats)
 		{
@@ -84,7 +84,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddMarkedIntervals(mint _nIntervals, mint _nIntervalElements, mint _nSegments) noexcept
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddMarkedIntervals(umint _nIntervals, umint _nIntervalElements, umint _nSegments) noexcept
 	{
 		if constexpr (t_Options.m_bStats)
 		{
@@ -97,11 +97,11 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddAdaptiveIntervalKinds
 		(
-			mint _nTwoElementIntervals
-			, mint _nWholeSegmentIntervals
-			, mint _nBackwardRunLengthTriggered
-			, mint _nForwardRunLengthTriggered
-			, mint _nTwoElementIntervalFailures
+			umint _nTwoElementIntervals
+			, umint _nWholeSegmentIntervals
+			, umint _nBackwardRunLengthTriggered
+			, umint _nForwardRunLengthTriggered
+			, umint _nTwoElementIntervalFailures
 		)
 		noexcept
 	{
@@ -132,12 +132,12 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddAdaptiveWindow
 		(
-			mint _nTimestamps
-			, mint _nSegmentsWithTimestamps
-			, mint _nSegmentsAnyAbovePercentile
-			, mint _nSegmentsHalfAbovePercentile
-			, mint _nSegmentsThreeQuarterAbovePercentile
-			, mint _nHotSegments
+			umint _nTimestamps
+			, umint _nSegmentsWithTimestamps
+			, umint _nSegmentsAnyAbovePercentile
+			, umint _nSegmentsHalfAbovePercentile
+			, umint _nSegmentsThreeQuarterAbovePercentile
+			, umint _nHotSegments
 			, bool _bPercentileIsMax
 		)
 		noexcept
@@ -164,7 +164,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddDetectorRemap(mint _nSegments, mint _nOverlapChecks, mint _nTransfers) noexcept
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddDetectorRemap(umint _nSegments, umint _nOverlapChecks, umint _nTransfers) noexcept
 	{
 		if constexpr (t_Options.m_bStats)
 		{
@@ -179,8 +179,8 @@ namespace NMib::NContainer
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddRebalanceDecision
 		(
 			bool _bInsertTrigger
-			, mint _iFirstViolationLevel
-			, mint _iChosenLevel
+			, umint _iFirstViolationLevel
+			, umint _iChosenLevel
 		)
 		noexcept
 	{
@@ -191,8 +191,8 @@ namespace NMib::NContainer
 			else
 				++mp_Stats.m_nRebalanceDeleteTriggers;
 
-			mint iChosenClamped = fg_Min(fg_Max(_iChosenLevel, mint(0)), CStats::mc_nRebalanceLevelHistSize - 1);
-			mint iFirstClamped = fg_Min(fg_Max(_iFirstViolationLevel, mint(0)), CStats::mc_nRebalanceLevelHistSize - 1);
+			umint iChosenClamped = fg_Min(fg_Max(_iChosenLevel, umint(0)), CStats::mc_nRebalanceLevelHistSize - 1);
+			umint iFirstClamped = fg_Min(fg_Max(_iFirstViolationLevel, umint(0)), CStats::mc_nRebalanceLevelHistSize - 1);
 
 			mp_Stats.m_nRebalanceChosenLevelSum += _iChosenLevel;
 			mp_Stats.m_nRebalanceFirstViolationLevelSum += _iFirstViolationLevel;

@@ -90,7 +90,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams, mint... tp_IndicesAllocator, mint... tp_IndicesCompare>
+	template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams, umint... tp_IndicesAllocator, umint... tp_IndicesCompare>
 	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::TCMap
 		(
 			NMeta::TCIndices<tp_IndicesAllocator...> const &_IndexSequenceAllocator

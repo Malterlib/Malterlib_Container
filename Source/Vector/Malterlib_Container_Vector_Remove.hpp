@@ -16,8 +16,8 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData TCVector<t_CData, t_CAllocator, t_COptions>::f_PopBack()
 	{
-		mint CurrentLen = f_GetLen();
-		mint NewLen = CurrentLen - 1;
+		umint CurrentLen = f_GetLen();
+		umint NewLen = CurrentLen - 1;
 		fsp_CheckBounds(CurrentLen, NewLen);
 
 		t_CData *pOldArray = f_GetArray();
@@ -63,19 +63,19 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Remove(mint _Start, mint _Len)
+	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Remove(umint _Start, umint _Len)
 	{
 		if (_Len == 0)
 			return;
-		mint CurrentLen = f_GetLen();
+		umint CurrentLen = f_GetLen();
 
 		fsp_CheckBounds(CurrentLen, _Start);
 		fsp_CheckBounds(CurrentLen, _Start + _Len - 1);
 
 		_Start = fg_Min(_Start, CurrentLen - 1);
-		mint ToDestroyLen = fg_Min(CurrentLen - _Start, _Len);
+		umint ToDestroyLen = fg_Min(CurrentLen - _Start, _Len);
 
-		mint NewLen = CurrentLen - ToDestroyLen;
+		umint NewLen = CurrentLen - ToDestroyLen;
 		if constexpr (t_COptions::mc_bShrink)
 		{
 			if (NewLen == 0)
@@ -116,7 +116,7 @@ namespace NMib::NContainer
 				// Destroy All datas that are to be destroyed
 				if (ToDestroyLen)
 				{
-					mint nToDestroy = ToDestroyLen;
+					umint nToDestroy = ToDestroyLen;
 					NPrivate::fg_DestroyArray(pOldArray + _Start, ToDestroyLen, nToDestroy);
 				}
 

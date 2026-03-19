@@ -9,7 +9,7 @@ namespace NMib::NContainer
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::fs_GetKey(CUserData const *_pData) -> t_CKey const &
 		requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 	{
-		mint Offset = CNode::fs_GetOffset();
+		umint Offset = CNode::fs_GetOffset();
 		const CNode *pNode = (const CNode *)(((uint8 *)_pData) - Offset);
 		return pNode->mp_Key;
 	}
@@ -18,7 +18,7 @@ namespace NMib::NContainer
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::fs_GetKey(const CUserData &_Data) -> t_CKey const &
 		requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 	{
-		mint Offset = CNode::fs_GetOffset();
+		umint Offset = CNode::fs_GetOffset();
 		const CNode *pNode = (const CNode *)(((uint8 *)(&_Data)) - Offset);;
 		return pNode->mp_Key;
 	}

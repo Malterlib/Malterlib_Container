@@ -48,7 +48,7 @@ namespace NMib::NContainer
 			if (FindResult.m_bExists)
 				return {pData->m_pKeys[FindResult.m_iSlot], pData->m_pValues[FindResult.m_iSlot], false};
 
-			mint iSegment = FindResult.m_iSegment;
+			umint iSegment = FindResult.m_iSegment;
 			auto *pMeta = pData->m_pSegmentMeta;
 
 			// Check if segment is full
@@ -62,19 +62,19 @@ namespace NMib::NContainer
 				pMeta = pData->m_pSegmentMeta;
 				if (pMeta[iSegment].m_Count >= mcp_SegmentSize)
 				{
-					mint nNewSegments = pData->m_nSegments * 2;
+					umint nNewSegments = pData->m_nSegments * 2;
 					fp_Resize(nNewSegments);
 				}
 				continue;
 			}
 
 			// Shift to make room and insert
-			mint Count = pMeta[iSegment].m_Count;
+			umint Count = pMeta[iSegment].m_Count;
 
 			auto *pKeys = pData->m_pKeys;
 			auto *pValues = pData->m_pValues;
 
-			mint iInsertSlot;
+			umint iInsertSlot;
 
 			if (Count == 0)
 			{
@@ -98,8 +98,8 @@ namespace NMib::NContainer
 						{
 							if (fsp_IsOddSegment(iSegment))
 							{
-								mint nToDestroy = Count - FindResult.m_iLocalPos;
-								for (mint i = 0; i < nToDestroy; ++i)
+								umint nToDestroy = Count - FindResult.m_iLocalPos;
+								for (umint i = 0; i < nToDestroy; ++i)
 								{
 									pKeys[iInsertSlot + 1 + i].~t_CKey();
 									pValues[iInsertSlot + 1 + i].~t_CValue();
@@ -109,8 +109,8 @@ namespace NMib::NContainer
 							}
 							else
 							{
-								mint iShiftStart = fsp_GetSegmentFirstSlot(iSegment, Count) - 1;
-								for (mint i = 0; i < FindResult.m_iLocalPos; ++i)
+								umint iShiftStart = fsp_GetSegmentFirstSlot(iSegment, Count) - 1;
+								for (umint i = 0; i < FindResult.m_iLocalPos; ++i)
 								{
 									pKeys[iShiftStart + i].~t_CKey();
 									pValues[iShiftStart + i].~t_CValue();
@@ -170,7 +170,7 @@ namespace NMib::NContainer
 			if (fp_SegmentNeedsRebalance(pData, iSegment))
 			{
 				// Compute rank before rebalance invalidates segment layout
-				mint Rank = fsp_ComputeRank(pData, iSegment, FindResult.m_iLocalPos);
+				umint Rank = fsp_ComputeRank(pData, iSegment, FindResult.m_iLocalPos);
 				fp_RebalanceFromSegment(pData, iSegment);
 
 				pData = mp_pData;
@@ -180,7 +180,7 @@ namespace NMib::NContainer
 				{
 					if (pData->m_nElements > fsp_ScaledMulFloor(mcp_RootUpperBoundScaled, pData->m_Capacity))
 					{
-						mint nNewSegments = pData->m_nSegments * 2;
+						umint nNewSegments = pData->m_nSegments * 2;
 						fp_Resize(nNewSegments);
 					}
 				}
@@ -188,14 +188,14 @@ namespace NMib::NContainer
 				{
 					if (pfp64(pData->m_nElements) > mc_RootUpperBound * pfp64(pData->m_Capacity))
 					{
-						mint nNewSegments = pData->m_nSegments * 2;
+						umint nNewSegments = pData->m_nSegments * 2;
 						fp_Resize(nNewSegments);
 					}
 				}
 
 				pData = mp_pData;
 				DMibFastCheck(pData);
-				mint iSlot = fsp_FindSlotByRank(pData, Rank);
+				umint iSlot = fsp_FindSlotByRank(pData, Rank);
 				return {pData->m_pKeys[iSlot], pData->m_pValues[iSlot], true};
 			}
 
@@ -205,12 +205,12 @@ namespace NMib::NContainer
 			{
 				if (pData->m_nElements > fsp_ScaledMulFloor(mcp_RootUpperBoundScaled, pData->m_Capacity))
 				{
-					mint Rank = fsp_ComputeRank(pData, iSegment, FindResult.m_iLocalPos);
-					mint nNewSegments = pData->m_nSegments * 2;
+					umint Rank = fsp_ComputeRank(pData, iSegment, FindResult.m_iLocalPos);
+					umint nNewSegments = pData->m_nSegments * 2;
 					fp_Resize(nNewSegments);
 					pData = mp_pData;
 					DMibFastCheck(pData);
-					mint iSlot = fsp_FindSlotByRank(pData, Rank);
+					umint iSlot = fsp_FindSlotByRank(pData, Rank);
 					return {pData->m_pKeys[iSlot], pData->m_pValues[iSlot], true};
 				}
 			}
@@ -218,12 +218,12 @@ namespace NMib::NContainer
 			{
 				if (pfp64(pData->m_nElements) > mc_RootUpperBound * pfp64(pData->m_Capacity))
 				{
-					mint Rank = fsp_ComputeRank(pData, iSegment, FindResult.m_iLocalPos);
-					mint nNewSegments = pData->m_nSegments * 2;
+					umint Rank = fsp_ComputeRank(pData, iSegment, FindResult.m_iLocalPos);
+					umint nNewSegments = pData->m_nSegments * 2;
 					fp_Resize(nNewSegments);
 					pData = mp_pData;
 					DMibFastCheck(pData);
-					mint iSlot = fsp_FindSlotByRank(pData, Rank);
+					umint iSlot = fsp_FindSlotByRank(pData, Rank);
 					return {pData->m_pKeys[iSlot], pData->m_pValues[iSlot], true};
 				}
 			}

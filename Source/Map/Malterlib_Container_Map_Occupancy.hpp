@@ -24,14 +24,14 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	mint TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_GetLen() const
+	umint TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_GetLen() const
 	{
 		CIteratorConst Iter = *this;
 		return Iter.f_GetLen();
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	mint TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_GetDepth() const
+	umint TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_GetDepth() const
 	{
 		return mp_Tree.f_GetDepth();
 	}
