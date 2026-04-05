@@ -1,5 +1,5 @@
-// Copyright © 2025 Unborken AB
-// Distributed under the MIT license, see license text in LICENSE.Malterlib
+// Copyright © Unbroken AB
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <Mib/Memory/MemoryManager>
 #include <Mib/Test/Performance>
