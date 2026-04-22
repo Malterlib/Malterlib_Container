@@ -53,6 +53,7 @@ namespace
 	using CDefaultMapNonAdaptive = TCPackedMapConstantsAccess<TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_bAdaptive = false}>>;
 	static_assert(CDefaultMapNonAdaptive::mc_SegmentMetaSize < CDefaultMap::mc_SegmentMetaSize);
 
+#if DMibPPtrBits >= 64
 	// Custom options: mc_MaxCapacityBits = 32
 	using CMap32 = TCPackedMapConstantsAccess<TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_MaxCapacityBits = 32}>>;
 	static_assert(CMap32::mc_MaxCalibratorLevels == 32);
@@ -64,6 +65,7 @@ namespace
 	static_assert(CMap48::mc_MaxCalibratorLevels == 48);
 	static_assert(CMap48::mc_MaxLevels == 16);
 	static_assert(!CMap48::mc_bUseFixedPoint); // 2^48 within pfp64 precision
+#endif
 
 	// Custom options: mc_MaxCapacityBits = 3 (exact multiple of FanoutBits)
 	using CMap3 = TCPackedMapConstantsAccess<TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_MaxCapacityBits = 3}>>;
@@ -71,6 +73,7 @@ namespace
 	static_assert(CMap3::mc_MaxLevels == 1);
 	static_assert(!CMap3::mc_bUseFixedPoint);
 
+#if DMibPPtrBits >= 64
 	// Fixed-point selection: mc_MaxCapacityBits = 52 exceeds pfp64 precision (2^52 >= 0.75 * 2^52)
 	using CMap52 = TCPackedMapConstantsAccess<TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_MaxCapacityBits = 52}>>;
 	static_assert(CMap52::mc_bUseFixedPoint);
@@ -86,6 +89,7 @@ namespace
 	// Floating-point with low mc_RootUpperBound but fewer bits stays within pfp64 precision
 	using CMapLowUpperSmall = TCPackedMapConstantsAccess<TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_MaxCapacityBits = 50, .m_RootUpperBound = 0.50}>>;
 	static_assert(!CMapLowUpperSmall::mc_bUseFixedPoint); // 2^50 / 0.50 = 2^51 < 2^52
+#endif
 
 	using CMapSegmentMax = TCPackedMapConstantsAccess<TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = TCLimitsInt<uint16>::mc_Max}>>;
 	static_assert(CMapSegmentMax::mc_SegmentSize == TCLimitsInt<uint16>::mc_Max);
