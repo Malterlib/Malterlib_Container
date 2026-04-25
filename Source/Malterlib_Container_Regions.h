@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <Mib/Core/Core>
 #include <Mib/Container/Map>
 
 namespace NMib::NContainer
