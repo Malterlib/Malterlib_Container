@@ -6,7 +6,7 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	bool TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_IsEmpty() const
+	constexpr bool TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_IsEmpty() const
 	{
 		return mp_Tree.f_IsEmpty();
 	}

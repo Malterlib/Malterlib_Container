@@ -11,6 +11,14 @@ namespace
 	using namespace NMib::NContainer;
 	using namespace NMib::NStorage;
 
+	constexpr bool fg_ConstexprEmptyMapIsConstructible()
+	{
+		TCMap<int, int> Map;
+		return true;
+	}
+
+	static_assert(fg_ConstexprEmptyMapIsConstructible());
+
 	class CMap_Tests : public NMib::NTest::CTest
 	{
 	public:

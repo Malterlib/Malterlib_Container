@@ -125,7 +125,7 @@ namespace NMib::NContainer::NPrivate
 			requires (t_Access == EMapIteratorAccess_Value)
 		;
 
-		explicit operator bool () const;
+		constexpr inline_always explicit operator bool () const;
 
 		inline_small CUserDataQualified *f_GetCurrent() const;
 		inline_small operator CUserDataQualified *() const;

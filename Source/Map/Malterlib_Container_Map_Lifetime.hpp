@@ -12,15 +12,18 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::TCMap() noexcept
+	constexpr TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::TCMap() noexcept
 	{
 		//DMibDTrace("sizeof(CNode) = {}" DMibNewLine, sizeof(CNode));
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::~TCMap()
+	constexpr TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::~TCMap()
 	{
-		f_Clear();
+		if_not_consteval
+		{
+			f_Clear();
+		}
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>

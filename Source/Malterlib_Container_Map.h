@@ -245,8 +245,8 @@ namespace NMib::NContainer
 		using CAVLTree = NIntrusive::TCAVLTree<&CMapNodeBase::m_Link, void, NMemory::CAllocator_Base, CNodeDestructive>;
 
 	public:
-		~TCMap();
-		TCMap() noexcept;
+		constexpr ~TCMap();
+		constexpr TCMap() noexcept;
 
 		TCMap(TCMap &&_Other) = default;
 		TCMap(TCMap const &_Other);
@@ -401,7 +401,7 @@ namespace NMib::NContainer
 			requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 		;
 
-		bool f_IsEmpty() const;
+		constexpr bool f_IsEmpty() const;
 		bool f_HasOneElement() const;
 		bool f_HasMoreThanOneElement() const;
 		umint f_GetLen() const;

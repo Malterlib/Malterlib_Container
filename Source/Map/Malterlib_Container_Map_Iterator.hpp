@@ -349,8 +349,8 @@ namespace NMib::NContainer::NPrivate
 	}
 
 	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
-	TCMapIterator<t_CMap, t_Access, t_Flags>::operator bool () const
+	constexpr inline_always TCMapIterator<t_CMap, t_Access, t_Flags>::operator bool () const
 	{
-		return f_GetCurrent() != nullptr;
+		return mp_Iter.f_GetCurrent() != nullptr;
 	}
 }
