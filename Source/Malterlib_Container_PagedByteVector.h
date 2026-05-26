@@ -95,6 +95,9 @@ namespace NMib::NContainer
 		EMatchResult f_StartsWithEx(uint8 const *_pMatch, umint _nMatchBytes);
 
 	private:
+		template <typename t_CInherit>
+		friend class TCBinaryStreamPagedByteVectorPtr;
+
 		struct CPageSizeScope
 		{
 			CPageSizeScope(umint _PageSize);
@@ -159,6 +162,63 @@ namespace NMib::NContainer
 	private:
 		TCBinaryStreamPagedByteVector(TCBinaryStreamPagedByteVector const &) = delete;
 		TCBinaryStreamPagedByteVector &operator = (TCBinaryStreamPagedByteVector const &) = delete;
+	};
+
+	// Read-only stream that walks a CPagedByteVector in place. Caches the current page pointer
+	// so single-page reads cost a bounds check + memcpy; multi-page reads loop over pages with
+	// the cache updated after each crossed boundary. The stream optionally exposes a sub-range
+	// of the buffer, so callers can frame messages without copying bytes out.
+	template <typename t_CInherit = NStream::CBinaryStreamLittleEndian>
+	class TCBinaryStreamPagedByteVectorPtr : public t_CInherit
+	{
+	public:
+		DMibStreamImplementOperators(TCBinaryStreamPagedByteVectorPtr);
+
+		TCBinaryStreamPagedByteVectorPtr();
+		~TCBinaryStreamPagedByteVectorPtr();
+
+		// Open the stream over the entire buffer.
+		void f_OpenRead(CPagedByteVector const &_Buffer);
+		// Open the stream over a sub-range [_Offset, _Offset + _Length) of the buffer.
+		void f_OpenRead(CPagedByteVector const &_Buffer, umint _Offset, umint _Length);
+
+		void f_FeedBytes(const void *_pMem, umint _nBytes);
+		void f_ConsumeBytes(void *_pMem, umint _nBytes);
+		bool f_IsValid() const;
+		bool f_IsAtEndOfStream() const;
+		NStream::CFilePos f_GetPosition() const;
+		void f_SetPosition(NStream::CFilePos _Pos);
+		void f_SetPositionFromEnd(NStream::CFilePos _Pos);
+		void f_AddPosition(NStream::CFilePos _Pos);
+		bool f_IsValidReadPosition(NStream::CFilePos _Pos) const;
+		void f_Flush(bool _bLocalCacheOnly);
+		NStream::CFilePos f_GetLength() const;
+		umint f_ContainerLengthLimit() const;
+		void f_SetLength(NStream::CFilePos _Length);
+		void f_SetCacheSize(umint _CacheSize);
+
+	protected:
+		void fp_SetPositionInternal(NStream::CFilePos _Pos);
+		DMibStreamImplementProtected(TCBinaryStreamPagedByteVectorPtr);
+
+		// Recomputes m_iCurrentPage, m_pCurrentPage and m_nCurrentPageRemaining from m_BaseOffset + m_Position.
+		// Performs a division by mp_PageSize to locate the page; used at open and after arbitrary seeks.
+		void fp_RebuildPageCache();
+		// Fast path for sequential page crossings: assumes m_iCurrentPage is valid and advances by one.
+		// Does no division.
+		void fp_AdvanceToNextPage();
+
+		CPagedByteVector const *m_pBuffer = nullptr;
+		umint m_BaseOffset = 0;
+		umint m_Position = 0;
+		umint m_Length = 0;
+		uint8 const *m_pCurrentPage = nullptr;
+		umint m_nCurrentPageRemaining = 0;
+		umint m_iCurrentPage = 0;
+
+	private:
+		TCBinaryStreamPagedByteVectorPtr(TCBinaryStreamPagedByteVectorPtr const &) = delete;
+		TCBinaryStreamPagedByteVectorPtr &operator = (TCBinaryStreamPagedByteVectorPtr const &) = delete;
 	};
 }
 

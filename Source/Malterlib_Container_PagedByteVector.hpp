@@ -317,4 +317,206 @@ namespace NMib::NContainer
 	void TCBinaryStreamPagedByteVector<t_CInherit>::f_SetCacheSize(umint _CacheSize)
 	{
 	}
+
+	template <typename t_CInherit>
+	TCBinaryStreamPagedByteVectorPtr<t_CInherit>::TCBinaryStreamPagedByteVectorPtr()
+	{
+	}
+
+	template <typename t_CInherit>
+	TCBinaryStreamPagedByteVectorPtr<t_CInherit>::~TCBinaryStreamPagedByteVectorPtr()
+	{
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_OpenRead(CPagedByteVector const &_Buffer)
+	{
+		f_OpenRead(_Buffer, 0, _Buffer.f_GetLen());
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_OpenRead(CPagedByteVector const &_Buffer, umint _Offset, umint _Length)
+	{
+		if (_Offset > _Buffer.f_GetLen() || _Length > _Buffer.f_GetLen() - _Offset)
+			DMibError("Paged byte vector stream range exceeds buffer length");
+
+		m_pBuffer = &_Buffer;
+		m_BaseOffset = _Offset;
+		m_Length = _Length;
+		m_Position = 0;
+		fp_RebuildPageCache();
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::fp_RebuildPageCache()
+	{
+		if (m_pBuffer == nullptr || m_Position >= m_Length)
+		{
+			m_pCurrentPage = nullptr;
+			m_nCurrentPageRemaining = 0;
+			return;
+		}
+
+		CPagedByteVector const &Buffer = *m_pBuffer;
+		umint AbsolutePos = m_BaseOffset + m_Position + Buffer.mp_iFirstPageStart;
+		umint iCurPage = AbsolutePos / Buffer.mp_PageSize;
+		umint iCurPagePos = AbsolutePos - iCurPage * Buffer.mp_PageSize;
+		umint iLastPage = Buffer.mp_Pages.f_GetLen() - 1;
+
+		umint nPageBytes = Buffer.mp_PageSize - iCurPagePos;
+		if (iCurPage == iLastPage)
+			nPageBytes -= (Buffer.mp_PageSize - Buffer.mp_iLastPageEnd);
+
+		// Cap by remaining bytes in our window.
+		umint nWindowRemaining = m_Length - m_Position;
+		if (nPageBytes > nWindowRemaining)
+			nPageBytes = nWindowRemaining;
+
+		m_iCurrentPage = iCurPage;
+		m_pCurrentPage = static_cast<uint8 const *>(Buffer.mp_Pages[iCurPage].f_Get()) + iCurPagePos;
+		m_nCurrentPageRemaining = nPageBytes;
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::fp_AdvanceToNextPage()
+	{
+		// Caller guarantees m_pBuffer != nullptr, m_iCurrentPage is the page just exhausted,
+		// and m_Position < m_Length (more data ahead). The next page always begins at offset 0,
+		// so no division or modulo is needed.
+		CPagedByteVector const &Buffer = *m_pBuffer;
+		++m_iCurrentPage;
+
+		umint nPageBytes;
+		if (m_iCurrentPage == Buffer.mp_Pages.f_GetLen() - 1)
+			nPageBytes = Buffer.mp_iLastPageEnd;
+		else
+			nPageBytes = Buffer.mp_PageSize;
+
+		umint nWindowRemaining = m_Length - m_Position;
+		if (nPageBytes > nWindowRemaining)
+			nPageBytes = nWindowRemaining;
+
+		m_pCurrentPage = static_cast<uint8 const *>(Buffer.mp_Pages[m_iCurrentPage].f_Get());
+		m_nCurrentPageRemaining = nPageBytes;
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_FeedBytes(const void *_pMem, umint _nBytes)
+	{
+		DMibError("Paged byte vector read stream cannot be written to");
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_ConsumeBytes(void *_pMem, umint _nBytes)
+	{
+		if (m_Length - m_Position < _nBytes) [[unlikely]]
+			this->fp_ThrowEndOfStreamException();
+
+		if (_nBytes <= m_nCurrentPageRemaining) [[likely]]
+		{
+			NMemory::fg_MemCopy(_pMem, m_pCurrentPage, _nBytes);
+			m_pCurrentPage += _nBytes;
+			m_nCurrentPageRemaining -= _nBytes;
+			m_Position += _nBytes;
+			return;
+		}
+
+		uint8 *pDest = static_cast<uint8 *>(_pMem);
+		while (_nBytes != 0)
+		{
+			if (m_nCurrentPageRemaining == 0)
+				fp_AdvanceToNextPage();
+
+			umint nCopy = _nBytes < m_nCurrentPageRemaining ? _nBytes : m_nCurrentPageRemaining;
+			NMemory::fg_MemCopy(pDest, m_pCurrentPage, nCopy);
+			m_pCurrentPage += nCopy;
+			m_nCurrentPageRemaining -= nCopy;
+			m_Position += nCopy;
+			pDest += nCopy;
+			_nBytes -= nCopy;
+		}
+	}
+
+	template <typename t_CInherit>
+	bool TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_IsValid() const
+	{
+		return m_pBuffer != nullptr;
+	}
+
+	template <typename t_CInherit>
+	bool TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_IsAtEndOfStream() const
+	{
+		return m_Position == m_Length;
+	}
+
+	template <typename t_CInherit>
+	NStream::CFilePos TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_GetPosition() const
+	{
+		return m_Position;
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::fp_SetPositionInternal(NStream::CFilePos _Pos)
+	{
+		if (_Pos < 0 || fg_SafeLargerThan(_Pos, TCLimitsInt<umint>::mc_Max))
+			DMibError("Paged byte vector stream positions are limited to 0 -> TCLimitsInt<umint>::mc_Max");
+
+		if (umint(_Pos) > m_Length)
+			DMibError("Position is past end of stream");
+
+		m_Position = umint(_Pos);
+		fp_RebuildPageCache();
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_SetPosition(NStream::CFilePos _Pos)
+	{
+		fp_SetPositionInternal(_Pos);
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_SetPositionFromEnd(NStream::CFilePos _Pos)
+	{
+		fp_SetPositionInternal(NStream::CFilePos(m_Length) + _Pos);
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_AddPosition(NStream::CFilePos _Pos)
+	{
+		fp_SetPositionInternal(NStream::CFilePos(m_Position) + _Pos);
+	}
+
+	template <typename t_CInherit>
+	bool TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_IsValidReadPosition(NStream::CFilePos _Pos) const
+	{
+		return _Pos >= 0 && _Pos < NStream::CFilePos(m_Length);
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_Flush(bool _bLocalCacheOnly)
+	{
+	}
+
+	template <typename t_CInherit>
+	NStream::CFilePos TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_GetLength() const
+	{
+		return m_Length;
+	}
+
+	template <typename t_CInherit>
+	umint TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_ContainerLengthLimit() const
+	{
+		return NStream::fg_CapLengthLimit(f_GetLength() - f_GetPosition());
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_SetLength(NStream::CFilePos _Length)
+	{
+		DMibError("Paged byte vector read stream cannot change length");
+	}
+
+	template <typename t_CInherit>
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_SetCacheSize(umint _CacheSize)
+	{
+	}
 }
