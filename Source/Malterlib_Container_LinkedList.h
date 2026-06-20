@@ -313,26 +313,14 @@ namespace NMib::NContainer
 			CIntrusiveIterator m_Iter;
 			TCLinkedList *m_pLinkedList;
 		public:
-#ifdef DMibDebuggerHelpers
-			static TCLinkedList *fs_Debug_List();
-			static CList *fs_Debug_IntrusiveList();
-#endif
 			CIterator()
 			{
 				m_pLinkedList = nullptr;
-#ifdef DMibDebuggerHelpers
-				static_assert(TCInstantiateValue<&fs_Debug_List>::mc_Value);
-				static_assert(TCInstantiateValue<&fs_Debug_IntrusiveList>::mc_Value);
-#endif
 			}
 
 			CIterator(TCLinkedList &_Map)
 			{
 				*this = _Map.f_GetIterator();
-#ifdef DMibDebuggerHelpers
-				static_assert(TCInstantiateValue<&fs_Debug_List>::mc_Value);
-				static_assert(TCInstantiateValue<&fs_Debug_IntrusiveList>::mc_Value);
-#endif
 			}
 
 			CIterator f_GetIterator() const
@@ -415,25 +403,11 @@ namespace NMib::NContainer
 			CIntrusiveIterator m_Iter;
 		public:
 
-#ifdef DMibDebuggerHelpers
-			static TCLinkedList *fs_Debug_List();
-			static CList *fs_Debug_IntrusiveList();
-#endif
-			CIteratorConst()
-			{
-#ifdef DMibDebuggerHelpers
-				static_assert(TCInstantiateValue<&fs_Debug_List>::mc_Value);
-				static_assert(TCInstantiateValue<&fs_Debug_IntrusiveList>::mc_Value);
-#endif
-			}
+			CIteratorConst() = default;
 
 			CIteratorConst(const TCLinkedList &_Map)
 			{
 				*this = _Map.f_GetIterator();
-#ifdef DMibDebuggerHelpers
-				static_assert(TCInstantiateValue<&fs_Debug_List>::mc_Value);
-				static_assert(TCInstantiateValue<&fs_Debug_IntrusiveList>::mc_Value);
-#endif
 			}
 
 			CIteratorConst f_GetIterator() const
@@ -1167,31 +1141,6 @@ namespace NMib::NContainer
 
 
 	};
-#ifdef DMibDebuggerHelpers
-	template <typename t_CData, typename t_CAllocator>
-	TCLinkedList<t_CData, t_CAllocator> *TCLinkedList<t_CData, t_CAllocator>::CIterator::fs_Debug_List()
-	{
-		return nullptr;
-	}
-
-	template <typename t_CData, typename t_CAllocator>
-	TCLinkedList<t_CData, t_CAllocator>* TCLinkedList<t_CData, t_CAllocator>::CIteratorConst::fs_Debug_List()
-	{
-		return nullptr;
-	}
-
-	template <typename t_CData, typename t_CAllocator>
-	typename TCLinkedList<t_CData, t_CAllocator>::CList *TCLinkedList<t_CData, t_CAllocator>::CIterator::fs_Debug_IntrusiveList()
-	{
-		return nullptr;
-	}
-
-	template <typename t_CData, typename t_CAllocator>
-	typename TCLinkedList<t_CData, t_CAllocator>::CList* TCLinkedList<t_CData, t_CAllocator>::CIteratorConst::fs_Debug_IntrusiveList()
-	{
-		return nullptr;
-	}
-#endif
 }
 
 #ifndef DMibPNoShortCuts
