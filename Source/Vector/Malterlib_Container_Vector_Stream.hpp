@@ -5,6 +5,31 @@
 
 namespace NMib::NStream
 {
+	namespace NPrivate
+	{
+		template <typename t_CStream, typename t_CEnableIf = void>
+		struct TCStreamHasFeedBytesAdopt
+		{
+			static constexpr bool mc_Value = false;
+		};
+
+		template <typename t_CStream>
+		struct TCStreamHasFeedBytesAdopt
+		<
+			t_CStream
+			, TCEnableIf
+			<
+				!NTraits::cIsSame
+				<
+					decltype(fg_GetReference<t_CStream>().f_FeedBytesAdopt(fg_GetType<NContainer::CIOByteVector>())), NPrivate::CDummy
+				>
+			>
+		>
+		{
+			static constexpr bool mc_Value = true;
+		};
+	}
+
 	template <typename t_CStream, typename t_CData, typename t_CAllocator, typename t_COptions>
 	class TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> >
 	{
@@ -93,10 +118,50 @@ namespace NMib::NStream
 	template <typename t_CStream>
 	class TCBinaryStreamTypeReference<t_CStream, NContainer::CByteVector> : public TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8>>
 	{
+	public:
+		using TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8>>::fs_Feed;
+		using TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8>>::fs_Consume;
+
+		static void fs_Feed(t_CStream &_Stream, NContainer::CByteVector &&_Data)
+		{
+			umint nItems = _Data.f_GetLen();
+			fg_FeedLenToStream(_Stream, nItems);
+			if constexpr (NPrivate::TCStreamHasFeedBytesAdopt<t_CStream>::mc_Value && NTraits::cIsSame<NContainer::CByteVector, NContainer::CIOByteVector>)
+			{
+				// Adopting is only valid at the end of the stream; an in place rewrite copies
+				if (_Stream.f_CanAdopt())
+				{
+					_Stream.f_FeedBytesAdopt(fg_Move(_Data));
+					return;
+				}
+			}
+
+			_Stream.f_FeedBytes(_Data.f_GetArray(), nItems);
+		}
 	};
 
 	template <typename t_CStream>
 	class TCBinaryStreamTypeReference<t_CStream, NContainer::CSecureByteVector> : public TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8, NMemory::CAllocator_HeapSecure>>
 	{
+	public:
+		using TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8, NMemory::CAllocator_HeapSecure>>::fs_Feed;
+		using TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8, NMemory::CAllocator_HeapSecure>>::fs_Consume;
+
+		static void fs_Feed(t_CStream &_Stream, NContainer::CSecureByteVector &&_Data)
+		{
+			umint nItems = _Data.f_GetLen();
+			fg_FeedLenToStream(_Stream, nItems);
+			if constexpr (NPrivate::TCStreamHasFeedBytesAdopt<t_CStream>::mc_Value && NTraits::cIsSame<NContainer::CSecureByteVector, NContainer::CIOByteVector>)
+			{
+				// Adopting is only valid at the end of the stream; an in place rewrite copies
+				if (_Stream.f_CanAdopt())
+				{
+					_Stream.f_FeedBytesAdopt(fg_Move(_Data));
+					return;
+				}
+			}
+
+			_Stream.f_FeedBytes(_Data.f_GetArray(), nItems);
+		}
 	};
 }
