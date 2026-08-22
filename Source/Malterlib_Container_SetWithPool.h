@@ -5,10 +5,30 @@
 
 namespace NMib::NContainer
 {
-	template <typename t_CKey, typename t_CCompare = NMib::CSort_Default>
-	struct TCSetWithPool : public TCSet<t_CKey, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, CMapSet>>>
+	template
+	<
+		typename t_CKey
+		, typename t_CCompare = NMib::CSort_Default
+		, typename t_CAllocator = NMib::NMemory::CAllocator_Virtual
+		, umint t_GrowSize = 128
+		, typename t_CPoolType = NMib::NMemory::CPoolType_FreeableSmall
+		, typename t_CLockType = NMib::NThread::CNoLock
+	>
+	struct TCSetWithPool
+		: public TCSet
+			<
+				t_CKey
+				, t_CCompare
+				, NMemory::TCPoolAllocator<TCMapNode<t_CKey, CMapSet>, t_GrowSize, t_CAllocator, t_CPoolType, t_CLockType>
+			>
 	{
-		using CSuper = TCSet<t_CKey, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, CMapSet>>>;
+		using CSuper = TCSet
+			<
+				t_CKey
+				, t_CCompare
+				, NMemory::TCPoolAllocator<TCMapNode<t_CKey, CMapSet>, t_GrowSize, t_CAllocator, t_CPoolType, t_CLockType>
+			>
+		;
 	public:
 		TCSetWithPool()
 		{
@@ -48,8 +68,8 @@ namespace NMib::NContainer
 
 namespace NMib::NContainer::NPrivate
 {
-	template <typename t_CKey, typename t_CCompare>
-	struct TCIsSet<TCSetWithPool<t_CKey, t_CCompare>>
+	template <typename t_CKey, typename t_CCompare, typename t_CAllocator, umint t_GrowSize, typename t_CPoolType, typename t_CLockType>
+	struct TCIsSet<TCSetWithPool<t_CKey, t_CCompare, t_CAllocator, t_GrowSize, t_CPoolType, t_CLockType>>
 	{
 		static constexpr bool mc_bValue = true;
 	};
