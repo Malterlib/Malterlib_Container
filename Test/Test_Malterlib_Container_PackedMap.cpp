@@ -3973,8 +3973,6 @@ namespace
 			static inline NAtomic::TCAtomic<umint> ms_nAlive{0};
 			static inline umint ms_nThrowAfter = TCLimitsInt<umint>::mc_Max;
 			static inline umint ms_nConstructions = 0;
-			static inline umint ms_nDestructions = 0;
-			static inline umint ms_nTotalConstructions = 0;
 			int32 m_Value = 0;
 			uint32 m_Magic = 0;
 
@@ -3983,15 +3981,12 @@ namespace
 				ms_nAlive = 0;
 				ms_nThrowAfter = _nThrowAfter;
 				ms_nConstructions = 0;
-				ms_nDestructions = 0;
-				ms_nTotalConstructions = 0;
 			}
 
 			CThrowingValue()
 			{
 				m_Magic = 0xABCD1234;
 				++ms_nAlive;
-				++ms_nTotalConstructions;
 			}
 
 			explicit CThrowingValue(int32 _v)
@@ -3999,7 +3994,6 @@ namespace
 			{
 				m_Magic = 0xABCD1234;
 				++ms_nAlive;
-				++ms_nTotalConstructions;
 			}
 
 			~CThrowingValue()
@@ -4007,7 +4001,6 @@ namespace
 				DMibFastCheck(m_Magic == 0xABCD1234);
 				m_Magic = 0xDEADDEAD;
 				--ms_nAlive;
-				++ms_nDestructions;
 			}
 
 			CThrowingValue(CThrowingValue const &_o)
@@ -4017,7 +4010,6 @@ namespace
 					DMibError("ThrowCopy");
 				m_Magic = 0xABCD1234;
 				++ms_nAlive;
-				++ms_nTotalConstructions;
 			}
 
 			CThrowingValue(CThrowingValue &&_o)
@@ -4027,7 +4019,6 @@ namespace
 					DMibError("ThrowMove");
 				m_Magic = 0xABCD1234;
 				++ms_nAlive;
-				++ms_nTotalConstructions;
 			}
 
 			CThrowingValue &operator = (CThrowingValue const &) = default;
