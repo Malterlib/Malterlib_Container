@@ -7,21 +7,21 @@ namespace NMib::NContainer
 {
 	namespace NPrivate
 	{
-		template <typename tf_CReturn, typename... tf_CParams>
+		template <typename tf_CReturn, typename ...tf_CParams>
 		void fg_CreateVectorHelper(tf_CReturn &_Return)
 		{
 		}
 
-		template <typename tf_CReturn, typename tf_CFirst, typename... tf_CParams>
-		void fg_CreateVectorHelper(tf_CReturn &_Return, tf_CFirst &&_First, tf_CParams &&...p_Params)
+		template <typename tf_CReturn, typename tf_CFirst, typename ...tf_CParams>
+		void fg_CreateVectorHelper(tf_CReturn &_Return, tf_CFirst &&_First, tf_CParams && ...p_Params)
 		{
 			_Return.f_Insert(fg_Construct(fg_Forward<tf_CFirst>(_First)));
 			fg_CreateVectorHelper<tf_CReturn>(_Return, fg_Forward<tf_CParams>(p_Params)...);
 		}
 	}
 
-	template <typename tf_CFirst, typename... tf_CParams>
-	auto fg_CreateVector(tf_CFirst &&_First, tf_CParams &&...p_Params)
+	template <typename tf_CFirst, typename ...tf_CParams>
+	auto fg_CreateVector(tf_CFirst &&_First, tf_CParams && ...p_Params)
 	{
 		if constexpr (NTraits::cIsSame<tf_CFirst, uint8>)
 		{
@@ -39,7 +39,7 @@ namespace NMib::NContainer
 		}
 	}
 
-	template <typename tf_CReturn, typename... tf_CParams>
+	template <typename tf_CReturn, typename ...tf_CParams>
 	auto fg_CreateVector(tf_CParams && ...p_Params)
 	{
 		if constexpr (NTraits::cIsSame<tf_CReturn, uint8>)

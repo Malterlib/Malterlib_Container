@@ -34,7 +34,6 @@ namespace NMib::NContainer
 	{
 		if (_Options.m_LocalOptions.m_bSingleLine)
 		{
-
 			if (_Options.m_LocalOptions.m_bBrackets)
 				o_FormatInto += "{";
 			auto iValue = this->f_GetIterator();

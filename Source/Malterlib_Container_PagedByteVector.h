@@ -112,6 +112,7 @@ namespace NMib::NContainer
 			{
 				mc_bIsDefault = false
 			};
+
 			only_parameters_aliased static void f_Free(void *_pBlock, umint _Size);
 		};
 
@@ -136,7 +137,7 @@ namespace NMib::NContainer
 		~TCBinaryStreamPagedByteVector();
 		void f_ResetStream();
 		void f_Clear();
-		void f_FeedBytes(const void *_pMem, umint _nBytes);
+		void f_FeedBytes(void const *_pMem, umint _nBytes);
 		void f_ConsumeBytes(void *_pMem, umint _nBytes);
 		bool f_IsValid() const;
 		bool f_IsAtEndOfStream() const;
@@ -182,7 +183,7 @@ namespace NMib::NContainer
 		// Open the stream over a sub-range [_Offset, _Offset + _Length) of the buffer.
 		void f_OpenRead(CPagedByteVector const &_Buffer, umint _Offset, umint _Length);
 
-		void f_FeedBytes(const void *_pMem, umint _nBytes);
+		void f_FeedBytes(void const *_pMem, umint _nBytes);
 		void f_ConsumeBytes(void *_pMem, umint _nBytes);
 		bool f_IsValid() const;
 		bool f_IsAtEndOfStream() const;

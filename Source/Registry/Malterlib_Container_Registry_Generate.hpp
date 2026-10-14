@@ -20,7 +20,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bEscapeNewLines, typename tf_CStr>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_GetEscapedStrAppend(const t_CStr &_Str, tf_CStr &_Dest, bool _bForceEscape, const t_CStr &_PreData, ch8 const *_pNewLine)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_GetEscapedStrAppend(t_CStr const &_Str, tf_CStr &_Dest, bool _bForceEscape, t_CStr const &_PreData, ch8 const *_pNewLine)
 	{
 		bool bNeedEscape = _bForceEscape || _Str.f_IsEmpty();
 
@@ -69,11 +69,11 @@ namespace NMib::NContainer
 					typename t_CStr::CMaxChar Current = _Str.f_GetAt(i);
 					if (Current == '\n')
 					{
-						_Dest += _Str.f_Extract(iStart, (i+1)-iStart).f_EscapeStr("\\\"\r\n\t", "\\\"rnt");
+						_Dest += _Str.f_Extract(iStart, (i + 1) - iStart).f_EscapeStr("\\\"\r\n\t", "\\\"rnt");
 						_Dest += "\\";
 						_Dest += _pNewLine;
 						_Dest += _PreData;
-						iStart = i+1;
+						iStart = i + 1;
 					}
 				}
 				_Dest += _Str.f_Extract(iStart, Len - iStart).f_EscapeStr("\\\"\r\n\t", "\\\"rnt");
@@ -88,7 +88,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bIncludeFileLine, bool tf_bEscapeNewLines, typename tf_CStr>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fspr_GenerateStr(tf_CStr &_Stream, umint _Level, const TCRegistry *_pReg, ch8 const *_pNewLine)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fspr_GenerateStr(tf_CStr &_Stream, umint _Level, TCRegistry const *_pReg, ch8 const *_pNewLine)
 	{
 		t_CStr PreData;
 		if constexpr (tf_bIncludeFileLine && mc_bSupportLocation)
@@ -110,8 +110,8 @@ namespace NMib::NContainer
 		else
 			bValueIsEmpty = TCRegistry_CustomKeyValue<t_CKey, t_CData>::fs_ValueIsEmpty(_pReg->mp_Data, bForceEscaped || !bHasScope);
 
-		const ch8 *Space = " ";
-		const ch8 *NewLine = _pNewLine;
+		ch8 const *Space = " ";
+		ch8 const *NewLine = _pNewLine;
 
 		t_CStr PreDataValue;
 		if constexpr (mc_bSupportWhiteSpace)
@@ -194,7 +194,6 @@ namespace NMib::NContainer
 		}
 		else
 			_Stream += NewLine;
-
 
 		if (bHasScope)
 		{

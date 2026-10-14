@@ -12,13 +12,13 @@
 namespace NMib::NMisc
 {
 #if defined(DMibDebug) || defined(DMibSanitizerEnabled)
-	constexpr static umint mc_nItemsToTest = 250'000;
+	static constexpr umint mc_nItemsToTest = 250'000;
 #else
-	constexpr static umint mc_nItemsToTest = 1'000'000;
+	static constexpr umint mc_nItemsToTest = 1'000'000;
 #endif
-	constexpr static pfp64 mc_AllowedPerformance = 1.0;
+	static constexpr pfp64 mc_AllowedPerformance = 1.0;
 
-	constexpr static umint gc_nTries = 5;
+	static constexpr umint gc_nTries = 5;
 
 	namespace
 	{
@@ -28,9 +28,9 @@ namespace NMib::NMisc
 
 		enum EPopulateMode
 		{
-			EPopulateMode_Random,
-			EPopulateMode_Linear,
-			EPopulateMode_LinearBulkLoad
+			EPopulateMode_Random
+			, EPopulateMode_Linear
+			, EPopulateMode_LinearBulkLoad
 		};
 
 		struct CPackedMapTester
@@ -43,7 +43,8 @@ namespace NMib::NMisc
 					, tf_FOperation const &_fOperation
 					, tf_FInit const &_fInit
 					, tf_FDestruct const &_fDestruct
-				) const
+				)
+				const
 			{
 				auto pDataStart = m_Key_DataSorted.f_GetArray();
 				auto pDataEnd = pDataStart + mc_nItemsToTest;
@@ -71,7 +72,8 @@ namespace NMib::NMisc
 					, tf_FOperation const &_fOperation
 					, tf_FInit const &_fInit
 					, tf_FDestruct const &_fDestruct
-				) const
+				)
+				const
 			{
 				if (fp_IsRandom())
 					f_MeasureForAllKeysRandomSorted(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
@@ -86,7 +88,8 @@ namespace NMib::NMisc
 					, tf_FOperation const &_fOperation
 					, tf_FInit const &_fInit
 					, tf_FDestruct const &_fDestruct
-				) const
+				)
+				const
 			{
 				auto pDataStart = m_Key_Data.f_GetArray();
 				auto pDataEnd = pDataStart + mc_nItemsToTest;
@@ -114,7 +117,8 @@ namespace NMib::NMisc
 					, tf_FOperation const &_fOperation
 					, tf_FInit const &_fInit
 					, tf_FDestruct const &_fDestruct
-				) const
+				)
+				const
 			{
 				auto fMeasure = [_fOperation]() inline_never
 					{
@@ -140,7 +144,8 @@ namespace NMib::NMisc
 					, tf_FOperation const &_fOperation
 					, tf_FInit const &_fInit
 					, tf_FDestruct const &_fDestruct
-				) const
+				)
+				const
 			{
 				if (fp_IsRandom())
 					f_MeasureForAllKeysRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
@@ -155,7 +160,8 @@ namespace NMib::NMisc
 					, tf_FOperation const &_fOperation
 					, tf_FInit const &_fInit
 					, tf_FDestruct const &_fDestruct
-				) const
+				)
+				const
 			{
 				auto pDataStart = m_Key_Data.f_GetArray();
 				auto pDataEnd = pDataStart + mc_nItemsToTest;
@@ -183,7 +189,8 @@ namespace NMib::NMisc
 					, tf_FOperation const &_fOperation
 					, tf_FInit const &_fInit
 					, tf_FDestruct const &_fDestruct
-				) const
+				)
+				const
 			{
 				auto fMeasure = [_fOperation]() inline_never
 					{
@@ -209,7 +216,8 @@ namespace NMib::NMisc
 					, tf_FOperation const &_fOperation
 					, tf_FInit const &_fInit
 					, tf_FDestruct const &_fDestruct
-				) const
+				)
+				const
 			{
 				if (fp_IsRandom())
 					f_MeasureForAllKeyValuesRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
@@ -231,11 +239,16 @@ namespace NMib::NMisc
 				else if (fp_IsBulkLoad())
 				{
 					tf_CMap Map;
-					Map.f_BulkLoad(mc_nItemsToTest, [](auto &&_fInsert)
-						{
-							for (umint iTest = 0; iTest < mc_nItemsToTest; ++iTest)
-								_fInsert(iTest, iTest);
-						});
+					Map.f_BulkLoad
+						(
+							mc_nItemsToTest
+							, [](auto &&_fInsert)
+							{
+								for (umint iTest = 0; iTest < mc_nItemsToTest; ++iTest)
+									_fInsert(iTest, iTest);
+							}
+						)
+					;
 					return Map;
 				}
 				else
@@ -320,21 +333,20 @@ namespace NMib::NMisc
 							{
 								TCPackedMap<umint, umint> PackedMap;
 								[&]() inline_never
-									{
-										DMibTestScopeMeasure(PackedMapMeasure, mc_nItemsToTest);
-										PackedMap.f_BulkLoad
-											(
-												mc_nItemsToTest
-												, [](auto &&_fInsert)
-												{
-													for (umint iTest = 0; iTest < mc_nItemsToTest; ++iTest)
-														_fInsert(iTest, iTest);
-												}
-											)
-										;
-									}
-									()
-								;
+								{
+									DMibTestScopeMeasure(PackedMapMeasure, mc_nItemsToTest);
+									PackedMap.f_BulkLoad
+										(
+											mc_nItemsToTest
+											, [](auto &&_fInsert)
+											{
+												for (umint iTest = 0; iTest < mc_nItemsToTest; ++iTest)
+													_fInsert(iTest, iTest);
+											}
+										)
+									;
+								}
+								();
 							}
 							Checkout.f_GarbageCollectLocalArena(bDecommit);
 						}
@@ -407,8 +419,12 @@ namespace NMib::NMisc
 								if (PackedMap.f_FindEqual(_Key))
 									++FoundPackedMap;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 						)
 					;
 					PerfTest.f_Add(PackedMapMeasure);
@@ -424,8 +440,12 @@ namespace NMib::NMisc
 								if (Map.f_FindEqual(_Key))
 									++FoundMap;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 						)
 					;
 					PerfTest.f_AddReference(MapMeasure);
@@ -453,8 +473,12 @@ namespace NMib::NMisc
 								if (PackedMap.f_FindEqual(_Key))
 									++FoundPackedMap;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 						)
 					;
 					PerfTest.f_Add(PackedMapMeasure);
@@ -470,8 +494,12 @@ namespace NMib::NMisc
 								if (Map.f_FindEqual(_Key))
 									++FoundMap;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 						)
 					;
 					PerfTest.f_AddReference(MapMeasure);
@@ -545,12 +573,11 @@ namespace NMib::NMisc
 					{
 						auto PackedMap = f_GetFilledMap<TCPackedMap<umint, umint>>();
 						[&]() inline_never
-							{
-								DMibTestScopeMeasure(PackedMapMeasure, mc_nItemsToTest);
-								PackedMap.f_Clear();
-							}
-							()
-						;
+						{
+							DMibTestScopeMeasure(PackedMapMeasure, mc_nItemsToTest);
+							PackedMap.f_Clear();
+						}
+						();
 					}
 
 					PerfTest.f_Add(PackedMapMeasure);
@@ -561,12 +588,11 @@ namespace NMib::NMisc
 					{
 						auto Map = f_GetFilledMap<TCMap<umint, umint>>();
 						[&]() inline_never
-							{
-								DMibTestScopeMeasure(MapMeasure, mc_nItemsToTest);
-								Map.f_Clear();
-							}
-							()
-						;
+						{
+							DMibTestScopeMeasure(MapMeasure, mc_nItemsToTest);
+							Map.f_Clear();
+						}
+						();
 					}
 
 					PerfTest.f_AddReference(MapMeasure);
@@ -587,12 +613,11 @@ namespace NMib::NMisc
 					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 					{
 						[&]() inline_never
-							{
-								DMibTestScopeMeasure(PackedMapMeasure, mc_nItemsToTest);
-								PackedMapCopy = PackedMapSource;
-							}
-							()
-						;
+						{
+							DMibTestScopeMeasure(PackedMapMeasure, mc_nItemsToTest);
+							PackedMapCopy = PackedMapSource;
+						}
+						();
 						PackedMapCopy.f_Clear();
 					}
 
@@ -604,12 +629,11 @@ namespace NMib::NMisc
 					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 					{
 						[&]() inline_never
-							{
-								DMibTestScopeMeasure(MapMeasure, mc_nItemsToTest);
-								MapCopy = MapSource;
-							}
-							()
-						;
+						{
+							DMibTestScopeMeasure(MapMeasure, mc_nItemsToTest);
+							MapCopy = MapSource;
+						}
+						();
 						MapCopy.f_Clear();
 					}
 
@@ -637,8 +661,12 @@ namespace NMib::NMisc
 								if (PackedMap.f_FindEqual(_Key))
 									++FoundPackedMap;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 						)
 					;
 					PerfTest.f_Add(PackedMapMeasure);
@@ -655,8 +683,12 @@ namespace NMib::NMisc
 								if (Map.f_FindEqual(_Key))
 									++FoundMap;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 						)
 					;
 					PerfTest.f_AddReference(MapMeasure);
@@ -686,8 +718,12 @@ namespace NMib::NMisc
 								if (PackedMap.f_FindEqual(_Key))
 									++FoundPackedMap;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 						)
 					;
 					PerfTest.f_Add(PackedMapMeasure);
@@ -704,8 +740,12 @@ namespace NMib::NMisc
 								if (Map.f_FindEqual(_Key))
 									++FoundMap;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 						)
 					;
 					PerfTest.f_AddReference(MapMeasure);
@@ -730,13 +770,12 @@ namespace NMib::NMisc
 						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 						{
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(PackedMapMeasure, mc_nItemsToTest);
-									for (auto Iter = PackedMap.f_GetIterator(); Iter; ++Iter)
-										SumPackedMap += *Iter;
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(PackedMapMeasure, mc_nItemsToTest);
+								for (auto Iter = PackedMap.f_GetIterator(); Iter; ++Iter)
+									SumPackedMap += *Iter;
+							}
+							();
 						}
 
 						PerfTest.f_Add(PackedMapMeasure);
@@ -750,19 +789,18 @@ namespace NMib::NMisc
 						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 						{
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(PackedMapScanMeasure, mc_nItemsToTest);
-									PackedMap.f_Scan
-										(
-											[&](auto &_Key, auto &_Value)
-											{
-												SumPackedMap += _Value;
-											}
-										)
-									;
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(PackedMapScanMeasure, mc_nItemsToTest);
+								PackedMap.f_Scan
+									(
+										[&](auto &_Key, auto &_Value)
+										{
+											SumPackedMap += _Value;
+										}
+									)
+								;
+							}
+							();
 						}
 
 						PerfTest.f_Add(PackedMapScanMeasure);
@@ -778,21 +816,20 @@ namespace NMib::NMisc
 						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 						{
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(PackedMapScanMeasure, mc_nItemsToTest);
-									PackedMap.f_Scan
-										(
-											[&](auto &_Key, auto &_Value)
-											{
-												SumPackedMap += _Value;
+							{
+								DMibTestScopeMeasure(PackedMapScanMeasure, mc_nItemsToTest);
+								PackedMap.f_Scan
+									(
+										[&](auto &_Key, auto &_Value)
+										{
+											SumPackedMap += _Value;
 
-												return CheckValue < 0xfffffff0u;
-											}
-										)
-									;
-								}
-								()
-							;
+											return CheckValue < 0xfffffff0u;
+										}
+									)
+								;
+							}
+							();
 						}
 
 						PerfTest.f_Add(PackedMapScanMeasure);
@@ -805,13 +842,12 @@ namespace NMib::NMisc
 						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 						{
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MapMeasure, mc_nItemsToTest);
-									for (auto Iter = Map.f_GetIterator(); Iter; ++Iter)
-										SumMap += *Iter;
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MapMeasure, mc_nItemsToTest);
+								for (auto Iter = Map.f_GetIterator(); Iter; ++Iter)
+									SumMap += *Iter;
+							}
+							();
 						}
 
 						PerfTest.f_AddReference(MapMeasure);

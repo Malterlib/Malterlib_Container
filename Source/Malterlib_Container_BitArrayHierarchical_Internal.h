@@ -6,13 +6,14 @@
 namespace NMib::NContainer::NPrivate
 {
 	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal, bool t_bLast = (t_nBitsInternal == 0)>
-	struct TCBitArrayHierarchicalInternalArray : public TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>
+	struct TCBitArrayHierarchicalInternalArray
+		: public TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>
 	{
 		enum
 		{
-			mc_bIsRoot = (t_nBitsInternal <= t_nBitsPerEntry)
+			mc_bIsRoot         = (t_nBitsInternal <= t_nBitsPerEntry)
 			, mc_bIsFirstLevel = t_nBitsInternal == t_nBits
-			, mc_nSuperBits = t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)
+			, mc_nSuperBits    = t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)
 		};
 
 		using CSuper = TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>;

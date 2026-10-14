@@ -8,7 +8,6 @@ namespace
 	class CRegion_Tests : public NMib::NTest::CTest
 	{
 	public:
-
 		void f_DoTests()
 		{
 			DMibTestCategory("Basic")
@@ -26,7 +25,6 @@ namespace
 				};
 				DMibTestSuite("Separate")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -43,7 +41,6 @@ namespace
 				};
 				DMibTestSuite("Merge overlapping")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -57,7 +54,6 @@ namespace
 				};
 				DMibTestSuite("Merge overlapping left")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -75,7 +71,6 @@ namespace
 				};
 				DMibTestSuite("Merge overlapping right")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -93,7 +88,6 @@ namespace
 				};
 				DMibTestSuite("Merge equal left")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -111,7 +105,6 @@ namespace
 				};
 				DMibTestSuite("Merge equal right")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -129,7 +122,6 @@ namespace
 				};
 				DMibTestSuite("Merge overlapping left equal right")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -143,7 +135,6 @@ namespace
 				};
 				DMibTestSuite("Merge overlapping right equal left")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -157,7 +148,6 @@ namespace
 				};
 				DMibTestSuite("Merge equal")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -171,7 +161,6 @@ namespace
 				};
 				DMibTestSuite("Before")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -193,7 +182,6 @@ namespace
 				};
 				DMibTestSuite("Before equal")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -211,7 +199,6 @@ namespace
 				};
 				DMibTestSuite("Before overlapping")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -229,7 +216,6 @@ namespace
 				};
 				DMibTestSuite("After")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -251,7 +237,6 @@ namespace
 				};
 				DMibTestSuite("After equal")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -269,7 +254,6 @@ namespace
 				};
 				DMibTestSuite("After overlapping")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -287,7 +271,6 @@ namespace
 				};
 				DMibTestSuite("Over")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -302,7 +285,6 @@ namespace
 				};
 				DMibTestSuite("Over equal left")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -317,7 +299,6 @@ namespace
 				};
 				DMibTestSuite("Over equal right")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -332,7 +313,6 @@ namespace
 				};
 				DMibTestSuite("Over equal")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -347,7 +327,6 @@ namespace
 				};
 				DMibTestSuite("Over middle")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
@@ -362,7 +341,6 @@ namespace
 				};
 				DMibTestSuite("Split left ovelapping")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::TCAutoClearInt<int32>> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion
@@ -390,7 +368,6 @@ namespace
 				};
 				DMibTestSuite("Split left equal")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::TCAutoClearInt<int32>> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion
@@ -418,7 +395,6 @@ namespace
 				};
 				DMibTestSuite("Split right ovelapping")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::TCAutoClearInt<int32>> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion
@@ -446,7 +422,6 @@ namespace
 				};
 				DMibTestSuite("Split right equal")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::TCAutoClearInt<int32>> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion
@@ -474,7 +449,6 @@ namespace
 				};
 				DMibTestSuite("Split middle")
 				{
-
 					NMib::NContainer::TCRegions<int32, NMib::TCAutoClearInt<int32>> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion
@@ -511,8 +485,7 @@ namespace
 				DMibTestSuite("Change state")
 				{
 					NMib::NContainer::TCRegions<int32, NMib::TCAutoClearInt<int32>> Regions;
-					auto fl_Set1
-						= [](NMib::TCAutoClearInt<int32> &_Data)
+					auto fl_Set1 = [](NMib::TCAutoClearInt<int32> &_Data)
 						{
 							_Data = 1;
 						}

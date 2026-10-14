@@ -9,7 +9,6 @@ namespace NMib::NContainer
 	class TCBitArray
 	{
 	public:
-
 		constexpr TCBitArray(bool _bInitValues = true);
 
 		void f_Clear();
@@ -78,10 +77,9 @@ namespace NMib::NContainer
 		};
 
 	public:
-		using CEntryType = typename TCSizeHelper<(t_nBits < sizeof(uaint)*8)>::CType;
+		using CEntryType = typename TCSizeHelper<(t_nBits < sizeof(uaint) * 8)>::CType;
 
 	private:
-
 		aint fp_FindFreeBit(umint &_iEntry) const;
 		aint fp_FindFreeBit(umint _StartBitApproximately, umint &_iEntry) const;
 
@@ -96,25 +94,22 @@ namespace NMib::NContainer
 
 		enum
 		{
-			ENumBitsPerEntry = sizeof(CEntryType) * 8,
-			ENumEntries = (t_nBits + ENumBitsPerEntry - 1) / ENumBitsPerEntry,
+			ENumBitsPerEntry = sizeof(CEntryType) * 8
+			, ENumEntries    = (t_nBits + ENumBitsPerEntry - 1) / ENumBitsPerEntry
 		};
 
 	private:
 		CEntryType mp_Entries[ENumEntries];
 
-
 	private:
-
 		static constexpr CEntryType mcp_FullySet = TCLimitsInt<CEntryType>::mc_Max;
 		static constexpr CEntryType mcp_FullySetLast = ((CEntryType(1) << (t_nBits - (t_nBits / (ENumBitsPerEntry)) * (ENumBitsPerEntry))) - 1);
 		static constexpr CEntryType mcp_FullyUnset = 0;
-
 	};
 }
 
 #include "Malterlib_Container_BitArray.hpp"
 
 #ifndef DMibPNoShortCuts
-	using namespace NMib::NContainer;
+using namespace NMib::NContainer;
 #endif

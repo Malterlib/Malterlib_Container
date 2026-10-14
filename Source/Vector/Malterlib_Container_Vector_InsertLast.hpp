@@ -33,7 +33,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CType, typename... tfp_CParams>
+	template <typename tf_CType, typename ...tfp_CParams>
 	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::fp_Insert(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams)
 	{
 		umint PrevLen = f_GetLen();
@@ -42,11 +42,10 @@ namespace NMib::NContainer
 		_CreateParams.template f_Create<t_CData>(NMemory::TCAllocator_Placement<sizeof(t_CData)>((void *)(pArray)));
 		++mp_StaticData.m_pData->m_Length;
 		return *pArray;
-
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CType, typename... tfp_CParams>
+	template <typename tf_CType, typename ...tfp_CParams>
 	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams)
 	{
 		umint PrevLen = f_GetLen();

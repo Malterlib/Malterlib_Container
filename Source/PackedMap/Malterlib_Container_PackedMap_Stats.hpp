@@ -176,12 +176,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddRebalanceDecision
-		(
-			bool _bInsertTrigger
-			, umint _iFirstViolationLevel
-			, umint _iChosenLevel
-		)
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_StatsAddRebalanceDecision(bool _bInsertTrigger, umint _iFirstViolationLevel, umint _iChosenLevel)
 		noexcept
 	{
 		if constexpr (t_Options.m_bStats)

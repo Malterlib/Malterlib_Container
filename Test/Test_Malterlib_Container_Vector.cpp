@@ -180,7 +180,7 @@ namespace
 					DMibTest(DMibExpr(ListConst.f_GetLast()) == DMibExpr(13));
 				}
 
-				List2.f_Remove(List3.f_GetLen()-1);
+				List2.f_Remove(List3.f_GetLen() - 1);
 				List3.f_Remove(0);
 
 				DMibTest(DMibExpr(List2) < DMibExpr(List));
@@ -230,7 +230,7 @@ namespace
 					DMibTest(DMibExpr(List[11]) == DMibExpr(444));
 				}
 				{
-					List.f_InsertAfter(List.f_GetLen()-1, 33);
+					List.f_InsertAfter(List.f_GetLen() - 1, 33);
 					DMibTest(DMibExpr(List.f_GetLast()) == DMibExpr(33));
 				}
 
@@ -262,12 +262,12 @@ namespace
 					DMibTest(DMibExpr(List[10]) == DMibExpr(555));
 				}
 				{
-					List.f_InsertBefore(List.f_GetLen()-1, 366);
-					DMibTest(DMibExpr(List[List.f_GetLen()-2]) == DMibExpr(366));
+					List.f_InsertBefore(List.f_GetLen() - 1, 366);
+					DMibTest(DMibExpr(List[List.f_GetLen() - 2]) == DMibExpr(366));
 				}
 				{
 					List.f_InsertBefore(List.f_GetLen(), 367);
-					DMibTest(DMibExpr(List[List.f_GetLen()-1]) == DMibExpr(367));
+					DMibTest(DMibExpr(List[List.f_GetLen() - 1]) == DMibExpr(367));
 				}
 
 				List.f_Clear();
@@ -275,46 +275,45 @@ namespace
 
 				List = fs_DefaultList();
 				List.f_Move(0, 5, 2);
-				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(2,3,4,0,1,5,6,7,8,9)));
+				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(2, 3, 4, 0, 1, 5, 6, 7, 8, 9)));
 
 				List = fs_DefaultList();
 				List.f_Move(1, 5, 2);
-				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0,3,4,1,2,5,6,7,8,9)));
+				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0, 3, 4, 1, 2, 5, 6, 7, 8, 9)));
 
 				List = fs_DefaultList();
 				List.f_Move(0, 10, 2);
-				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(2,3,4,5,6,7,8,9,0,1)));
+				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(2, 3, 4, 5, 6, 7, 8, 9, 0, 1)));
 
 				List = fs_DefaultList();
 				List.f_Move(1, 10, 2);
-				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0,3,4,5,6,7,8,9,1,2)));
-
+				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0, 3, 4, 5, 6, 7, 8, 9, 1, 2)));
 
 				List = fs_DefaultList();
 				List.f_Move(8, 5, 2);
-				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0,1,2,3,4,8,9,5,6,7)));
+				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0, 1, 2, 3, 4, 8, 9, 5, 6, 7)));
 
 				List = fs_DefaultList();
 				List.f_Move(7, 5, 2);
-				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0,1,2,3,4,7,8,5,6,9)));
+				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0, 1, 2, 3, 4, 7, 8, 5, 6, 9)));
 
 				List = fs_DefaultList();
 				List.f_Move(8, 0, 2);
-				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(8,9,0,1,2,3,4,5,6,7)));
+				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(8, 9, 0, 1, 2, 3, 4, 5, 6, 7)));
 
 				List = fs_DefaultList();
 				List.f_Move(7, 0, 2);
-				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(7,8,0,1,2,3,4,5,6,9)));
+				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(7, 8, 0, 1, 2, 3, 4, 5, 6, 9)));
 
 				// Bounds
 
 				List = fs_DefaultList();
 				List.f_Move(0, 2, 2);
-				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0,1,2,3,4,5,6,7,8,9)));
+				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)));
 
 				List = fs_DefaultList();
 				List.f_Move(2, 2, 2);
-				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0,1,2,3,4,5,6,7,8,9)) && DMibExpr(2));
+				DMibTest(DMibExpr(List) == DMibExpr(fs_Vector(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)) && DMibExpr(2));
 			};
 
 			DMibTestSuite("Exceptions")
@@ -326,7 +325,6 @@ namespace
 
 				DMibTest(DMibExpr(TCThrowsException<CException>()) == DMibLExpr(List.f_InsertAfter(10)));
 				DMibTest(DMibExpr(TCThrowsException<CException>()) == DMibLExpr(List.f_InsertBefore(11)));
-
 
 				// Out of bounds move
 				DMibTest(DMibExpr(TCThrowsException<CException>()) == DMibLExpr(List.f_Move(9, 0, 2)));
@@ -368,7 +366,6 @@ namespace
 				TCVector<int32> TestVector;
 
 				TestVector.f_Reserve(500);
-
 
 				{
 					CTestMemoryMeasure MeasureMemory("Alloc");
@@ -533,13 +530,13 @@ namespace
 											TestVector0.f_Replace(fg_Move(TestVector1), _SourceStart, _SourceCopyLen, 0, _MinLen);
 										else
 											TestVector0.f_Replace(TestVector1, _SourceStart, _SourceCopyLen, 0, _MinLen);
-										DMibExpect(g_nObjects.f_Load(), ==,  fg_Max((_DestLen + _SourceLen), _MinLen + _SourceLen));
+										DMibExpect(g_nObjects.f_Load(), ==, fg_Max((_DestLen + _SourceLen), _MinLen + _SourceLen));
 									}
-									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, == , _bDoMove);
-									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, == , !_bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, ==, _bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, ==, !_bDoMove);
 
 									umint EndLen = fg_Max(_MinLen, _DestLen) - _DestLen;
-									DMibExpect(TestVector0, == , fExpected({{"SI", _SourceStart}, {"S", CopiedSourceLen}, {"D", _DestLen - CopiedSourceLen}, {"", EndLen}}));
+									DMibExpect(TestVector0, ==, fExpected({{"SI", _SourceStart}, {"S", CopiedSourceLen}, {"D", _DestLen - CopiedSourceLen}, {"", EndLen}}));
 								}
 							)
 						;
@@ -564,8 +561,8 @@ namespace
 											TestVector0.f_Replace(TestVector1, _SourceStart, _SourceCopyLen, _DestLen - _SourceLen, _MinLen);
 										DMibExpect(g_nObjects.f_Load(), ==, fg_Max((_DestLen + _SourceLen), _MinLen + _SourceLen));
 									}
-									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, == , _bDoMove);
-									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, == , !_bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, ==, _bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, ==, !_bDoMove);
 
 									umint EndLen = fg_Max(_MinLen, _DestLen) - _DestLen;
 									DMibExpect
@@ -586,7 +583,7 @@ namespace
 							(
 								[&]
 								{
-									umint CopyEnd = _DestLen - _SourceLen/2 + CopiedSourceLen;
+									umint CopyEnd = _DestLen - _SourceLen / 2 + CopiedSourceLen;
 									umint NewEnd = fg_Max(_DestLen, CopyEnd);
 									umint EndLen = fg_Max(_MinLen, NewEnd) - NewEnd;
 
@@ -597,21 +594,15 @@ namespace
 									{
 										DMibTestPath("After Replace");
 										if (_bDoMove)
-											TestVector0.f_Replace(fg_Move(TestVector1), _SourceStart, _SourceCopyLen, _DestLen - _SourceLen/2, _MinLen);
+											TestVector0.f_Replace(fg_Move(TestVector1), _SourceStart, _SourceCopyLen, _DestLen - _SourceLen / 2, _MinLen);
 										else
-											TestVector0.f_Replace(TestVector1, _SourceStart, _SourceCopyLen, _DestLen - _SourceLen/2, _MinLen);
+											TestVector0.f_Replace(TestVector1, _SourceStart, _SourceCopyLen, _DestLen - _SourceLen / 2, _MinLen);
 										DMibExpect(g_nObjects.f_Load(), ==, fg_Max(_MinLen, NewEnd) + _SourceLen);
 									}
-									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, == , _bDoMove);
-									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, == , !_bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, ==, _bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, ==, !_bDoMove);
 
-									DMibExpect
-										(
-											TestVector0
-											, ==
-											, fExpected({{"SI", _SourceStart}, {"D", _DestLen - _SourceLen/2}, {"S", CopiedSourceLen}, {"", EndLen}})
-										)
-									;
+									DMibExpect(TestVector0, ==, fExpected({{"SI", _SourceStart}, {"D", _DestLen - _SourceLen / 2}, {"S", CopiedSourceLen}, {"", EndLen}}));
 								}
 							)
 						;
@@ -639,16 +630,10 @@ namespace
 											TestVector0.f_Replace(TestVector1, _SourceStart, _SourceCopyLen, _DestLen, _MinLen);
 										DMibExpect(g_nObjects.f_Load(), ==, fg_Max(_MinLen, NewEnd) + _SourceLen);
 									}
-									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, == , _bDoMove);
-									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, == , !_bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, ==, _bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, ==, !_bDoMove);
 
-									DMibExpect
-										(
-											TestVector0
-											, ==
-											, fExpected({{"SI", _SourceStart}, {"D", _DestLen}, {"S", CopiedSourceLen}, {"", EndLen}})
-										)
-									;
+									DMibExpect(TestVector0, ==, fExpected({{"SI", _SourceStart}, {"D", _DestLen}, {"S", CopiedSourceLen}, {"", EndLen}}));
 								}
 							)
 						;
@@ -676,16 +661,10 @@ namespace
 											TestVector0.f_Replace(TestVector1, _SourceStart, _SourceCopyLen, (_DestLen + _SourceLen), _MinLen);
 										DMibExpect(g_nObjects.f_Load(), ==, fg_Max(_MinLen, NewEnd) + _SourceLen);
 									}
-									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, == , _bDoMove);
-									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, == , !_bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bMovedFrom, ==, _bDoMove);
+									DMibExpect(TestVector1[_SourceStart].m_bCopiedFrom, ==, !_bDoMove);
 
-									DMibExpect
-										(
-											TestVector0
-											, ==
-											, fExpected({{"SI", _SourceStart}, {"D", _DestLen}, {"", _SourceLen}, {"S", CopiedSourceLen}, {"", EndLen}})
-										)
-									;
+									DMibExpect(TestVector0, ==, fExpected({{"SI", _SourceStart}, {"D", _DestLen}, {"", _SourceLen}, {"S", CopiedSourceLen}, {"", EndLen}}));
 								}
 							)
 						;
@@ -751,6 +730,7 @@ namespace
 				if (_Other.m_bThrowException)
 					DMibError("Test");
 			}
+
 			CExceptionObject(CExceptionObject &&_Other)
 			{
 				if (_Other.m_bThrowException)

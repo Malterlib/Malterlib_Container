@@ -15,5 +15,5 @@ namespace NMib::NContainer
 }
 
 #ifndef DMibPNoShortCuts
-	using namespace NMib::NContainer;
+using namespace NMib::NContainer;
 #endif

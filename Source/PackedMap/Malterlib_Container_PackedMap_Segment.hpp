@@ -223,7 +223,7 @@ namespace NMib::NContainer
 			}
 			else if constexpr (mcp_bNothrowElementMove)
 			{
-				for (umint iSegmentSlot = Count; iSegmentSlot-- > _iLocalPos; )
+				for (umint iSegmentSlot = Count; iSegmentSlot-- > _iLocalPos;)
 				{
 					umint iSrc = iSegStart + iSegmentSlot;
 					umint iDst = iSrc + 1;
@@ -252,7 +252,7 @@ namespace NMib::NContainer
 					}
 				;
 
-				for (umint iSegmentSlot = Count; iSegmentSlot-- > _iLocalPos; )
+				for (umint iSegmentSlot = Count; iSegmentSlot-- > _iLocalPos;)
 				{
 					umint iSrc = iSegStart + iSegmentSlot;
 					umint iDst = iSrc + 1;
@@ -472,7 +472,7 @@ namespace NMib::NContainer
 			else if constexpr (mcp_bNothrowElementMove)
 			{
 				// Reverse loop: shift elements [iFirst .. iFirst+_iLocalPos-1] right by 1
-				for (umint iSegmentSlot = _iLocalPos + 1; --iSegmentSlot > 0; )
+				for (umint iSegmentSlot = _iLocalPos + 1; --iSegmentSlot > 0;)
 				{
 					umint iDst = iFirst + iSegmentSlot;
 					umint iSrc = iDst - 1;
@@ -503,7 +503,7 @@ namespace NMib::NContainer
 					}
 				;
 
-				for (umint iSegmentSlot = _iLocalPos + 1; --iSegmentSlot > 0; )
+				for (umint iSegmentSlot = _iLocalPos + 1; --iSegmentSlot > 0;)
 				{
 					umint iDst = iFirst + iSegmentSlot;
 					umint iSrc = iDst - 1;
@@ -534,8 +534,8 @@ namespace NMib::NContainer
 			CPackedMapData const *_pData
 			, umint _iSegment
 			, umint _iLocalPos
-			, t_CKey const *&_pPrevKey
-			, t_CKey const *&_pNextKey
+			, t_CKey const * &_pPrevKey
+			, t_CKey const * &_pNextKey
 		)
 		const noexcept
 	{

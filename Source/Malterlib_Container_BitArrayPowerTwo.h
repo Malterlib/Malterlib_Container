@@ -82,5 +82,5 @@ namespace NMib::NContainer
 #include "Malterlib_Container_BitArrayPowerTwo.hpp"
 
 #ifndef DMibPNoShortCuts
-	using namespace NMib::NContainer;
+using namespace NMib::NContainer;
 #endif

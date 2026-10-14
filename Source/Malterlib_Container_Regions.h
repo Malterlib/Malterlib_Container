@@ -14,20 +14,24 @@ namespace NMib::NContainer
 		TCRegionData()
 		{
 		}
+
 		TCRegionData(TCRegionData const &_Other)
 			: t_CRegionData(_Other)
 			, mp_End(_Other.mp_End)
 		{
 		}
+
 		TCRegionData(TCRegionData &&_Other)
 			: t_CRegionData(fg_Move(_Other))
 			, mp_End(fg_Move(_Other.mp_End))
 		{
 		}
+
 		t_CKey const &f_End() const
 		{
 			return mp_End;
 		}
+
 		t_CKey &f_End()
 		{
 			return mp_End;
@@ -37,12 +41,14 @@ namespace NMib::NContainer
 		{
 			return *this;
 		}
+
 		t_CRegionData const &f_Data() const
 		{
 			return *this;
 		}
 
 		DMibListLinkD_Link(TCRegionData, m_Link);
+
 	private:
 		t_CKey mp_End;
 	};
@@ -58,10 +64,12 @@ namespace NMib::NContainer
 			CRegionData()
 			{
 			}
+
 			CRegionData(CRegionData const &_Other)
 				: TCRegionData<t_CKey, t_CRegionData>(_Other)
 			{
 			}
+
 			CRegionData(CRegionData &&_Other)
 				: TCRegionData<t_CKey, t_CRegionData>(fg_Move(_Other))
 			{
@@ -72,9 +80,10 @@ namespace NMib::NContainer
 				return CMap::fs_GetKey(this);
 			}
 		};
-		CMap m_Regions;
-	public:
 
+		CMap m_Regions;
+
+	public:
 		using CIterator = typename CMap::CIterator;
 		using CIteratorConst = typename CMap::CIteratorConst;
 
@@ -82,27 +91,23 @@ namespace NMib::NContainer
 		{
 			m_Regions.f_Clear();
 		}
+
 		bool f_IsEmpty() const
 		{
 			return m_Regions.f_IsEmpty();
 		}
+
 		CIterator f_GetIterator()
 		{
 			return m_Regions.f_GetIterator();
 		}
+
 		CIteratorConst f_GetIterator() const
 		{
 			return m_Regions.f_GetIterator();
 		}
 
-		CIterator f_GetIterator(const t_CKey &_Start)
-		{
-			auto Iter = m_Regions.f_GetIterator_SmallestGreaterThanEqual(_Start);
-			if (Iter == nullptr)
-				Iter = m_Regions.f_GetIterator();
-			return Iter;
-		}
-		CIteratorConst f_GetIterator(const t_CKey &_Start) const
+		CIterator f_GetIterator(t_CKey const &_Start)
 		{
 			auto Iter = m_Regions.f_GetIterator_SmallestGreaterThanEqual(_Start);
 			if (Iter == nullptr)
@@ -110,14 +115,15 @@ namespace NMib::NContainer
 			return Iter;
 		}
 
-		CIterator f_GetIteratorLower(const t_CKey &_Start)
+		CIteratorConst f_GetIterator(t_CKey const &_Start) const
 		{
-			auto Iter = m_Regions.f_GetIterator_LargestLessThanEqual(_Start);
+			auto Iter = m_Regions.f_GetIterator_SmallestGreaterThanEqual(_Start);
 			if (Iter == nullptr)
 				Iter = m_Regions.f_GetIterator();
 			return Iter;
 		}
-		CIteratorConst f_GetIteratorLower(const t_CKey &_Start) const
+
+		CIterator f_GetIteratorLower(t_CKey const &_Start)
 		{
 			auto Iter = m_Regions.f_GetIterator_LargestLessThanEqual(_Start);
 			if (Iter == nullptr)
@@ -125,7 +131,15 @@ namespace NMib::NContainer
 			return Iter;
 		}
 
-		CRegionData const *f_GetData(const t_CKey &_Key) const
+		CIteratorConst f_GetIteratorLower(t_CKey const &_Start) const
+		{
+			auto Iter = m_Regions.f_GetIterator_LargestLessThanEqual(_Start);
+			if (Iter == nullptr)
+				Iter = m_Regions.f_GetIterator();
+			return Iter;
+		}
+
+		CRegionData const *f_GetData(t_CKey const &_Key) const
 		{
 			auto *pValue = m_Regions.f_FindLargestLessThanEqual(_Key);
 			if (pValue && _Key < pValue->f_End())
@@ -133,12 +147,13 @@ namespace NMib::NContainer
 			return nullptr;
 		}
 
-		void f_MakeRegion(const t_CKey &_Start, const t_CKey &_End)
+		void f_MakeRegion(t_CKey const &_Start, t_CKey const &_End)
 		{
 			f_MakeRegion(_Start, _End, CVoidFunctor());
 		}
+
 		template <class t_CTransform>
-		void f_MakeRegion(const t_CKey &_Start, const t_CKey &_End, t_CTransform const &_Transform)
+		void f_MakeRegion(t_CKey const &_Start, t_CKey const &_End, t_CTransform const &_Transform)
 		{
 			t_CKey Search = _Start;
 			--Search;
@@ -239,7 +254,6 @@ namespace NMib::NContainer
 									ToProcess.f_InsertAfter(&New0, pSlice);
 									pSlice->f_End() = CurrentRegion;
 									CurrentRegion = New0.f_End();
-
 								}
 							}
 						}
@@ -254,9 +268,7 @@ namespace NMib::NContainer
 						_Transform(New.f_Data());
 						ToProcess.f_Insert(&New);
 					}
-
 				}
-
 			}
 			else
 			{
@@ -304,5 +316,5 @@ namespace NMib::NContainer
 }
 
 #ifndef DMibPNoShortCuts
-	using namespace NMib::NContainer;
+using namespace NMib::NContainer;
 #endif

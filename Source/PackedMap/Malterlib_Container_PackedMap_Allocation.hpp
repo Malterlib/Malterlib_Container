@@ -219,9 +219,7 @@ namespace NMib::NContainer
 
 		// Initialize segment metadata
 		for (umint iSegment = 0; iSegment < nSegments; ++iSegment)
-		{
 			new(&pData->m_pSegmentMeta[iSegment]) CSegmentMeta();
-		}
 
 		// Mark all index entries as empty
 		if constexpr (mcp_bIndexStoresKeys)
@@ -234,7 +232,7 @@ namespace NMib::NContainer
 		{
 			// Slot index storage uses implicit-lifetime umint entries; assignment starts lifetime.
 			for (umint iIndex = 0; iIndex < pData->m_nStaticIndexTotalEntries; ++iIndex)
-				pData->m_pIndex[iIndex] = pData->m_Capacity;  // Invalid sentinel (umint)
+				pData->m_pIndex[iIndex] = pData->m_Capacity; // Invalid sentinel (umint)
 		}
 
 		// Initialize calibrator counts to zero (all segments empty)
@@ -318,7 +316,7 @@ namespace NMib::NContainer
 		{
 			// Slot index storage uses implicit-lifetime umint entries; assignment starts lifetime.
 			for (umint iEntry = 0; iEntry < pNewData->m_nStaticIndexTotalEntries; ++iEntry)
-				pNewData->m_pIndex[iEntry] = pNewData->m_Capacity;  // Invalid sentinel (umint)
+				pNewData->m_pIndex[iEntry] = pNewData->m_Capacity; // Invalid sentinel (umint)
 		}
 
 		// Initialize calibrator counts to zero

@@ -16,7 +16,6 @@ namespace NMib
 {
 	namespace NAlgorithm
 	{
-
 		template <typename tf_CIterator, typename tf_CCompare>
 		bool fg_IsReverseSorted(tf_CIterator _iFirst, tf_CIterator _iLast, tf_CCompare &&_fCompare)
 		{
@@ -90,6 +89,7 @@ namespace NMib
 		{
 			EInsertSortTryMaxSwaps = 16
 		};
+
 		template <typename t_CData, typename tf_CType>
 		inline_always t_CData *fg_InsertSortTryReverse(t_CData *_pLow, t_CData *_pHigh, tf_CType &&_fCompare)
 		{
@@ -114,7 +114,7 @@ namespace NMib
 						++Swaps;
 						if (Swaps - SwapsBefore >= EInsertSortTryMaxSwaps)
 						{
-							for (;pJ > pI; --pJ)
+							for (; pJ > pI; --pJ)
 								*pJ = fg_Move(pJ[-1]);
 							*pJ = fg_Move(Temp);
 							return pI + 1;
@@ -137,8 +137,7 @@ namespace NMib
 			t_CData *pL = _pLow;
 			t_CData *pEnd = _pHigh - 1;
 
-			auto fl_Swap
-				= [&](t_CData *pL) -> bool
+			auto fl_Swap = [&](t_CData *pL) -> bool
 				{
 					if (Swaps >= umint(pL - _pLow) + EInsertSortTryMaxSwaps)
 						return true;
@@ -157,7 +156,7 @@ namespace NMib
 						++Swaps;
 						if (Swaps - SwapsBefore >= EInsertSortTryMaxSwaps)
 						{
-							for (;pJ <= pL; ++pJ)
+							for (; pJ <= pL; ++pJ)
 								*pJ = fg_Move(pJ[1]);
 							*pJ = fg_Move(Temp);
 							return true;
@@ -248,9 +247,9 @@ namespace NMib
 		{
 			enum
 			{
-				ETI7_RandomSeed = 123456789,
-				ETI7_InsertionSortLimit = 20,
-				EIntrospective_InsertionSortLimit = 20,
+				ETI7_RandomSeed                     = 123456789
+				, ETI7_InsertionSortLimit           = 20
+				, EIntrospective_InsertionSortLimit = 20
 			};
 
 			inline_always static umint fg_TI7Rand(umint _Old)
@@ -267,19 +266,15 @@ namespace NMib
 				{
 					tf_CIterator iMiddle = _Iterator + 1;
 					tf_CIterator iFirst = iMiddle;
-					tf_CIterator iLast = _Iterator + (_Length-1);
+					tf_CIterator iLast = _Iterator + (_Length - 1);
 					while (iFirst != iLast)
 					{
 						++iFirst;
 						if (COrdering_Partial(_Comp(*iFirst, *iMiddle)) < 0)
-						{
 							iMiddle = iFirst;
-						}
 					}
 					if (COrdering_Partial(_Comp(*iMiddle, *_Iterator)) < 0)
-					{
 						NMib::fg_Swap(*_Iterator, *iMiddle);
-					}
 					++_Iterator;
 					while (_Iterator != iLast)
 					{
@@ -306,12 +301,10 @@ namespace NMib
 				umint c = p * 2;
 				auto temp = _Iterator[p];
 
-				while(_n - p > p)
+				while (_n - p > p)
 				{
 					if (COrdering_Partial(_Comp(*(_Iterator + c), *(_Iterator + c + 1))) < 0)
-					{
 						++c;
-					}
 					if (COrdering_Partial(_Comp(temp, *(_Iterator + c))) < 0)
 					{
 						_Iterator[p] = _Iterator[c];
@@ -358,9 +351,7 @@ namespace NMib
 				while (_Length > ETI7_InsertionSortLimit)
 				{
 					if (fg_IsSorted(_Iterator, _Iterator + _Length, _Comp))
-					{
 						return _Random;
-					}
 					if (!_DepthLeft--)
 					{
 						fg_TI7HeapSort(_Iterator, _Length, _Comp);
@@ -405,13 +396,13 @@ namespace NMib
 				fg_TI7InsertionSort(_Iterator, _Length, _Comp);
 				return _Random;
 			}
+
 			template <typename tf_CIterator, typename tf_CCompare>
 			inline_never static umint fg_IntrospectiveLoop(tf_CIterator _Iterator, umint _Length, umint _DepthLeft, umint _Random, tf_CCompare &&_Comp)
 			{
 				static_assert(EIntrospective_InsertionSortLimit >= 4, "what");
 				if (_Length > EIntrospective_InsertionSortLimit)
 				{
-
 #if 0
 					auto pLow = _Iterator;
 					auto pHigh = _Iterator + _Length;
@@ -486,7 +477,7 @@ namespace NMib
 							{
 								++iFirst;
 							}
-							while(COrdering_Partial(_Comp(*iFirst, *_Iterator)) < 0);
+							while (COrdering_Partial(_Comp(*iFirst, *_Iterator)) < 0);
 
 							do
 							{
@@ -508,7 +499,7 @@ namespace NMib
 		template <typename tf_CIterator, typename tf_CCompare>
 		inline void fg_TI7Sort(tf_CIterator _Iterator, umint _Count, tf_CCompare &&_Comp)
 		{
-			if (_Count > 1 && !fg_IsSorted(_Iterator, _Iterator+_Count, _Comp))
+			if (_Count > 1 && !fg_IsSorted(_Iterator, _Iterator + _Count, _Comp))
 			{
 				if (!fg_IsReverseSorted(_Iterator, _Iterator + _Count, _Comp))
 				{
@@ -519,9 +510,7 @@ namespace NMib
 					NPrivate::fg_TI7Loop(_Iterator, _Count, MaxDepth, NPrivate::ETI7_RandomSeed, _Comp);
 				}
 				else
-				{
 					fg_Reverse(_Iterator, _Iterator + _Count);
-				}
 			}
 		}
 
@@ -543,7 +532,6 @@ namespace NMib
 		{
 			fg_SortIntrospective(_Iterator, _Count, CSort_Default());
 		}
-
 	}
 }
 
@@ -551,10 +539,13 @@ namespace NMib
 {
 	namespace NContainer
 	{
+		namespace Tests
+		{
+			struct Big
+			{
+				char dummy[1000];
+			};
 
-		namespace Tests {
-
-			struct Big { char dummy[1000]; };
 			class CVectorPerformance_Tests : public CTest
 			{
 				template <int32 tf_nItems>
@@ -574,24 +565,25 @@ namespace NMib
 					CPerfTimeMeasureMin MalterlibTime;
 					CPerfTimeMeasureMin StdTime;
 
-					for (int32 i=0;i<nRep;++i)
+					for (int32 i = 0; i < nRep; ++i)
 					{
 						TCVector<Big> Vec1;
 						MalterlibTime.f_Start();
-						for (int32 i=0;i<tf_nItems;++i)
+						for (int32 i = 0; i < tf_nItems; ++i)
 							Vec1.f_Insert(Item);
 						MalterlibTime.f_Stop();
 					}
-					for (int32 i=0;i<nRep;++i)
+					for (int32 i = 0; i < nRep; ++i)
 					{
 						std::vector<Big> Vec2;
 						StdTime.f_Start();
-						for (int32 i=0;i<tf_nItems;++i)
+						for (int32 i = 0; i < tf_nItems; ++i)
 							Vec2.push_back(Item);
 						StdTime.f_Stop();
 					}
 					DMibTest(DMibExpr(StdTime) / DMibExpr(MalterlibTime) > DMibExpr(1.0));
 				}
+
 				template <int32 tf_nItems>
 				void fp_Insert_Simple()
 				{
@@ -606,24 +598,25 @@ namespace NMib
 					int32 Item = 1;
 					CPerfTimeMeasureMin MalterlibTime;
 					CPerfTimeMeasureMin StdTime;
-					for (int32 i=0;i<nRep;++i)
+					for (int32 i = 0; i < nRep; ++i)
 					{
 						TCVector<int32> Vec1;
 						MalterlibTime.f_Start();
-						for (int32 i=0;i<tf_nItems;++i)
+						for (int32 i = 0; i < tf_nItems; ++i)
 							Vec1.f_Insert(Item);
 						MalterlibTime.f_Stop();
 					}
-					for (int32 i=0;i<nRep;++i)
+					for (int32 i = 0; i < nRep; ++i)
 					{
 						std::vector<int32> Vec2;
 						StdTime.f_Start();
-						for (int32 i=0;i<tf_nItems;++i)
+						for (int32 i = 0; i < tf_nItems; ++i)
 							Vec2.push_back(Item);
 						StdTime.f_Stop();
 					}
 					DMibTest(DMibExpr(StdTime) / DMibExpr(MalterlibTime) > DMibExpr(1.0));
 				}
+
 				template <int32 tf_nItems>
 				void fp_Insert_Vector()
 				{
@@ -637,37 +630,29 @@ namespace NMib
 
 					TCVector<int32> Vec1;
 					std::vector<int32> Vec2;
-					for (int32 i=0;i<100;++i)
-					{
+					for (int32 i = 0; i < 100; ++i)
 						Vec1.f_Insert(1);
-					}
 
-					for (int32 i=0;i<100;++i)
-					{
+					for (int32 i = 0; i < 100; ++i)
 						Vec2.push_back(1);
-					}
 
 					TCVector<TCVector<int32>> vecvec1;
 					std::vector<std::vector<int32>> vecvec2;
 
 					CPerfTimeMeasureMin MalterlibTime;
 					CPerfTimeMeasureMin StdTime;
-					for (int32 i=0;i<nRep;++i)
+					for (int32 i = 0; i < nRep; ++i)
 					{
 						MalterlibTime.f_Start();
-						for (int32 i=0;i<tf_nItems;++i)
-						{
+						for (int32 i = 0; i < tf_nItems; ++i)
 							vecvec1.f_Insert(Vec1);
-						}
 						MalterlibTime.f_Stop();
 					}
-					for (int32 i=0;i<nRep;++i)
+					for (int32 i = 0; i < nRep; ++i)
 					{
 						StdTime.f_Start();
-						for (int32 i=0;i<tf_nItems;++i)
-						{
+						for (int32 i = 0; i < tf_nItems; ++i)
 							vecvec2.push_back(Vec2);
-						}
 						StdTime.f_Stop();
 					}
 
@@ -715,18 +700,14 @@ namespace NMib
 							Value = Random.f_GetValue<uint32>() % tf_nItems;
 							//Value = Random.f_GetValue<uint32>() % TCLimitsInt<int32>::mc_Max;
 							break;
-						case ESortType_Sorted:
-							Value = i;
-							break;
+						case ESortType_Sorted: Value = i; break;
 						case ESortType_OneUnsorted:
 							if (i == tf_nItems / 2)
 								Value = tf_nItems * 2;
 							else
 								Value = i;
 							break;
-						case ESortType_Reversed:
-							Value = (tf_nItems - 1) - i;
-							break;
+						case ESortType_Reversed: Value = (tf_nItems - 1) - i; break;
 						case ESortType_HalfSortedHalfReversed:
 							if (i < tf_nItems / 2)
 								Value = i;
@@ -739,18 +720,10 @@ namespace NMib
 							else
 								Value = i - tf_nItems / 2;
 							break;
-						case ESortType_AlmostSorted:
-							Value = i + Random.f_GetValue<uint32>() % 5;
-							break;
-						case ESortType_AlmostReversed:
-							Value = ((tf_nItems - 1) - i) + Random.f_GetValue<uint32>() % 5;
-							break;
-						case ESortType_ManySame:
-							Value = Random.f_GetValue<uint32>() % 100;
-							break;
-						case ESortType_AllSame:
-							Value = 0;
-							break;
+						case ESortType_AlmostSorted: Value = i + Random.f_GetValue<uint32>() % 5; break;
+						case ESortType_AlmostReversed: Value = ((tf_nItems - 1) - i) + Random.f_GetValue<uint32>() % 5; break;
+						case ESortType_ManySame: Value = Random.f_GetValue<uint32>() % 100; break;
+						case ESortType_AllSame: Value = 0; break;
 						case ESortType_Uneven:
 							if ((i & 1) == 0)
 								Value = 0;
@@ -765,7 +738,7 @@ namespace NMib
 					CPerfTimeMeasureMin MalterlibTime;
 					CPerfTimeMeasureMin StdTime;
 
-					for (int32 i=0;i<nRep;++i)
+					for (int32 i = 0; i < nRep; ++i)
 					{
 						TCVector<int32> Vec1 = ToSortMalterlib;
 						MalterlibTime.f_Start();
@@ -776,12 +749,10 @@ namespace NMib
 						if (i == 0)
 						{
 							if (!Vec1.f_IsAdjacentUnique())
-							{
 								DMibTest(DMibExpr(Vec1.f_IsAdjacentUnique()))(ETestFlag_Aggregated);
-							}
 						}
 					}
-					for (int32 i=0;i<nRep;++i)
+					for (int32 i = 0; i < nRep; ++i)
 					{
 						TCVector<int32> Vec2 = ToSortMalterlib;
 						StdTime.f_Start();
@@ -832,21 +803,11 @@ namespace NMib
 							//Value = Random.f_GetValue<uint32>() % tf_nItems;
 							Value = Random.f_GetValue<uint32>() % TCLimitsInt<int32>::mc_Max;
 							break;
-						case ESortType_Sorted:
-							Value = i;
-							break;
-						case ESortType_Reversed:
-							Value = (tf_nItems - 1) - i;
-							break;
-						case ESortType_AlmostSorted:
-							Value = i + Random.f_GetValue<int32>() % 10;
-							break;
-						case ESortType_ManySame:
-							Value = i / 100;
-							break;
-						case ESortType_AllSame:
-							Value = 0;
-							break;
+						case ESortType_Sorted: Value = i; break;
+						case ESortType_Reversed: Value = (tf_nItems - 1) - i; break;
+						case ESortType_AlmostSorted: Value = i + Random.f_GetValue<int32>() % 10; break;
+						case ESortType_ManySame: Value = i / 100; break;
+						case ESortType_AllSame: Value = 0; break;
 						case ESortType_Uneven:
 							if ((i & 1) == 0)
 								Value = 0;
@@ -860,8 +821,7 @@ namespace NMib
 						Item.m_Sequence = Sequence++;
 						ToSortStl.push_back(Item);
 					}
-					auto fl_IsStable =
-						[](TCVector<CTestClass> const &_Vector) -> bool
+					auto fl_IsStable = [](TCVector<CTestClass> const &_Vector) -> bool
 						{
 							CTestClass const *pPrev = nullptr;
 							for (auto iItem = _Vector.f_GetIterator(); iItem; ++iItem)
@@ -881,7 +841,7 @@ namespace NMib
 					;
 					CPerfTimeMeasureMin MalterlibTime;
 					CPerfTimeMeasureMin StdTime;
-					for (int32 i=0;i<nRep;++i)
+					for (int32 i = 0; i < nRep; ++i)
 					{
 						TCVector<CTestClass> Vec1 = ToSortMalterlib;
 						MalterlibTime.f_Start();
@@ -894,7 +854,7 @@ namespace NMib
 						}
 					}
 
-					for (int32 i=0;i<nRep;++i)
+					for (int32 i = 0; i < nRep; ++i)
 					{
 						std::vector<CTestClass> Vec2 = ToSortStl;
 						StdTime.f_Start();
@@ -905,30 +865,35 @@ namespace NMib
 				}
 
 			public:
-
 				struct CThing
 				{
 					int32 m_Val;
-					CThing() : m_Val(-1)
+					CThing()
+						: m_Val(-1)
 					{
 					}
-					CThing(int32 _V) : m_Val(_V)
+
+					CThing(int32 _V)
+						: m_Val(_V)
 					{
 					}
+
 				private:
-					CThing(const CThing& _CopyThis) : m_Val(_CopyThis.m_Val)
+					CThing(CThing const &_CopyThis)
+						: m_Val(_CopyThis.m_Val)
 					{
 					}
+
 				public:
-					CThing(CThing && _MoveThis)
+					CThing(CThing &&_MoveThis)
 					{
 						*this = fg_Move(_MoveThis);
 					}
 
-					CThing& operator =(CThing &&_MoveThis)
+					CThing &operator = (CThing &&_MoveThis)
 					{
-						DMibTest(DMibExpr(this != &_MoveThis )) (ETestFlag_Aggregated);
-						DMibTest(DMibExpr(_MoveThis.m_Val != -1)) (ETestFlag_Aggregated);
+						DMibTest(DMibExpr(this != &_MoveThis))(ETestFlag_Aggregated);
+						DMibTest(DMibExpr(_MoveThis.m_Val != -1))(ETestFlag_Aggregated);
 						m_Val = _MoveThis.m_Val;
 						_MoveThis.m_Val = -1;
 						return *this;
@@ -1044,22 +1009,25 @@ namespace NMib
 						{
 							NMib::NContainer::TCVector<CThing> lVec;
 
-							for (int32 i = 0; i< 19; ++i)
+							for (int32 i = 0; i < 19; ++i)
 								lVec.f_Insert(CThing(i + 1));
 
 							lVec[9] = CThing(0);
 
-							lVec.f_Sort([](CThing const& _A, CThing const& _B)
-							{
-								return _A.m_Val <=> _B.m_Val;
-							} );
+							lVec.f_Sort
+								(
+									[](CThing const &_A, CThing const &_B)
+									{
+										return _A.m_Val <=> _B.m_Val;
+									}
+								)
+							;
 
-							for (int32 i = 1; i< 19; ++i)
+							for (int32 i = 1; i < 19; ++i)
 							{
-								DMibTest(DMibExpr(lVec[i].m_Val) != DMibExpr(-1)) (ETestFlag_Aggregated);
-								DMibTest(DMibExpr(lVec[i-1].m_Val) < DMibExpr(lVec[i].m_Val )) (ETestFlag_Aggregated);
+								DMibTest(DMibExpr(lVec[i].m_Val) != DMibExpr(-1))(ETestFlag_Aggregated);
+								DMibTest(DMibExpr(lVec[i - 1].m_Val) < DMibExpr(lVec[i].m_Val))(ETestFlag_Aggregated);
 							}
-
 						}
 					};
 					DMibTestCategory(CTestCategory("Performace") << CTestGroup("Unfinished"))

@@ -6,8 +6,8 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <typename tf_CKey, typename... tfp_CParam>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator[] (tf_CKey &&_Key, tfp_CParam && ... p_Params) -> CUserData &
+	template <typename tf_CKey, typename ...tfp_CParam>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator [] (tf_CKey &&_Key, tfp_CParam && ...p_Params) -> CUserData &
 	{
 		return mp_Tree.f_FindEqualOrInsert
 			(
@@ -16,12 +16,13 @@ namespace NMib::NContainer
 				{
 					auto Memory = mp_Allocator.f_AllocSafe(sizeof(CNodeDestructive), alignof(CNodeDestructive));
 					auto pData = (CNodeDestructive *)Memory.m_pMemory;
-					new ((void *)pData) CNodeDestructive(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
+					new((void *)pData) CNodeDestructive(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
 					Memory.f_Claim();
 					return pData;
 				}
 				, mp_Compare
-			)->f_Value()
+			)
+			->f_Value()
 		;
 	}
 
@@ -40,7 +41,8 @@ namespace NMib::NContainer
 						return fg_Exchange(_Node.mp_pNode, nullptr);
 					}
 					, mp_Compare
-				)->f_Value()
+				)
+				->f_Value()
 			;
 		}
 		else
@@ -73,7 +75,8 @@ namespace NMib::NContainer
 						return pData;
 					}
 					, mp_Compare
-				)->f_Value()
+				)
+				->f_Value()
 			;
 		}
 	}
@@ -82,7 +85,7 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Insert(tf_CKey &&_Key) -> CUserData &
 	{
-		return operator [](fg_Forward<tf_CKey>(_Key));
+		return operator [] (fg_Forward<tf_CKey>(_Key));
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
@@ -98,9 +101,7 @@ namespace NMib::NContainer
 				{
 					bInserted = true;
 					if constexpr (NTraits::cIsEmpty<t_CAllocator>)
-					{
 						return fg_Exchange(_Node.mp_pNode, nullptr);
-					}
 					else
 					{
 						bool bCanSteal = false;
@@ -135,8 +136,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <typename tf_CKey, typename... tfp_CParam>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator () (tf_CKey &&_Key, tfp_CParam && ... p_Params) -> TCMapResult<CUserData &>
+	template <typename tf_CKey, typename ...tfp_CParam>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator () (tf_CKey &&_Key, tfp_CParam && ...p_Params) -> TCMapResult<CUserData &>
 	{
 		bool bWasCreated = false;
 		auto pData = mp_Tree.f_FindEqualOrInsert
@@ -147,7 +148,7 @@ namespace NMib::NContainer
 					bWasCreated = true;
 					auto Memory = mp_Allocator.f_AllocSafe(sizeof(CNodeDestructive), alignof(CNodeDestructive));
 					auto pData = (CNodeDestructive *)Memory.m_pMemory;
-					new ((void *)pData) CNodeDestructive(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
+					new((void *)pData) CNodeDestructive(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
 					Memory.f_Claim();
 					return pData;
 				}

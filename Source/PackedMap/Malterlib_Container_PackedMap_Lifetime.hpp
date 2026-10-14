@@ -11,11 +11,8 @@ namespace NMib::NContainer
 
 	// Move constructor
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::TCPackedMap(TCPackedMap &&_Other) noexcept
-		(
-			NTraits::cIsNothrowMoveConstructible<t_CAllocator>
-			&& NTraits::cIsNothrowMoveConstructible<t_CCompare>
-		)
+	constexpr TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::TCPackedMap(TCPackedMap &&_Other)
+		noexcept(NTraits::cIsNothrowMoveConstructible<t_CAllocator> && NTraits::cIsNothrowMoveConstructible<t_CCompare>)
 		: mp_Stats(fg_Move(_Other.mp_Stats))
 		, mp_Allocator(fg_Move(_Other.mp_Allocator))
 		, mp_Compare(fg_Move(_Other.mp_Compare))
@@ -503,7 +500,6 @@ namespace NMib::NContainer
 					KeyGuard.f_Clear();
 					++nAssignCleanupPlacedInSeg;
 				}
-
 			}
 			pData->m_pSegmentMeta[iSeg].m_Count = (uint16)Count;
 			pData->m_nElements += Count;

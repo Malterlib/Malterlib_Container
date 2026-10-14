@@ -6,8 +6,8 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CValue>
-	template <typename tf_CKey, typename... tfp_CArg>
-	inline_small TCMapNode<t_CKey, t_CValue>::TCMapNode(tf_CKey &&_Key, tfp_CArg && ... p_Args)
+	template <typename tf_CKey, typename ...tfp_CArg>
+	inline_small TCMapNode<t_CKey, t_CValue>::TCMapNode(tf_CKey &&_Key, tfp_CArg && ...p_Args)
 		: mp_Key(fg_Forward<tf_CKey>(_Key))
 		, mp_Value(fg_Forward<tfp_CArg>(p_Args)...)
 	{
@@ -36,7 +36,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue>
-	constexpr inline_small auto TCMapNode<t_CKey, t_CValue>::f_Key() const & noexcept -> const t_CKey &
+	constexpr inline_small auto TCMapNode<t_CKey, t_CValue>::f_Key() const & noexcept -> t_CKey const &
 	{
 		return mp_Key;
 	}
@@ -54,7 +54,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue>
-	constexpr inline_small auto TCMapNode<t_CKey, t_CValue>::f_Value() const & noexcept -> const t_CValue &
+	constexpr inline_small auto TCMapNode<t_CKey, t_CValue>::f_Value() const & noexcept -> t_CValue const &
 	{
 		return mp_Value;
 	}

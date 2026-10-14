@@ -10,7 +10,7 @@ namespace NMib::NContainer
 	template <typename tf_FOnEntry>
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_Scan(tf_FOnEntry &&_fOnEntry) const
 	{
-		constexpr static bool c_bEarlyExit = requires(t_CKey const &_Key, t_CValue const &_Value)
+		static constexpr bool c_bEarlyExit = requires (t_CKey const &_Key, t_CValue const &_Value)
 			{
 				{ _fOnEntry(_Key, _Value) } -> NTraits::cIsSame<bool>;
 			}

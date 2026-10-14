@@ -45,12 +45,8 @@ namespace NMib::NContainer
 	{
 		_Stream >> m_CurrentIndex;
 		_Stream >> m_Strings;
-		for (auto iString = m_Strings.f_GetIterator()
-			;iString
-			;++iString)
-		{
+		for (auto iString = m_Strings.f_GetIterator(); iString; ++iString)
 			m_IndexToString.f_Insert(*iString);
-		}
 	}
 
 	template <typename t_CStr, typename t_CIndex>
@@ -70,9 +66,7 @@ namespace NMib::NContainer
 		if (pStr)
 			_String = *pStr;
 		else
-		{
 			DMibErrorFile("Invalid string index in stream");
-		}
 	}
 
 	template <typename t_CStr, typename t_CIndex>

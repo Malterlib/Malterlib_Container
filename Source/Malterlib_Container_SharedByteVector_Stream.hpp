@@ -17,13 +17,7 @@ namespace NMib::NStream
 		struct TCStreamHasFeedShared
 		<
 			t_CStream
-			, TCEnableIf
-			<
-				!NTraits::cIsSame
-				<
-					decltype(fg_GetReference<t_CStream>().f_FeedShared(fg_GetType<NContainer::CSharedByteVector>())), NPrivate::CDummy
-				>
-			>
+			, TCEnableIf<!NTraits::cIsSame<decltype(fg_GetReference<t_CStream>().f_FeedShared(fg_GetType<NContainer::CSharedByteVector>())), NPrivate::CDummy>>
 		>
 		{
 			static constexpr bool mc_Value = true;
@@ -36,17 +30,7 @@ namespace NMib::NStream
 		};
 
 		template <typename t_CStream>
-		struct TCStreamHasConsumeShared
-		<
-			t_CStream
-			, TCEnableIf
-			<
-				!NTraits::cIsSame
-				<
-					decltype(fg_GetReference<t_CStream>().f_ConsumeShared(fg_GetType<umint>())), NPrivate::CDummy
-				>
-			>
-		>
+		struct TCStreamHasConsumeShared<t_CStream, TCEnableIf<!NTraits::cIsSame<decltype(fg_GetReference<t_CStream>().f_ConsumeShared(fg_GetType<umint>())), NPrivate::CDummy>>>
 		{
 			static constexpr bool mc_Value = true;
 		};
@@ -97,9 +81,7 @@ namespace NMib::NStream
 			fg_CheckLengthLimit(_Stream, nItems);
 
 			if constexpr (NPrivate::TCStreamHasConsumeShared<t_CStream>::mc_Value)
-			{
 				_Data = _Stream.f_ConsumeShared(nItems);
-			}
 			else
 			{
 				NContainer::CIOByteVector Vector;

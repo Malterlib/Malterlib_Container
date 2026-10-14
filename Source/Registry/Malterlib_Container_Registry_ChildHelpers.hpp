@@ -33,7 +33,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CKey>
-	inline_small COrdering_Partial TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator ()(CRegistryKey const &_Left, const tf_CKey &_Right) const
+	inline_small COrdering_Partial TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator () (CRegistryKey const &_Left, tf_CKey const &_Right) const
 	{
 		return _Left <=> _Right;
 	}
@@ -41,7 +41,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_CKey>
-	inline_small COrdering_Partial TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator ()(tf_CKey const &_Left, CRegistryKey const &_Right) const
+	inline_small COrdering_Partial TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CAVLCompare_TCRegistry::operator () (tf_CKey const &_Left, CRegistryKey const &_Right) const
 	{
 		return _Left <=> _Right;
 	}
@@ -59,7 +59,7 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CChildren_Sorted::operator =(CChildren_Sorted &&_Other) -> CChildren_Sorted &
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CChildren_Sorted::operator = (CChildren_Sorted &&_Other) -> CChildren_Sorted &
 	{
 		m_Tree = fg_Move(_Other.m_Tree);
 		return *this;
@@ -135,7 +135,7 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CChildren_PreserveOrder::operator =(CChildren_PreserveOrder &&_Other) -> CChildren_PreserveOrder &
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CChildren_PreserveOrder::operator = (CChildren_PreserveOrder &&_Other) -> CChildren_PreserveOrder &
 	{
 		m_Tree = fg_Move(_Other.m_Tree);
 		m_ChildrenOrder = fg_Move(_Other.m_ChildrenOrder);

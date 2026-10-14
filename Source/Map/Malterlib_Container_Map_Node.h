@@ -60,12 +60,12 @@ namespace NMib::NContainer
 		template <typename tf_CStream>
 		void f_Consume(tf_CStream &_Stream);
 
-		constexpr inline_small const t_CKey &f_Key() const & noexcept;
+		constexpr inline_small t_CKey const &f_Key() const & noexcept;
 		constexpr inline_small t_CValue &f_Value() & noexcept;
 		constexpr inline_small t_CValue &&f_Value() && noexcept;
-		constexpr inline_small const t_CValue &f_Value() const & noexcept;
+		constexpr inline_small t_CValue const &f_Value() const & noexcept;
 
-		constexpr static bool mc_bHasValue = true;
+		static constexpr bool mc_bHasValue = true;
 
 		template <umint tf_iValue>
 		constexpr decltype(auto) get() const & noexcept;
@@ -114,8 +114,8 @@ namespace NMib::NContainer
 
 		TCMapNode() = default;
 
-		template <typename tf_CKey, typename... tfp_CArg>
-		explicit inline_small TCMapNode(tf_CKey &&_Key, tfp_CArg && ... p_Args);
+		template <typename tf_CKey, typename ...tfp_CArg>
+		explicit inline_small TCMapNode(tf_CKey &&_Key, tfp_CArg && ...p_Args);
 
 		DMibNoUniqueAddress t_CKey mp_Key;
 		DMibNoUniqueAddress t_CValue mp_Value;
@@ -281,7 +281,7 @@ namespace std
 	template <typename t_CKey, typename t_CValue>
 	struct tuple_element<0, NMib::NContainer::TCMapNode<t_CKey, t_CValue>>
 	{
-		using type = const t_CKey;
+		using type = t_CKey const;
 	};
 
 	template <typename t_CKey, typename t_CValue>

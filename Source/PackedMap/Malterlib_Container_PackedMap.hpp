@@ -154,14 +154,14 @@ namespace NMib::NContainer
 	// Stats access
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_GetStats() const noexcept -> CStats const &
-		requires(t_Options.m_bStats)
+		requires (t_Options.m_bStats)
 	{
 		return mp_Stats;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_ResetStats() noexcept
-		requires(t_Options.m_bStats)
+		requires (t_Options.m_bStats)
 	{
 		mp_Stats = {};
 	}

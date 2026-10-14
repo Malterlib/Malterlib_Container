@@ -252,13 +252,13 @@ namespace NMib::NContainer
 		TCMap(TCMap const &_Other);
 		TCMap(std::initializer_list<NStorage::TCTuple<t_CKey, t_CValue>> const &_Values);
 
-		template <typename... tfp_CParams>
+		template <typename ...tfp_CParams>
 		TCMap(CAllocatorConstructTag const &, tfp_CParams && ...p_Params);
 
-		template <typename... tfp_CParams>
+		template <typename ...tfp_CParams>
 		TCMap(CCompareConstructTag const &, tfp_CParams && ...p_Params);
 
-		template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams>
+		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams>
 		TCMap
 			(
 				CAllocatorConstructTag &&
@@ -289,15 +289,15 @@ namespace NMib::NContainer
 		static t_CKey const &fs_GetKey(CUserData const *_pData)
 			requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 		;
-		static t_CKey const &fs_GetKey(const CUserData &_Data)
+		static t_CKey const &fs_GetKey(CUserData const &_Data)
 			requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
 		;
 
-		template <typename tf_CKey, typename... tfp_CParam>
-		CUserData &operator[] (tf_CKey &&_Key, tfp_CParam && ... p_Params);
+		template <typename tf_CKey, typename ...tfp_CParam>
+		CUserData &operator [] (tf_CKey &&_Key, tfp_CParam && ...p_Params);
 
-		template <typename tf_CKey, typename... tfp_CParam>
-		TCMapResult<CUserData &> operator () (tf_CKey &&_Key, tfp_CParam && ... p_Params);
+		template <typename tf_CKey, typename ...tfp_CParam>
+		TCMapResult<CUserData &> operator () (tf_CKey &&_Key, tfp_CParam && ...p_Params);
 
 		template <typename tf_CKey>
 		CUserData &f_Insert(tf_CKey &&_Key);
@@ -315,7 +315,7 @@ namespace NMib::NContainer
 		void f_BatchMapIfNotMapped(tf_FDoInsert &&_fDoInsert);
 
 		template <typename tf_CKey>
-		CUserData const &operator[] (tf_CKey&& _Key) const;
+		CUserData const &operator [] (tf_CKey &&_Key) const;
 
 		template <typename tf_CKey>
 		bool f_Exists(tf_CKey &&_Key) const;
@@ -456,31 +456,19 @@ namespace NMib::NContainer
 		void f_Consume(tf_CStream &_Stream);
 
 		template <typename tf_CKey, typename tf_CValue, typename tf_CCompare, typename tf_CAllocator>
-		bool operator == (TCMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator> const &_Other) const noexcept
-			(
-				noexcept(fg_GetType<t_CKey const &>() == fg_GetType<tf_CKey const &>())
-				&& noexcept(fg_GetType<t_CValue const &>() == fg_GetType<tf_CValue const &>())
-			)
+		bool operator == (TCMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator> const &_Other) const
+			noexcept(noexcept(fg_GetType<t_CKey const &>() == fg_GetType<tf_CKey const &>()) && noexcept(fg_GetType<t_CValue const &>() == fg_GetType<tf_CValue const &>()))
 		;
-		bool operator == (TCMap const &_Other) const noexcept
-			(
-				noexcept(fg_GetType<t_CKey const &>() == fg_GetType<t_CKey const &>())
-				&& noexcept(fg_GetType<t_CValue const &>() == fg_GetType<t_CValue const &>())
-			)
-		;;
+		bool operator == (TCMap const &_Other) const
+			noexcept(noexcept(fg_GetType<t_CKey const &>() == fg_GetType<t_CKey const &>()) && noexcept(fg_GetType<t_CValue const &>() == fg_GetType<t_CValue const &>()))
+		;
 
 		template <typename tf_CKey, typename tf_CValue, typename tf_CCompare, typename tf_CAllocator>
-		auto operator <=> (TCMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator> const &_Other) const noexcept
-			(
-				noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<tf_CKey const &>())
-				&& noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<tf_CValue const &>())
-			)
+		auto operator <=> (TCMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator> const &_Other) const
+			noexcept(noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<tf_CKey const &>()) && noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<tf_CValue const &>()))
 		;
-		auto operator <=> (TCMap const &_Other) const noexcept
-			(
-				noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<t_CKey const &>())
-				&& noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<t_CValue const &>())
-			)
+		auto operator <=> (TCMap const &_Other) const
+			noexcept(noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<t_CKey const &>()) && noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<t_CValue const &>()))
 		;
 
 		template <typename tf_COption>
@@ -494,15 +482,15 @@ namespace NMib::NContainer
 		CNodeHandle fp_ExtractNoRebalance(CNodeDestructive *_pParent, CNodeDestructive *_pToRemove);
 
 		template <typename tf_CSource>
-		inline_always void fp_CopyAll(tf_CSource && _Other);
+		inline_always void fp_CopyAll(tf_CSource &&_Other);
 		template <typename tf_CSource>
-		inline_always void fp_MoveAll(tf_CSource && _Other);
+		inline_always void fp_MoveAll(tf_CSource &&_Other);
 		template <typename tf_CSource>
-		inline_always void fp_CopyAddAll(tf_CSource && _Other);
+		inline_always void fp_CopyAddAll(tf_CSource &&_Other);
 		template <typename tf_CSource>
-		inline_always void fp_MoveAddAll(tf_CSource && _Other);
+		inline_always void fp_MoveAddAll(tf_CSource &&_Other);
 
-		template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams, umint... tp_IndicesAllocator, umint... tp_IndicesCompare>
+		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, umint ...tp_IndicesAllocator, umint ...tp_IndicesCompare>
 		TCMap
 			(
 				NMeta::TCIndices<tp_IndicesAllocator...> const &_IndexSequenceAllocator
@@ -514,7 +502,7 @@ namespace NMib::NContainer
 			)
 		;
 
-		constexpr static bool mcp_bIsReference = NTraits::cIsReference<t_CValue>;
+		static constexpr bool mcp_bIsReference = NTraits::cIsReference<t_CValue>;
 
 		DMibNoUniqueAddress t_CAllocator mp_Allocator;
 		DMibNoUniqueAddress CNodeCompare mp_Compare;
@@ -526,7 +514,7 @@ namespace NMib::NContainer
 }
 
 #ifndef DMibPNoShortCuts
-	using namespace NMib::NContainer;
+using namespace NMib::NContainer;
 #endif
 
 #include "Map/Malterlib_Container_Map.hpp"

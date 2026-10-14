@@ -7,10 +7,8 @@ namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-	bool TCVector<t_CData, t_CAllocator, t_COptions>::operator == (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const noexcept
-		(
-			noexcept(fg_GetType<const t_CData &>() == fg_GetType<const tf_CData &>())
-		)
+	bool TCVector<t_CData, t_CAllocator, t_COptions>::operator == (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const
+		noexcept(noexcept(fg_GetType<t_CData const &>() == fg_GetType<tf_CData const &>()))
 	{
 		umint Len = f_GetLen();
 		if (Len != _Other.f_GetLen())
@@ -30,12 +28,10 @@ namespace NMib::NContainer
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-	auto TCVector<t_CData, t_CAllocator, t_COptions>::operator <=> (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const noexcept
-		(
-			noexcept(fg_GetType<const t_CData &>() <=> fg_GetType<const tf_CData &>())
-		)
+	auto TCVector<t_CData, t_CAllocator, t_COptions>::operator <=> (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const
+		noexcept(noexcept(fg_GetType<t_CData const &>() <=> fg_GetType<tf_CData const &>()))
 	{
-		using COrdering = decltype(fg_GetType<const t_CData &>() <=> fg_GetType<const tf_CData &>());
+		using COrdering = decltype(fg_GetType<t_CData const &>() <=> fg_GetType<tf_CData const &>());
 
 		umint Len = f_GetLen();
 		umint OtherLen = _Other.f_GetLen();
@@ -72,8 +68,8 @@ namespace NMib::NContainer
 		else if (Len0 < Len1)
 			return -1;
 
-		const t_CData *pData0 = f_GetArray();
-		const tf_CData *pData1 = _Other.f_GetArray();
+		t_CData const *pData0 = f_GetArray();
+		tf_CData const *pData1 = _Other.f_GetArray();
 
 		for (umint i = 0; i < Len0; ++i)
 		{
@@ -95,8 +91,8 @@ namespace NMib::NContainer
 		else if (Len0 < Len1)
 			return -1;
 
-		const t_CData *pData0 = f_GetArray();
-		const tf_CData *pData1 = _Other.f_GetArray();
+		t_CData const *pData0 = f_GetArray();
+		tf_CData const *pData1 = _Other.f_GetArray();
 
 		for (umint i = 0; i < Len0; ++i)
 		{
@@ -116,8 +112,8 @@ namespace NMib::NContainer
 		umint Len1 = _Other.f_GetLen();
 		umint Len = fg_Min(Len0, Len1);
 
-		const t_CData *pData0 = f_GetArray();
-		const tf_CData *pData1 = _Other.f_GetArray();
+		t_CData const *pData0 = f_GetArray();
+		tf_CData const *pData1 = _Other.f_GetArray();
 
 		for (umint iElement = 0; iElement < Len; ++iElement)
 		{
@@ -150,10 +146,12 @@ namespace NMib::NContainer
 		, typename tf_COptions2
 	>
 	void TCVector<t_CData, t_CAllocator, t_COptions>::f_FindDifferences
-	(
-		const TCVector<tf_CData0, tf_CAllocator0, tf_COptions0> &_CompareTo
-		, TCVector<tf_CData1, tf_CAllocator1, tf_COptions1> *_pAdded
-		, TCVector<tf_CData2, tf_CAllocator2, tf_COptions2> *_pRemoved) const
+		(
+			TCVector<tf_CData0, tf_CAllocator0, tf_COptions0> const &_CompareTo
+			, TCVector<tf_CData1, tf_CAllocator1, tf_COptions1> *_pAdded
+			, TCVector<tf_CData2, tf_CAllocator2, tf_COptions2> *_pRemoved
+		)
+		const
 	{
 		// Find added
 		if (_pAdded)
@@ -163,7 +161,7 @@ namespace NMib::NContainer
 			umint nItems = _CompareTo.f_GetLen();
 			for (umint i = 0; i < nItems; ++i)
 			{
-				const tf_CData0 &CompareTo = _CompareTo[i];
+				tf_CData0 const &CompareTo = _CompareTo[i];
 				if (Sorted.f_BinarySearch(CompareTo) < 0)
 					_pAdded->f_Insert(CompareTo);
 			}
@@ -177,7 +175,7 @@ namespace NMib::NContainer
 			umint nItems = f_GetLen();
 			for (umint i = 0; i < nItems; ++i)
 			{
-				const t_CData &CompareTo = (*this)[i];
+				t_CData const &CompareTo = (*this)[i];
 				if (Sorted.f_BinarySearch(CompareTo) < 0)
 					_pRemoved->f_Insert(CompareTo);
 			}
