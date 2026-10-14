@@ -26,13 +26,13 @@ namespace NMib::NContainer
 		template <typename tf_CStream>
 		void f_Consume(tf_CStream &_Stream);
 
-		inline_small const t_CKey &f_Key() const &;
-		inline_small const t_CKey &f_Value() const &;
+		inline_small t_CKey const &f_Key() const &;
+		inline_small t_CKey const &f_Value() const &;
 
 		template <umint tf_iValue>
 		constexpr decltype(auto) get() const & noexcept;
 
-		constexpr static bool mc_bHasValue = false;
+		static constexpr bool mc_bHasValue = false;
 
 	private:
 		template <typename t_CNode2, typename t_CKey2>
@@ -151,6 +151,6 @@ namespace std
 	template <typename t_CKey>
 	struct tuple_element<0, NMib::NContainer::TCMapNode<t_CKey, NMib::NContainer::CMapSet>>
 	{
-		using type = const t_CKey;
+		using type = t_CKey const;
 	};
 }

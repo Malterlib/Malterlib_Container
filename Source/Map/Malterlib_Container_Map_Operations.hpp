@@ -311,7 +311,7 @@ namespace NMib::NContainer
 	{
 		TCMap Return;
 
-		constexpr static bool c_bPreferLeft = (t_Policy == EMapOperationPolicy::mc_PreferLeft) || (t_Policy == EMapOperationPolicy::mc_Fastest);
+		static constexpr bool c_bPreferLeft = (t_Policy == EMapOperationPolicy::mc_PreferLeft) || (t_Policy == EMapOperationPolicy::mc_Fastest);
 
 		if constexpr (c_bPreferLeft && NTraits::cIsRValueReference<t_CThis &&>)
 		{

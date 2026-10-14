@@ -8,7 +8,7 @@ using namespace NMib::NStr;
 using namespace NMib;
 
 #ifdef DCompiler_clang
-#pragma clang diagnostic ignored "-Wself-assign-overloaded"
+#	pragma clang diagnostic ignored "-Wself-assign-overloaded"
 #endif
 
 namespace
@@ -134,20 +134,20 @@ namespace
 				t_CRegistry Registry3;
 				Registry3.f_SetValue("Test3", "Test3");
 				DMibTest(DMibExpr(Registry3.f_GetValue("Test3", "")) == DMibExpr("Test3"));
-				DMibTest(DMibExpr(Registry1) != DMibExpr(Registry2)) (ETestFlag_NoValues);
-				DMibTest(DMibExpr(Registry3) != DMibExpr(Registry2)) (ETestFlag_NoValues);
-				DMibTest(DMibExpr(Registry3) != DMibExpr(Registry1)) (ETestFlag_NoValues);
+				DMibTest(DMibExpr(Registry1) != DMibExpr(Registry2))(ETestFlag_NoValues);
+				DMibTest(DMibExpr(Registry3) != DMibExpr(Registry2))(ETestFlag_NoValues);
+				DMibTest(DMibExpr(Registry3) != DMibExpr(Registry1))(ETestFlag_NoValues);
 				Registry1 = Registry2;
 				DMibTest(DMibExpr(Registry1.f_DebugIsValid()) && DMibExpr("Copy to"));
 				DMibTest(DMibExpr(Registry2.f_DebugIsValid()) && DMibExpr("Copy from"));
-				DMibTest(DMibExpr(Registry1) == DMibExpr(Registry2)) (ETestFlag_NoValues);
+				DMibTest(DMibExpr(Registry1) == DMibExpr(Registry2))(ETestFlag_NoValues);
 				Registry2 = Registry3;
 				DMibTest(DMibExpr(Registry2.f_DebugIsValid()) && DMibExpr("Copy to"));
 				DMibTest(DMibExpr(Registry3.f_DebugIsValid()) && DMibExpr("Copy from"));
-				DMibTest(DMibExpr(Registry2) != DMibExpr(Registry1)) (ETestFlag_NoValues);
+				DMibTest(DMibExpr(Registry2) != DMibExpr(Registry1))(ETestFlag_NoValues);
 				Registry1 = Registry1;
 				DMibTest(DMibExpr(Registry1.f_DebugIsValid()) && DMibExpr("Copy same"));
-				DMibTest(DMibExpr(Registry1) == DMibExpr(Registry1)) (ETestFlag_NoValues);
+				DMibTest(DMibExpr(Registry1) == DMibExpr(Registry1))(ETestFlag_NoValues);
 
 				t_CRegistry Registry4;
 				Registry4.f_SetValue("Test3", "Test3");
@@ -155,7 +155,7 @@ namespace
 				DMibTest(DMibExpr(Registry4.f_GetValue("Test3", "")) == DMibExpr("Test3"));
 				Registry3 = Registry4;
 				DMibTest(DMibExpr(Registry3.f_DebugIsValid()) && DMibExpr("Copy to"));
-				DMibTest(DMibExpr(Registry3) == DMibExpr(Registry4)) (ETestFlag_NoValues);
+				DMibTest(DMibExpr(Registry3) == DMibExpr(Registry4))(ETestFlag_NoValues);
 			}
 			t_CRegistry Registry;
 			[[maybe_unused]] t_CRegistry *pChild = Registry.f_SetValue("Test1", "Test1");
@@ -275,7 +275,6 @@ namespace
 		}
 	};
 
-
 	class CMalterlibRegistry_Tests : public NMib::NTest::CTest
 	{
 	public:
@@ -307,50 +306,52 @@ namespace
 					Registry2.f_ParseStr(RegistryStrGenerated);
 					if (RegistryStr != RegistryStrGenerated)
 						NMib::NSys::fg_Debug_DiffStrings(RegistryStr, RegistryStrGenerated);
-					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated)) (ETestFlag_NoValues);
+					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated))(ETestFlag_NoValues);
 					DMibTest(DMibExpr(Registry == Registry2));
 				};
 				DMibTestSuite("Compact comments")
 				{
 					CRegistryPreserveWhitespace Registry;
 
-					CStr RegistryStr = " /*Comm1*/ Test /*Comm2*/ { /*Comm3*/ Test /*Comm4*/ Test0 /*Comm5*/ Test /*Comm6*/ Test2 /*Comm7*/ Test3 /*Comm8*/ \"Abra\\\"Kadabra\"/*Comm8*/ }/*Comm9*/ ";
+					CStr RegistryStr
+						= " /*Comm1*/ Test /*Comm2*/ { /*Comm3*/ Test /*Comm4*/ Test0 /*Comm5*/ Test /*Comm6*/ Test2 /*Comm7*/ Test3 /*Comm8*/ \"Abra\\\"Kadabra\"/*Comm8*/ }/*Comm9*/ "
+					;
 					Registry.f_ParseStr(RegistryStr);
 					CStr RegistryStrGenerated = Registry.f_GenerateStr();
 					CRegistry Registry2;
 					Registry2.f_ParseStr(RegistryStrGenerated);
 					if (RegistryStr != RegistryStrGenerated)
 						NMib::NSys::fg_Debug_DiffStrings(RegistryStr, RegistryStrGenerated);
-					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated)) (ETestFlag_NoValues);
+					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated))(ETestFlag_NoValues);
 					DMibTest(DMibExpr(Registry == Registry2));
 				};
 				DMibTestSuite("Comments")
 				{
 					CRegistryPreserveWhitespace Registry;
 					CStr RegistryStr =
-					"// Comment before root\r\n"
-					"1st_Root RootValue // Comment at root\r\n"
-					"{ // Comment after children start\r\n"
-					"\tValue1 Value1 // Comment after Value1\r\n"
-					"\tValue2 /*Comment in middle for value 2*/ Value2\r\n"
-					"/*Comment before Value3*/\tValue3 Value3\r\n"
-					"/*Comment before Value4*/\tValue4 /*Comment in middle for value 4*/ Value4 // Comment after value3\r\n"
-					"\t/*Multi line block comment\r\n"
-					"\tMulti line block comment\r\n"
-					"\tMulti line block comment\r\n"
-					"\tMulti line block comment\r\n"
-					"\tMulti line block comment*/\r\n"
-					"\r\n"
-					"\t// Multi line comment\r\n"
-					"\t// Multi line comment\r\n"
-					"\t// Multi line comment\r\n"
-					"\t// Multi line comment\r\n"
-					"\t// Multi line comment\r\n"
-					"\t// Multi line comment\r\n"
-					"\t// Multi line comment\r\n"
-					"/* Comment before children end */ } // Comment after children end\r\n"
-					"End EndValue\r\n"
-					"// Comment after end\r\n"
+						"// Comment before root\r\n"
+						"1st_Root RootValue // Comment at root\r\n"
+						"{ // Comment after children start\r\n"
+						"\tValue1 Value1 // Comment after Value1\r\n"
+						"\tValue2 /*Comment in middle for value 2*/ Value2\r\n"
+						"/*Comment before Value3*/\tValue3 Value3\r\n"
+						"/*Comment before Value4*/\tValue4 /*Comment in middle for value 4*/ Value4 // Comment after value3\r\n"
+						"\t/*Multi line block comment\r\n"
+						"\tMulti line block comment\r\n"
+						"\tMulti line block comment\r\n"
+						"\tMulti line block comment\r\n"
+						"\tMulti line block comment*/\r\n"
+						"\r\n"
+						"\t// Multi line comment\r\n"
+						"\t// Multi line comment\r\n"
+						"\t// Multi line comment\r\n"
+						"\t// Multi line comment\r\n"
+						"\t// Multi line comment\r\n"
+						"\t// Multi line comment\r\n"
+						"\t// Multi line comment\r\n"
+						"/* Comment before children end */ } // Comment after children end\r\n"
+						"End EndValue\r\n"
+						"// Comment after end\r\n"
 					;
 					RegistryStr = RegistryStr.f_Replace("\r\n", DMibNewLine);
 					CStr TmpFile = NSys::NFile::fg_GetTemporaryDirectory() + "/NoFile.ir";
@@ -359,24 +360,25 @@ namespace
 					CStr RegistryStrGenerated = Registry.f_GenerateStr();
 					if (RegistryStr != RegistryStrGenerated)
 						NMib::NSys::fg_Debug_DiffStrings(RegistryStr, RegistryStrGenerated);
-					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated)) (ETestFlag_NoValues);
+					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated))(ETestFlag_NoValues);
 
 					CRegistryPreserveWhitespace Registry2 = Registry;
 					CStr RegistryStrGenerated2 = Registry2.f_GenerateStr();
-					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated2)) (ETestFlag_NoValues);
+					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated2))(ETestFlag_NoValues);
 				};
 				DMibTestSuite("No comments")
 				{
 					CRegistryPreserveWhitespace Registry;
 					CStr RegistryStr =
-					"1st_Root RootValue\r\n"
-					"{\r\n"
-					"\tValue1 Value1\r\n"
-					"\tValue2 Value2\r\n"
-					"\tValue3 Value3\r\n"
-					"\tValue4 Value4\r\n"
-					"}\r\n"
-					"End EndValue\r\n";
+						"1st_Root RootValue\r\n"
+						"{\r\n"
+						"\tValue1 Value1\r\n"
+						"\tValue2 Value2\r\n"
+						"\tValue3 Value3\r\n"
+						"\tValue4 Value4\r\n"
+						"}\r\n"
+						"End EndValue\r\n"
+					;
 
 					RegistryStr = RegistryStr.f_Replace("\r\n", DMibNewLine);
 
@@ -387,24 +389,25 @@ namespace
 					CStr RegistryStrGenerated = Registry.f_GenerateStr();
 					if (RegistryStr != RegistryStrGenerated)
 						NMib::NSys::fg_Debug_DiffStrings(RegistryStr, RegistryStrGenerated);
-					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated)) (ETestFlag_NoValues);
+					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated))(ETestFlag_NoValues);
 
 					CRegistryPreserveWhitespace Registry2 = Registry;
 					CStr RegistryStrGenerated2 = Registry2.f_GenerateStr();
-					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated2)) (ETestFlag_NoValues);
+					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated2))(ETestFlag_NoValues);
 				};
 				DMibTestSuite("Presevre interface")
 				{
 					CRegistryPreserveWhitespace Registry;
 					CStr RegistryStr =
-					"1st_Root RootValue\r\n"
-					"{\r\n"
-					"\tValue1 Value1\r\n"
-					"\tValue2 Value2 // After Value 2\r\n"
-					"\tValue3 Value3\r\n"
-					"\tValue4 Value4\r\n"
-					"}\r\n"
-					"End EndValue\r\n";
+						"1st_Root RootValue\r\n"
+						"{\r\n"
+						"\tValue1 Value1\r\n"
+						"\tValue2 Value2 // After Value 2\r\n"
+						"\tValue3 Value3\r\n"
+						"\tValue4 Value4\r\n"
+						"}\r\n"
+						"End EndValue\r\n"
+					;
 					RegistryStr = RegistryStr.f_Replace("\r\n", DMibNewLine);
 					CStr TmpFile = NSys::NFile::fg_GetTemporaryDirectory() + "/NoFile.ir";
 					//NMib::NFile::CFile::fs_WriteStringToFile(TmpFile, RegistryStr);
@@ -412,14 +415,14 @@ namespace
 					CStr RegistryStrGenerated = Registry.f_GenerateStr();
 					if (RegistryStr != RegistryStrGenerated)
 						NMib::NSys::fg_Debug_DiffStrings(RegistryStr, RegistryStrGenerated);
-					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated)) (ETestFlag_NoValues);
+					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated))(ETestFlag_NoValues);
 
 					CRegistryPreserveWhitespace *pValue2 = Registry.f_GetChild("1st_Root/Value2");
-					DMibTest(DMibExpr(pValue2) && DMibExpr(pValue2->f_GetWhiteSpace(ERegistryWhiteSpaceLocation_After)) == DMibExpr(" // After Value 2" DMibNewLine)) (ETestFlag_NoValues);
+					DMibTest(DMibExpr(pValue2) && DMibExpr(pValue2->f_GetWhiteSpace(ERegistryWhiteSpaceLocation_After)) == DMibExpr(" // After Value 2" DMibNewLine))(ETestFlag_NoValues);
 
 					CRegistryPreserveWhitespace Registry2 = Registry;
 					CStr RegistryStrGenerated2 = Registry2.f_GenerateStr();
-					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated2)) (ETestFlag_NoValues);
+					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated2))(ETestFlag_NoValues);
 
 					CRegistryPreserveWhitespace *pValue3 = Registry.f_GetChild("1st_Root/Value3");
 					DMibTest(DMibExpr(pValue3));
@@ -431,35 +434,36 @@ namespace
 						pValue3->f_SetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, "\t/* Before */");
 
 					CStr RegistryStrResult =
-					"1st_Root RootValue\r\n"
-					"{\r\n"
-					"\tValue1 Value1\r\n"
-					"\tValue2 Value2 // After Value 2\r\n"
-					"\t/* Before */Value3/* Middle */Value3 // After Value 3\r\n"
-					"\tValue4 Value4\r\n"
-					"}\r\n"
-					"End EndValue\r\n";
+						"1st_Root RootValue\r\n"
+						"{\r\n"
+						"\tValue1 Value1\r\n"
+						"\tValue2 Value2 // After Value 2\r\n"
+						"\t/* Before */Value3/* Middle */Value3 // After Value 3\r\n"
+						"\tValue4 Value4\r\n"
+						"}\r\n"
+						"End EndValue\r\n"
+					;
 					RegistryStrResult = RegistryStrResult.f_Replace("\r\n", DMibNewLine);
 					CStr RegistryStrGenerated3 = Registry.f_GenerateStr();
-					DMibTest(DMibExpr(RegistryStrResult) == DMibExpr(RegistryStrGenerated3)) (ETestFlag_NoValues);
-
+					DMibTest(DMibExpr(RegistryStrResult) == DMibExpr(RegistryStrGenerated3))(ETestFlag_NoValues);
 				};
 				DMibTestSuite("Corner cases")
 				{
 					CRegistryPreserveWhitespace Registry;
 					CStr RegistryStr =
-					"/* blaha\r\n"
-					"haha */1st_Root RootValue\r\n"
-					"/* blaha\r\n"
-					"haha */{\r\n"
-					"/* blaha\r\n"
-					"haha */\tValue1 Value1\r\n"
-					"\tValue2 Value2 // After Value 2\r\n"
-					"\tValue3 Value3\r\n"
-					"\tValue4 Value4\r\n"
-					"/* blaha\r\n"
-					"haha */}\r\n"
-					"End EndValue\r\n";
+						"/* blaha\r\n"
+						"haha */1st_Root RootValue\r\n"
+						"/* blaha\r\n"
+						"haha */{\r\n"
+						"/* blaha\r\n"
+						"haha */\tValue1 Value1\r\n"
+						"\tValue2 Value2 // After Value 2\r\n"
+						"\tValue3 Value3\r\n"
+						"\tValue4 Value4\r\n"
+						"/* blaha\r\n"
+						"haha */}\r\n"
+						"End EndValue\r\n"
+					;
 					RegistryStr = RegistryStr.f_Replace("\r\n", DMibNewLine);
 					CStr TmpFile = NSys::NFile::fg_GetTemporaryDirectory() + "/NoFile.ir";
 					//NMib::NFile::CFile::fs_WriteStringToFile(TmpFile, RegistryStr);
@@ -467,8 +471,7 @@ namespace
 					CStr RegistryStrGenerated = Registry.f_GenerateStr();
 					if (RegistryStr != RegistryStrGenerated)
 						NMib::NSys::fg_Debug_DiffStrings(RegistryStr, RegistryStrGenerated);
-					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated)) (ETestFlag_NoValues);
-
+					DMibTest(DMibExpr(RegistryStr) == DMibExpr(RegistryStrGenerated))(ETestFlag_NoValues);
 				};
 				DMibTestSuite("Line breaks")
 				{
@@ -522,7 +525,7 @@ namespace
 						"				  \"Second\\r\\n\"\\\r\n"
 						"				  \"\"// Comment!\r\n"
 						"}\r\n"
-						;
+					;
 					RegistryStr = RegistryStr.f_Replace("\r\n", DMibNewLine);
 					CStr RegistryGenerateStr =
 						"Key0Second Value0Second\r\n"
@@ -574,36 +577,35 @@ namespace
 						"				  \"Second\\r\\n\"\\\r\n"
 						"				  \"\"// Comment!\r\n"
 						"}\r\n"
-						;
+					;
 					RegistryGenerateStr = RegistryGenerateStr.f_Replace("\r\n", DMibNewLine);
 					CStr TmpFile = NSys::NFile::fg_GetTemporaryDirectory() + "/NoFile.ir";
-//					NMib::NFile::CFile::fs_WriteStringToFile(TmpFile, RegistryStr);
+					// NMib::NFile::CFile::fs_WriteStringToFile(TmpFile, RegistryStr);
 					Registry.f_ParseStr(RegistryStr, TmpFile);
 					CStr RegistryStrGenerated = Registry.f_GenerateStr();
 					if (RegistryGenerateStr != RegistryStrGenerated)
 						NMib::NSys::fg_Debug_DiffStrings(RegistryGenerateStr, RegistryStrGenerated);
-					DMibTest(DMibExpr(RegistryGenerateStr) == DMibExpr(RegistryStrGenerated)) (ETestFlag_NoValues);
-
+					DMibTest(DMibExpr(RegistryGenerateStr) == DMibExpr(RegistryStrGenerated))(ETestFlag_NoValues);
 				};
 				DMibTestSuite("Exceptions")
 				{
-
-					auto DoTest = [&] (CStr const &_String, const ch8 *_pDesc, const ch8 *_pDescDisambiguate)
-					{
-						CStr Category;
-						if (*_pDescDisambiguate)
-							Category = CStr::CFormat("{} {}") << _pDesc << _pDescDisambiguate;
-						else
-							Category = _pDesc;
-						CStr Exception = CStr::CFormat(DMibPFileLineFormat " {}") << "" << 1 << _pDesc;
-						fg_StrReplaceChar(Category, '/', ' ');
-						Category = Category.f_Replace("\\", "Escape");
+					auto DoTest = [&](CStr const &_String, ch8 const *_pDesc, ch8 const *_pDescDisambiguate)
 						{
-							DMibTestPath(Category);
-							CRegistryPreserveWhitespace Registry;
-							DMibExpectException(Registry.f_ParseStr(_String), DMibErrorInstance(Exception));
-						};
-					};
+							CStr Category;
+							if (*_pDescDisambiguate)
+								Category = CStr::CFormat("{} {}") << _pDesc << _pDescDisambiguate;
+							else
+								Category = _pDesc;
+							CStr Exception = CStr::CFormat(DMibPFileLineFormat " {}") << "" << 1 << _pDesc;
+							fg_StrReplaceChar(Category, '/', ' ');
+							Category = Category.f_Replace("\\", "Escape");
+							{
+								DMibTestPath(Category);
+								CRegistryPreserveWhitespace Registry;
+								DMibExpectException(Registry.f_ParseStr(_String), DMibErrorInstance(Exception));
+							};
+						}
+					;
 
 					DoTest("Key value /* Comment not ending", "No end found for block comment", "");
 					DoTest("{ }", "Children without key not supported", "");
@@ -624,7 +626,6 @@ namespace
 				};
 				DMibTestSuite("Copy")
 				{
-
 					{
 						DMibTestPath("Single");
 						TCCopyTest<NMib::NContainer::TCRegistry<NStr::CStr, NStr::CStr>>::fs_DoTest();
@@ -640,7 +641,6 @@ namespace
 				};
 				DMibTestSuite("Move")
 				{
-
 					{
 						DMibTestPath("Single");
 						TCMoveTest<TCRegistry<CStr, CStr>>::fs_DoTest();
@@ -667,7 +667,7 @@ namespace
 							"\t}\r\n"
 							"\tValue2 Value2 // After Value 2\r\n"
 							"}\r\n"
-							;
+						;
 						RegistryStr = RegistryStr.f_Replace("\r\n", DMibNewLine);
 
 						CStr TmpFile = NSys::NFile::fg_GetTemporaryDirectory() + "/NoFile.ir";
@@ -680,12 +680,12 @@ namespace
 
 					{
 						DMibTestPath("2");
-						// Problem: Strings containing comment markers (//, /*) and no spaces were not escaped, so after writing them to a string reading back would fail as they would be parsed as comments. Doh!
+						// Problem: Strings containing comment markers (//, /*) and no spaces were not escaped, so after writing
+						// them to a string reading back would fail as they would be parsed as comments.
 						CStr RegStr;
 						CStr ValueThatLooksLikeACommentButIsNot1 = "//Perforce/Depot/Path/Maybe";
 						CStr ValueThatLooksLikeACommentButIsNot2 = "SomethingWithA//InTheMiddle";
 						CStr ValueThatLooksLikeACommentButIsNot3 = "SomethingWithA/*BlockCommentAtTheEnd*/";
-
 
 						{
 							CRegistryPreserveWhitespace Registry;
@@ -699,30 +699,28 @@ namespace
 							CRegistryPreserveWhitespace Reg;
 							Reg.f_ParseStr(RegStr);
 
-							DMibTest( DMibExpr(Reg.f_GetValue("Key1", "")) == DMibExpr(ValueThatLooksLikeACommentButIsNot1));
-							DMibTest( DMibExpr(Reg.f_GetValue("Key2", "")) == DMibExpr(ValueThatLooksLikeACommentButIsNot2));
-							DMibTest( DMibExpr(Reg.f_GetValue("Key3", "")) == DMibExpr(ValueThatLooksLikeACommentButIsNot3));
+							DMibTest(DMibExpr(Reg.f_GetValue("Key1", "")) == DMibExpr(ValueThatLooksLikeACommentButIsNot1));
+							DMibTest(DMibExpr(Reg.f_GetValue("Key2", "")) == DMibExpr(ValueThatLooksLikeACommentButIsNot2));
+							DMibTest(DMibExpr(Reg.f_GetValue("Key3", "")) == DMibExpr(ValueThatLooksLikeACommentButIsNot3));
 						}
 					}
 					{
 						DMibTestPath("3");
-						CStr RegistryStr =
-							"\tKey Value // Comment\r\n";
+						CStr RegistryStr = "\tKey Value // Comment\r\n";
 						RegistryStr = RegistryStr.f_Replace("\r\n", DMibNewLine);
 						{
 							CRegistryPreserveWhitespace Registry;
 							Registry.f_ParseStr(RegistryStr);
 
-							DMibTest( DMibExpr(Registry.f_GetValue("Key", "")) == DMibExpr("Value"));
+							DMibTest(DMibExpr(Registry.f_GetValue("Key", "")) == DMibExpr("Value"));
 						}
 
 						{
 							CRegistry Registry;
 							Registry.f_ParseStr(RegistryStr);
 
-							DMibTest( DMibExpr(Registry.f_GetValue("Key", "")) == DMibExpr("Value") && DMibExpr(2));
+							DMibTest(DMibExpr(Registry.f_GetValue("Key", "")) == DMibExpr("Value") && DMibExpr(2));
 						}
-
 					}
 
 					{
@@ -731,14 +729,14 @@ namespace
 						CRegistry Registry;
 						Registry.f_ParseStr(RegistryStr);
 
-						DMibTest( !DMibExpr(Registry.f_GetChildNoPath("Key0")));
-						DMibTest( !DMibExpr(Registry.f_GetChild("Key0/Key1")));
-						DMibTest( DMibExpr(Registry.f_GetChildNoPath("Key0/Key1")));
-						DMibTest( DMibExpr(Registry.f_GetValueNoPath("Key0/Key1", "")) == DMibExpr("Value"));
+						DMibTest(!DMibExpr(Registry.f_GetChildNoPath("Key0")));
+						DMibTest(!DMibExpr(Registry.f_GetChild("Key0/Key1")));
+						DMibTest(DMibExpr(Registry.f_GetChildNoPath("Key0/Key1")));
+						DMibTest(DMibExpr(Registry.f_GetValueNoPath("Key0/Key1", "")) == DMibExpr("Value"));
 						CStr ResultStr = Registry.f_GenerateStr();
 						CStr ExpectedStr = "Key0/Key1 Value" DMibNewLine;
 
-						DMibTest( DMibExpr(ResultStr) == DMibExpr(ExpectedStr))(ETestFlag_NoValues);
+						DMibTest(DMibExpr(ResultStr) == DMibExpr(ExpectedStr))(ETestFlag_NoValues);
 						if (ResultStr != ExpectedStr)
 							NMib::NSys::fg_Debug_DiffStrings(ExpectedStr, ResultStr);
 					}

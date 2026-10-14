@@ -60,7 +60,11 @@ namespace NMib::NContainer
 			pArray = Data.f_GetData();
 		}
 
-		using CAccumulator = decltype(NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Forward<tf_CAccumulator>(_Accumulator), fg_ForwardAs<tf_CThis>(pArray[0]), umint(0), fg_Forward<tf_CThis>(_This)));
+		using CAccumulator = decltype
+			(
+				NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Forward<tf_CAccumulator>(_Accumulator), fg_ForwardAs<tf_CThis>(pArray[0]), umint(0), fg_Forward<tf_CThis>(_This))
+			)
+		;
 
 		if constexpr (NTraits::cIsVoid<CAccumulator>)
 		{
@@ -93,7 +97,7 @@ namespace NMib::NContainer
 			pArray = Data.f_GetData();
 		}
 
-		using CAccumulator = typename NTraits::TCMemberFunctionPointerTraits<decltype(&NTraits::TCRemoveReference<tf_FReducer>::operator())>::CReturn;
+		using CAccumulator = typename NTraits::TCMemberFunctionPointerTraits<decltype(&NTraits::TCRemoveReference<tf_FReducer>::operator ())>::CReturn;
 
 		CAccumulator Accumulator{};
 
@@ -118,7 +122,11 @@ namespace NMib::NContainer
 			pArray = Data.f_GetData();
 		}
 
-		using CAccumulator = decltype(NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Forward<tf_CAccumulator>(_Accumulator), fg_ForwardAs<tf_CThis>(pArray[0]), umint(0), fg_Forward<tf_CThis>(_This)));
+		using CAccumulator = decltype
+			(
+				NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Forward<tf_CAccumulator>(_Accumulator), fg_ForwardAs<tf_CThis>(pArray[0]), umint(0), fg_Forward<tf_CThis>(_This))
+			)
+		;
 
 		if constexpr (NTraits::cIsVoid<CAccumulator>)
 		{
@@ -151,7 +159,7 @@ namespace NMib::NContainer
 			pArray = Data.f_GetData();
 		}
 
-		using CAccumulator = typename NTraits::TCMemberFunctionPointerTraits<decltype(&NTraits::TCRemoveReference<tf_FReducer>::operator())>::CReturn;
+		using CAccumulator = typename NTraits::TCMemberFunctionPointerTraits<decltype(&NTraits::TCRemoveReference<tf_FReducer>::operator ())>::CReturn;
 
 		CAccumulator Accumulator{};
 

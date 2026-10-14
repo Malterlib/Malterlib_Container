@@ -28,7 +28,7 @@ namespace NMib::NContainer
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CIterator>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, const t_CData *_pData, umint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, t_CData const *_pData, umint _Len)
 	{
 		return f_InsertBefore(fp_GetIteratorPos(_Position), _pData, _Len);
 	}
@@ -49,7 +49,7 @@ namespace NMib::NContainer
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CIterator>
-	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, const t_CData &_Data)
+	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, t_CData const &_Data)
 	{
 		return f_InsertBefore(fp_GetIteratorPos(_Position), _Data);
 	}

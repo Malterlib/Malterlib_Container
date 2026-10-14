@@ -20,18 +20,18 @@ namespace NMib::NContainer
 
 	enum EMapIteratorFlags : uint8
 	{
-		EMapIteratorFlags_None = 0
-		, EMapIteratorFlags_Reverse = DMibBit(0)
-		, EMapIteratorFlags_Const = DMibBit(1)
+		EMapIteratorFlags_None            = 0
+		, EMapIteratorFlags_Reverse       = DMibBit(0)
+		, EMapIteratorFlags_Const         = DMibBit(1)
 		, EMapIteratorFlags_Bidirectional = DMibBit(2)
-		, EMapIteratorFlags_Destructive = DMibBit(3)
+		, EMapIteratorFlags_Destructive   = DMibBit(3)
 
-		, EMapIteratorFlags_ReverseConst = EMapIteratorFlags_Reverse | EMapIteratorFlags_Const
-		, EMapIteratorFlags_BidirectionalConst = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Const
-		, EMapIteratorFlags_BidirectionalReverse = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Reverse
-		, EMapIteratorFlags_BidirectionalReverseConst = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Reverse | EMapIteratorFlags_Const
-		, EMapIteratorFlags_ReverseDestructive = EMapIteratorFlags_Reverse | EMapIteratorFlags_Destructive
-		, EMapIteratorFlags_BidirectionalDestructive = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Destructive
+		, EMapIteratorFlags_ReverseConst                    = EMapIteratorFlags_Reverse | EMapIteratorFlags_Const
+		, EMapIteratorFlags_BidirectionalConst              = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Const
+		, EMapIteratorFlags_BidirectionalReverse            = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Reverse
+		, EMapIteratorFlags_BidirectionalReverseConst       = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Reverse | EMapIteratorFlags_Const
+		, EMapIteratorFlags_ReverseDestructive              = EMapIteratorFlags_Reverse | EMapIteratorFlags_Destructive
+		, EMapIteratorFlags_BidirectionalDestructive        = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Destructive
 		, EMapIteratorFlags_BidirectionalReverseDestructive = EMapIteratorFlags_Bidirectional | EMapIteratorFlags_Reverse | EMapIteratorFlags_Destructive
 	};
 }
@@ -133,7 +133,7 @@ namespace NMib::NContainer::NPrivate
 				(
 					sizeof(CNode)
 					, alignof(CNode)
-					, [&](void * _pAlloc, umint _Size) -> bool
+					, [&](void *_pAlloc, umint _Size) -> bool
 					{
 						auto Cleanup = _Map.mp_Allocator.f_MakeSafe(_pAlloc, _Size);
 						auto pData = (CNode *)_pAlloc;
@@ -216,7 +216,7 @@ namespace NMib::NContainer::NPrivate
 				(
 					sizeof(CNode)
 					, alignof(CNode)
-					, [&](void * _pAlloc, umint _Size) -> bool
+					, [&](void *_pAlloc, umint _Size) -> bool
 					{
 						auto Cleanup = _Map.mp_Allocator.f_MakeSafe(_pAlloc, _Size);
 						auto pData = (CNode *)_pAlloc;

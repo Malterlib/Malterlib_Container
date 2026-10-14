@@ -30,7 +30,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue>
-	mark_nodebug constexpr inline_small TCPackedMapResult<t_CKey, t_CValue>::operator t_CValue &() noexcept
+	mark_nodebug constexpr inline_small TCPackedMapResult<t_CKey, t_CValue>::operator t_CValue & () noexcept
 	{
 		return m_Value;
 	}
@@ -66,13 +66,13 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue>
-	mark_nodebug constexpr inline_small TCPackedMapRef<t_CKey, t_CValue>::operator t_CValue &() noexcept
+	mark_nodebug constexpr inline_small TCPackedMapRef<t_CKey, t_CValue>::operator t_CValue & () noexcept
 	{
 		return m_Value;
 	}
 
 	template <typename t_CKey, typename t_CValue>
-	mark_nodebug constexpr inline_small TCPackedMapRef<t_CKey, t_CValue>::operator t_CValue const &() const noexcept
+	mark_nodebug constexpr inline_small TCPackedMapRef<t_CKey, t_CValue>::operator t_CValue const & () const noexcept
 	{
 		return m_Value;
 	}

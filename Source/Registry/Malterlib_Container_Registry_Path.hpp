@@ -7,7 +7,7 @@ namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_AppendPath(const t_CStr &_Path, const t_CStr &_Append)
+	t_CStr TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_AppendPath(t_CStr const &_Path, t_CStr const &_Append)
 	{
 		if (_Path.f_IsEmpty())
 			return _Append;
@@ -17,13 +17,7 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_GetChildParse
-		(
-			t_CStr &_Str
-			, t_CStr *_pNotFound
-			, TCRegistry const **_pPrev
-		)
-		const -> TCRegistry const *
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_GetChildParse(t_CStr &_Str, t_CStr *_pNotFound, TCRegistry const **_pPrev) const -> TCRegistry const *
 	{
 		TCRegistry const *pCurrent = this;
 		while (1)

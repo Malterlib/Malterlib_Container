@@ -16,11 +16,11 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CValue>
 	struct TCPackedMapResult
 	{
-		mark_nodebug constexpr inline_small bool f_WasCreated() const noexcept ;
+		mark_nodebug constexpr inline_small bool f_WasCreated() const noexcept;
 		mark_nodebug constexpr inline_small t_CKey const &f_Key() const noexcept;
 		mark_nodebug constexpr inline_small t_CValue &f_Value() noexcept;
 		mark_nodebug constexpr inline_small t_CValue const &f_Value() const noexcept;
-		mark_nodebug constexpr inline_small operator t_CValue &() noexcept;
+		mark_nodebug constexpr inline_small operator t_CValue & () noexcept;
 		mark_nodebug constexpr inline_small t_CValue &f_GetResult() noexcept;
 		mark_nodebug constexpr inline_small t_CValue &operator * () noexcept;
 
@@ -38,22 +38,15 @@ namespace NMib::NContainer
 		mark_nodebug constexpr inline_small t_CValue const &f_Value() const noexcept;
 
 		// Implicit conversion to value for convenience
-		mark_nodebug constexpr inline_small operator t_CValue &() noexcept;
-		mark_nodebug constexpr inline_small operator t_CValue const &() const noexcept;
+		mark_nodebug constexpr inline_small operator t_CValue & () noexcept;
+		mark_nodebug constexpr inline_small operator t_CValue const & () const noexcept;
 
 		t_CKey const &m_Key;
 		t_CValue &m_Value;
 	};
 
 	// Forward declaration
-	template
-	<
-		typename t_CKey
-		, typename t_CValue
-		, typename t_CCompare = NMib::CSort_Default
-		, typename t_CAllocator = NMib::NMemory::CAllocator_Heap
-		, CPackedMapOptions t_Options = {}
-	>
+	template <typename t_CKey, typename t_CValue, typename t_CCompare = NMib::CSort_Default, typename t_CAllocator = NMib::NMemory::CAllocator_Heap, CPackedMapOptions t_Options = {}>
 	struct TCPackedMap;
 
 	// Main TCPackedMap class
@@ -64,15 +57,10 @@ namespace NMib::NContainer
 		using CValue = t_CValue;
 		using CRef = TCPackedMapRef<t_CKey, t_CValue>;
 
-		static_assert
-			(
-				noexcept(fg_GetType<t_CCompare const &>()(fg_GetType<t_CKey const &>(), fg_GetType<t_CKey const &>()))
-				, "TCPackedMap requires key comparisons to be noexcept"
-			)
-		;
+		static_assert(noexcept(fg_GetType<t_CCompare const &>()(fg_GetType<t_CKey const &>(), fg_GetType<t_CKey const &>())), "TCPackedMap requires key comparisons to be noexcept");
 
 		template <typename tf_CProbeKey>
-		constexpr static void fsp_StaticAssertNothrowCompareProbeToStoredKey() noexcept
+		static constexpr void fsp_StaticAssertNothrowCompareProbeToStoredKey() noexcept
 		{
 			using CProbeKey = NTraits::TCRemoveReferenceAndQualifiers<tf_CProbeKey>;
 			static_assert
@@ -84,7 +72,7 @@ namespace NMib::NContainer
 		}
 
 		template <typename tf_CProbeKey>
-		constexpr static void fsp_StaticAssertNothrowCompareStoredKeyToProbe() noexcept
+		static constexpr void fsp_StaticAssertNothrowCompareStoredKeyToProbe() noexcept
 		{
 			using CProbeKey = NTraits::TCRemoveReferenceAndQualifiers<tf_CProbeKey>;
 			static_assert
@@ -118,7 +106,7 @@ namespace NMib::NContainer
 
 		struct CStats
 		{
-			constexpr static umint mc_nRebalanceLevelHistSize = 32;
+			static constexpr umint mc_nRebalanceLevelHistSize = 32;
 
 			umint m_nElementMoves = 0;
 			umint m_nShiftMoves = 0;
@@ -222,12 +210,7 @@ namespace NMib::NContainer
 		};
 
 		constexpr TCPackedMap() noexcept;
-		constexpr TCPackedMap(TCPackedMap &&_Other) noexcept
-			(
-				NTraits::cIsNothrowMoveConstructible<t_CAllocator>
-				&& NTraits::cIsNothrowMoveConstructible<t_CCompare>
-			)
-		;
+		constexpr TCPackedMap(TCPackedMap &&_Other) noexcept(NTraits::cIsNothrowMoveConstructible<t_CAllocator> && NTraits::cIsNothrowMoveConstructible<t_CCompare>);
 		constexpr TCPackedMap(TCPackedMap const &_Other);
 		constexpr ~TCPackedMap();
 
@@ -372,18 +355,18 @@ namespace NMib::NContainer
 
 		// Stats access (only valid if mc_bStats is true)
 		constexpr CStats const &f_GetStats() const noexcept
-			requires(t_Options.m_bStats)
+			requires (t_Options.m_bStats)
 		;
 		constexpr void f_ResetStats() noexcept
-			requires(t_Options.m_bStats)
+			requires (t_Options.m_bStats)
 		;
 
 		// Same exception-safety guarantee as f_Insert().
 		template <typename tf_CKey, typename ...tfp_CParam>
-		constexpr t_CValue &operator[] (tf_CKey &&_Key, tfp_CParam && ...p_Params);
+		constexpr t_CValue &operator [] (tf_CKey &&_Key, tfp_CParam && ...p_Params);
 
 		template <typename tf_CKey>
-		constexpr t_CValue const &operator[] (tf_CKey &&_Key) const;
+		constexpr t_CValue const &operator [] (tf_CKey &&_Key) const;
 
 		// Same exception-safety guarantee as f_Insert().
 		template <typename tf_CKey, typename ...tfp_CParam>
@@ -391,34 +374,25 @@ namespace NMib::NContainer
 
 		// Comparison operators
 		template <typename tf_CKey, typename tf_CValue, typename tf_CCompare, typename tf_CAllocator, CPackedMapOptions tf_Options>
-		constexpr bool operator == (TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options> const &_Other) const noexcept
-			(
-				noexcept(fg_GetType<t_CKey const &>() == fg_GetType<tf_CKey const &>())
-				&& noexcept(fg_GetType<t_CValue const &>() == fg_GetType<tf_CValue const &>())
-			)
+		constexpr bool operator == (TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options> const &_Other) const
+			noexcept(noexcept(fg_GetType<t_CKey const &>() == fg_GetType<tf_CKey const &>()) && noexcept(fg_GetType<t_CValue const &>() == fg_GetType<tf_CValue const &>()))
 		;
 
 		template <typename tf_CKey, typename tf_CValue, typename tf_CCompare, typename tf_CAllocator, CPackedMapOptions tf_Options>
-		constexpr auto operator <=> (TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options> const &_Other) const noexcept
-			(
-				noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<tf_CKey const &>())
-				&& noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<tf_CValue const &>())
-			)
+		constexpr auto operator <=> (TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options> const &_Other) const
+			noexcept(noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<tf_CKey const &>()) && noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<tf_CValue const &>()))
 		;
 
 		template <typename tf_CKey, typename tf_CValue, typename tf_CCompare, typename tf_CAllocator, CPackedMapOptions tf_Options>
-		constexpr auto f_CompareLexicographical(TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options> const &_Other) const noexcept
-			(
-				noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<tf_CKey const &>())
-				&& noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<tf_CValue const &>())
-			)
+		constexpr auto f_CompareLexicographical(TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options> const &_Other) const
+			noexcept(noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<tf_CKey const &>()) && noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<tf_CValue const &>()))
 		;
 
-		constexpr static pfp64 mc_LeafLowerBound = t_Options.m_LeafLowerBound; // Leaf lower bound (prevents underflow, ensures O(log² n) amortized)
-		constexpr static pfp64 mc_RootLowerBound = t_Options.m_RootLowerBound; // Root lower bound
-		constexpr static pfp64 mc_LeafUpperBound = t_Options.m_LeafUpperBound; // Leaf upper bound (full segment)
-		constexpr static pfp64 mc_RootUpperBound = t_Options.m_RootUpperBound; // Root upper bound
-		constexpr static pfp64 mc_ResizeThreshold = t_Options.m_ResizeThreshold; // Shrink threshold
+		static constexpr pfp64 mc_LeafLowerBound = t_Options.m_LeafLowerBound;   // Leaf lower bound (prevents underflow, ensures O(log² n) amortized)
+		static constexpr pfp64 mc_RootLowerBound = t_Options.m_RootLowerBound;   // Root lower bound
+		static constexpr pfp64 mc_LeafUpperBound = t_Options.m_LeafUpperBound;   // Leaf upper bound (full segment)
+		static constexpr pfp64 mc_RootUpperBound = t_Options.m_RootUpperBound;   // Root upper bound
+		static constexpr pfp64 mc_ResizeThreshold = t_Options.m_ResizeThreshold; // Shrink threshold
 
 	protected:
 		template <typename, typename, typename, typename, CPackedMapOptions>
@@ -437,7 +411,7 @@ namespace NMib::NContainer
 		static_assert(t_Options.m_DetectorQueueSize > 0, "PackedMap mc_DetectorQueueSize must be greater than 0");
 		static_assert(t_Options.m_MaxCapacityBits < sizeof(umint) * 8, "PackedMap mc_MaxCapacityBits must be smaller than the number of bits in umint");
 
-		constexpr static uint16 mcp_MaxCalibratorLevels = t_Options.m_MaxCapacityBits; // Supports up to 2^mc_MaxCapacityBits segments
+		static constexpr uint16 mcp_MaxCalibratorLevels = t_Options.m_MaxCapacityBits; // Supports up to 2^mc_MaxCapacityBits segments
 
 		struct CReciprocalTable
 		{
@@ -450,33 +424,33 @@ namespace NMib::NContainer
 		// Per paper: either a 2-element interval (kbwd/kfwd hotspot) or whole segment range
 		struct CMarkedInterval
 		{
-			umint m_iStartElem; // Start element position (inclusive)
-			umint m_iEndElem; // End element position (exclusive)
+			umint m_iStartElem;  // Start element position (inclusive)
+			umint m_iEndElem;    // End element position (exclusive)
 			smint m_SignedScore; // +1 insert-heavy, -1 delete-heavy
 		};
 
-		constexpr static umint mcp_DetectorQueueSize = t_Options.m_DetectorQueueSize; // Number of timestamps per segment (ring buffer Q)
-		constexpr static uint16 mcp_RunLengthCap = 1000; // Saturation cap for backward/forward run-length counters
-		constexpr static uint16 mcp_NetBalanceCap = 1000; // Saturation cap for sc counter
-		constexpr static uint16 mcp_RunLengthHotnessThreshold = 8; // θSC threshold for run-length counters
+		static constexpr umint mcp_DetectorQueueSize = t_Options.m_DetectorQueueSize; // Number of timestamps per segment (ring buffer Q)
+		static constexpr uint16 mcp_RunLengthCap = 1000;                              // Saturation cap for backward/forward run-length counters
+		static constexpr uint16 mcp_NetBalanceCap = 1000;                             // Saturation cap for sc counter
+		static constexpr uint16 mcp_RunLengthHotnessThreshold = 8;                    // θSC threshold for run-length counters
 
 		// Fixed-point density representation: density = ScaledValue / mcp_DensityScale
 		// All runtime density math uses integer arithmetic with this scale factor.
-		constexpr static umint mcp_DensityScaleBits = fg_Min(umint(20), umint(sizeof(void *) * 8) / 2 - 1);
-		constexpr static umint mcp_DensityScale = umint(1) << mcp_DensityScaleBits;
+		static constexpr umint mcp_DensityScaleBits = fg_Min(umint(20), umint(sizeof(void *) * 8) / 2 - 1);
+		static constexpr umint mcp_DensityScale = umint(1) << mcp_DensityScaleBits;
 		// Truncate (floor) scaled constants so they are always <= the exact float value.
 		// This ensures fsp_ScaledMulCeil for lower bounds and fsp_ScaledMulFloor for upper
 		// bounds produce element counts identical to the original floating-point code.
-		constexpr static umint mcp_LeafLowerBoundScaled = (umint)(mc_LeafLowerBound * mcp_DensityScale);
-		constexpr static umint mcp_RootLowerBoundScaled = (umint)(mc_RootLowerBound * mcp_DensityScale);
-		constexpr static umint mcp_LeafUpperBoundScaled = (umint)(mc_LeafUpperBound * mcp_DensityScale);
-		constexpr static umint mcp_RootUpperBoundScaled = (umint)(mc_RootUpperBound * mcp_DensityScale);
-		constexpr static umint mcp_ResizeThresholdScaled = (umint)(mc_ResizeThreshold * mcp_DensityScale);
+		static constexpr umint mcp_LeafLowerBoundScaled = (umint)(mc_LeafLowerBound * mcp_DensityScale);
+		static constexpr umint mcp_RootLowerBoundScaled = (umint)(mc_RootLowerBound * mcp_DensityScale);
+		static constexpr umint mcp_LeafUpperBoundScaled = (umint)(mc_LeafUpperBound * mcp_DensityScale);
+		static constexpr umint mcp_RootUpperBoundScaled = (umint)(mc_RootUpperBound * mcp_DensityScale);
+		static constexpr umint mcp_ResizeThresholdScaled = (umint)(mc_ResizeThreshold * mcp_DensityScale);
 
-		constexpr static bool mcp_bUseReciprocalDivide = false; // sizeof(void *) >= 8; // Not safe for 32 bit
+		static constexpr bool mcp_bUseReciprocalDivide = false; // sizeof(void *) >= 8; // Not safe for 32 bit
 		// Use fixed-point density math when max capacity exceeds pfp64 precision (53-bit mantissa).
 		// Max capacity ≈ 2^mc_MaxCapacityBits / mc_RootUpperBound; safe for float when < 2^52.
-		constexpr static bool mcp_bUseFixedPoint = [] -> bool
+		static constexpr bool mcp_bUseFixedPoint = [] -> bool
 			{
 				if (t_Options.m_MaxCapacityBits >= 63)
 					return true;
@@ -502,12 +476,12 @@ namespace NMib::NContainer
 		static_assert(mcp_RootUpperBoundScaled > 0, "Root upper bound must remain positive after fixed-point scaling");
 
 		// Precomputed unsigned deltas for interpolation (signs are known at compile time)
-		constexpr static umint mcp_LowerBoundDeltaScaled = mcp_RootLowerBoundScaled - mcp_LeafLowerBoundScaled; // >= 0
-		constexpr static umint mcp_UpperBoundDeltaScaled = mcp_LeafUpperBoundScaled - mcp_RootUpperBoundScaled; // >= 0
+		static constexpr umint mcp_LowerBoundDeltaScaled = mcp_RootLowerBoundScaled - mcp_LeafLowerBoundScaled; // >= 0
+		static constexpr umint mcp_UpperBoundDeltaScaled = mcp_LeafUpperBoundScaled - mcp_RootUpperBoundScaled; // >= 0
 
-		constexpr static uint16 mcp_Fanout = 8; // Branching factor (cache line friendly)
-		constexpr static uint16 mcp_FanoutBits = gc_HighestBitSet<mcp_Fanout>; // log2(fanout)
-		constexpr static uint16 mcp_MaxLevels = (t_Options.m_MaxCapacityBits + mcp_FanoutBits - 1) / mcp_FanoutBits; // Maximum index depth (supports up to fanout^MaxLevels segments)
+		static constexpr uint16 mcp_Fanout = 8;                                                                      // Branching factor (cache line friendly)
+		static constexpr uint16 mcp_FanoutBits = gc_HighestBitSet<mcp_Fanout>;                                       // log2(fanout)
+		static constexpr uint16 mcp_MaxLevels = (t_Options.m_MaxCapacityBits + mcp_FanoutBits - 1) / mcp_FanoutBits; // Maximum index depth (supports up to fanout^MaxLevels segments)
 
 		// Reciprocal table for divide-free threshold interpolation.
 		// Replaces division by Divisor in [1, mcp_MaxCalibratorLevels) with
@@ -515,25 +489,27 @@ namespace NMib::NContainer
 		// The shift is sized so that the intermediate |x| * R[d] fits in signed umint.
 		// Max dividend: mcp_DensityScale * (mcp_MaxCalibratorLevels - 1).
 		// Exact when max dividend <= 2^mcp_ReciprocalShift.
-		constexpr static umint mcp_ReciprocalShift = (umint)sizeof(umint) * 8 - 2 - mcp_DensityScaleBits - gc_HighestBitSet<mcp_MaxCalibratorLevels>;
+		static constexpr umint mcp_ReciprocalShift = (umint)sizeof(umint) * 8 - 2 - mcp_DensityScaleBits - gc_HighestBitSet<mcp_MaxCalibratorLevels>;
 
-		constexpr static CReciprocalTable mcp_ReciprocalTable = {};
+		static constexpr CReciprocalTable mcp_ReciprocalTable = {};
 
-		constexpr static bool mcp_bIndexStoresKeys = NTraits::cIsNothrowCopyConstructible<t_CKey> && NTraits::cIsNothrowCopyAssignable<t_CKey>;
+		static constexpr bool mcp_bIndexStoresKeys = NTraits::cIsNothrowCopyConstructible<t_CKey> && NTraits::cIsNothrowCopyAssignable<t_CKey>;
 
 		// Exception safety: noexcept traits for specialization
-		constexpr static bool mcp_bNothrowElementMove = NTraits::cIsNothrowMoveConstructible<t_CKey> && NTraits::cIsNothrowMoveConstructible<t_CValue>;
-		constexpr static bool mcp_bNothrowElementCopy = NTraits::cIsNothrowCopyConstructible<t_CKey> && NTraits::cIsNothrowCopyConstructible<t_CValue>;
+		static constexpr bool mcp_bNothrowElementMove = NTraits::cIsNothrowMoveConstructible<t_CKey> && NTraits::cIsNothrowMoveConstructible<t_CValue>;
+		static constexpr bool mcp_bNothrowElementCopy = NTraits::cIsNothrowCopyConstructible<t_CKey> && NTraits::cIsNothrowCopyConstructible<t_CValue>;
 
 		// Segment metadata - per-segment count and detector state
-		constexpr static bool mcp_bDetectorStoresKeys = t_Options.m_bAdaptive && t_Options.m_bDetectorStoresKeys && NTraits::cIsNothrowCopyConstructible<t_CKey> && NTraits::cIsNothrowCopyAssignable<t_CKey>;
+		static constexpr bool mcp_bDetectorStoresKeys
+			= t_Options.m_bAdaptive && t_Options.m_bDetectorStoresKeys && NTraits::cIsNothrowCopyConstructible<t_CKey> && NTraits::cIsNothrowCopyAssignable<t_CKey>
+		;
 
 		// Scratch buffers may reuse the map allocator only when it is stateless and default-constructible.
 		// Stateful allocators can require constructor arguments or impose allocation constraints.
 		using CScratchAllocator = TCConditional<NTraits::cIsEmpty<t_CAllocator> && NTraits::cIsConstructibleWith<t_CAllocator>, t_CAllocator, NMemory::CAllocator_Heap>;
 
 		// Static allocator sizing for rebalance temporaries (covers up to ~64 segments without heap)
-		constexpr static umint mcp_nMarkedIntervalStaticSize = 64 * sizeof(CMarkedInterval);
+		static constexpr umint mcp_nMarkedIntervalStaticSize = 64 * sizeof(CMarkedInterval);
 
 		using CMarkedIntervalAllocator = NMemory::TCAllocator_Static<mcp_nMarkedIntervalStaticSize, 16, CScratchAllocator>;
 		using CMarkedIntervalVector = TCVector<CMarkedInterval, CMarkedIntervalAllocator>;
@@ -549,7 +525,7 @@ namespace NMib::NContainer
 
 		struct CDetectorKeys
 		{
-			NStorage::TCOptional<t_CKey> m_BackwardRunLengthValue;  // Stored successor key (kbwd.value)
+			NStorage::TCOptional<t_CKey> m_BackwardRunLengthValue; // Stored successor key (kbwd.value)
 			NStorage::TCOptional<t_CKey> m_ForwardRunLengthValue;  // Stored predecessor key (kfwd.value)
 		};
 
@@ -606,55 +582,55 @@ namespace NMib::NContainer
 			t_CKey *m_pKeys = nullptr;
 			t_CValue *m_pValues = nullptr;
 			CIndexEntry *m_pIndex = nullptr;                              // All index entries (all levels packed)
-			umint *m_pLevelOffsets = nullptr;                              // Offset into m_pIndex for each level
+			umint *m_pLevelOffsets = nullptr;                             // Offset into m_pIndex for each level
 			DMibNoUniqueAddress CIndexValidStorage m_IndexValidStorage{}; // Validity bitmask for key-stored entries (1 bit per entry)
 			CCalibratorCount *m_pCalibratorCounts = nullptr;              // Calibrator tree counts (all levels packed)
-			umint *m_pCalibratorOffsets = nullptr;                         // Offset into m_pCalibratorCounts for each level
+			umint *m_pCalibratorOffsets = nullptr;                        // Offset into m_pCalibratorCounts for each level
 			CSegmentMeta *m_pSegmentMeta = nullptr;
 
-			umint m_nElements = 0;                                         // Total element count
-			umint m_nSegments = 0;                                         // Number of segments
-			umint m_AllocSize = 0;                                         // Size of allocation
-			umint m_Capacity = 0;                                          // Total capacity (m_nSegments * SegmentSize)
-			umint m_nStaticIndexTotalEntries = 0;                          // Total entries across all levels
-			umint m_nCalibratorTreeTotalEntries = 0;                       // Total entries across all levels (~2*nSegments)
-			DMibNoUniqueAddress CTimeCounterStorage m_TimeCounter = {};   // Global monotonic counter for detector timestamps
-			uint16 m_nStaticIndexLevels = 0;                              // Number of levels (1 = leaf only)
-			uint16 m_nCalibratorTreeLevels = 0;                           // Number of levels (ceil(log2(nSegments)) + 1)
+			umint m_nElements = 0;                                      // Total element count
+			umint m_nSegments = 0;                                      // Number of segments
+			umint m_AllocSize = 0;                                      // Size of allocation
+			umint m_Capacity = 0;                                       // Total capacity (m_nSegments * SegmentSize)
+			umint m_nStaticIndexTotalEntries = 0;                       // Total entries across all levels
+			umint m_nCalibratorTreeTotalEntries = 0;                    // Total entries across all levels (~2*nSegments)
+			DMibNoUniqueAddress CTimeCounterStorage m_TimeCounter = {}; // Global monotonic counter for detector timestamps
+			uint16 m_nStaticIndexLevels = 0;                            // Number of levels (1 = leaf only)
+			uint16 m_nCalibratorTreeLevels = 0;                         // Number of levels (ceil(log2(nSegments)) + 1)
 		};
 
 		// Static index helpers (multi-level B+-tree-like index)
 		struct CIndexLayout
 		{
-			umint m_LevelSizes[mcp_MaxLevels];       // Size of each level
-			umint m_LevelOffsets[mcp_MaxLevels];     // Offset for each level in packed array
-			umint m_nTotalEntries;                   // Total entries across all levels
-			uint16 m_nLevels;                       // Number of levels
+			umint m_LevelSizes[mcp_MaxLevels];   // Size of each level
+			umint m_LevelOffsets[mcp_MaxLevels]; // Offset for each level in packed array
+			umint m_nTotalEntries;               // Total entries across all levels
+			uint16 m_nLevels;                    // Number of levels
 		};
 
 		// Binary search within segment
 		struct CSearchResult
 		{
-			umint m_iLocalPos;                       // Position within segment (relative to first element)
-			bool m_bExists;                         // Whether key was found
+			umint m_iLocalPos; // Position within segment (relative to first element)
+			bool m_bExists;    // Whether key was found
 		};
 
 		// Find global position (segment + local position)
 		struct CFindResult
 		{
 			umint m_iSegment;
-			umint m_iLocalPos;                       // Position relative to first element in segment
-			umint m_iSlot;                           // Absolute slot index in keys/values array
+			umint m_iLocalPos; // Position relative to first element in segment
+			umint m_iSlot;     // Absolute slot index in keys/values array
 			bool m_bExists;
 		};
 
 		// Calibrator tree layout (binary tree of element counts for O(log n) density queries)
 		struct CCalibratorLayout
 		{
-			umint m_LevelSizes[mcp_MaxCalibratorLevels];        // Size of each level
-			umint m_LevelOffsets[mcp_MaxCalibratorLevels];      // Offset for each level in packed array
-			umint m_nTotalEntries;                              // Total entries across all levels
-			uint16 m_nLevels;                                  // Number of levels
+			umint m_LevelSizes[mcp_MaxCalibratorLevels];   // Size of each level
+			umint m_LevelOffsets[mcp_MaxCalibratorLevels]; // Offset for each level in packed array
+			umint m_nTotalEntries;                         // Total entries across all levels
+			uint16 m_nLevels;                              // Number of levels
 		};
 
 		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, umint ...tp_IndicesAllocator, umint ...tp_IndicesCompare>
@@ -670,27 +646,27 @@ namespace NMib::NContainer
 		;
 
 		// floor(density * capacity) — dispatches to fixed-point or float based on mcp_bUseFixedPoint
-		constexpr static umint fsp_ScaledMulFloor(umint _ScaledDensity, umint _Capacity) noexcept;
+		static constexpr umint fsp_ScaledMulFloor(umint _ScaledDensity, umint _Capacity) noexcept;
 
 		// ceil(density * capacity) — dispatches to fixed-point or float based on mcp_bUseFixedPoint
-		constexpr static umint fsp_ScaledMulCeil(umint _ScaledDensity, umint _Capacity) noexcept;
+		static constexpr umint fsp_ScaledMulCeil(umint _ScaledDensity, umint _Capacity) noexcept;
 
 		// ceil(nElements / density) — dispatches to fixed-point or float based on mcp_bUseFixedPoint
-		constexpr static umint fsp_ScaledDivCeil(umint _nElements, umint _ScaledDensity) noexcept;
+		static constexpr umint fsp_ScaledDivCeil(umint _nElements, umint _ScaledDensity) noexcept;
 
 		// Exact unsigned integer division via reciprocal multiply for small dividends.
 		// Precondition: _Dividend <= DensityScale * (MaxCalibratorLevels - 1), _Divisor in [1, MaxCalibratorLevels)
-		constexpr static umint fsp_ReciprocalDivide(umint _Dividend, umint _Divisor) noexcept;
+		static constexpr umint fsp_ReciprocalDivide(umint _Dividend, umint _Divisor) noexcept;
 
 		// Remove helper (shared by key and pointer remove overloads)
 		constexpr void fp_RemoveAtPosition(CPackedMapData *_pData, umint _iSegment, umint _iLocalPos);
 		constexpr void fp_Clear(bool _bKeepBacking, t_CAllocator &_Allocator);
 
 		// Segment helpers
-		constexpr static umint fsp_GetSegmentStart(umint _iSegment) noexcept;
-		constexpr static umint fsp_GetSegmentEnd(umint _iSegment) noexcept;
-		constexpr static bool fsp_IsOddSegment(umint _iSegment) noexcept;
-		constexpr static umint fsp_GetSegmentFirstSlot(umint _iSegment, umint _Count) noexcept;
+		static constexpr umint fsp_GetSegmentStart(umint _iSegment) noexcept;
+		static constexpr umint fsp_GetSegmentEnd(umint _iSegment) noexcept;
+		static constexpr bool fsp_IsOddSegment(umint _iSegment) noexcept;
+		static constexpr umint fsp_GetSegmentFirstSlot(umint _iSegment, umint _Count) noexcept;
 
 		// Allocation helpers
 		constexpr umint fp_CalculateAllocSize(umint _nSegments, umint &o_Alignment) const noexcept;
@@ -699,34 +675,34 @@ namespace NMib::NContainer
 		constexpr void fp_Resize(umint _nNewSegments);
 		constexpr void fp_SetupCachedPointers(CPackedMapData *_pData) noexcept;
 
-		constexpr static CIndexLayout fsp_ComputeIndexLayout(umint _nSegments) noexcept;
-		constexpr static umint fsp_StaticIndexSizeBytes(umint _nSegments) noexcept;
+		static constexpr CIndexLayout fsp_ComputeIndexLayout(umint _nSegments) noexcept;
+		static constexpr umint fsp_StaticIndexSizeBytes(umint _nSegments) noexcept;
 		template <typename tf_CKey>
-		constexpr static umint fsp_FindSegmentForKey(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key) noexcept;
-		constexpr static umint fsp_FindPrevNonEmptySegment(CPackedMapData const *_pData, umint _iSegment) noexcept;
-		constexpr static umint fsp_FindNextNonEmptySegment(CPackedMapData const *_pData, umint _iSegment) noexcept;
-		constexpr static umint fsp_FindLeftmostValidLeaf(CPackedMapData const *_pData, umint _iLevel, umint _iEntry) noexcept;
-		constexpr static umint fsp_FindRightmostValidLeaf(CPackedMapData const *_pData, umint _iLevel, umint _iEntry) noexcept;
+		static constexpr umint fsp_FindSegmentForKey(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key) noexcept;
+		static constexpr umint fsp_FindPrevNonEmptySegment(CPackedMapData const *_pData, umint _iSegment) noexcept;
+		static constexpr umint fsp_FindNextNonEmptySegment(CPackedMapData const *_pData, umint _iSegment) noexcept;
+		static constexpr umint fsp_FindLeftmostValidLeaf(CPackedMapData const *_pData, umint _iLevel, umint _iEntry) noexcept;
+		static constexpr umint fsp_FindRightmostValidLeaf(CPackedMapData const *_pData, umint _iLevel, umint _iEntry) noexcept;
 		constexpr void fp_RebuildStaticIndex(CPackedMapData *_pData) noexcept;
 		constexpr void fp_RebuildStaticIndexRange(CPackedMapData *_pData, umint _iStartSeg, umint _iEndSeg) noexcept;
 		constexpr void fp_UpdateStaticIndexEntry(CPackedMapData *_pData, umint _iSegment) noexcept;
 		constexpr void fp_BuildIndexLevel(CPackedMapData *_pData, umint _iLevel) noexcept;
-		constexpr bool fp_CompareIndexEntry(CPackedMapData const *_pData, umint _iEntry, t_CKey const &_Key) const noexcept;  // Returns true if entry < key
+		constexpr bool fp_CompareIndexEntry(CPackedMapData const *_pData, umint _iEntry, t_CKey const &_Key) const noexcept; // Returns true if entry < key
 
 		// Validity bitmask helpers (for key-stored entries)
-		constexpr static umint fsp_IndexValidityArraySizeBytes(umint _nTotalEntries) noexcept;
+		static constexpr umint fsp_IndexValidityArraySizeBytes(umint _nTotalEntries) noexcept;
 
 		template <typename tf_CKey>
-		constexpr static CSearchResult fsp_BinarySearchInSegment(CPackedMapData const *_pData, t_CCompare const &_Compare, umint _iSegment, tf_CKey const &_Key) noexcept;
+		static constexpr CSearchResult fsp_BinarySearchInSegment(CPackedMapData const *_pData, t_CCompare const &_Compare, umint _iSegment, tf_CKey const &_Key) noexcept;
 
 		template <typename tf_CKey>
-		constexpr static CFindResult fsp_Find(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key) noexcept;
+		static constexpr CFindResult fsp_Find(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key) noexcept;
 
 		template <typename tf_CKey>
-		constexpr static umint fsp_FindEqualSlot(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key) noexcept;
+		static constexpr umint fsp_FindEqualSlot(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key) noexcept;
 
-		constexpr static umint fsp_ComputeRank(CPackedMapData const *_pData, umint _iSegment, umint _iLocalPos) noexcept;
-		constexpr static umint fsp_FindSlotByRank(CPackedMapData const *_pData, umint _Rank) noexcept;
+		static constexpr umint fsp_ComputeRank(CPackedMapData const *_pData, umint _iSegment, umint _iLocalPos) noexcept;
+		static constexpr umint fsp_FindSlotByRank(CPackedMapData const *_pData, umint _Rank) noexcept;
 
 		// Shift operations
 		constexpr umint fp_ShiftRightInSegment(CPackedMapData *_pData, umint _iSegment, umint _iLocalPos);
@@ -761,7 +737,17 @@ namespace NMib::NContainer
 		constexpr void fp_RebalanceFromSegment(CPackedMapData *_pData, umint _iSegment);
 		constexpr NStorage::TCTuple<umint, umint, umint> fp_FindRebalanceWindow(CPackedMapData const *_pData, umint _iSegment) const noexcept;
 		constexpr void fp_EvenRedistribute(CPackedMapData *_pData, umint _iStartSeg, umint _iEndSeg, umint _iWindowLevel, umint _nGlobalLevels);
-		constexpr bool fp_ValidateRedistributeDensityBounds(CPackedMapData const *_pData, umint _iStartSeg, umint _iEndSeg, umint _nTotalElements, umint _nGlobalLevels, ch8 const *_pLabel) const noexcept;
+		constexpr bool fp_ValidateRedistributeDensityBounds
+			(
+				CPackedMapData const *_pData
+				, umint _iStartSeg
+				, umint _iEndSeg
+				, umint _nTotalElements
+				, umint _nGlobalLevels
+				, ch8 const *_pLabel
+			)
+			const noexcept
+		;
 
 		// Adaptive rebalancing (optional, implements RMA paper's Detector + Calibrator tree)
 		constexpr void fp_RecordInsertion(CPackedMapData *_pData, umint _iSegment, t_CKey const *_pPrevKey, t_CKey const *_pNextKey) noexcept;
@@ -773,7 +759,7 @@ namespace NMib::NContainer
 		constexpr void fp_FindMarkedIntervals(CPackedMapData const *_pData, umint _iStartSeg, umint _iEndSeg, CMarkedIntervalVector &_OutIntervals);
 		constexpr void fp_AdaptiveRedistribute(CPackedMapData *_pData, umint _iStartSeg, umint _iEndSeg, umint _iWindowLevel, umint _nGlobalLevels);
 
-		constexpr bool fp_GetPrevNextKeys(CPackedMapData const *_pData, umint _iSegment, umint _iLocalPos, t_CKey const *&_pPrevKey, t_CKey const *&_pNextKey) const noexcept;
+		constexpr bool fp_GetPrevNextKeys(CPackedMapData const *_pData, umint _iSegment, umint _iLocalPos, t_CKey const * &_pPrevKey, t_CKey const * &_pNextKey) const noexcept;
 		constexpr void fp_AdjustDetectorSlotsOnShift(CPackedMapData *_pData, umint _iSegment, umint _iStartSlot, umint _iEndSlot, umint _Delta) noexcept;
 		constexpr void fp_ClearDetectorSlotAt(CPackedMapData *_pData, umint _iSegment, umint _iSlot) noexcept;
 
@@ -819,7 +805,7 @@ namespace NMib::NContainer
 		// Density-bounded recursive distribution of elements across segments
 		constexpr void fp_DistributeElements(umint *_pTargets, umint _iStart, umint _iEnd, umint _nElements, umint _iLocalLevel, umint _iWindowLevel, umint _nGlobalLevels) const noexcept;
 
-		constexpr static umint mcp_SegmentSize = [] -> umint
+		static constexpr umint mcp_SegmentSize = [] -> umint
 			{
 				if constexpr (t_Options.m_SegmentBytes > 0)
 				{

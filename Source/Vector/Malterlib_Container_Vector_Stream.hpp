@@ -17,13 +17,7 @@ namespace NMib::NStream
 		struct TCStreamHasFeedBytesAdopt
 		<
 			t_CStream
-			, TCEnableIf
-			<
-				!NTraits::cIsSame
-				<
-					decltype(fg_GetReference<t_CStream>().f_FeedBytesAdopt(fg_GetType<NContainer::CIOByteVector>())), NPrivate::CDummy
-				>
-			>
+			, TCEnableIf<!NTraits::cIsSame<decltype(fg_GetReference<t_CStream>().f_FeedBytesAdopt(fg_GetType<NContainer::CIOByteVector>())), NPrivate::CDummy>>
 		>
 		{
 			static constexpr bool mc_Value = true;
@@ -31,7 +25,7 @@ namespace NMib::NStream
 	}
 
 	template <typename t_CStream, typename t_CData, typename t_CAllocator, typename t_COptions>
-	class TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> >
+	class TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions>>
 	{
 	public:
 		static constexpr void fs_Feed(t_CStream &_Stream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> const &_Data)

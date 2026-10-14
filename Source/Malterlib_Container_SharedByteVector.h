@@ -37,7 +37,7 @@ namespace NMib::NContainer
 
 		bool operator == (CSharedByteVector const &_Other) const;
 
-		static CSharedByteVector fs_AllocateExact(umint _nBytes, uint8 *&o_pWritable);
+		static CSharedByteVector fs_AllocateExact(umint _nBytes, uint8 * &o_pWritable);
 
 		bool f_TryAppendContiguous(CSharedByteVector const &_Next);
 

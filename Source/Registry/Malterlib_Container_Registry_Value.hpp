@@ -21,21 +21,18 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetThisValue(const t_CData &_Data)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetThisValue(t_CData const &_Data)
 	{
 		mp_Data = _Data;
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValue(t_CStr _Str, const t_CData &_Default) const
+	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValue(t_CStr _Str, t_CData const &_Default) const
 	{
-
-		const TCRegistry *pRegistry = fp_GetChildParse(_Str, fg_NullPtr<t_CStr>());
+		TCRegistry const *pRegistry = fp_GetChildParse(_Str, fg_NullPtr<t_CStr>());
 		if (pRegistry)
-		{
 			return pRegistry->mp_Data;
-		}
 		else
 			return _Default;
 	}
@@ -47,9 +44,7 @@ namespace NMib::NContainer
 		t_CStr Str = _Str;
 		TCRegistry const *pRegistry = fp_GetChildParse(Str, fg_NullPtr<t_CStr>());
 		if (pRegistry)
-		{
 			return pRegistry->mp_Data;
-		}
 		else
 			DMibErrorRegistry(typename t_CStr::CFormat("No such key '{}'") << _Str);
 	}
@@ -61,9 +56,7 @@ namespace NMib::NContainer
 		t_CStr Str = _Str;
 		TCRegistry const *pRegistry = fp_GetChildParse(Str, fg_NullPtr<t_CStr>());
 		if (pRegistry)
-		{
 			return fg_Move(pRegistry->mp_Data);
-		}
 		else
 			DMibErrorRegistry(typename t_CStr::CFormat("No such key '{}'") << _Str);
 	}
@@ -74,9 +67,7 @@ namespace NMib::NContainer
 	{
 		TCRegistry const *pRegistry = CRegistryKey::fs_FindEqual(*this, _Name);
 		if (pRegistry)
-		{
 			return pRegistry->mp_Data;
-		}
 		else
 			DMibErrorRegistry(typename t_CStr::CFormat("No such key '{}'") << _Name);
 	}
@@ -87,29 +78,25 @@ namespace NMib::NContainer
 	{
 		TCRegistry *pRegistry = CRegistryKey::fs_FindEqual(*this, _Name);
 		if (pRegistry)
-		{
 			return fg_Move(pRegistry->mp_Data);
-		}
 		else
 			DMibErrorRegistry(typename t_CStr::CFormat("No such key '{}'") << _Name);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueNoPath(t_CKey const &_Name, const t_CData &_Default) const
+	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueNoPath(t_CKey const &_Name, t_CData const &_Default) const
 	{
 		TCRegistry const *pRegistry = CRegistryKey::fs_FindEqual(*this, _Name);
 		if (pRegistry)
-		{
 			return pRegistry->mp_Data;
-		}
 		else
 			return _Default;
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueIfExists(t_CStr _Str, t_CData & _OutValue) const
+	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueIfExists(t_CStr _Str, t_CData &_OutValue) const
 	{
 		TCRegistry const *pRegistry = fp_GetChildParse(_Str, fg_NullPtr<t_CStr>());
 		if (pRegistry)
@@ -123,7 +110,7 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetValue(t_CStr _Name, const t_CData &_Data) -> TCRegistry *
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetValue(t_CStr _Name, t_CData const &_Data) -> TCRegistry *
 	{
 		t_CStr NotFound;
 		TCRegistry *pPrev = this;
@@ -146,7 +133,7 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetValueNoPath(t_CKey const &_Name, const t_CData &_Data) -> TCRegistry *
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetValueNoPath(t_CKey const &_Name, t_CData const &_Data) -> TCRegistry *
 	{
 		TCRegistry *pChild = CRegistryKey::fs_FindEqual(*this, _Name);
 

@@ -9,19 +9,19 @@ namespace NMib::NContainer
 	template <typename tf_CKey, typename ...tfp_CParam>
 	constexpr TCPackedMapResult<t_CKey, t_CValue> TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_Insert(tf_CKey &&_Key, tfp_CParam && ...p_Params)
 	{
-		return operator()(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
+		return operator () (fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...);
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	template <typename tf_CKey, typename ...tfp_CParam>
-	constexpr t_CValue &TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::operator[] (tf_CKey &&_Key, tfp_CParam && ...p_Params)
+	constexpr t_CValue &TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::operator [] (tf_CKey &&_Key, tfp_CParam && ...p_Params)
 	{
-		return operator()(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...).m_Value;
+		return operator () (fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CParam>(p_Params)...).m_Value;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	template <typename tf_CKey>
-	constexpr t_CValue const &TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::operator[] (tf_CKey &&_Key) const
+	constexpr t_CValue const &TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::operator [] (tf_CKey &&_Key) const
 	{
 		auto const *pValue = f_FindEqual(fg_Forward<tf_CKey>(_Key));
 		if (!pValue)
@@ -141,13 +141,9 @@ namespace NMib::NContainer
 				t_CKey const *pNextKey = nullptr;
 				fp_GetPrevNextKeys(pData, iSegment, FindResult.m_iLocalPos, pPrevKey, pNextKey);
 				if (pPrevKey)
-				{
 					DMibCheck(mp_Compare(*pPrevKey, pKeys[iInsertSlot]) < 0);
-				}
 				if (pNextKey)
-				{
 					DMibCheck(mp_Compare(pKeys[iInsertSlot], *pNextKey) < 0);
-				}
 			}
 #endif
 

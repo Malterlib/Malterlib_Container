@@ -53,7 +53,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(const t_CData *_pData, umint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(t_CData const *_pData, umint _Len)
 	{
 		umint PrevLen = f_GetLen();
 		umint NewLen = PrevLen + _Len;
@@ -115,7 +115,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(const t_CData &_Data)
+	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_Insert(t_CData const &_Data)
 	{
 		umint PrevLen = f_GetLen();
 		auto pData = mp_StaticData.m_pData;

@@ -31,7 +31,8 @@ namespace NMib::NContainer
 			, umint _nLevels
 			, umint &o_ScaledLowerBound
 			, umint &o_ScaledUpperBound
-		) const noexcept
+		)
+		const noexcept
 	{
 		o_ScaledLowerBound = fp_GetLevelLowerThreshold(_iLevel, _nLevels);
 		o_ScaledUpperBound = fp_GetLevelUpperThreshold(_iLevel, _nLevels);
@@ -72,11 +73,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetLevelDensityBounds
-		(
-			umint _iLevel
-			, umint _nLevels
-		) const noexcept -> CLevelDensityBounds
+	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetLevelDensityBounds(umint _iLevel, umint _nLevels) const noexcept -> CLevelDensityBounds
 	{
 		if constexpr (!mcp_bUseFixedPoint)
 		{
@@ -109,7 +106,8 @@ namespace NMib::NContainer
 			, umint _Capacity
 			, umint &o_nMinElements
 			, umint &o_nMaxElements
-		) const noexcept
+		)
+		const noexcept
 	{
 		if constexpr (!mcp_bUseFixedPoint)
 		{
@@ -135,7 +133,8 @@ namespace NMib::NContainer
 			, umint _Capacity
 			, umint &o_nMinElements
 			, umint &o_nMaxElements
-		) const noexcept
+		)
+		const noexcept
 	{
 		fp_ElementBoundsFromDensity(fp_GetLevelDensityBounds(_iLevel, _nLevels), _Capacity, o_nMinElements, o_nMaxElements);
 	}
@@ -316,13 +315,8 @@ namespace NMib::NContainer
 	// Get element count for a window at a given level
 	// Window at level k starting at segment i has index = i / (2^k)
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetCalibratorWindowCount
-		(
-			CPackedMapData const *_pData
-			, umint _iLevel
-			, umint _iWindowIndex
-		)
-		const noexcept
+	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetCalibratorWindowCount(CPackedMapData const *_pData, umint _iLevel, umint _iWindowIndex) const
+		noexcept
 	{
 		umint const *pOffsets = _pData->m_pCalibratorOffsets;
 		CCalibratorCount const *pCounts = _pData->m_pCalibratorCounts;
@@ -366,22 +360,18 @@ namespace NMib::NContainer
 		// - Else if pred_k (prev key) matches kfwd.value: increment kfwd only
 		// - Else: decrement both; if either hits 0, reset stored value and set counter = 1
 
-		#if DMibDebug
+#if DMibDebug
 		{
 			if (pKeys)
 			{
 				if (_pPrevKey)
-				{
 					DMibCheck(_pPrevKey >= pKeys && _pPrevKey < pKeys + _pData->m_Capacity);
-				}
 
 				if (_pNextKey)
-				{
 					DMibCheck(_pNextKey >= pKeys && _pNextKey < pKeys + _pData->m_Capacity);
-				}
 			}
 		}
-		#endif
+#endif
 
 		auto fCheckMatch = [&](uint16 _KCount, auto const &_Stored, t_CKey const *_pKey) -> bool
 			{
@@ -524,14 +514,10 @@ namespace NMib::NContainer
 		if (pKeys)
 		{
 			if (_pPrevKey)
-			{
 				DMibCheck(_pPrevKey >= pKeys && _pPrevKey < pKeys + _pData->m_Capacity);
-			}
 
 			if (_pNextKey)
-			{
 				DMibCheck(_pNextKey >= pKeys && _pNextKey < pKeys + _pData->m_Capacity);
-			}
 		}
 #endif
 
@@ -805,7 +791,7 @@ namespace NMib::NContainer
 		// Avoid picking the absolute maximum for typical window sizes, otherwise
 		// the ">= percentile" hotness test degenerates and hot segments vanish.
 		umint nTimestamps = AllTimestamps.f_GetLen();
-		umint iPercentileIdx = (nTimestamps * 9) / 10;  // ~90th percentile
+		umint iPercentileIdx = (nTimestamps * 9) / 10; // ~90th percentile
 		if (iPercentileIdx >= nTimestamps - 1)
 			iPercentileIdx = nTimestamps - 2;
 		AllTimestamps.f_Sort();
@@ -894,7 +880,7 @@ namespace NMib::NContainer
 			{
 				umint iRelSeg = _iSeg - _iStartSeg;
 				if (iRelSeg < 0 || iRelSeg >= nSegments)
-					return CumulativeCounts[nSegments];  // Total elements
+					return CumulativeCounts[nSegments]; // Total elements
 				return CumulativeCounts[iRelSeg];
 			}
 		;
@@ -920,7 +906,8 @@ namespace NMib::NContainer
 		{
 			auto const &Meta = pMeta[iSeg];
 			bool bHotByPercentile = fIsSegmentHot(iSeg);
-			bool bHotByCounters = (Meta.m_BackwardRunLength >= mcp_RunLengthHotnessThreshold)
+			bool bHotByCounters
+				= (Meta.m_BackwardRunLength >= mcp_RunLengthHotnessThreshold)
 				|| (Meta.m_ForwardRunLength >= mcp_RunLengthHotnessThreshold)
 				|| (fg_Abs((int)Meta.m_NetBalance) >= (int)mcp_RunLengthHotnessThreshold)
 			;
@@ -1080,7 +1067,14 @@ namespace NMib::NContainer
 		if (nOutIntervals > 1)
 		{
 			// Sort by start element position
-			_OutIntervals.f_Sort([](CMarkedInterval const &_a, CMarkedInterval const &_b) { return _a.m_iStartElem <=> _b.m_iStartElem; });
+			_OutIntervals.f_Sort
+				(
+					[](CMarkedInterval const &_a, CMarkedInterval const &_b)
+					{
+						return _a.m_iStartElem <=> _b.m_iStartElem;
+					}
+				)
+			;
 
 			CMarkedIntervalVector Merged;
 			auto *pLastMerged = &Merged.f_InsertLast(pOutIntervals[0]);
@@ -1140,7 +1134,7 @@ namespace NMib::NContainer
 
 		// Allocate combined buffer for all temporary data
 		// Use stack for small rebalances (most delete-triggered rebalances are 2-8 segments)
-		constexpr static umint c_nBufferAlign = fg_Max(alignof(umint), alignof(t_CKey), alignof(t_CValue), alignof(CSegmentMeta));
+		static constexpr umint c_nBufferAlign = fg_Max(alignof(umint), alignof(t_CKey), alignof(t_CValue), alignof(CSegmentMeta));
 
 		umint nTargetsBytes = nSegments * sizeof(umint);
 		umint nKeysBytes = nTotalElements * sizeof(t_CKey);
@@ -1229,7 +1223,8 @@ namespace NMib::NContainer
 			{
 				auto const &Meta = pMeta[iSeg];
 
-				bool bMarked = (Meta.m_BackwardRunLength >= mcp_RunLengthHotnessThreshold)
+				bool bMarked
+					= (Meta.m_BackwardRunLength >= mcp_RunLengthHotnessThreshold)
 					|| (Meta.m_ForwardRunLength >= mcp_RunLengthHotnessThreshold)
 					|| (fg_Abs((int)Meta.m_NetBalance) >= (int)mcp_RunLengthHotnessThreshold)
 				;
@@ -1662,15 +1657,7 @@ namespace NMib::NContainer
 						(
 							!bBestSet
 							|| (ScoreA < BestScoreA)
-							||
-							(
-								ScoreA == BestScoreA
-								&&
-								(
-									ScoreB < BestScoreB
-									|| (ScoreB == BestScoreB && ScoreC < fg_Abs((int)(iBestSplit - iElemSplitBase)))
-								)
-							)
+							|| (ScoreA == BestScoreA && (ScoreB < BestScoreB || (ScoreB == BestScoreB && ScoreC < fg_Abs((int)(iBestSplit - iElemSplitBase)))))
 						)
 						{
 							iBestSplit = _iSplit;

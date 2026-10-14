@@ -203,7 +203,7 @@ namespace NMib::NContainer::NPrivate
 
 	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
 	template <typename tf_CKey>
-	TCMapIterator<t_CMap, t_Access, t_Flags>::TCMapIterator(CMapQualified &_Map, const tf_CKey &_Key)
+	TCMapIterator<t_CMap, t_Access, t_Flags>::TCMapIterator(CMapQualified &_Map, tf_CKey const &_Key)
 		requires (!(t_Flags & EMapIteratorFlags_Reverse) && !(t_Flags & EMapIteratorFlags_Destructive)) // Not supported for reverse or destructive iterators
 	{
 		mp_pMap = &_Map;
@@ -256,7 +256,6 @@ namespace NMib::NContainer::NPrivate
 			mp_Iter.f_NextBidirectional();
 		else
 			mp_Iter.f_PrevBidirectional();
-
 	}
 
 	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
@@ -330,19 +329,19 @@ namespace NMib::NContainer::NPrivate
 	}
 
 	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
-	inline_small auto TCMapIterator<t_CMap, t_Access, t_Flags>::operator ->() const -> CUserDataQualified *
+	inline_small auto TCMapIterator<t_CMap, t_Access, t_Flags>::operator -> () const -> CUserDataQualified *
 	{
 		return f_GetCurrent();
 	}
 
 	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
-	inline_small void TCMapIterator<t_CMap, t_Access, t_Flags>::operator ++()
+	inline_small void TCMapIterator<t_CMap, t_Access, t_Flags>::operator ++ ()
 	{
 		f_Next();
 	}
 
 	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
-	inline_small void TCMapIterator<t_CMap, t_Access, t_Flags>::operator --()
+	inline_small void TCMapIterator<t_CMap, t_Access, t_Flags>::operator -- ()
 		requires (!!(t_Flags & EMapIteratorFlags_Bidirectional))
 	{
 		f_Prev();

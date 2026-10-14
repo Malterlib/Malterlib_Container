@@ -35,9 +35,7 @@ namespace NMib::NContainer
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation _Location)
 	{
 		if constexpr (mc_bSupportWhiteSpace)
-		{
 			mp_Key.f_SetParsed(_Location, true);
-		}
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
@@ -126,9 +124,7 @@ namespace NMib::NContainer
 		case ERegistryWhiteSpaceLocation_BeforeChildScopeEnd:
 			bLineCommentValid = false;
 			break;
-		case ERegistryWhiteSpaceLocation_Max:
-			DMibNeverGetHere;
-			break;
+		case ERegistryWhiteSpaceLocation_Max: DMibNeverGetHere; break;
 		}
 
 		{

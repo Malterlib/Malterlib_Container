@@ -7,15 +7,7 @@ namespace NMib::NContainer
 {
 	// Advance scan cursor to the next contiguous slot range using clustered segment pairs
 	template <typename tf_FGetFirstSlot>
-	constexpr void fsg_PackedMapAdvanceScanRange
-		(
-			umint &_iSeg
-			, umint &_iSlot
-			, umint &_iSlotEnd
-			, auto const *_pMeta
-			, umint _nSegments
-			, tf_FGetFirstSlot &&_fGetFirstSlot
-		)
+	constexpr void fsg_PackedMapAdvanceScanRange(umint &_iSeg, umint &_iSlot, umint &_iSlotEnd, auto const *_pMeta, umint _nSegments, tf_FGetFirstSlot &&_fGetFirstSlot)
 	{
 		while (_iSeg < _nSegments)
 		{
@@ -54,15 +46,9 @@ namespace NMib::NContainer
 	// Equality comparison
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	template <typename tf_CKey, typename tf_CValue, typename tf_CCompare, typename tf_CAllocator, CPackedMapOptions tf_Options>
-	constexpr bool TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::operator ==
-		(
-			TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options> const &_Other
-		)
-		const noexcept
-		(
-			noexcept(fg_GetType<t_CKey const &>() == fg_GetType<tf_CKey const &>())
-			&& noexcept(fg_GetType<t_CValue const &>() == fg_GetType<tf_CValue const &>())
-		)
+	constexpr bool TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>
+		::operator == (TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options> const &_Other) const
+		noexcept(noexcept(fg_GetType<t_CKey const &>() == fg_GetType<tf_CKey const &>()) && noexcept(fg_GetType<t_CValue const &>() == fg_GetType<tf_CValue const &>()))
 	{
 		auto *pData = mp_pData;
 		auto *pDataOther = _Other.mp_pData;
@@ -107,15 +93,9 @@ namespace NMib::NContainer
 	// Three-way comparison (non-lexicographic: early out on different length)
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	template <typename tf_CKey, typename tf_CValue, typename tf_CCompare, typename tf_CAllocator, CPackedMapOptions tf_Options>
-	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::operator <=>
-		(
-			TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options> const &_Other
-		)
-		const noexcept
-		(
-			noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<tf_CKey const &>())
-			&& noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<tf_CValue const &>())
-		)
+	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>
+		::operator <=> (TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options> const &_Other) const
+		noexcept(noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<tf_CKey const &>()) && noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<tf_CValue const &>()))
 	{
 		using COrdering = TCCommonOrderingType
 			<
@@ -176,11 +156,7 @@ namespace NMib::NContainer
 		(
 			TCPackedMap<tf_CKey, tf_CValue, tf_CCompare, tf_CAllocator, tf_Options> const &_Other
 		)
-		const noexcept
-		(
-			noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<tf_CKey const &>())
-			&& noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<tf_CValue const &>())
-		)
+		const noexcept(noexcept(fg_GetType<t_CKey const &>() <=> fg_GetType<tf_CKey const &>()) && noexcept(fg_GetType<t_CValue const &>() <=> fg_GetType<tf_CValue const &>()))
 	{
 		using COrdering = TCCommonOrderingType
 			<

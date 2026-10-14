@@ -66,7 +66,6 @@ namespace NMib::NContainer
 		mp_StaticData.m_pData->m_Length = NewLen;
 	}
 
-
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::fp_MakeRoomMiddle(umint _iStart, umint _Len)
 	{

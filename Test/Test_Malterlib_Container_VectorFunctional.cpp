@@ -72,7 +72,14 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5};
 
-					auto Doubled = Vector.f_Map([](int32 _Value) { return _Value * 2; });
+					auto Doubled = Vector.f_Map
+						(
+							[](int32 _Value)
+							{
+								return _Value * 2;
+							}
+						)
+					;
 
 					DMibExpect(Doubled.f_GetLen(), ==, 5);
 					DMibExpect(Doubled, ==, TCVector<int32>({2, 4, 6, 8, 10}));
@@ -82,7 +89,14 @@ namespace
 				{
 					TCVector<int32> Vector;
 
-					auto Mapped = Vector.f_Map([](int32 _Value) { return _Value * 2; });
+					auto Mapped = Vector.f_Map
+						(
+							[](int32 _Value)
+							{
+								return _Value * 2;
+							}
+						)
+					;
 
 					DMibExpectTrue(Mapped.f_IsEmpty());
 				};
@@ -91,7 +105,14 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3};
 
-					auto Strings = Vector.f_Map([](int32 _Value) -> CStr { return "{}"_f << _Value; });
+					auto Strings = Vector.f_Map
+						(
+							[](int32 _Value) -> CStr
+							{
+								return "{}"_f << _Value;
+							}
+						)
+					;
 
 					static_assert(NTraits::cIsSame<decltype(Strings)::CData, CStr>);
 					DMibExpect(Strings, ==, TCVector<CStr>({"1", "2", "3"}));
@@ -101,7 +122,14 @@ namespace
 				{
 					TCVector<CStr> Vector = {"a", "b", "c"};
 
-					auto WithIndex = Vector.f_Map([](CStr const &_Value, umint _Index) -> CStr { return "{}:{}"_f << _Index << _Value; });
+					auto WithIndex = Vector.f_Map
+						(
+							[](CStr const &_Value, umint _Index) -> CStr
+							{
+								return "{}:{}"_f << _Index << _Value;
+							}
+						)
+					;
 
 					DMibExpect(WithIndex, ==, TCVector<CStr>({"0:a", "1:b", "2:c"}));
 				};
@@ -130,7 +158,14 @@ namespace
 					Vector.f_Insert(CTrackedObject("b"));
 					Vector.f_Insert(CTrackedObject("c"));
 
-					auto Mapped = fg_Move(Vector).f_Map([](CTrackedObject &&_Value) { return fg_Move(_Value); });
+					auto Mapped = fg_Move(Vector).f_Map
+						(
+							[](CTrackedObject &&_Value)
+							{
+								return fg_Move(_Value);
+							}
+						)
+					;
 
 					DMibExpect(Mapped.f_GetLen(), ==, 3);
 					DMibExpectTrue(Vector[0].m_bMovedFrom);
@@ -142,7 +177,14 @@ namespace
 				{
 					TCVector<int32> const Vector = {1, 2, 3};
 
-					auto Doubled = Vector.f_Map([](int32 _Value) { return _Value * 2; });
+					auto Doubled = Vector.f_Map
+						(
+							[](int32 _Value)
+							{
+								return _Value * 2;
+							}
+						)
+					;
 
 					DMibExpect(Doubled, ==, TCVector<int32>({2, 4, 6}));
 				};
@@ -157,7 +199,14 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-					auto Evens = Vector.f_Filter([](int32 _Value) { return _Value % 2 == 0; });
+					auto Evens = Vector.f_Filter
+						(
+							[](int32 _Value)
+							{
+								return _Value % 2 == 0;
+							}
+						)
+					;
 
 					DMibExpect(Evens, ==, TCVector<int32>({2, 4, 6, 8, 10}));
 				};
@@ -166,7 +215,14 @@ namespace
 				{
 					TCVector<int32> Vector;
 
-					auto Filtered = Vector.f_Filter([](int32 _Value) { return _Value > 0; });
+					auto Filtered = Vector.f_Filter
+						(
+							[](int32 _Value)
+							{
+								return _Value > 0;
+							}
+						)
+					;
 
 					DMibExpectTrue(Filtered.f_IsEmpty());
 				};
@@ -175,7 +231,14 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5};
 
-					auto Filtered = Vector.f_Filter([](int32 _Value) { return _Value > 10; });
+					auto Filtered = Vector.f_Filter
+						(
+							[](int32 _Value)
+							{
+								return _Value > 10;
+							}
+						)
+					;
 
 					DMibExpectTrue(Filtered.f_IsEmpty());
 				};
@@ -184,7 +247,14 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5};
 
-					auto Filtered = Vector.f_Filter([](int32 _Value) { return _Value > 0; });
+					auto Filtered = Vector.f_Filter
+						(
+							[](int32 _Value)
+							{
+								return _Value > 0;
+							}
+						)
+					;
 
 					DMibExpect(Filtered, ==, Vector);
 				};
@@ -193,7 +263,14 @@ namespace
 				{
 					TCVector<CStr> Vector = {"a", "b", "c", "d", "e"};
 
-					auto EvenIndices = Vector.f_Filter([](CStr const &, umint _Index) { return _Index % 2 == 0; });
+					auto EvenIndices = Vector.f_Filter
+						(
+							[](CStr const &, umint _Index)
+							{
+								return _Index % 2 == 0;
+							}
+						)
+					;
 
 					DMibExpect(EvenIndices, ==, TCVector<CStr>({"a", "c", "e"}));
 				};
@@ -222,7 +299,14 @@ namespace
 					Vector.f_Insert(CTrackedObject("b"));
 					Vector.f_Insert(CTrackedObject("c"));
 
-					auto Filtered = fg_Move(Vector).f_Filter([](CTrackedObject const &_Value) { return _Value.m_Value != "b"; });
+					auto Filtered = fg_Move(Vector).f_Filter
+						(
+							[](CTrackedObject const &_Value)
+							{
+								return _Value.m_Value != "b";
+							}
+						)
+					;
 
 					DMibExpect(Filtered.f_GetLen(), ==, 2);
 					DMibExpectTrue(Vector[0].m_bMovedFrom);
@@ -234,7 +318,14 @@ namespace
 				{
 					TCVector<int32> const Vector = {1, 2, 3, 4, 5};
 
-					auto Odds = Vector.f_Filter([](int32 _Value) { return _Value % 2 == 1; });
+					auto Odds = Vector.f_Filter
+						(
+							[](int32 _Value)
+							{
+								return _Value % 2 == 1;
+							}
+						)
+					;
 
 					DMibExpect(Odds, ==, TCVector<int32>({1, 3, 5}));
 				};
@@ -249,7 +340,14 @@ namespace
 				{
 					TCVector<int32> Vector = {2, 4, 6, 8, 10};
 
-					bool bAllEven = Vector.f_Every([](int32 _Value) { return _Value % 2 == 0; });
+					bool bAllEven = Vector.f_Every
+						(
+							[](int32 _Value)
+							{
+								return _Value % 2 == 0;
+							}
+						)
+					;
 
 					DMibExpectTrue(bAllEven);
 				};
@@ -258,7 +356,14 @@ namespace
 				{
 					TCVector<int32> Vector = {2, 4, 5, 8, 10};
 
-					bool bAllEven = Vector.f_Every([](int32 _Value) { return _Value % 2 == 0; });
+					bool bAllEven = Vector.f_Every
+						(
+							[](int32 _Value)
+							{
+								return _Value % 2 == 0;
+							}
+						)
+					;
 
 					DMibExpectFalse(bAllEven);
 				};
@@ -267,7 +372,14 @@ namespace
 				{
 					TCVector<int32> Vector;
 
-					bool bResult = Vector.f_Every([](int32 _Value) { return _Value > 0; });
+					bool bResult = Vector.f_Every
+						(
+							[](int32 _Value)
+							{
+								return _Value > 0;
+							}
+						)
+					;
 
 					// Empty vector should return true (vacuous truth)
 					DMibExpectTrue(bResult);
@@ -277,7 +389,14 @@ namespace
 				{
 					TCVector<int32> Vector = {0, 1, 2, 3, 4};
 
-					bool bIndexMatches = Vector.f_Every([](int32 _Value, umint _Index) { return _Value == (int32)_Index; });
+					bool bIndexMatches = Vector.f_Every
+						(
+							[](int32 _Value, umint _Index)
+							{
+								return _Value == (int32)_Index;
+							}
+						)
+					;
 
 					DMibExpectTrue(bIndexMatches);
 				};
@@ -327,7 +446,14 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 3, 5, 6, 7};
 
-					bool bHasEven = Vector.f_Some([](int32 _Value) { return _Value % 2 == 0; });
+					bool bHasEven = Vector.f_Some
+						(
+							[](int32 _Value)
+							{
+								return _Value % 2 == 0;
+							}
+						)
+					;
 
 					DMibExpectTrue(bHasEven);
 				};
@@ -336,7 +462,14 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 3, 5, 7, 9};
 
-					bool bHasEven = Vector.f_Some([](int32 _Value) { return _Value % 2 == 0; });
+					bool bHasEven = Vector.f_Some
+						(
+							[](int32 _Value)
+							{
+								return _Value % 2 == 0;
+							}
+						)
+					;
 
 					DMibExpectFalse(bHasEven);
 				};
@@ -345,7 +478,14 @@ namespace
 				{
 					TCVector<int32> Vector;
 
-					bool bResult = Vector.f_Some([](int32 _Value) { return _Value > 0; });
+					bool bResult = Vector.f_Some
+						(
+							[](int32 _Value)
+							{
+								return _Value > 0;
+							}
+						)
+					;
 
 					// Empty vector returns false (no element can satisfy the predicate)
 					DMibExpectFalse(bResult);
@@ -355,7 +495,14 @@ namespace
 				{
 					TCVector<int32> Vector = {0, 10, 20, 30, 40};
 
-					bool bHasMatchingIndex = Vector.f_Some([](int32 _Value, umint _Index) { return _Value == (int32)_Index * 10; });
+					bool bHasMatchingIndex = Vector.f_Some
+						(
+							[](int32 _Value, umint _Index)
+							{
+								return _Value == (int32)_Index * 10;
+							}
+						)
+					;
 
 					DMibExpectTrue(bHasMatchingIndex);
 				};
@@ -405,7 +552,15 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5};
 
-					int32 Sum = Vector.f_Reduce([](int32 &&_Acc, int32 _Value) { return _Acc + _Value; }, 0);
+					int32 Sum = Vector.f_Reduce
+						(
+							[](int32 &&_Acc, int32 _Value)
+							{
+								return _Acc + _Value;
+							}
+							, 0
+						)
+					;
 
 					DMibExpect(Sum, ==, 15);
 				};
@@ -414,7 +569,15 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5};
 
-					int32 Sum = Vector.f_Reduce([](int32 &&_Acc, int32 _Value) { return _Acc + _Value; }, 100);
+					int32 Sum = Vector.f_Reduce
+						(
+							[](int32 &&_Acc, int32 _Value)
+							{
+								return _Acc + _Value;
+							}
+							, 100
+						)
+					;
 
 					DMibExpect(Sum, ==, 115);
 				};
@@ -423,7 +586,15 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5};
 
-					int32 Product = Vector.f_Reduce([](int32 &&_Acc, int32 _Value) { return _Acc * _Value; }, 1);
+					int32 Product = Vector.f_Reduce
+						(
+							[](int32 &&_Acc, int32 _Value)
+							{
+								return _Acc * _Value;
+							}
+							, 1
+						)
+					;
 
 					DMibExpect(Product, ==, 120);
 				};
@@ -451,7 +622,15 @@ namespace
 				{
 					TCVector<int32> Vector;
 
-					int32 Result = Vector.f_Reduce([](int32 &&_Acc, int32 _Value) { return _Acc + _Value; }, 42);
+					int32 Result = Vector.f_Reduce
+						(
+							[](int32 &&_Acc, int32 _Value)
+							{
+								return _Acc + _Value;
+							}
+							, 42
+						)
+					;
 
 					DMibExpect(Result, ==, 42);
 				};
@@ -460,7 +639,14 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5};
 
-					int32 Sum = Vector.f_Reduce([](int32 &&_Acc, int32 _Value) { return _Acc + _Value; });
+					int32 Sum = Vector.f_Reduce
+						(
+							[](int32 &&_Acc, int32 _Value)
+							{
+								return _Acc + _Value;
+							}
+						)
+					;
 
 					DMibExpect(Sum, ==, 15);
 				};
@@ -604,11 +790,27 @@ namespace
 					TCVector<int32> Vector = {1, 2, 3, 4};
 
 					// Reduce: ((((0-1)-2)-3)-4) = -10
-					int32 ReduceResult = Vector.f_Reduce([](int32 &&_Acc, int32 _Value) { return _Acc - _Value; }, 0);
+					int32 ReduceResult = Vector.f_Reduce
+						(
+							[](int32 &&_Acc, int32 _Value)
+							{
+								return _Acc - _Value;
+							}
+							, 0
+						)
+					;
 					DMibExpect(ReduceResult, ==, -10);
 
 					// ReduceRight: ((((0-4)-3)-2)-1) = -10 (same for subtraction with 0 initial)
-					int32 ReduceRightResult = Vector.f_ReduceRight([](int32 &&_Acc, int32 _Value) { return _Acc - _Value; }, 0);
+					int32 ReduceRightResult = Vector.f_ReduceRight
+						(
+							[](int32 &&_Acc, int32 _Value)
+							{
+								return _Acc - _Value;
+							}
+							, 0
+						)
+					;
 					DMibExpect(ReduceRightResult, ==, -10);
 				};
 
@@ -616,7 +818,15 @@ namespace
 				{
 					TCVector<int32> Vector;
 
-					int32 Result = Vector.f_ReduceRight([](int32 &&_Acc, int32 _Value) { return _Acc + _Value; }, 42);
+					int32 Result = Vector.f_ReduceRight
+						(
+							[](int32 &&_Acc, int32 _Value)
+							{
+								return _Acc + _Value;
+							}
+							, 42
+						)
+					;
 
 					DMibExpect(Result, ==, 42);
 				};
@@ -625,7 +835,14 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5};
 
-					int32 Sum = Vector.f_ReduceRight([](int32 &&_Acc, int32 _Value) { return _Acc + _Value; });
+					int32 Sum = Vector.f_ReduceRight
+						(
+							[](int32 &&_Acc, int32 _Value)
+							{
+								return _Acc + _Value;
+							}
+						)
+					;
 
 					DMibExpect(Sum, ==, 15);
 				};
@@ -751,9 +968,20 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-					auto Result = Vector
-						.f_Filter([](int32 _Value) { return _Value % 2 == 0; })
-						.f_Map([](int32 _Value) { return _Value * _Value; })
+					auto Result = Vector.f_Filter
+						(
+							[](int32 _Value)
+							{
+								return _Value % 2 == 0;
+							}
+						)
+						.f_Map
+						(
+							[](int32 _Value)
+							{
+								return _Value * _Value;
+							}
+						)
 					;
 
 					DMibExpect(Result, ==, TCVector<int32>({4, 16, 36, 64, 100}));
@@ -763,10 +991,28 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5};
 
-					int32 Result = Vector
-						.f_Map([](int32 _Value) { return _Value * 2; })
-						.f_Filter([](int32 _Value) { return _Value > 4; })
-						.f_Reduce([](int32 &&_Acc, int32 _Value) { return _Acc + _Value; }, 0)
+					int32 Result = Vector.f_Map
+						(
+							[](int32 _Value)
+							{
+								return _Value * 2;
+							}
+						)
+						.f_Filter
+						(
+							[](int32 _Value)
+							{
+								return _Value > 4;
+							}
+						)
+						.f_Reduce
+						(
+							[](int32 &&_Acc, int32 _Value)
+							{
+								return _Acc + _Value;
+							}
+							, 0
+						)
 					;
 
 					// Map: {2, 4, 6, 8, 10}
@@ -779,9 +1025,20 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3, 4, 5, 6};
 
-					bool bResult = Vector
-						.f_Filter([](int32 _Value) { return _Value > 3; })
-						.f_Every([](int32 _Value) { return _Value > 3; })
+					bool bResult = Vector.f_Filter
+						(
+							[](int32 _Value)
+							{
+								return _Value > 3;
+							}
+						)
+						.f_Every
+						(
+							[](int32 _Value)
+							{
+								return _Value > 3;
+							}
+						)
 					;
 
 					DMibExpectTrue(bResult);
@@ -791,9 +1048,20 @@ namespace
 				{
 					TCVector<int32> Vector = {1, 2, 3};
 
-					bool bResult = Vector
-						.f_Map([](int32 _Value) { return _Value * 10; })
-						.f_Some([](int32 _Value) { return _Value == 20; })
+					bool bResult = Vector.f_Map
+						(
+							[](int32 _Value)
+							{
+								return _Value * 10;
+							}
+						)
+						.f_Some
+						(
+							[](int32 _Value)
+							{
+								return _Value == 20;
+							}
+						)
 					;
 
 					DMibExpectTrue(bResult);
@@ -809,7 +1077,14 @@ namespace
 				{
 					TCVector<int32> const Vector = {1, 2, 3, 4, 5};
 
-					auto Result = Vector.f_Map([](int32 _Value) { return _Value * 2; });
+					auto Result = Vector.f_Map
+						(
+							[](int32 _Value)
+							{
+								return _Value * 2;
+							}
+						)
+					;
 
 					DMibExpect(Result, ==, TCVector<int32>({2, 4, 6, 8, 10}));
 				};
@@ -818,7 +1093,14 @@ namespace
 				{
 					TCVector<int32> const Vector = {1, 2, 3, 4, 5, 6};
 
-					auto Result = Vector.f_Filter([](int32 _Value) { return _Value % 2 == 0; });
+					auto Result = Vector.f_Filter
+						(
+							[](int32 _Value)
+							{
+								return _Value % 2 == 0;
+							}
+						)
+					;
 
 					DMibExpect(Result, ==, TCVector<int32>({2, 4, 6}));
 				};
@@ -827,7 +1109,14 @@ namespace
 				{
 					TCVector<int32> const Vector = {2, 4, 6, 8};
 
-					bool bResult = Vector.f_Every([](int32 _Value) { return _Value % 2 == 0; });
+					bool bResult = Vector.f_Every
+						(
+							[](int32 _Value)
+							{
+								return _Value % 2 == 0;
+							}
+						)
+					;
 
 					DMibExpectTrue(bResult);
 				};
@@ -836,7 +1125,14 @@ namespace
 				{
 					TCVector<int32> const Vector = {1, 3, 5, 6, 7};
 
-					bool bResult = Vector.f_Some([](int32 _Value) { return _Value % 2 == 0; });
+					bool bResult = Vector.f_Some
+						(
+							[](int32 _Value)
+							{
+								return _Value % 2 == 0;
+							}
+						)
+					;
 
 					DMibExpectTrue(bResult);
 				};
@@ -845,7 +1141,15 @@ namespace
 				{
 					TCVector<int32> const Vector = {1, 2, 3, 4, 5};
 
-					int32 Sum = Vector.f_Reduce([](int32 &&_Acc, int32 _Value) { return _Acc + _Value; }, 0);
+					int32 Sum = Vector.f_Reduce
+						(
+							[](int32 &&_Acc, int32 _Value)
+							{
+								return _Acc + _Value;
+							}
+							, 0
+						)
+					;
 
 					DMibExpect(Sum, ==, 15);
 				};
@@ -873,10 +1177,28 @@ namespace
 				{
 					TCVector<int32> const Vector = {1, 2, 3, 4, 5};
 
-					int32 Result = Vector
-						.f_Filter([](int32 _Value) { return _Value > 2; })
-						.f_Map([](int32 _Value) { return _Value * 10; })
-						.f_Reduce([](int32 &&_Acc, int32 _Value) { return _Acc + _Value; }, 0)
+					int32 Result = Vector.f_Filter
+						(
+							[](int32 _Value)
+							{
+								return _Value > 2;
+							}
+						)
+						.f_Map
+						(
+							[](int32 _Value)
+							{
+								return _Value * 10;
+							}
+						)
+						.f_Reduce
+						(
+							[](int32 &&_Acc, int32 _Value)
+							{
+								return _Acc + _Value;
+							}
+							, 0
+						)
 					;
 
 					// Filter: {3, 4, 5}
@@ -895,7 +1217,14 @@ namespace
 					TCVector<CTrackedObject> const &ConstVector = Vector;
 
 					// Use copy constructor to verify const ref is passed
-					auto Result = ConstVector.f_Map([](CTrackedObject const &_Value) { return CTrackedObject(_Value); });
+					auto Result = ConstVector.f_Map
+						(
+							[](CTrackedObject const &_Value)
+							{
+								return CTrackedObject(_Value);
+							}
+						)
+					;
 
 					DMibExpect(Result.f_GetLen(), ==, 3);
 					// Elements should be copied, not moved
