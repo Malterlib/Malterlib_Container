@@ -680,7 +680,8 @@ namespace
 
 					{
 						DMibTestPath("2");
-						// Problem: Strings containing comment markers (//, /*) and no spaces were not escaped, so after writing them to a string reading back would fail as they would be parsed as comments. Doh!
+						// Problem: Strings containing comment markers (//, /*) and no spaces were not escaped, so after writing
+						// them to a string reading back would fail as they would be parsed as comments.
 						CStr RegStr;
 						CStr ValueThatLooksLikeACommentButIsNot1 = "//Perforce/Depot/Path/Maybe";
 						CStr ValueThatLooksLikeACommentButIsNot2 = "SomethingWithA//InTheMiddle";
