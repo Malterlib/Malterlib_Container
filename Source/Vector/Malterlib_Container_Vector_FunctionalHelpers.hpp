@@ -58,5 +58,4 @@ namespace NMib::NContainer::NPrivate
 		else
 			return _fReducer(fg_Forward<tf_CAccumulator>(_Accumulator), fg_Forward<tf_CElement>(_Element));
 	}
-
 }

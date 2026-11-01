@@ -15,18 +15,19 @@ namespace NMib::NContainer
 			, NContainer::TCVector<t_CStr> &_Added
 			, NContainer::TCVector<t_CStr> &_Deleted
 			, bool _bRecursive
-		) const
+		)
+		const
 	{
 		// Find deleted
 		{
 			auto Iter = _Original.mp_Children.f_GetIterator();
 			while (Iter)
 			{
-				const TCRegistry *pReg = Iter;
+				TCRegistry const *pReg = Iter;
 				++Iter;
 				auto Name = pReg->f_GetName();
 
-				const TCRegistry *pChild = f_GetChildNoPath(Name);
+				TCRegistry const *pChild = f_GetChildNoPath(Name);
 				if (!pChild)
 				{
 					t_CStr Path = fsp_AppendPath(_Path, Name);
@@ -41,12 +42,12 @@ namespace NMib::NContainer
 			auto Iter = mp_Children.f_GetIterator();
 			while (Iter)
 			{
-				const TCRegistry *pReg = Iter;
+				TCRegistry const *pReg = Iter;
 				++Iter;
 				auto Name = pReg->f_GetName();
 
 				t_CStr Path = fsp_AppendPath(_Path, Name);
-				const TCRegistry *pChild = _Original.f_GetChildNoPath(Name);
+				TCRegistry const *pChild = _Original.f_GetChildNoPath(Name);
 				if (!pChild)
 				{
 					_Added.f_Insert(Path);
@@ -67,19 +68,19 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_FindChanges(const t_CStr &_Path, const TCRegistry &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_FindChanges(t_CStr const &_Path, TCRegistry const &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
 	{
 		// Find added and changed
 		{
 			auto Iter = mp_Children.f_GetIterator();
 			while (Iter)
 			{
-				const TCRegistry *pReg = Iter;
+				TCRegistry const *pReg = Iter;
 				++Iter;
 				t_CStr Name = pReg->f_GetName();
 
 				t_CStr Path = fsp_AppendPath(_Path, Name);
-				const TCRegistry *pChild = _Original.f_GetChildNoPath(Name);
+				TCRegistry const *pChild = _Original.f_GetChildNoPath(Name);
 				if (!pChild)
 				{
 					if (_bIncludeAdded)
@@ -108,18 +109,19 @@ namespace NMib::NContainer
 			, TCRegistry &_Changed
 			, NContainer::TCVector<t_CStr> &_Deleted
 			, bool _bIncludeAdded
-		) const
+		)
+		const
 	{
 		// Find deleted
 		{
 			auto Iter = _Original.mp_Children.f_GetIterator();
 			while (Iter)
 			{
-				const TCRegistry *pReg = Iter;
+				TCRegistry const *pReg = Iter;
 				++Iter;
 				t_CStr Name = pReg->f_GetName();
 
-				const TCRegistry *pChild = f_GetChildNoPath(Name);
+				TCRegistry const *pChild = f_GetChildNoPath(Name);
 				if (!pChild)
 				{
 					t_CStr Path = fsp_AppendPath(_Path, Name);
@@ -132,12 +134,12 @@ namespace NMib::NContainer
 			auto Iter = mp_Children.f_GetIterator();
 			while (Iter)
 			{
-				const TCRegistry *pReg = Iter;
+				TCRegistry const *pReg = Iter;
 				++Iter;
 				t_CStr Name = pReg->f_GetName();
 
 				t_CStr Path = fsp_AppendPath(_Path, Name);
-				const TCRegistry *pChild = _Original.f_GetChildNoPath(Name);
+				TCRegistry const *pChild = _Original.f_GetChildNoPath(Name);
 				if (!pChild)
 				{
 					if (_bIncludeAdded)
@@ -166,27 +168,22 @@ namespace NMib::NContainer
 			, NContainer::TCVector<t_CStr> &_Added
 			, NContainer::TCVector<t_CStr> &_Deleted
 			, bool _bRecursive
-		) const
+		)
+		const
 	{
 		fpr_FindDiffs("", _Original, _Changed, _Added, _Deleted, _bRecursive);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FindChanges(const TCRegistry &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FindChanges(TCRegistry const &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
 	{
 		fpr_FindChanges("", _Original, _Changed, _bIncludeAdded);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FindChanges
-		(
-			TCRegistry const &_Original
-			, TCRegistry &_Changed
-			, NContainer::TCVector<t_CKey> &_Deleted
-			, bool _bIncludeAdded
-		) const
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FindChanges(TCRegistry const &_Original, TCRegistry &_Changed, NContainer::TCVector<t_CKey> &_Deleted, bool _bIncludeAdded) const
 	{
 		fpr_FindChanges("", _Original, _Changed, _Deleted, _bIncludeAdded);
 	}

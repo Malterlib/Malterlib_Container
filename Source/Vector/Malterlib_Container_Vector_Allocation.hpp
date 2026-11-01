@@ -51,7 +51,6 @@ namespace NMib::NContainer
 		return fp_AllocData(fsp_GetAllocSize(_nObjects));
 	}
 
-
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CAllocator &TCVector<t_CData, t_CAllocator, t_COptions>::fp_Allocator()
 	{
@@ -67,11 +66,11 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	inline_never umint TCVector<t_CData, t_CAllocator, t_COptions>::fsp_GetAllocSize(umint _NeededSize)
 	{
-		return fg_Max(fg_Max((umint(1) << NMib::fg_GetHighestBitSetNoZero((_NeededSize-1) | 1)) << 1, _NeededSize), t_COptions::mc_MinSize);
+		return fg_Max(fg_Max((umint(1) << NMib::fg_GetHighestBitSetNoZero((_NeededSize - 1) | 1)) << 1, _NeededSize), t_COptions::mc_MinSize);
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	inline_small bool TCVector<t_CData, t_CAllocator, t_COptions>::fsp_NeedReallocGrow(umint _NeededSize, const CVectorData *_pExtraData)
+	inline_small bool TCVector<t_CData, t_CAllocator, t_COptions>::fsp_NeedReallocGrow(umint _NeededSize, CVectorData const *_pExtraData)
 	{
 		if (!_pExtraData)
 			return true;
@@ -85,7 +84,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	inline_small bool TCVector<t_CData, t_CAllocator, t_COptions>::fsp_NeedRealloc(umint _NeededSize, const CVectorData *_pExtraData)
+	inline_small bool TCVector<t_CData, t_CAllocator, t_COptions>::fsp_NeedRealloc(umint _NeededSize, CVectorData const *_pExtraData)
 	{
 		if (!_pExtraData)
 			return true;
@@ -106,7 +105,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	inline_small bool TCVector<t_CData, t_CAllocator, t_COptions>::fsp_CanGrow(umint _NeededSize, const CVectorData *_pExtraData)
+	inline_small bool TCVector<t_CData, t_CAllocator, t_COptions>::fsp_CanGrow(umint _NeededSize, CVectorData const *_pExtraData)
 	{
 		if (!_pExtraData)
 			return false;

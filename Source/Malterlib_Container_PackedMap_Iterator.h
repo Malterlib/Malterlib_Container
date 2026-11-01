@@ -35,7 +35,7 @@ namespace NMib::NContainer
 		constexpr inline_small umint f_GetLen() const noexcept;
 		constexpr inline_small TCPackedMapIterator f_GetIterator() const noexcept;
 
-		constexpr inline_small operator bool() const noexcept;
+		constexpr inline_small operator bool () const noexcept;
 		constexpr inline_small CValueRef operator * () const noexcept;
 		constexpr inline_small CValuePtr operator -> () const noexcept;
 		constexpr inline_small TCPackedMapIterator &operator ++ () noexcept;
@@ -52,10 +52,10 @@ namespace NMib::NContainer
 		constexpr void fp_RetreatToPrevElement() noexcept;
 
 		CMapPointer mp_pMap = nullptr;
-		umint m_iSegment = 0;           // Current segment
-		umint m_iLocalPos = 0;          // Position within segment (relative to first element)
-		umint m_iCurrent = 0;           // Absolute position in forward order
-		umint m_nElements = 0;          // Total number of elements
+		umint m_iSegment = 0;  // Current segment
+		umint m_iLocalPos = 0; // Position within segment (relative to first element)
+		umint m_iCurrent = 0;  // Absolute position in forward order
+		umint m_nElements = 0; // Total number of elements
 		bool m_bValid = false;
 	};
 
@@ -78,7 +78,7 @@ namespace NMib::NContainer
 		constexpr inline_small umint f_GetLen() const noexcept;
 		constexpr inline_small TCPackedMapKeyIterator f_GetIterator() const noexcept;
 
-		constexpr inline_small operator bool() const noexcept;
+		constexpr inline_small operator bool () const noexcept;
 		constexpr inline_small CKeyRef operator * () const noexcept;
 		constexpr inline_small CKeyPtr operator -> () const noexcept;
 		constexpr inline_small TCPackedMapKeyIterator &operator ++ () noexcept;
@@ -121,7 +121,7 @@ namespace NMib::NContainer
 		constexpr inline_small umint f_GetLen() const noexcept;
 		constexpr inline_small TCPackedMapKeyValueIterator f_GetIterator() const noexcept;
 
-		constexpr inline_small operator bool() const noexcept;
+		constexpr inline_small operator bool () const noexcept;
 		constexpr inline_small CRef operator * () const noexcept;
 		constexpr inline_small TCPackedMapKeyValueIterator &operator ++ () noexcept;
 		constexpr inline_small TCPackedMapKeyValueIterator operator ++ (int) noexcept;

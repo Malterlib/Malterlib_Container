@@ -10,7 +10,7 @@ namespace NMib::NContainer
 	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Replace(tf_CSource &&_Source, umint _StartInSource, umint _Len, umint _StartInList, umint _MinLen)
 		requires (NTraits::cIsSame<NTraits::TCRemoveReference<tf_CSource>, TCVector>)
 	{
-		constexpr static bool c_bIsMove = NTraits::cIsRValueReference<tf_CSource &&>;
+		static constexpr bool c_bIsMove = NTraits::cIsRValueReference<tf_CSource &&>;
 
 		umint CurrentLength = f_GetLen();
 		umint Len = fg_Min(_Len, _Source.f_GetLen() - _StartInSource);

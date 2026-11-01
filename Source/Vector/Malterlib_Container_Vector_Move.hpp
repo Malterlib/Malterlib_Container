@@ -14,8 +14,8 @@ namespace NMib::NContainer
 		umint OldLen = f_GetLen();
 
 		fsp_CheckOverlapping(_FromPosition, _ToPosition, _Len, _Len);
-		fsp_CheckBounds(OldLen+1, _FromPosition + _Len);
-		fsp_CheckBounds(OldLen+1, _ToPosition);
+		fsp_CheckBounds(OldLen + 1, _FromPosition + _Len);
+		fsp_CheckBounds(OldLen + 1, _ToPosition);
 
 		// TODO: Make inplace
 

@@ -167,16 +167,12 @@ namespace NMib::NContainer::NPrivate
 		if constexpr (NTraits::cIsTriviallyMoveConstructible<t_CData>)
 		{
 			if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
-			{
 				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
-			}
 			else
 			{
 				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
 				for (smint i = smint(_Len) - 1; i >= 0; --i)
-				{
 					_pSrc[i].~t_CData();
-				}
 			}
 		}
 		else
@@ -184,9 +180,7 @@ namespace NMib::NContainer::NPrivate
 			if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
 			{
 				for (smint i = smint(_Len) - 1; i >= 0; --i)
-				{
 					new((void *)(_pDest + i)) t_CData(fg_Move(_pSrc[i]));
-				}
 			}
 			else
 			{
@@ -218,9 +212,7 @@ namespace NMib::NContainer::NPrivate
 		if constexpr (NTraits::cIsTriviallyMoveConstructible<t_CData>)
 		{
 			if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
-			{
 				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
-			}
 			else
 			{
 				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
@@ -233,9 +225,7 @@ namespace NMib::NContainer::NPrivate
 			if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
 			{
 				for (umint i = 0; i < _Len; ++i)
-				{
 					new((void *)(_pDest + i)) t_CData(fg_Move(_pSrc[i]));
-				}
 			}
 			else
 			{

@@ -33,9 +33,7 @@ namespace NMib::NContainer::NPrivate
 	inline_small bool TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_IsFullySet() const
 	{
 		if constexpr (mc_bIsRoot)
-		{
 			return m_Bits.f_IsFullySet();
-		}
 		return CSuper::f_IsFullySet();
 	}
 
@@ -43,9 +41,7 @@ namespace NMib::NContainer::NPrivate
 	inline_small bool TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_IsFullyFree() const
 	{
 		if constexpr (mc_bIsRoot)
-		{
 			return m_Bits.f_IsFullyFree();
-		}
 		return CSuper::f_IsFullyFree();
 	}
 
@@ -64,7 +60,6 @@ namespace NMib::NContainer::NPrivate
 			}
 		}
 	}
-
 
 	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal, bool t_bLast>
 	template <bool tf_bValue>
@@ -169,7 +164,6 @@ namespace NMib::NContainer::NPrivate
 		return Bit;
 	}
 
-
 	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal, bool t_bLast>
 	inline_small aint TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_FindFreeBitReverseAndSet()
 	{
@@ -188,7 +182,6 @@ namespace NMib::NContainer::NPrivate
 		return Bit;
 	}
 
-
 	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal, bool t_bLast>
 	inline_small aint TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_FindUpperBound(umint _StartBit) const
 	{
@@ -204,7 +197,13 @@ namespace NMib::NContainer::NPrivate
 
 	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal, bool t_bLast>
 	template <typename t_CFunctor>
-	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_EnumFreeBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_EnumFreeBitRanges
+		(
+			t_CFunctor &&_Functor
+			, umint _StartBit
+			, umint _EndBit
+		)
+		const
 	{
 		return m_Bits.f_EnumFreeBitRanges(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
@@ -265,7 +264,6 @@ namespace NMib::NContainer::NPrivate
 	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, true>::f_SetBitRange(umint _StartBit, umint _nBits, bool _bValue)
 	{
 	}
-
 
 	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal>
 	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, true>::f_SetBit(umint _Bit, bool _bValue)

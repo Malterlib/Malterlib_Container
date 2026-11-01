@@ -41,7 +41,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(umint _Position, const t_CData *_pData, umint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(umint _Position, t_CData const *_pData, umint _Len)
 	{
 		umint PrevLen = f_GetLen();
 		fsp_CheckBounds(PrevLen + 1, _Position);
@@ -84,7 +84,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(umint _Position, const t_CData &_Data)
+	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertBefore(umint _Position, t_CData const &_Data)
 	{
 		umint PrevLen = f_GetLen();
 		fsp_CheckBounds(PrevLen + 1, _Position);

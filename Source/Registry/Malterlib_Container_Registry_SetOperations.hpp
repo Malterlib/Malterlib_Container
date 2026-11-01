@@ -7,12 +7,12 @@ namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_AddAllChildren(const t_CStr &_Path, NContainer::TCVector<t_CStr> &_Added) const
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_AddAllChildren(t_CStr const &_Path, NContainer::TCVector<t_CStr> &_Added) const
 	{
 		auto Iter = mp_Children.f_GetIterator();
 		while (Iter)
 		{
-			const TCRegistry *pReg = Iter;
+			TCRegistry const *pReg = Iter;
 			++Iter;
 			t_CStr Name = pReg->f_GetName();
 			t_CStr Path = fsp_AppendPath(_Path, Name);
@@ -21,17 +21,16 @@ namespace NMib::NContainer
 		}
 	}
 
-
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_Merge(const TCRegistry *_pMergeWith)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_Merge(TCRegistry const *_pMergeWith)
 	{
 		// Find deleted
 		{
 			auto Iter = _pMergeWith->mp_Children.f_GetIterator();
 			while (Iter)
 			{
-				const TCRegistry *pReg = Iter;
+				TCRegistry const *pReg = Iter;
 				++Iter;
 				t_CStr Name = pReg->f_GetName();
 				TCRegistry *pChild = f_SetValue(Name, pReg->f_GetThisValue());
@@ -44,14 +43,14 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_FPredicate>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_MergeIncludingValue(const TCRegistry *_pMergeWith, tf_FPredicate const &_fPredicate)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_MergeIncludingValue(TCRegistry const *_pMergeWith, tf_FPredicate const &_fPredicate)
 	{
 		// Find deleted
 		{
 			auto Iter = _pMergeWith->mp_Children.f_GetIterator();
 			while (Iter)
 			{
-				const TCRegistry *pReg = Iter;
+				TCRegistry const *pReg = Iter;
 				++Iter;
 				t_CStr Name = pReg->f_GetName();
 				TCRegistry *pChild;
@@ -70,12 +69,12 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_Add(const TCRegistry *_pAdd)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_Add(TCRegistry const *_pAdd)
 	{
 		auto Iter = _pAdd->mp_Children.f_GetIterator();
 		while (Iter)
 		{
-			const TCRegistry *pReg = Iter;
+			TCRegistry const *pReg = Iter;
 			++Iter;
 			t_CStr Name = pReg->f_GetName();
 			TCRegistry *pChild = f_CreateChild(Name, true);
@@ -84,9 +83,10 @@ namespace NMib::NContainer
 			pChild->fpr_Add(pReg);
 		}
 	}
+
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Merge(const TCRegistry &_MergeWith, bool _bMergeRoot)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Merge(TCRegistry const &_MergeWith, bool _bMergeRoot)
 	{
 		if (_bMergeRoot)
 		{
@@ -104,7 +104,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <typename tf_FPredicate>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_MergeIncludingValue(const TCRegistry &_MergeWith, bool _bMergeRoot, tf_FPredicate const &_fPredicate)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_MergeIncludingValue(TCRegistry const &_MergeWith, bool _bMergeRoot, tf_FPredicate const &_fPredicate)
 	{
 		if (_bMergeRoot)
 		{
@@ -121,14 +121,23 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_MergeIncludingValue(const TCRegistry &_MergeWith, bool _bMergeRoot)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_MergeIncludingValue(TCRegistry const &_MergeWith, bool _bMergeRoot)
 	{
-		f_MergeIncludingValue(_MergeWith, _bMergeRoot, [](TCRegistry const &_Reg) -> bool { return true; });
+		f_MergeIncludingValue
+			(
+				_MergeWith
+				, _bMergeRoot
+				, [](TCRegistry const &_Reg) -> bool
+				{
+					return true;
+				}
+			)
+		;
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Add(const TCRegistry &_ToAdd, bool _SetRootValue)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Add(TCRegistry const &_ToAdd, bool _SetRootValue)
 	{
 		if (_SetRootValue)
 			f_SetThisValue(_ToAdd.f_GetThisValue());
@@ -137,11 +146,11 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Subtract(const TCRegistry &_ToSubtract)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Subtract(TCRegistry const &_ToSubtract)
 	{
 		for (auto Iter = _ToSubtract.mp_Children.f_GetIterator(); Iter; ++Iter)
 		{
-			const TCRegistry *pReg = Iter;
+			TCRegistry const *pReg = Iter;
 			t_CStr Name = pReg->f_GetName();
 			auto *pChild = f_GetChild(Name);
 			if (pChild)

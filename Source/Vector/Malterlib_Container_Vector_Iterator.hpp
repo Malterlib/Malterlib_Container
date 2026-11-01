@@ -8,13 +8,13 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	auto TCVector<t_CData, t_CAllocator, t_COptions>::f_GetIterator() -> CIterator
 	{
-		return CIterator(f_GetArray(),f_GetArray()+f_GetLen());
+		return CIterator(f_GetArray(), f_GetArray() + f_GetLen());
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	auto TCVector<t_CData, t_CAllocator, t_COptions>::f_GetIterator() const -> CIteratorConst
 	{
-		return CIteratorConst(f_GetArray(),f_GetArray()+f_GetLen());
+		return CIteratorConst(f_GetArray(), f_GetArray() + f_GetLen());
 	}
 
 	template <typename t_CIteratorData>
@@ -25,14 +25,14 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CIteratorData>
-	TCVectorIterator<t_CIteratorData>::TCVectorIterator(t_CIteratorData *_Begin,t_CIteratorData *_End)
+	TCVectorIterator<t_CIteratorData>::TCVectorIterator(t_CIteratorData *_Begin, t_CIteratorData *_End)
 		: m_pBegin(_Begin)
 		, m_pEnd(_End)
 	{
 	}
 
 	template <typename t_CIteratorData>
-	TCVectorIterator<t_CIteratorData>::TCVectorIterator(TCVectorIterator const& _ToCopy)
+	TCVectorIterator<t_CIteratorData>::TCVectorIterator(TCVectorIterator const &_ToCopy)
 		: m_pBegin(_ToCopy.m_pBegin)
 		, m_pEnd(_ToCopy.m_pEnd)
 	{
@@ -45,7 +45,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CIteratorData>
-	inline_small auto TCVectorIterator<t_CIteratorData>::operator = (TCVectorIterator const& _ToCopy) -> TCVectorIterator &
+	inline_small auto TCVectorIterator<t_CIteratorData>::operator = (TCVectorIterator const &_ToCopy) -> TCVectorIterator &
 	{
 		m_pBegin = _ToCopy.m_pBegin;
 		m_pEnd = _ToCopy.m_pEnd;
@@ -53,13 +53,13 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CIteratorData>
-	inline_small bool TCVectorIterator<t_CIteratorData>::operator == (TCVectorIterator const& _Other) const noexcept
+	inline_small bool TCVectorIterator<t_CIteratorData>::operator == (TCVectorIterator const &_Other) const noexcept
 	{
 		return (m_pBegin == _Other.m_pBegin) && (m_pEnd == _Other.m_pEnd);
 	}
 
 	template <typename t_CIteratorData>
-	inline_small TCVectorIterator<t_CIteratorData>::operator t_CIteratorData *() const
+	inline_small TCVectorIterator<t_CIteratorData>::operator t_CIteratorData * () const
 	{
 		return fp_GetCurrent();
 	}

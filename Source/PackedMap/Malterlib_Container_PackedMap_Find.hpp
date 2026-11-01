@@ -9,13 +9,9 @@ namespace NMib::NContainer
 	// Uses top-down descent through B+-tree-like index structure
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	template <typename tf_CKey>
-	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_FindSegmentForKey
-		(
-			CPackedMapData const *_pData
-			, t_CCompare const &_Compare
-			, tf_CKey const &_Key
-		)
+	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_FindSegmentForKey(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key)
 		noexcept
+		-> umint
 	{
 		fsp_StaticAssertNothrowCompareProbeToStoredKey<tf_CKey>();
 
@@ -59,7 +55,7 @@ namespace NMib::NContainer
 		}
 
 		// Start from root (top level)
-		umint iCurrent = 0;  // Index within current level
+		umint iCurrent = 0; // Index within current level
 
 		// Descend from root to leaf level
 		for (umint iLevel = nLevels - 1; iLevel > 0; --iLevel)
@@ -85,13 +81,9 @@ namespace NMib::NContainer
 
 					t_CKey const *pSeparatorKey;
 					if constexpr (mcp_bIndexStoresKeys)
-					{
 						pSeparatorKey = &pIndex[iEntry];
-					}
 					else
-					{
 						pSeparatorKey = &_pData->m_pKeys[pIndex[iEntry]];
-					}
 
 					auto CompResult = _Compare(_Key, *pSeparatorKey);
 					if (CompResult < 0)
@@ -177,7 +169,7 @@ namespace NMib::NContainer
 			umint iChildEnd = fg_Min(iChildStart + mcp_Fanout, ChildSize);
 
 			bool bFound = false;
-			for (umint iChild = iChildEnd; iChild-- > iChildStart; )
+			for (umint iChild = iChildEnd; iChild-- > iChildStart;)
 			{
 				umint iChildEntry = iChildOffset + iChild;
 				if (_pData->f_GetIndexEntryValid(iChildEntry))
@@ -221,7 +213,7 @@ namespace NMib::NContainer
 			umint iParent = iIndex >> mcp_FanoutBits;
 			umint iChildStart = iParent * mcp_Fanout;
 
-			for (umint iChild = iIndex; iChild-- > iChildStart; )
+			for (umint iChild = iIndex; iChild-- > iChildStart;)
 			{
 				umint iEntry = pLevelOffsets[iLevel] + iChild;
 				if (!_pData->f_GetIndexEntryValid(iEntry))
@@ -306,7 +298,8 @@ namespace NMib::NContainer
 			, umint _iSegment
 			, tf_CKey const &_Key
 		)
-		noexcept -> CSearchResult
+		noexcept
+		-> CSearchResult
 	{
 		fsp_StaticAssertNothrowCompareProbeToStoredKey<tf_CKey>();
 
@@ -344,13 +337,8 @@ namespace NMib::NContainer
 	// Find a key's position (segment + local position)
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	template <typename tf_CKey>
-	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_Find
-		(
-			CPackedMapData const *_pData
-			, t_CCompare const &_Compare
-			, tf_CKey const &_Key
-		)
-		noexcept -> CFindResult
+	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_Find(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key) noexcept
+		-> CFindResult
 	{
 		if (!_pData)
 			return {0, 0, 0, false};
@@ -414,7 +402,7 @@ namespace NMib::NContainer
 		if (pCounts && nLevels > 1)
 		{
 			// Descend calibrator tree from root to find target segment
-			for (uint16 iLevel = nLevels; iLevel-- > 1; )
+			for (uint16 iLevel = nLevels; iLevel-- > 1;)
 			{
 				umint iLeftChild = iSegment * 2;
 				umint nLeftCount = (umint)pCounts[pOffsets[iLevel - 1] + iLeftChild];
@@ -435,13 +423,9 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	template <typename tf_CKey>
-	constexpr umint TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_FindEqualSlot
-		(
-			CPackedMapData const *_pData
-			, t_CCompare const &_Compare
-			, tf_CKey const &_Key
-		)
+	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_FindEqualSlot(CPackedMapData const *_pData, t_CCompare const &_Compare, tf_CKey const &_Key)
 		noexcept
+		-> umint
 	{
 		fsp_StaticAssertNothrowCompareProbeToStoredKey<tf_CKey>();
 
@@ -652,7 +636,7 @@ namespace NMib::NContainer
 		auto *pValues = pData->m_pValues;
 
 		// Use safe reverse loop pattern for unsigned umint
-		for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
+		for (umint iSeg = pData->m_nSegments; iSeg-- > 0;)
 		{
 			if (pMeta[iSeg].m_Count > 0)
 			{
@@ -704,7 +688,7 @@ namespace NMib::NContainer
 		auto const *pKeys = pData->m_pKeys;
 
 		// Use safe reverse loop pattern for unsigned umint
-		for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
+		for (umint iSeg = pData->m_nSegments; iSeg-- > 0;)
 		{
 			if (pMeta[iSeg].m_Count > 0)
 			{

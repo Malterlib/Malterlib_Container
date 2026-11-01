@@ -9,14 +9,13 @@
 
 // TODO: Figure out why compiler is complaining about C4789
 #ifdef DCompiler_MSVC
-#pragma warning(disable:4789)
+#	pragma warning(disable:4789)
 #endif
 namespace
 {
 	class CLinkedList_Tests : public NMib::NTest::CTest
 	{
 	public:
-
 		class CTestClass
 		{
 		public:
@@ -88,13 +87,13 @@ namespace
 				}
 
 				// Test splitting at beginning
-				OtherList.f_SplitInto(&Tests[0], &Tests[nToSplit-1]);
+				OtherList.f_SplitInto(&Tests[0], &Tests[nToSplit - 1]);
 				DMibTest(DMibExpr(OtherList.f_CheckList(false)) && DMibExpr(3u));
 				DMibTest(DMibExpr(TestList.f_CheckList(false)) && DMibExpr(3u));
 				DMibTest(DMibExpr(OtherList.f_GetFirst()->m_Value) == DMibExpr(0u));
-				DMibTest(DMibExpr(OtherList.f_GetLast()->m_Value) == DMibExpr(nToSplit)-DMibExpr(1u));
+				DMibTest(DMibExpr(OtherList.f_GetLast()->m_Value) == DMibExpr(nToSplit) - DMibExpr(1u));
 				DMibTest(DMibExpr(TestList.f_GetFirst()->m_Value) == DMibExpr(nToSplit));
-				DMibTest(DMibExpr(TestList.f_GetLast()->m_Value) == DMibExpr(nItems)-DMibExpr(1u));
+				DMibTest(DMibExpr(TestList.f_GetLast()->m_Value) == DMibExpr(nItems) - DMibExpr(1u));
 				DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(nToSplit) && DMibExpr(2u));
 				DMibTest((DMibExpr(TestList.f_GetLen()) == DMibExpr(nItems) - DMibExpr(nToSplit)) && DMibExpr(2u));
 
@@ -113,13 +112,13 @@ namespace
 					}
 
 					// Test splitting at end
-					OtherList.f_SplitInto(&Tests[nItems - nToSplit], &Tests[nItems-1]);
+					OtherList.f_SplitInto(&Tests[nItems - nToSplit], &Tests[nItems - 1]);
 					DMibTest(DMibExpr(OtherList.f_CheckList(false)) && DMibExpr(2));
 					DMibTest(DMibExpr(TestList.f_CheckList(false)) && DMibExpr(2));
-					DMibTest(DMibExpr(OtherList.f_GetFirst()->m_Value) == DMibExpr(nItems)-DMibExpr(nToSplit));
-					DMibTest(DMibExpr(OtherList.f_GetLast()->m_Value) == DMibExpr(nItems)-DMibExpr(1u));
+					DMibTest(DMibExpr(OtherList.f_GetFirst()->m_Value) == DMibExpr(nItems) - DMibExpr(nToSplit));
+					DMibTest(DMibExpr(OtherList.f_GetLast()->m_Value) == DMibExpr(nItems) - DMibExpr(1u));
 					DMibTest(DMibExpr(TestList.f_GetFirst()->m_Value) == DMibExpr(0u));
-					DMibTest(DMibExpr(TestList.f_GetLast()->m_Value) == DMibExpr(nItems)-DMibExpr(nToSplit)-DMibExpr(1u));
+					DMibTest(DMibExpr(TestList.f_GetLast()->m_Value) == DMibExpr(nItems) - DMibExpr(nToSplit) - DMibExpr(1u));
 					DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(nToSplit));
 					DMibTest(DMibExpr(TestList.f_GetLen()) == DMibExpr(nItems) - DMibExpr(nToSplit));
 
@@ -170,7 +169,6 @@ namespace
 				DMibTest(DMibExpr(OtherList.f_CheckList(false)) && DMibExpr(5));
 				DMibTest(DMibExpr(TestList.f_CheckList(false)) && DMibExpr(5));
 			}
-
 		}
 
 		class CTestS
@@ -250,13 +248,13 @@ namespace
 				{
 					DMibTestPath("Beginning");
 
-					OtherList.f_SplitInto(&Tests[0], &Tests[nToSplit-1]);
+					OtherList.f_SplitInto(&Tests[0], &Tests[nToSplit - 1]);
 					DMibTest(DMibExpr(OtherList.f_CheckList(false)) && DMibExpr(3));
 					DMibTest(DMibExpr(TestList.f_CheckList(false)) && DMibExpr(3));
 					DMibTest(DMibExpr(OtherList.f_GetFirst()->m_Value) == DMibExpr(0u));
-					DMibTest(DMibExpr(OtherList.f_GetLast()->m_Value) == DMibExpr(nToSplit)-DMibExpr(1u));
+					DMibTest(DMibExpr(OtherList.f_GetLast()->m_Value) == DMibExpr(nToSplit) - DMibExpr(1u));
 					DMibTest(DMibExpr(TestList.f_GetFirst()->m_Value) == DMibExpr(nToSplit));
-					DMibTest(DMibExpr(TestList.f_GetLast()->m_Value) == DMibExpr(nItems)-DMibExpr(1u));
+					DMibTest(DMibExpr(TestList.f_GetLast()->m_Value) == DMibExpr(nItems) - DMibExpr(1u));
 					DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(nToSplit));
 					DMibTest(DMibExpr(TestList.f_GetLen()) == DMibExpr(nItems) - DMibExpr(nToSplit));
 
@@ -277,7 +275,7 @@ namespace
 				{
 					DMibTestPath("End");
 
-					OtherList.f_SplitInto(&Tests[nItems - nToSplit], &Tests[nItems-1]);
+					OtherList.f_SplitInto(&Tests[nItems - nToSplit], &Tests[nItems - 1]);
 					DMibTest(DMibExpr(OtherList.f_CheckList(false)) && DMibExpr(5));
 					DMibTest(DMibExpr(TestList.f_CheckList(false)) && DMibExpr(5));
 					DMibTest(DMibExpr(OtherList.f_GetFirst()->m_Value) == DMibExpr(nItems) - DMibExpr(nToSplit));
@@ -477,13 +475,10 @@ namespace
 
 			List.f_Clear();
 			DMibTest(DMibExpr(List.f_IsEmpty()));
-
-
 		}
 
 		void f_DoTests()
 		{
-
 			DMibTestSuite("Invasive Normal")
 			{
 				this->f_InvasiveNormal();
@@ -587,9 +582,12 @@ namespace
 					Dest.f_InsertAfter(fg_Move(Handle), DestIter);
 					// Order should be: 10, 20, 1, 30
 					auto CheckIter = Dest.f_GetIterator();
-					DMibExpect(*CheckIter, ==, 10); ++CheckIter;
-					DMibExpect(*CheckIter, ==, 20); ++CheckIter;
-					DMibExpect(*CheckIter, ==, 1); ++CheckIter;
+					DMibExpect(*CheckIter, ==, 10);
+					++CheckIter;
+					DMibExpect(*CheckIter, ==, 20);
+					++CheckIter;
+					DMibExpect(*CheckIter, ==, 1);
+					++CheckIter;
 					DMibExpect(*CheckIter, ==, 30);
 				};
 
@@ -599,7 +597,7 @@ namespace
 					TCLinkedList<int32> Source = {1, 2, 3, 4, 5};
 					TCLinkedList<int32> Dest;
 
-					for (auto Iter = Source.f_GetIterator(); Iter; )
+					for (auto Iter = Source.f_GetIterator(); Iter;)
 					{
 						auto Handle = Iter.f_ExtractNode();
 						Dest.f_Insert(fg_Move(Handle));
@@ -611,9 +609,7 @@ namespace
 					// Verify order is preserved
 					auto CheckIter = Dest.f_GetIterator();
 					for (int32 i = 1; i <= 5; ++i, ++CheckIter)
-					{
 						DMibExpect(*CheckIter, ==, i)(ETestFlag_Aggregated);
-					}
 				};
 
 				// Test handle destructor properly cleans up

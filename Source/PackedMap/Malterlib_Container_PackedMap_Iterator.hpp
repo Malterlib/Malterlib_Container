@@ -54,7 +54,7 @@ namespace NMib::NContainer
 					m_iCurrent = m_nElements - 1;
 					// Start from the last element
 					// Safe reverse loop for unsigned umint
-					for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
+					for (umint iSeg = pData->m_nSegments; iSeg-- > 0;)
 					{
 						if (pMeta[iSeg].m_Count > 0)
 						{
@@ -82,7 +82,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr inline_small TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::operator bool() const noexcept
+	constexpr inline_small TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::operator bool () const noexcept
 	{
 		return m_bValid;
 	}
@@ -131,7 +131,7 @@ namespace NMib::NContainer
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
 	constexpr auto TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::operator -> () const noexcept -> CValuePtr
 	{
-		return &operator*();
+		return &operator * ();
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
@@ -205,7 +205,7 @@ namespace NMib::NContainer
 			else
 			{
 				m_iCurrent = m_nElements - 1;
-				for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
+				for (umint iSeg = pData->m_nSegments; iSeg-- > 0;)
 				{
 					if (pMeta[iSeg].m_Count > 0)
 					{
@@ -287,10 +287,10 @@ namespace NMib::NContainer
 		{
 			// Move to previous segment - safe check for unsigned umint
 			if (m_iSegment == 0)
-				return;  // Can't retreat further
+				return; // Can't retreat further
 
 			// Safe reverse search for unsigned umint
-			for (umint iSeg = m_iSegment; iSeg-- > 0; )
+			for (umint iSeg = m_iSegment; iSeg-- > 0;)
 			{
 				if (pMeta[iSeg].m_Count > 0)
 				{
@@ -349,7 +349,7 @@ namespace NMib::NContainer
 				{
 					m_iCurrent = m_nElements - 1;
 					// Safe reverse loop for unsigned umint
-					for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
+					for (umint iSeg = pData->m_nSegments; iSeg-- > 0;)
 					{
 						if (pMeta[iSeg].m_Count > 0)
 						{
@@ -376,7 +376,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr inline_small TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::operator bool() const noexcept
+	constexpr inline_small TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::operator bool () const noexcept
 	{
 		return m_bValid;
 	}
@@ -425,7 +425,7 @@ namespace NMib::NContainer
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
 	constexpr auto TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::operator -> () const noexcept -> CKeyPtr
 	{
-		return &operator*();
+		return &operator * ();
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
@@ -499,7 +499,7 @@ namespace NMib::NContainer
 			else
 			{
 				m_iCurrent = m_nElements - 1;
-				for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
+				for (umint iSeg = pData->m_nSegments; iSeg-- > 0;)
 				{
 					if (pMeta[iSeg].m_Count > 0)
 					{
@@ -580,10 +580,10 @@ namespace NMib::NContainer
 		{
 			// Move to previous segment - safe check for unsigned umint
 			if (m_iSegment == 0)
-				return;  // Can't retreat further
+				return; // Can't retreat further
 
 			// Safe reverse search for unsigned umint
-			for (umint iSeg = m_iSegment; iSeg-- > 0; )
+			for (umint iSeg = m_iSegment; iSeg-- > 0;)
 			{
 				if (pMeta[iSeg].m_Count > 0)
 				{
@@ -642,7 +642,7 @@ namespace NMib::NContainer
 				{
 					m_iCurrent = m_nElements - 1;
 					// Safe reverse loop for unsigned umint
-					for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
+					for (umint iSeg = pData->m_nSegments; iSeg-- > 0;)
 					{
 						if (pMeta[iSeg].m_Count > 0)
 						{
@@ -669,7 +669,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr inline_small TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::operator bool() const noexcept
+	constexpr inline_small TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::operator bool () const noexcept
 	{
 		return m_bValid;
 	}
@@ -693,11 +693,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse> &TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::operator =
-		(
-			TCPackedMapKeyValueIterator const &_ToCopy
-		)
-		noexcept
+	constexpr auto TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::operator = (TCPackedMapKeyValueIterator const &_ToCopy) noexcept
+		-> TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse> &
 	{
 		mp_pMap = _ToCopy.mp_pMap;
 		m_iSegment = _ToCopy.m_iSegment;
@@ -790,7 +787,7 @@ namespace NMib::NContainer
 			else
 			{
 				m_iCurrent = m_nElements - 1;
-				for (umint iSeg = pData->m_nSegments; iSeg-- > 0; )
+				for (umint iSeg = pData->m_nSegments; iSeg-- > 0;)
 				{
 					if (pMeta[iSeg].m_Count > 0)
 					{
@@ -871,10 +868,10 @@ namespace NMib::NContainer
 		{
 			// Move to previous segment - safe check for unsigned umint
 			if (m_iSegment == 0)
-				return;  // Can't retreat further
+				return; // Can't retreat further
 
 			// Safe reverse search for unsigned umint
-			for (umint iSeg = m_iSegment; iSeg-- > 0; )
+			for (umint iSeg = m_iSegment; iSeg-- > 0;)
 			{
 				if (pMeta[iSeg].m_Count > 0)
 				{

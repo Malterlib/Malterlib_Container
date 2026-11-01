@@ -79,8 +79,8 @@ namespace NMib::NContainer
 		// the start of _pMatch in the buffer.
 		// If the buffer ends with a prefix of _pMatch EMatchResult_Partial is returned and _oPos is set
 		// to the offset of the start of the potential match.
-			// NOTE: This doesn't mean that a match will definitely occur at this pos in the future!
-			// just that it could.
+		// 	NOTE: This doesn't mean that a match will definitely occur at this pos in the future!
+		// 	just that it could.
 		// If the buffer does not contain either a full match of _pMatch or end with a partial match
 		// then EMatchResult_None is returned and _oPos is unchanged.
 		EMatchResult f_FindFrontEx(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos) const;
@@ -112,6 +112,7 @@ namespace NMib::NContainer
 			{
 				mc_bIsDefault = false
 			};
+
 			only_parameters_aliased static void f_Free(void *_pBlock, umint _Size);
 		};
 
@@ -136,7 +137,7 @@ namespace NMib::NContainer
 		~TCBinaryStreamPagedByteVector();
 		void f_ResetStream();
 		void f_Clear();
-		void f_FeedBytes(const void *_pMem, umint _nBytes);
+		void f_FeedBytes(void const *_pMem, umint _nBytes);
 		void f_ConsumeBytes(void *_pMem, umint _nBytes);
 		bool f_IsValid() const;
 		bool f_IsAtEndOfStream() const;
@@ -182,7 +183,7 @@ namespace NMib::NContainer
 		// Open the stream over a sub-range [_Offset, _Offset + _Length) of the buffer.
 		void f_OpenRead(CPagedByteVector const &_Buffer, umint _Offset, umint _Length);
 
-		void f_FeedBytes(const void *_pMem, umint _nBytes);
+		void f_FeedBytes(void const *_pMem, umint _nBytes);
 		void f_ConsumeBytes(void *_pMem, umint _nBytes);
 		bool f_IsValid() const;
 		bool f_IsAtEndOfStream() const;

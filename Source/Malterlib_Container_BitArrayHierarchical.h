@@ -14,8 +14,8 @@ namespace NMib::NContainer
 	{
 	public:
 		using CEntryType = typename TCBitArray<t_nBits>::CEntryType;
-	public:
 
+	public:
 		constexpr TCBitArrayHierarchical(bool _bInitValues = true);
 		void f_Clear();
 
@@ -53,6 +53,7 @@ namespace NMib::NContainer
 		void f_EnumSetBits(t_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
 		template <typename t_CFunctor>
 		void f_EnumSetBitRanges(t_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
+
 	private:
 		enum
 		{
@@ -66,5 +67,5 @@ namespace NMib::NContainer
 #include "Malterlib_Container_BitArrayHierarchical.hpp"
 
 #ifndef DMibPNoShortCuts
-	using namespace NMib::NContainer;
+using namespace NMib::NContainer;
 #endif

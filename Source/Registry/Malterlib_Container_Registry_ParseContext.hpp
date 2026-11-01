@@ -94,33 +94,21 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_SetWhiteSpace
-		(
-			ERegistryWhiteSpaceLocation _Location
-			, t_CStr const &_Str
-		)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str)
 	{
 		m_WhiteSpace[_Location] = _Str;
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	t_CStr const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_GetWhiteSpace
-		(
-			ERegistryWhiteSpaceLocation _Location
-		)
-		const
+	t_CStr const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const
 	{
 		return m_WhiteSpace[_Location];
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_SetLastAdded
-		(
-			TCRegistry *_pReg
-			, bool _bHadChildren
-		)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_SetLastAdded(TCRegistry *_pReg, bool _bHadChildren)
 	{
 		m_pLastAdded = _pReg;
 		m_bLastHadChildren = _bHadChildren;
@@ -128,11 +116,7 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_GetLastAdded
-		(
-			bool &_bLastHadChildren
-		)
-		const -> TCRegistry *
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::CPreserveParseContext::f_GetLastAdded(bool &_bLastHadChildren) const -> TCRegistry *
 	{
 		_bLastHadChildren = m_bLastHadChildren;
 		return m_pLastAdded;

@@ -14,33 +14,25 @@ namespace NMib::NContainer
 		, typename t_CPoolType = NMib::NMemory::CPoolType_FreeableSmall
 		, typename t_CLockType = NMib::NThread::CNoLock
 	>
-	struct TCSetWithPool
-		: public TCSet
-			<
-				t_CKey
-				, t_CCompare
-				, NMemory::TCPoolAllocator<TCMapNode<t_CKey, CMapSet>, t_GrowSize, t_CAllocator, t_CPoolType, t_CLockType>
-			>
+	struct TCSetWithPool : public TCSet<t_CKey, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, CMapSet>, t_GrowSize, t_CAllocator, t_CPoolType, t_CLockType>>
 	{
-		using CSuper = TCSet
-			<
-				t_CKey
-				, t_CCompare
-				, NMemory::TCPoolAllocator<TCMapNode<t_CKey, CMapSet>, t_GrowSize, t_CAllocator, t_CPoolType, t_CLockType>
-			>
-		;
+		using CSuper = TCSet<t_CKey, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, CMapSet>, t_GrowSize, t_CAllocator, t_CPoolType, t_CLockType>>;
+
 	public:
 		TCSetWithPool()
 		{
 		}
+
 		TCSetWithPool(TCSetWithPool &&_Other)
 			: CSuper((CSuper &&)fg_Move(_Other))
 		{
 		}
+
 		TCSetWithPool(TCSetWithPool const &_Other)
 			: CSuper((CSuper const &)_Other)
 		{
 		}
+
 		template <typename tf_COther>
 		TCSetWithPool(tf_COther &&_Other)
 			: CSuper(fg_Forward<tf_COther>(_Other))
@@ -52,11 +44,13 @@ namespace NMib::NContainer
 			*((CSuper *)this) = ((CSuper &&)fg_Move(_Other));
 			return *this;
 		}
+
 		TCSetWithPool &operator = (TCSetWithPool const &_Other)
 		{
 			*((CSuper *)this) = ((CSuper const &)_Other);
 			return *this;
 		}
+
 		template <typename tf_COther>
 		TCSetWithPool &operator = (tf_COther &&_Other)
 		{
@@ -76,5 +70,5 @@ namespace NMib::NContainer::NPrivate
 }
 
 #ifndef DMibPNoShortCuts
-	using namespace NMib::NContainer;
+using namespace NMib::NContainer;
 #endif

@@ -9,9 +9,8 @@ namespace NMib::NContainer
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::TCRegistry()
 		: mp_Key((TCRegistry *)nullptr) // No parent
-		, mp_pParent (nullptr)
+		, mp_pParent(nullptr)
 	{
-
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>

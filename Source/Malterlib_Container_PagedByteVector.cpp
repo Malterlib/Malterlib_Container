@@ -87,7 +87,7 @@ namespace NMib::NContainer
 			nBytesLeft -= nBlockBytes;
 		}
 
-		while(nBytesLeft)
+		while (nBytesLeft)
 		{
 			umint nBlockBytes = fg_Min(nBytesLeft, mp_PageSize);
 
@@ -125,7 +125,7 @@ namespace NMib::NContainer
 			mp_iLastPageEnd += nBlockBytes;
 		}
 
-		while(nBytesLeft)
+		while (nBytesLeft)
 		{
 			umint nBlockBytes = fg_Min(nBytesLeft, mp_PageSize);
 

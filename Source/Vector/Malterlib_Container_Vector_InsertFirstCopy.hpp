@@ -41,7 +41,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirst(const t_CData *_pData, umint _Len)
+	t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirst(t_CData const *_pData, umint _Len)
 	{
 		//static_assert(NTraits::cIsNothrowConstructibleWith<t_CData, t_CData &&>, "For exception safety type must be noexcept movable");
 		t_CData *pArray = fp_MakeRoomBegin(_Len);
@@ -81,7 +81,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirst(const t_CData &_Data)
+	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_InsertFirst(t_CData const &_Data)
 	{
 		//static_assert(NTraits::cIsNothrowConstructibleWith<t_CData, t_CData &&>, "For exception safety type must be noexcept movable");
 		t_CData *pArray = fp_MakeRoomBegin(1);

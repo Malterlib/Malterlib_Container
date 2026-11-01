@@ -12,24 +12,24 @@ namespace NMib::NContainer
 {
 	DMibImpErrorClassDefine(CExceptionRegistry, NMib::NException::CException);
 
-#	define DMibErrorRegistry(d_Description) DMibImpError(NMib::NContainer::CExceptionRegistry, d_Description)
+#define DMibErrorRegistry(d_Description) DMibImpError(NMib::NContainer::CExceptionRegistry, d_Description)
 
-#	ifndef DMibPNoShortCuts
-#		define DErrorRegistry(d_Description) DMibErrorRegistry(d_Description)
-#	endif
+#ifndef DMibPNoShortCuts
+#	define DErrorRegistry(d_Description) DMibErrorRegistry(d_Description)
+#endif
 
 	enum ERegistryFlag : uint32
 	{
-		ERegistryFlag_None = 0
-		, ERegistryFlag_PreserveOrder = DMibBit(0)
-		, ERegistryFlag_DuplicateKeys = DMibBit(1)
+		ERegistryFlag_None                = 0
+		, ERegistryFlag_PreserveOrder     = DMibBit(0)
+		, ERegistryFlag_DuplicateKeys     = DMibBit(1)
 		, ERegistryFlag_PreserveWhitspace = DMibBit(2)
-		, ERegistryFlag_FullLocation = DMibBit(3)
+		, ERegistryFlag_FullLocation      = DMibBit(3)
 	};
 
 	template <typename t_CStr, ERegistryFlag t_Flags>
-	concept cCompatibleRegistryFlags =
-		(sizeof(typename t_CStr::CChar) == 1) // Only 8 bit string types supported
+	concept cCompatibleRegistryFlags
+		= (sizeof(typename t_CStr::CChar) == 1) // Only 8 bit string types supported
 		&&
 		( // Preserve whitespace can only be used together with duplicate keys
 			(t_Flags & (ERegistryFlag_PreserveWhitspace | ERegistryFlag_DuplicateKeys)) == ERegistryFlag_None
@@ -44,14 +44,14 @@ namespace NMib::NContainer
 
 	enum ERegistryWhiteSpaceLocation
 	{
-		ERegistryWhiteSpaceLocation_BeforeKey = 0,
-		ERegistryWhiteSpaceLocation_Between,
-		ERegistryWhiteSpaceLocation_After,
-		ERegistryWhiteSpaceLocation_BeforeChildScopeStart,
-		ERegistryWhiteSpaceLocation_AfterChildScopeStart,
-		ERegistryWhiteSpaceLocation_BeforeChildScopeEnd,
-		ERegistryWhiteSpaceLocation_AfterChildScopeEnd,
-		ERegistryWhiteSpaceLocation_Max
+		ERegistryWhiteSpaceLocation_BeforeKey = 0
+		, ERegistryWhiteSpaceLocation_Between
+		, ERegistryWhiteSpaceLocation_After
+		, ERegistryWhiteSpaceLocation_BeforeChildScopeStart
+		, ERegistryWhiteSpaceLocation_AfterChildScopeStart
+		, ERegistryWhiteSpaceLocation_BeforeChildScopeEnd
+		, ERegistryWhiteSpaceLocation_AfterChildScopeEnd
+		, ERegistryWhiteSpaceLocation_Max
 	};
 }
 
@@ -77,12 +77,7 @@ namespace NMib::NContainer
 		using CRegistryKey = TCConditional
 			<
 				(t_Flags & ERegistryFlag_DuplicateKeys) != 0
-				, TCConditional
-				<
-					(t_Flags & ERegistryFlag_PreserveWhitspace) != 0
-					, TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>
-					, TCRegistryKeyStrMulti<t_CKey, t_CStr>
-				>
+				, TCConditional<(t_Flags & ERegistryFlag_PreserveWhitspace) != 0, TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>, TCRegistryKeyStrMulti<t_CKey, t_CStr>>
 				, TCRegistryKeyStr<t_CKey, t_CStr>
 			>
 		;
@@ -99,8 +94,8 @@ namespace NMib::NContainer
 		template <typename t_CStream2, typename t_CData2>
 		friend class NMib::NStream::TCBinaryStreamTypeReference;
 
-		template <typename tf_CObjectType, typename tf_CAllocator, typename... tfp_CParams>
-		friend tf_CObjectType *NMib::fg_ConstructObject(tf_CAllocator &&_Allocator, tfp_CParams &&...p_Params);
+		template <typename tf_CObjectType, typename tf_CAllocator, typename ...tfp_CParams>
+		friend tf_CObjectType *NMib::fg_ConstructObject(tf_CAllocator &&_Allocator, tfp_CParams && ...p_Params);
 
 		struct CAVLCompare_TCRegistry
 		{
@@ -108,9 +103,9 @@ namespace NMib::NContainer
 			inline_small CRegistryKey &operator () (TCRegistry &_Left) const;
 			inline_small COrdering_Partial operator () (CRegistryKey const &_Left, CRegistryKey const &_Right) const;
 			template <typename tf_CKey>
-			inline_small COrdering_Partial operator ()(CRegistryKey const &_Left, tf_CKey const &_Right) const;
+			inline_small COrdering_Partial operator () (CRegistryKey const &_Left, tf_CKey const &_Right) const;
 			template <typename tf_CKey>
-			inline_small COrdering_Partial operator ()(tf_CKey const &_Left, CRegistryKey const &_Right) const;
+			inline_small COrdering_Partial operator () (tf_CKey const &_Left, CRegistryKey const &_Right) const;
 		};
 
 		using CTree = NIntrusive::TCAVLTree<&CRegistryLinks::mp_ChildLink, CAVLCompare_TCRegistry, NMib::NMemory::CDefaultAllocator, TCRegistry>;
@@ -120,7 +115,7 @@ namespace NMib::NContainer
 			using CIterator = typename CTree::CIterator;
 
 			CChildren_Sorted(CChildren_Sorted &&_Other);
-			CChildren_Sorted &operator =(CChildren_Sorted &&_Other);
+			CChildren_Sorted &operator = (CChildren_Sorted &&_Other);
 			CChildren_Sorted();
 
 			CIterator f_GetIterator() const;
@@ -167,7 +162,7 @@ namespace NMib::NContainer
 
 			CChildren_PreserveOrder();
 			CChildren_PreserveOrder(CChildren_PreserveOrder &&_Other);
-			CChildren_PreserveOrder &operator =(CChildren_PreserveOrder &&_Other);
+			CChildren_PreserveOrder &operator = (CChildren_PreserveOrder &&_Other);
 
 			CIterator f_GetIterator() const;
 
@@ -342,7 +337,7 @@ namespace NMib::NContainer
 		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
 		auto f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str) -> TCEnableIf<tf_bSupportWhiteSpace>;
 		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
-		auto f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const  -> TCEnableIf<tf_bSupportWhiteSpace, NStr::CStr>;
+		auto f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const -> TCEnableIf<tf_bSupportWhiteSpace, NStr::CStr>;
 
 		bool f_HasScope() const;
 
@@ -448,11 +443,17 @@ namespace NMib::NContainer
 	using CRegistryPreserveOrder = TCRegistry<NStr::CStr, NStr::CStr, ERegistryFlag_DuplicateKeys | ERegistryFlag_PreserveOrder>;
 	using CRegistryPreserveWhitespace = TCRegistry<NStr::CStr, NStr::CStr, ERegistryFlag_DuplicateKeys | ERegistryFlag_PreserveWhitspace>;
 	using CRegistryPreserveAll = TCRegistry<NStr::CStr, NStr::CStr, ERegistryFlag_DuplicateKeys | ERegistryFlag_PreserveWhitspace | ERegistryFlag_PreserveOrder>;
-	using CRegistryPreserveAllFull = TCRegistry<NStr::CStr, NStr::CStr, ERegistryFlag_DuplicateKeys | ERegistryFlag_PreserveWhitspace | ERegistryFlag_PreserveOrder | ERegistryFlag_FullLocation>;
+	using CRegistryPreserveAllFull = TCRegistry
+		<
+			NStr::CStr
+			, NStr::CStr
+			, ERegistryFlag_DuplicateKeys | ERegistryFlag_PreserveWhitspace | ERegistryFlag_PreserveOrder | ERegistryFlag_FullLocation
+		>
+	;
 }
 
 #ifndef DMibPNoShortCuts
-	using namespace NMib::NContainer;
+using namespace NMib::NContainer;
 #endif
 
 #include "Registry/Malterlib_Container_Registry.hpp"

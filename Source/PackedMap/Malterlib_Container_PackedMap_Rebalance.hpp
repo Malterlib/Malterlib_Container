@@ -16,7 +16,7 @@ namespace NMib::NContainer
 	{
 		// Empty/invalid entries are treated as +infinity (never less than any key)
 		if (!_pData->f_GetIndexEntryValid(_iEntry))
-			return false;  // +infinity
+			return false; // +infinity
 
 		if constexpr (mcp_bIndexStoresKeys)
 			return mp_Compare(_pData->m_pIndex[_iEntry], _Key) < 0;
@@ -126,9 +126,7 @@ namespace NMib::NContainer
 			umint Count = pMeta[iSeg].m_Count;
 
 			if (Count == 0)
-			{
 				_pData->f_ClearIndexEntry(iSeg);
-			}
 			else
 			{
 				umint iFirst = fsp_GetSegmentFirstSlot(iSeg, Count);
@@ -209,9 +207,7 @@ namespace NMib::NContainer
 		umint Count = pMeta[_iSegment].m_Count;
 
 		if (Count == 0)
-		{
 			_pData->f_ClearIndexEntry(_iSegment);
-		}
 		else
 		{
 			umint iFirst = fsp_GetSegmentFirstSlot(_iSegment, Count);
@@ -292,7 +288,7 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_FindRebalanceWindow(CPackedMapData const *_pData, umint _iSegment) const noexcept
-	 	-> NStorage::TCTuple<umint, umint, umint>
+		-> NStorage::TCTuple<umint, umint, umint>
 	{
 		umint nSegments = _pData->m_nSegments;
 		auto const *pMeta = _pData->m_pSegmentMeta;
@@ -571,7 +567,7 @@ namespace NMib::NContainer
 
 		// Allocate combined buffer for all temporary data
 		// Use stack for small rebalances (most delete-triggered rebalances are 2-8 segments)
-		constexpr static umint c_nBufferAlign = fg_Max(alignof(umint), alignof(t_CKey), alignof(t_CValue), alignof(CSegmentMeta));
+		static constexpr umint c_nBufferAlign = fg_Max(alignof(umint), alignof(t_CKey), alignof(t_CValue), alignof(CSegmentMeta));
 
 		umint nTargetsBytes = nSegments * sizeof(umint);
 		umint nKeysBytes = nTotalElements * sizeof(t_CKey);

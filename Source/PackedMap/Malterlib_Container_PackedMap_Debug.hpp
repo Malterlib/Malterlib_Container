@@ -28,8 +28,16 @@ namespace NMib::NContainer
 
 		auto fKeyToStr = [&](t_CKey const &_Key) -> NStr::CStr
 			{
-				if constexpr (requires { "{}"_f << _Key; })
+				if constexpr
+				(
+					requires
+					{
+						"{}"_f << _Key;
+					}
+				)
+				{
 					return "{}"_f << _Key;
+				}
 				else
 					return gc_Str<"<key>">;
 			}
@@ -79,8 +87,9 @@ namespace NMib::NContainer
 						{
 							NStr::CStr PrevStr = fKeyToStr(*pPrevKey);
 							NStr::CStr CurrStr = fKeyToStr(Key);
-							*_pOutError = "Global key order violated: prev seg {} local {} key {}, curr seg {} local {} key {}"_f
-								<< iPrevSeg << iPrevLocal << PrevStr << iSeg << iKey << CurrStr;
+							*_pOutError
+								= "Global key order violated: prev seg {} local {} key {}, curr seg {} local {} key {}"_f << iPrevSeg << iPrevLocal << PrevStr << iSeg << iKey << CurrStr
+							;
 						}
 						return false;
 					}
@@ -146,7 +155,7 @@ namespace NMib::NContainer
 					umint ScaledLowerBound, ScaledUpperBound;
 					fp_GetLevelThresholds(iLevel, nLevels, ScaledLowerBound, ScaledUpperBound);
 
-					if (nWinElements > fsp_ScaledMulFloor(ScaledUpperBound + ScaledUpperBound / 100, WinCapacity))  // Allow 1% tolerance for edge cases
+					if (nWinElements > fsp_ScaledMulFloor(ScaledUpperBound + ScaledUpperBound / 100, WinCapacity)) // Allow 1% tolerance for edge cases
 					{
 						if (_pOutError)
 							*_pOutError = "Level {} window [{},{}) elems {} exceeds tau threshold"_f << iLevel << iWin << iEnd << nWinElements;
@@ -232,7 +241,7 @@ namespace NMib::NContainer
 	// Validate that all calibrator-tree nodes satisfy their [rho, tau] density bounds
 	// This catches redistribution errors early during development
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr bool TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_ValidateRedistributeDensityBounds
+	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_ValidateRedistributeDensityBounds
 		(
 			CPackedMapData const *_pData
 			, umint _iStartSeg
@@ -242,6 +251,7 @@ namespace NMib::NContainer
 			, ch8 const *_pLabel
 		)
 		const noexcept
+		-> bool
 	{
 		auto const *pMeta = _pData->m_pSegmentMeta;
 		umint nSegments = _iEndSeg - _iStartSeg;
@@ -273,8 +283,17 @@ namespace NMib::NContainer
 				{
 					DMibConOut
 						(
-							"{} density violation (upper): level={} window=[{}, {}) elems={} cap={} scaledRho={} scaledTau={} min={} max={}\n",
-							_pLabel, iLevel, iWin, iEnd, nWinElements, WinCapacity, ScaledLowerBound, ScaledUpperBound, nMinElems, nMaxElems
+							"{} density violation (upper): level={} window=[{}, {}) elems={} cap={} scaledRho={} scaledTau={} min={} max={}\n"
+							, _pLabel
+							, iLevel
+							, iWin
+							, iEnd
+							, nWinElements
+							, WinCapacity
+							, ScaledLowerBound
+							, ScaledUpperBound
+							, nMinElems
+							, nMaxElems
 						)
 					;
 					return false;
@@ -284,12 +303,8 @@ namespace NMib::NContainer
 				umint TotalCapacity = nSegments * mcp_SegmentSize;
 				umint nWindowSegments = iEnd - iWin;
 				umint nScaledExpectedWindowElements;
-				bool bExpectedWindowCouldContainElement = fg_MultiplyOverflow
-					(
-						_nTotalElements
-						, nWindowSegments
-						, nScaledExpectedWindowElements) || (nScaledExpectedWindowElements >= nSegments
-					)
+				bool bExpectedWindowCouldContainElement
+					= fg_MultiplyOverflow(_nTotalElements, nWindowSegments, nScaledExpectedWindowElements) || (nScaledExpectedWindowElements >= nSegments)
 				;
 				bool bCheckLowerBound = (ScaledLowerBound > 0) && bExpectedWindowCouldContainElement && (_nTotalElements >= fsp_ScaledMulCeil(mcp_RootLowerBoundScaled, TotalCapacity));
 
@@ -297,8 +312,17 @@ namespace NMib::NContainer
 				{
 					DMibConOut
 						(
-							"{} density violation (lower): level={} window=[{}, {}) elems={} cap={} scaledRho={} scaledTau={} min={} max={}\n",
-							_pLabel, iLevel, iWin, iEnd, nWinElements, WinCapacity, ScaledLowerBound, ScaledUpperBound, nMinElems, nMaxElems
+							"{} density violation (lower): level={} window=[{}, {}) elems={} cap={} scaledRho={} scaledTau={} min={} max={}\n"
+							, _pLabel
+							, iLevel
+							, iWin
+							, iEnd
+							, nWinElements
+							, WinCapacity
+							, ScaledLowerBound
+							, ScaledUpperBound
+							, nMinElems
+							, nMaxElems
 						)
 					;
 					return false;

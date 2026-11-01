@@ -42,7 +42,7 @@ namespace NMib::NContainer
 	}
 
 	// o_pWritable may only be used to fill the allocation before the returned view is shared.
-	CSharedByteVector CSharedByteVector::fs_AllocateExact(umint _nBytes, uint8 *&o_pWritable)
+	CSharedByteVector CSharedByteVector::fs_AllocateExact(umint _nBytes, uint8 * &o_pWritable)
 	{
 		NStorage::TCSharedPointer<CRawBytesOwner> pOwner = fg_Construct();
 		pOwner->m_pData = (uint8 *)NMemory::CDefaultAllocator::f_Alloc(_nBytes);

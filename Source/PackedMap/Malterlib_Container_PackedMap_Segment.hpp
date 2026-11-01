@@ -223,7 +223,7 @@ namespace NMib::NContainer
 			}
 			else if constexpr (mcp_bNothrowElementMove)
 			{
-				for (umint iSegmentSlot = Count; iSegmentSlot-- > _iLocalPos; )
+				for (umint iSegmentSlot = Count; iSegmentSlot-- > _iLocalPos;)
 				{
 					umint iSrc = iSegStart + iSegmentSlot;
 					umint iDst = iSrc + 1;
@@ -252,7 +252,7 @@ namespace NMib::NContainer
 					}
 				;
 
-				for (umint iSegmentSlot = Count; iSegmentSlot-- > _iLocalPos; )
+				for (umint iSegmentSlot = Count; iSegmentSlot-- > _iLocalPos;)
 				{
 					umint iSrc = iSegStart + iSegmentSlot;
 					umint iDst = iSrc + 1;
@@ -472,7 +472,7 @@ namespace NMib::NContainer
 			else if constexpr (mcp_bNothrowElementMove)
 			{
 				// Reverse loop: shift elements [iFirst .. iFirst+_iLocalPos-1] right by 1
-				for (umint iSegmentSlot = _iLocalPos + 1; --iSegmentSlot > 0; )
+				for (umint iSegmentSlot = _iLocalPos + 1; --iSegmentSlot > 0;)
 				{
 					umint iDst = iFirst + iSegmentSlot;
 					umint iSrc = iDst - 1;
@@ -503,7 +503,7 @@ namespace NMib::NContainer
 					}
 				;
 
-				for (umint iSegmentSlot = _iLocalPos + 1; --iSegmentSlot > 0; )
+				for (umint iSegmentSlot = _iLocalPos + 1; --iSegmentSlot > 0;)
 				{
 					umint iDst = iFirst + iSegmentSlot;
 					umint iSrc = iDst - 1;
@@ -529,15 +529,16 @@ namespace NMib::NContainer
 
 	// Get predecessor/successor keys around a local position (after insertion)
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	constexpr bool TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetPrevNextKeys
+	constexpr auto TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fp_GetPrevNextKeys
 		(
 			CPackedMapData const *_pData
 			, umint _iSegment
 			, umint _iLocalPos
-			, t_CKey const *&_pPrevKey
-			, t_CKey const *&_pNextKey
+			, t_CKey const * &_pPrevKey
+			, t_CKey const * &_pNextKey
 		)
 		const noexcept
+		-> bool
 	{
 		_pPrevKey = nullptr;
 		_pNextKey = nullptr;

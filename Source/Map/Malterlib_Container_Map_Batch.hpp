@@ -10,13 +10,13 @@ namespace NMib::NContainer
 		template <typename t_CNode>
 		struct TCMapMapper
 		{
-			TCMapMapper(void * _pMemory)
+			TCMapMapper(void *_pMemory)
 				: m_pMemory(_pMemory)
 			{
 			}
 
-			template <typename tf_CKey, typename... tfp_CArg>
-			auto &operator ()(tf_CKey &&_Key, tfp_CArg && ... p_Args)
+			template <typename tf_CKey, typename ...tfp_CArg>
+			auto &operator () (tf_CKey &&_Key, tfp_CArg && ...p_Args)
 			{
 				return (new(m_pMemory) t_CNode(fg_Forward<tf_CKey>(_Key), fg_Forward<tfp_CArg>(p_Args)...))->f_Value();
 			}
@@ -30,15 +30,15 @@ namespace NMib::NContainer
 			using CNode = typename t_CMap::CNodeDestructive;
 			using CUserData = typename t_CMap::CUserData;
 
-			TCMapConditionalMapper(void * _pMemory, t_CMap &_Map)
+			TCMapConditionalMapper(void *_pMemory, t_CMap &_Map)
 				: m_pMemory(_pMemory)
 				, m_Map(_Map)
 				, m_bAddFailed(false)
 			{
 			}
 
-			template <typename tf_CKey, typename... tfp_CArg>
-			TCMapResult<CUserData &> operator ()(tf_CKey &&_Key, tfp_CArg && ... p_Args)
+			template <typename tf_CKey, typename ...tfp_CArg>
+			TCMapResult<CUserData &> operator () (tf_CKey &&_Key, tfp_CArg && ...p_Args)
 			{
 				m_bAddFailed = true;
 				auto pData = m_Map.mp_Tree.f_FindEqualOrInsert
@@ -73,7 +73,7 @@ namespace NMib::NContainer
 			(
 				sizeof(CNodeDestructive)
 				, alignof(CNodeDestructive)
-				, [&](void * _pAlloc, umint _Size) -> bool
+				, [&](void *_pAlloc, umint _Size) -> bool
 				{
 					auto Cleanup = mp_Allocator.f_MakeSafe(_pAlloc, _Size);
 					CMapper Mapper(_pAlloc);
@@ -95,7 +95,7 @@ namespace NMib::NContainer
 			(
 				sizeof(CNodeDestructive)
 				, alignof(CNodeDestructive)
-				, [&](void * _pAlloc, umint _Size) -> bool
+				, [&](void *_pAlloc, umint _Size) -> bool
 				{
 					auto Cleanup = mp_Allocator.f_MakeSafe(_pAlloc, _Size);
 

@@ -77,33 +77,22 @@ namespace NMib::NContainer
 		umint iPrevKeySlot = TCLimitsInt<umint>::mc_Max;
 #endif
 #ifdef DMibContractConfigure_CheckEnabled
-		constexpr static bool c_bCanThrowCheck = true;
+		static constexpr bool c_bCanThrowCheck = true;
 #else
-		constexpr static bool c_bCanThrowCheck = false;
+		static constexpr bool c_bCanThrowCheck = false;
 #endif
-		auto fPopulateOne = [&](this auto &&_fThis, auto &&_Key, auto &&_Value) noexcept
-			(
-				noexcept(t_CKey(fg_Forward<decltype(_Key)>(_Key)))
-				&& noexcept(t_CValue(fg_Forward<decltype(_Value)>(_Value)))
-				&& !c_bCanThrowCheck
-			)
+		auto fPopulateOne = [&](this auto &&_fThis, auto &&_Key, auto &&_Value)
+			noexcept(noexcept(t_CKey(fg_Forward<decltype(_Key)>(_Key))) && noexcept(t_CValue(fg_Forward<decltype(_Value)>(_Value))) && !c_bCanThrowCheck)
 			-> void
 			{
-				constexpr static bool c_bPopulateIsNoexcept = noexcept(_fPopulate(_fThis));
+				static constexpr bool c_bPopulateIsNoexcept = noexcept(_fPopulate(_fThis));
 				if constexpr (c_bPopulateIsNoexcept)
 				{
-					constexpr static bool c_bPopulateOneNoexcept
-						= noexcept(t_CKey(fg_Forward<decltype(_Key)>(_Key)))
-						&& noexcept(t_CValue(fg_Forward<decltype(_Value)>(_Value)))
-						&& !c_bCanThrowCheck
+					static constexpr bool c_bPopulateOneNoexcept
+						= noexcept(t_CKey(fg_Forward<decltype(_Key)>(_Key))) && noexcept(t_CValue(fg_Forward<decltype(_Value)>(_Value))) && !c_bCanThrowCheck
 					;
 
-					static_assert
-						(
-							c_bPopulateOneNoexcept
-							, "TCPackedMap::f_BulkLoad populate functor must not be noexcept when the populate callback may throw"
-						)
-					;
+					static_assert(c_bPopulateOneNoexcept, "TCPackedMap::f_BulkLoad populate functor must not be noexcept when the populate callback may throw");
 				}
 
 				DMibCheck(iSeg < nSegments);
@@ -111,12 +100,10 @@ namespace NMib::NContainer
 #ifdef DMibContractConfigure_CheckEnabled
 				// Verify sorted and unique input
 				if (iPrevKeySlot != TCLimitsInt<umint>::mc_Max)
-				{
 					DMibCheck(mp_Compare(pKeys[iPrevKeySlot], _Key) < 0);
-				}
 #endif
 				umint iSlot = iSegFirst + iLocalInSeg;
-				constexpr static bool c_bNothrow = noexcept(t_CKey(fg_Forward<decltype(_Key)>(_Key))) && noexcept(t_CValue(fg_Forward<decltype(_Value)>(_Value)));
+				static constexpr bool c_bNothrow = noexcept(t_CKey(fg_Forward<decltype(_Key)>(_Key))) && noexcept(t_CValue(fg_Forward<decltype(_Value)>(_Value)));
 
 				new(&pKeys[iSlot]) t_CKey(fg_Forward<decltype(_Key)>(_Key));
 
@@ -232,33 +219,22 @@ namespace NMib::NContainer
 		t_CKey const *pPrevKey = nullptr;
 #endif
 #ifdef DMibContractConfigure_CheckEnabled
-		constexpr static bool c_bCanThrowCheck = true;
+		static constexpr bool c_bCanThrowCheck = true;
 #else
-		constexpr static bool c_bCanThrowCheck = false;
+		static constexpr bool c_bCanThrowCheck = false;
 #endif
-		auto fPopulateOne = [&](this auto &&_fThis, auto &&_Key, auto &&_Value) noexcept
-			(
-				noexcept(t_CKey(fg_Forward<decltype(_Key)>(_Key)))
-				&& noexcept(t_CValue(fg_Forward<decltype(_Value)>(_Value)))
-				&& !c_bCanThrowCheck
-			)
+		auto fPopulateOne = [&](this auto &&_fThis, auto &&_Key, auto &&_Value)
+			noexcept(noexcept(t_CKey(fg_Forward<decltype(_Key)>(_Key))) && noexcept(t_CValue(fg_Forward<decltype(_Value)>(_Value))) && !c_bCanThrowCheck)
 			-> void
 			{
-				constexpr static bool c_bPopulateIsNoexcept = noexcept(_fPopulate(_fThis));
+				static constexpr bool c_bPopulateIsNoexcept = noexcept(_fPopulate(_fThis));
 				if constexpr (c_bPopulateIsNoexcept)
 				{
-					constexpr static bool c_bPopulateOneNoexcept
-						= noexcept(t_CKey(fg_Forward<decltype(_Key)>(_Key)))
-						&& noexcept(t_CValue(fg_Forward<decltype(_Value)>(_Value)))
-						&& !c_bCanThrowCheck
+					static constexpr bool c_bPopulateOneNoexcept
+						= noexcept(t_CKey(fg_Forward<decltype(_Key)>(_Key))) && noexcept(t_CValue(fg_Forward<decltype(_Value)>(_Value))) && !c_bCanThrowCheck
 					;
 
-					static_assert
-						(
-							c_bPopulateOneNoexcept
-							, "TCPackedMap::f_BulkInsert populate functor must not be noexcept when the populate callback may throw"
-						)
-					;
+					static_assert(c_bPopulateOneNoexcept, "TCPackedMap::f_BulkInsert populate functor must not be noexcept when the populate callback may throw");
 				}
 
 #ifdef DMibContractConfigure_CheckEnabled
@@ -266,9 +242,7 @@ namespace NMib::NContainer
 
 				// Verify sorted and unique input
 				if (pPrevKey)
-				{
 					DMibCheck(mp_Compare(*pPrevKey, _Key) < 0);
-				}
 				++PopulateCount;
 #endif
 				auto FindResult = fsp_Find(pData, mp_Compare, _Key);
@@ -429,7 +403,7 @@ namespace NMib::NContainer
 			(
 				[](auto const &_Left, auto const &_Right)
 				{
-					 return fg_Get<0>(_Left) <=> fg_Get<0>(_Right);
+					return fg_Get<0>(_Left) <=> fg_Get<0>(_Right);
 				}
 			)
 		;

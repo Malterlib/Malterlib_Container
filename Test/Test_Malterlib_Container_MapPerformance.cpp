@@ -30,7 +30,15 @@ namespace NMib::NMisc
 		{
 		private: // Measure
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeysRandomSorted(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, umint _nTries) const
+			inline_never void f_MeasureForAllKeysRandomSorted
+				(
+					CTestPerformanceMeasure &_PerformanceMeasure
+					, tf_FOperation const &_fOperation
+					, tf_FInit const &_fInit
+					, tf_FDestruct const &_fDestruct
+					, umint _nTries
+				)
+				const
 			{
 				auto pDataStart = m_Key_DataSorted.f_GetArray();
 				auto pDataEnd = pDataStart + mc_nItemsToTest;
@@ -52,7 +60,15 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeysSorted(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, umint _nTries = 5) const
+			inline_never void f_MeasureForAllKeysSorted
+				(
+					CTestPerformanceMeasure &_PerformanceMeasure
+					, tf_FOperation const &_fOperation
+					, tf_FInit const &_fInit
+					, tf_FDestruct const &_fDestruct
+					, umint _nTries = 5
+				)
+				const
 			{
 				if (m_bRandom)
 					f_MeasureForAllKeysRandomSorted(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
@@ -61,7 +77,15 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeysRandom(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, umint _nTries) const
+			inline_never void f_MeasureForAllKeysRandom
+				(
+					CTestPerformanceMeasure &_PerformanceMeasure
+					, tf_FOperation const &_fOperation
+					, tf_FInit const &_fInit
+					, tf_FDestruct const &_fDestruct
+					, umint _nTries
+				)
+				const
 			{
 				auto pDataStart = m_Key_Data.f_GetArray();
 				auto pDataEnd = pDataStart + mc_nItemsToTest;
@@ -83,7 +107,15 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeysLinear(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, umint _nTries) const
+			inline_never void f_MeasureForAllKeysLinear
+				(
+					CTestPerformanceMeasure &_PerformanceMeasure
+					, tf_FOperation const &_fOperation
+					, tf_FInit const &_fInit
+					, tf_FDestruct const &_fDestruct
+					, umint _nTries
+				)
+				const
 			{
 				auto fMeasure = [_fOperation]() inline_never
 					{
@@ -103,7 +135,15 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeys(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, umint _nTries = 5) const
+			inline_never void f_MeasureForAllKeys
+				(
+					CTestPerformanceMeasure &_PerformanceMeasure
+					, tf_FOperation const &_fOperation
+					, tf_FInit const &_fInit
+					, tf_FDestruct const &_fDestruct
+					, umint _nTries = 5
+				)
+				const
 			{
 				if (m_bRandom)
 					f_MeasureForAllKeysRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
@@ -112,7 +152,15 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeyValuesRandom(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, umint _nTries) const
+			inline_never void f_MeasureForAllKeyValuesRandom
+				(
+					CTestPerformanceMeasure &_PerformanceMeasure
+					, tf_FOperation const &_fOperation
+					, tf_FInit const &_fInit
+					, tf_FDestruct const &_fDestruct
+					, umint _nTries
+				)
+				const
 			{
 				auto pDataStart = m_Key_Data.f_GetArray();
 				auto pDataEnd = pDataStart + mc_nItemsToTest;
@@ -134,7 +182,15 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeyValuesLinear(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, umint _nTries) const
+			inline_never void f_MeasureForAllKeyValuesLinear
+				(
+					CTestPerformanceMeasure &_PerformanceMeasure
+					, tf_FOperation const &_fOperation
+					, tf_FInit const &_fInit
+					, tf_FDestruct const &_fDestruct
+					, umint _nTries
+				)
+				const
 			{
 				auto fMeasure = [_fOperation]() inline_never
 					{
@@ -154,7 +210,15 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeyValues(CTestPerformanceMeasure &_PerformanceMeasure, tf_FOperation const &_fOperation, tf_FInit const &_fInit, tf_FDestruct const &_fDestruct, umint _nTries = 5) const
+			inline_never void f_MeasureForAllKeyValues
+				(
+					CTestPerformanceMeasure &_PerformanceMeasure
+					, tf_FOperation const &_fOperation
+					, tf_FInit const &_fInit
+					, tf_FDestruct const &_fDestruct
+					, umint _nTries = 5
+				)
+				const
 			{
 				if (m_bRandom)
 					f_MeasureForAllKeyValuesRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
@@ -281,7 +345,9 @@ namespace NMib::NMisc
 							{
 								Set[_Key];
 							}
-							, []{}
+							, []
+							{
+							}
 							, [&]
 							{
 								Set.f_Clear();
@@ -299,7 +365,9 @@ namespace NMib::NMisc
 							{
 								Set2.insert(_Key);
 							}
-							, []{}
+							, []
+							{
+							}
 							, [&]
 							{
 								Set2.clear();
@@ -327,7 +395,9 @@ namespace NMib::NMisc
 							{
 								Map[_Key] = _Value;
 							}
-							, []{}
+							, []
+							{
+							}
 							, [&]
 							{
 								Map.f_Clear();
@@ -345,7 +415,9 @@ namespace NMib::NMisc
 							{
 								Map2[_Key] = _Value;
 							}
-							, []{}
+							, []
+							{
+							}
 							, [&]
 							{
 								Map2.clear();
@@ -364,7 +436,7 @@ namespace NMib::NMisc
 
 				struct CCompare
 				{
-					auto &operator ()(CIntrusiveSetNode &_Node)
+					auto &operator () (CIntrusiveSetNode &_Node)
 					{
 						return _Node.m_Value;
 					}
@@ -388,8 +460,12 @@ namespace NMib::NMisc
 								if (Set.f_FindEqual(_Key))
 									++nFoundMalterlib;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 							, 5
 						)
 					;
@@ -406,8 +482,12 @@ namespace NMib::NMisc
 								if (Set2.find(_Key) != Set2.end())
 									++nFound;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 							, 5
 						)
 					;
@@ -447,8 +527,12 @@ namespace NMib::NMisc
 									if (Set3.f_FindEqual(_Key))
 										++nFoundIntrusive;
 								}
-								, []{}
-								, []{}
+								, []
+								{
+								}
+								, []
+								{
+								}
 								, 5
 							)
 						;
@@ -475,12 +559,11 @@ namespace NMib::NMisc
 					for (umint i = 0; i < 5; ++i)
 					{
 						[&]() inline_never
-							{
-								DMibTestScopeMeasure(MalterlibMeasure, mc_nItemsToTest);
-								SetCopy = Set;
-							}
-							()
-						;
+						{
+							DMibTestScopeMeasure(MalterlibMeasure, mc_nItemsToTest);
+							SetCopy = Set;
+						}
+						();
 						SetCopy.f_Clear();
 					}
 
@@ -492,12 +575,11 @@ namespace NMib::NMisc
 					for (umint i = 0; i < 5; ++i)
 					{
 						[&]() inline_never
-							{
-								DMibTestScopeMeasure(StdMeasure, mc_nItemsToTest);
-								Set2Copy = Set2;
-							}
-							()
-						;
+						{
+							DMibTestScopeMeasure(StdMeasure, mc_nItemsToTest);
+							Set2Copy = Set2;
+						}
+						();
 						Set2Copy.clear();
 					}
 
@@ -518,30 +600,27 @@ namespace NMib::NMisc
 					{
 						auto Set = f_GetFilledSet<TCSet<umint>>();
 						[&]() inline_never
-							{
-								DMibTestScopeMeasure(MalterlibMeasure, mc_nItemsToTest);
-								Set.f_Clear();
-							}
-							()
-						;
+						{
+							DMibTestScopeMeasure(MalterlibMeasure, mc_nItemsToTest);
+							Set.f_Clear();
+						}
+						();
 					}
 
 					PerfTest.f_Add(MalterlibMeasure);
 
 					CTestPerformanceMeasure StdMeasure("std");
 
-
 					std::set<umint> Set2Copy;
 					for (umint i = 0; i < 5; ++i)
 					{
 						auto Set2 = f_GetFilledSet<std::set<umint>>();
 						[&]() inline_never
-							{
-								DMibTestScopeMeasure(StdMeasure, mc_nItemsToTest);
-								Set2.clear();
-							}
-							()
-						;
+						{
+							DMibTestScopeMeasure(StdMeasure, mc_nItemsToTest);
+							Set2.clear();
+						}
+						();
 					}
 
 					PerfTest.f_AddReference(StdMeasure);
@@ -567,8 +646,12 @@ namespace NMib::NMisc
 								if (Set.f_FindEqual(_Key))
 									++nFoundMalterlib;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 							, 5
 						)
 					;
@@ -586,8 +669,12 @@ namespace NMib::NMisc
 								if (Set2.find(_Key) != Set2.end())
 									++nFound;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 							, 5
 						)
 					;
@@ -617,8 +704,12 @@ namespace NMib::NMisc
 								if (Set.f_FindEqual(_Key))
 									++nFoundMalterlib;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 							, 5
 						)
 					;
@@ -636,8 +727,12 @@ namespace NMib::NMisc
 								if (Set2.find(_Key) != Set2.end())
 									++nFound;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 							, 5
 						)
 					;
@@ -666,8 +761,12 @@ namespace NMib::NMisc
 								if (Set.f_FindEqual(_Key))
 									++nFoundMalterlib;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 							, 5
 						)
 					;
@@ -684,8 +783,12 @@ namespace NMib::NMisc
 								if (Set2.find(_Key) != Set2.end())
 									++nFound;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 							, 5
 						)
 					;
@@ -714,8 +817,12 @@ namespace NMib::NMisc
 							{
 								Found += fg_Const(Map)[_Key];
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 							, 5
 						)
 					;
@@ -730,8 +837,12 @@ namespace NMib::NMisc
 							{
 								Found += fg_Const(Map2).find(_Key)->second;
 							}
-							, []{}
-							, []{}
+							, []
+							{
+							}
+							, []
+							{
+							}
 							, 5
 						)
 					;
@@ -760,7 +871,9 @@ namespace NMib::NMisc
 							{
 								Set = f_GetFilledSet<TCSet<umint>>();
 							}
-							, []{}
+							, []
+							{
+							}
 						)
 					;
 					PerfTest.f_Add(MalterlibMeasure);
@@ -778,7 +891,9 @@ namespace NMib::NMisc
 							{
 								Set2 = f_GetFilledSet<std::set<umint>>();
 							}
-							, []{}
+							, []
+							{
+							}
 						)
 					;
 					PerfTest.f_AddReference(StdMeasure);
@@ -806,7 +921,9 @@ namespace NMib::NMisc
 							{
 								Map = f_GetFilledMap<TCMap<umint, umint>>();
 							}
-							, []{}
+							, []
+							{
+							}
 						)
 					;
 					PerfTest.f_Add(MalterlibMeasure);
@@ -824,7 +941,9 @@ namespace NMib::NMisc
 							{
 								Map2 = f_GetFilledMap<std::map<umint, umint>>();
 							}
-							, []{}
+							, []
+							{
+							}
 						)
 					;
 					PerfTest.f_AddReference(StdMeasure);

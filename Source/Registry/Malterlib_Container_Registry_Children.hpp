@@ -234,9 +234,7 @@ namespace NMib::NContainer
 					TCRegistry *pToDelete = pParent;
 					pParent = pParent->mp_pParent;
 					if (pParent)
-					{
 						f_DeleteChild(pToDelete);
-					}
 				}
 			}
 			return true;
@@ -262,9 +260,7 @@ namespace NMib::NContainer
 					TCRegistry *pToDelete = pParent;
 					pParent = pParent->mp_pParent;
 					if (pParent)
-					{
 						f_DeleteChild(pToDelete);
-					}
 				}
 			}
 			return true;

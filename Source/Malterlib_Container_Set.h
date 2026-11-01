@@ -18,13 +18,13 @@ namespace NMib::NContainer
 		TCSet(TCSet const &_Other);
 		TCSet(std::initializer_list<t_CKey> const &_Values);
 
-		template <typename... tfp_CParams>
+		template <typename ...tfp_CParams>
 		TCSet(CAllocatorConstructTag const &, tfp_CParams && ...p_Params);
 
-		template <typename... tfp_CParams>
+		template <typename ...tfp_CParams>
 		TCSet(CCompareConstructTag const &, tfp_CParams && ...p_Params);
 
-		template <typename... tfp_CAllocatorParams, typename... tfp_CCompareParams>
+		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams>
 		TCSet
 			(
 				CAllocatorConstructTag &&
@@ -42,11 +42,11 @@ namespace NMib::NContainer
 		TCSet &operator = (tf_COther &&_Other);
 
 		template <typename tf_CKey>
-		auto operator[] (tf_CKey &&_Key) -> typename CMap::CUserData &;
+		auto operator [] (tf_CKey &&_Key) -> typename CMap::CUserData &;
 
 #ifdef DCompiler_MSVC_Workaround
 		template <typename tf_CContainer>
-		TCSet & f_AddContainer(tf_CContainer &&_Container)
+		TCSet &f_AddContainer(tf_CContainer &&_Container)
 			requires (!NTraits::cIsVoid<decltype(begin(fg_GetType<tf_CContainer &&>()))>)
 		{
 			for (auto &Value : _Container)
@@ -119,7 +119,7 @@ namespace NMib::NContainer
 		void f_Format(tf_CFormatInto &o_FormatInto, tf_CFormatOptions const &_Options) const;
 	};
 
-	template <typename tf_CReturn, typename... tf_CParams>
+	template <typename tf_CReturn, typename ...tf_CParams>
 	TCSet<tf_CReturn> fg_CreateSet(tf_CParams && ...p_Params);
 
 	template <typename tf_CContainer>

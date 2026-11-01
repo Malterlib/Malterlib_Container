@@ -48,12 +48,8 @@ namespace NMib::NContainer
 		umint Len = mp_Children.m_Tree.f_GetLen();
 		fg_FeedLenToStream(_Stream, Len);
 
-		for (auto iChild = mp_Children.f_GetIterator()
-			;iChild
-			;++iChild)
-		{
+		for (auto iChild = mp_Children.f_GetIterator(); iChild; ++iChild)
 			(*iChild).f_Feed(_Stream, _StringTable);
-		}
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>

@@ -38,44 +38,26 @@ namespace NMib::NContainer
 						if constexpr (mc_bSupportLocation)
 						{
 							if (Current == '\n')
-							{
 								_ParseContext.f_AddLine(pParse + 1);
-							}
 						}
 						Current = *(++pParse);
 					}
 
-					if
-					(
-						!Current || Current == '{' || Current == '}'
-						|| (Current == '/' && pParse[1] == '/')
-						|| (Current == '/' && pParse[1] == '*')
-					)
-					{
+					if (!Current || Current == '{' || Current == '}' || (Current == '/' && pParse[1] == '/') || (Current == '/' && pParse[1] == '*'))
 						DMibError(NStr::CStr::CFormat("{}\\ needs to be followed with a continuation of the text") << _ParseContext.f_FormatLocation(pErrorParse));
-					}
 
 					pStart = pParse;
 					continue;
 				}
-				else if
-				(
-					NStr::fg_CharIsWhiteSpace(Current) || Current == '{' || Current == '}'
-					|| (Current == '/' && pParse[1] == '/')
-					|| (Current == '/' && pParse[1] == '*')
-				)
-				{
+				else if (NStr::fg_CharIsWhiteSpace(Current) || Current == '{' || Current == '}' || (Current == '/' && pParse[1] == '/') || (Current == '/' && pParse[1] == '*'))
 					break;
-				}
 			}
 			else
 			{
 				if constexpr (mc_bSupportLocation)
 				{
 					if (Current == '\n')
-					{
 						_ParseContext.f_AddLine(pParse + 1);
-					}
 				}
 
 				if (Current == '\\')
@@ -84,24 +66,12 @@ namespace NMib::NContainer
 					Ret.f_AddStr(pStart, pParse - pStart);
 					switch (Next)
 					{
-					case 'r':
-						Ret.f_AddChar('\r');
-						break;
-					case 'n':
-						Ret.f_AddChar('\n');
-						break;
-					case 't':
-						Ret.f_AddChar('\t');
-						break;
-					case '\\':
-						Ret.f_AddChar('\\');
-						break;
-					case '\"':
-						Ret.f_AddChar('\"');
-						break;
-					default:
-						DMibError(NStr::CStr::CFormat("{}Invalid escape character") << _ParseContext.f_FormatLocation(pParse + 1));
-						break;
+					case 'r': Ret.f_AddChar('\r'); break;
+					case 'n': Ret.f_AddChar('\n'); break;
+					case 't': Ret.f_AddChar('\t'); break;
+					case '\\': Ret.f_AddChar('\\'); break;
+					case '\"': Ret.f_AddChar('\"'); break;
+					default: DMibError(NStr::CStr::CFormat("{}Invalid escape character") << _ParseContext.f_FormatLocation(pParse + 1)); break;
 					}
 					++pParse;
 					pStart = pParse + 1;
@@ -205,30 +175,37 @@ namespace NMib::NContainer
 		bool bHadChildren = false;
 		bool bKeyWithoutLine = false;
 
-		auto fl_FixupWhitespaceBeforeKey = [&] (ch8 const *_pBeforeParse)
-		{
-			if constexpr (mc_bSupportWhiteSpace)
+		auto fl_FixupWhitespaceBeforeKey = [&](ch8 const *_pBeforeParse)
 			{
-				if (pReg || this->f_GetParent())
+				if constexpr (mc_bSupportWhiteSpace)
 				{
-					t_CStr Temp = _ParseContext.f_GetNextWhiteSpace(_pBeforeParse);
-					aint iFind = Temp.f_FindCharReverse('\n');
-					if (iFind >= 0)
+					if (pReg || this->f_GetParent())
 					{
-						t_CStr Left = Temp.f_Left(iFind+1);
-						t_CStr Right = Temp.f_Extract(iFind+1);
-						if (this->f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_After, Left) && this->f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, Right))
+						t_CStr Temp = _ParseContext.f_GetNextWhiteSpace(_pBeforeParse);
+						aint iFind = Temp.f_FindCharReverse('\n');
+						if (iFind >= 0)
 						{
-							if (pReg)
+							t_CStr Left = Temp.f_Left(iFind + 1);
+							t_CStr Right = Temp.f_Extract(iFind + 1);
+							if (this->f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_After, Left) && this->f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, Right))
 							{
-								if (bHadChildren)
-									pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_AfterChildScopeEnd, Left);
+								if (pReg)
+								{
+									if (bHadChildren)
+										pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_AfterChildScopeEnd, Left);
+									else
+										pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_After, Left);
+								}
 								else
-									pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_After, Left);
+									this->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_AfterChildScopeStart, Left);
+								_ParseContext.f_SetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, Right);
 							}
 							else
-								this->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_AfterChildScopeStart, Left);
-							_ParseContext.f_SetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, Right);
+							{
+								if (pReg)
+									pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_After);
+								_ParseContext.f_SetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, Temp);
+							}
 						}
 						else
 						{
@@ -238,27 +215,22 @@ namespace NMib::NContainer
 						}
 					}
 					else
-					{
-						if (pReg)
-							pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_After);
-						_ParseContext.f_SetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, Temp);
-					}
+						_ParseContext.f_SetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, _ParseContext.f_GetNextWhiteSpace(_pBeforeParse));
+					_ParseContext.f_SetStartWhiteSpace(pParse);
 				}
-				else
-					_ParseContext.f_SetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, _ParseContext.f_GetNextWhiteSpace(_pBeforeParse));
-				_ParseContext.f_SetStartWhiteSpace(pParse);
 			}
-		};
+		;
 
-		auto fl_FixupWhitespaceBeforeValue = [&] (ch8 const *_pBeforeParse)
-		{
-			if constexpr (mc_bSupportWhiteSpace)
+		auto fl_FixupWhitespaceBeforeValue = [&](ch8 const *_pBeforeParse)
 			{
-				pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, _ParseContext.f_GetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey));
-				pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_Between, _ParseContext.f_GetNextWhiteSpace(_pBeforeParse));
-				_ParseContext.f_SetStartWhiteSpace(pParse);
+				if constexpr (mc_bSupportWhiteSpace)
+				{
+					pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey, _ParseContext.f_GetWhiteSpace(ERegistryWhiteSpaceLocation_BeforeKey));
+					pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_Between, _ParseContext.f_GetNextWhiteSpace(_pBeforeParse));
+					_ParseContext.f_SetStartWhiteSpace(pParse);
+				}
 			}
-		};
+		;
 
 		while (Current)
 		{
@@ -328,8 +300,8 @@ namespace NMib::NContainer
 						aint iFind = Temp.f_FindCharReverse('\n');
 						if (iFind >= 0)
 						{
-							t_CStr Left = Temp.f_Left(iFind+1);
-							t_CStr Right = Temp.f_Extract(iFind+1);
+							t_CStr Left = Temp.f_Left(iFind + 1);
+							t_CStr Right = Temp.f_Extract(iFind + 1);
 							if (f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_After, Left) && f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_BeforeChildScopeStart, Right))
 							{
 								pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_After, Left);
@@ -355,9 +327,7 @@ namespace NMib::NContainer
 					pParse = pReg->fpr_Parse<tf_bAllowLineBreakInEscapedString>(pParse, _ParseContext);
 					Current = *pParse;
 					if (Current != '}')
-					{
 						DMibError(NStr::CStr::CFormat("{}No matching '}' found") << _ParseContext.f_FormatLocation(LineBeforeStartLocation));
-					}
 					++pParse;
 				}
 
@@ -374,8 +344,8 @@ namespace NMib::NContainer
 					aint iFind = Temp.f_FindCharReverse('\n');
 					if (iFind >= 0)
 					{
-						t_CStr Left = Temp.f_Left(iFind+1);
-						t_CStr Right = Temp.f_Extract(iFind+1);
+						t_CStr Left = Temp.f_Left(iFind + 1);
+						t_CStr Right = Temp.f_Extract(iFind + 1);
 						if (f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_After, Left) && f_IsValidWhiteSpace(ERegistryWhiteSpaceLocation_BeforeChildScopeEnd, Right))
 						{
 							if (pReg)
@@ -403,7 +373,7 @@ namespace NMib::NContainer
 							pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_After);
 						fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_BeforeChildScopeEnd, Temp);
 					}
-					_ParseContext.f_SetStartWhiteSpace(pParse+1);
+					_ParseContext.f_SetStartWhiteSpace(pParse + 1);
 				}
 				return pParse;
 			}
@@ -548,11 +518,9 @@ namespace NMib::NContainer
 							pReg->fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation_After);
 					}
 				}
-
 			}
 		}
 	}
-
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
@@ -588,7 +556,6 @@ namespace NMib::NContainer
 	{
 		f_ParseStr(t_CStr::fs_ReadTextStream(_Stream, true), _File);
 	}
-
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>

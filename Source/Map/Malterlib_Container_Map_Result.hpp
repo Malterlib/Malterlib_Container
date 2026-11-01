@@ -35,5 +35,4 @@ namespace NMib::NContainer
 		, mp_bWasCreated(_bWasCreated)
 	{
 	}
-
 }

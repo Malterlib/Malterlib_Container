@@ -543,7 +543,7 @@ namespace
 							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
 							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
 
-							TCMap<int, int> Expected = {TCTuple{2, 20}, TCTuple{3, 30}};  // Left values kept
+							TCMap<int, int> Expected = {TCTuple{2, 20}, TCTuple{3, 30}}; // Left values kept
 							DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferLeft>(Right)) == DMibExpr(Expected));
 						};
 						DMibTestCategory("MovableLeft")
@@ -610,7 +610,7 @@ namespace
 							TCMap<int, int> Left = {TCTuple{1, 10}, TCTuple{2, 20}, TCTuple{3, 30}};
 							TCMap<int, int> Right = {TCTuple{2, 200}, TCTuple{3, 300}, TCTuple{4, 400}};
 
-							TCMap<int, int> Expected = {TCTuple{2, 200}, TCTuple{3, 300}};  // Right values kept
+							TCMap<int, int> Expected = {TCTuple{2, 200}, TCTuple{3, 300}}; // Right values kept
 							DMibTest(DMibExpr(Left.f_And<EMapOperationPolicy::mc_PreferRight>(Right)) == DMibExpr(Expected));
 						};
 						DMibTestCategory("MovableLeft")
@@ -923,7 +923,6 @@ namespace
 			};
 			DMibTestSuite("Bidirectional Iterator")
 			{
-
 				TCSet<int> Testing;
 
 				static_assert(sizeof(Testing) == sizeof(void *));
@@ -982,7 +981,6 @@ namespace
 			};
 			DMibTestSuite("Reverse Iterator")
 			{
-
 				TCSet<int> Testing;
 				static_assert(sizeof(Testing) == sizeof(void *));
 
@@ -1018,7 +1016,6 @@ namespace
 			};
 			DMibTestSuite("Bidirectional Reverse Iterator")
 			{
-
 				TCSet<int> Testing;
 				static_assert(sizeof(Testing) == sizeof(void *));
 
@@ -1077,7 +1074,6 @@ namespace
 			};
 			DMibTestSuite("Reference Iterator")
 			{
-
 				int Values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 				TCMap<int, int const &> Testing;
@@ -1115,9 +1111,9 @@ namespace
 			};
 			DMibTestSuite("CTAD Map")
 			{
-				TCMap Map0{TCTuple{1, 2}, {3 ,4}, {5, 6}};
+				TCMap Map0{TCTuple{1, 2}, {3, 4}, {5, 6}};
 				static_assert(cIsSame<decltype(Map0), TCMap<int, int>>);
-				DMibExpect(Map0, ==, (TCMap<int, int>({{1, 2}, {3 ,4}, {5, 6}})));
+				DMibExpect(Map0, ==, (TCMap<int, int>({{1, 2}, {3, 4}, {5, 6}})));
 			};
 			DMibTestSuite("CTAD Set")
 			{
@@ -1203,7 +1199,7 @@ namespace
 					DMibTestPath("Static");
 					struct CCompare
 					{
-						auto operator ()(int const &_Left, int const &_Right) const
+						auto operator () (int const &_Left, int const &_Right) const
 						{
 							return _Right <=> _Left;
 						}
@@ -1241,15 +1237,19 @@ namespace
 					}
 				}
 
-				auto fInitSet = []<umint tf_ExpectedSize = sizeof(void *) * 2>(auto &_Set, TCCompileTimeConstant<umint, tf_ExpectedSize> _x = TCCompileTimeConstant<umint, sizeof(void *) * 2>())
+				auto fInitSet = []
+					<umint tf_ExpectedSize = sizeof(void *) * 2>
+					(auto &_Set, TCCompileTimeConstant<umint, tf_ExpectedSize> _x = TCCompileTimeConstant<umint, sizeof(void *) * 2>())
 					{
-//						static_assert(sizeof(_Set) == tf_ExpectedSize);
+						// static_assert(sizeof(_Set) == tf_ExpectedSize);
 
 						for (int i = 0; i < 10; ++i)
 							_Set[i];
 					}
 				;
-				auto fInitMap = []<umint tf_ExpectedSize = sizeof(void *) * 2>(auto &_Map, TCCompileTimeConstant<umint, tf_ExpectedSize> _x = TCCompileTimeConstant<umint, sizeof(void *) * 2>())
+				auto fInitMap = []
+					<umint tf_ExpectedSize = sizeof(void *) * 2>
+					(auto &_Map, TCCompileTimeConstant<umint, tf_ExpectedSize> _x = TCCompileTimeConstant<umint, sizeof(void *) * 2>())
 					{
 						static_assert(sizeof(_Map) == tf_ExpectedSize);
 
@@ -1307,7 +1307,7 @@ namespace
 					DMibTestPath("Stateful");
 					struct CCompare
 					{
-						auto operator ()(int const &_Left, int const &_Right) const
+						auto operator () (int const &_Left, int const &_Right) const
 						{
 							if (m_bReverse)
 								return _Right <=> _Left;
@@ -1325,7 +1325,7 @@ namespace
 						{
 						}
 
-						auto operator ()(int const &_Left, int const &_Right) const
+						auto operator () (int const &_Left, int const &_Right) const
 						{
 							if (m_bReverse)
 								return _Right <=> _Left;
@@ -2153,7 +2153,7 @@ namespace
 
 						TCMap<CStr, CStr> Target;
 						// f_ExtractNode() requires bidirectional iterator (maintains full ancestor path for parent lookup)
-						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive(); iIter; )
+						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive(); iIter;)
 						{
 							// f_ExtractNode() advances the iterator
 							auto Handle = iIter.f_ExtractNode();
@@ -2181,7 +2181,7 @@ namespace
 
 						TCMap<CStr, CStr> Target;
 						// f_ExtractNode() requires bidirectional iterator
-						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive(); iIter; )
+						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive(); iIter;)
 						{
 							// Extract only even-numbered keys
 							CStr Key = iIter->f_Key();
@@ -2195,9 +2195,7 @@ namespace
 								Target.f_Insert(fg_Move(Handle));
 							}
 							else
-							{
 								++iIter;
-							}
 						}
 
 						DMibExpect(Source.f_GetLen(), ==, 0);
@@ -2240,7 +2238,7 @@ namespace
 						TCMap<CStr, CStr> Target;
 						TCVector<CStr> ExtractOrder;
 						// f_ExtractNode() requires bidirectional iterator
-						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalReverseDestructive(); iIter; )
+						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalReverseDestructive(); iIter;)
 						{
 							ExtractOrder.f_InsertLast(iIter->f_Key());
 							auto Handle = iIter.f_ExtractNode();
@@ -2263,7 +2261,7 @@ namespace
 
 						TCSet<CStr> Target;
 						// f_ExtractNode() requires bidirectional iterator
-						for (auto iIter = fg_Move(Source).f_GetIteratorBidirectionalReverseDestructive(); iIter; )
+						for (auto iIter = fg_Move(Source).f_GetIteratorBidirectionalReverseDestructive(); iIter;)
 						{
 							CStr Key = *iIter;
 							int Num = 0;
@@ -2276,9 +2274,7 @@ namespace
 								Target.f_Insert(fg_Move(Handle));
 							}
 							else
-							{
 								++iIter;
-							}
 						}
 
 						DMibExpect(Source.f_GetLen(), ==, 0);
@@ -2299,9 +2295,7 @@ namespace
 
 						// Extract first 3 elements going forward
 						for (int i = 0; i < 3; ++i)
-						{
 							Target.f_Insert(iIter.f_ExtractNode());
-						}
 
 						// Now at element 3, move forward to 5
 						++iIter;
@@ -2457,7 +2451,7 @@ namespace
 						TCVector<int> ExtractedKeys;
 
 						// f_ExtractNode() requires bidirectional iterator
-						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive(); iIter; )
+						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive(); iIter;)
 						{
 							// Extract every third element
 							if (iIter->f_Key() % 3 == 0)
@@ -2466,9 +2460,7 @@ namespace
 								Target.f_Insert(iIter.f_ExtractNode());
 							}
 							else
-							{
 								++iIter;
-							}
 						}
 
 						DMibExpect(Source.f_GetLen(), ==, 0);
@@ -2493,7 +2485,7 @@ namespace
 						int nExtracted = 0;
 
 						// f_ExtractNode() requires bidirectional iterator
-						for (auto iIter = fg_Move(Source).f_GetIteratorBidirectionalReverseDestructive(); iIter; )
+						for (auto iIter = fg_Move(Source).f_GetIteratorBidirectionalReverseDestructive(); iIter;)
 						{
 							// Extract every other element
 							if (*iIter % 2 == 0)
@@ -2502,9 +2494,7 @@ namespace
 								++nExtracted;
 							}
 							else
-							{
 								++iIter;
-							}
 						}
 
 						DMibExpect(Source.f_GetLen(), ==, 0);

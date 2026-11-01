@@ -153,7 +153,6 @@ namespace NMib::NContainer
 		return {mp_Map};
 	}
 
-
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeysConst::f_GetIteratorBidirectionalReverse() const -> CKeyIteratorBidirectionalReverseConst
 	{
@@ -374,7 +373,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntriesConst::f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key) const -> CKeyValueIteratorBidirectionalConst
- 	{
+	{
 		CKeyValueIteratorBidirectionalConst Iterator;
 		Iterator.mp_pMap = &mp_Map;
 		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);

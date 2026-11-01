@@ -5,15 +5,23 @@
 
 namespace NMib::NContainer::NPrivate
 {
-	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels, bool t_bLast = (t_nBitsInternal == 0 || t_nLevel == t_nMaxLevels)>
+	template
+	<
+		umint t_nBits
+		, umint t_nBitsInternal
+		, umint t_nLevel
+		, template <umint t_nBits2> class t_TCBitArray
+		, umint t_nMaxLevels
+		, bool t_bLast = (t_nBitsInternal == 0 || t_nLevel == t_nMaxLevels)
+	>
 	struct TCBitArrayPowerTwoInternalArray : public TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>
 	{
 		enum
 		{
-			mc_bIsFirstLevel = t_nBitsInternal == t_nBits
+			mc_bIsFirstLevel      = t_nBitsInternal == t_nBits
 			, mc_bIsLastLevelCalc = false
-			, mc_bIsLastLevel = TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>::mc_bIsLastLevelCalc
-			, mc_nSuperBits = t_nBitsInternal / 2
+			, mc_bIsLastLevel     = TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>::mc_bIsLastLevelCalc
+			, mc_nSuperBits       = t_nBitsInternal / 2
 		};
 
 		using CSuper = TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>;
@@ -31,7 +39,6 @@ namespace NMib::NContainer::NPrivate
 
 		bool f_IsFullySet() const;
 		bool f_IsFullyFree() const;
-
 
 		template <bool tf_bValue>
 		void f_SetBit(umint _Bit);
@@ -81,7 +88,6 @@ namespace NMib::NContainer::NPrivate
 		void f_EnumSetBits(umint _Level, t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 		template <typename t_CFunctor>
 		void f_EnumSetBitRanges(umint _Level, t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
-
 	};
 
 	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels>

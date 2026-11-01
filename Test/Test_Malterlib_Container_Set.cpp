@@ -626,13 +626,13 @@ namespace
 			DMibTestSuite(NTest::CTestCategory("MoveSemantics") << NTest::CTestGroup("Performance"))
 			{
 #if defined(DMibDebug) || defined(DMibSanitizerEnabled)
-				constexpr static umint c_nNumElements = 10000;
-				constexpr static umint c_nNumIterations = 5;
+				static constexpr umint c_nNumElements = 10000;
+				static constexpr umint c_nNumIterations = 5;
 #else
-				constexpr static umint c_nNumElements = 1000000;
-				constexpr static umint c_nNumIterations = 5;
+				static constexpr umint c_nNumElements = 1000000;
+				static constexpr umint c_nNumIterations = 5;
 #endif
-				constexpr static pfp64 AllowedPerformance = 1.001;
+				static constexpr pfp64 AllowedPerformance = 1.001;
 
 				DMibTestCategory("Union")
 				{
@@ -648,14 +648,13 @@ namespace
 							auto Right = f_CreateSet<>(c_nNumElements, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = fg_Move(Left) | fg_Move(Right);
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = fg_Move(Left) | fg_Move(Right);
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -673,14 +672,13 @@ namespace
 							auto Right = f_CreateSet<>(c_nNumElements, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = fg_Move(Left) | Right;
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = fg_Move(Left) | Right;
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -698,14 +696,13 @@ namespace
 							auto Right = f_CreateSet<>(c_nNumElements, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = Left | fg_Move(Right);
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = Left | fg_Move(Right);
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -723,14 +720,13 @@ namespace
 							auto RightCopy = f_CreateSet<>(c_nNumElements, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-									Result = LeftCopy | RightCopy;
-									LeftCopy.f_Clear();
-									RightCopy.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+								Result = LeftCopy | RightCopy;
+								LeftCopy.f_Clear();
+								RightCopy.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_AddReference(CopyMeasure);
@@ -758,14 +754,13 @@ namespace
 									auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements, c_nNumElements);
 									TCMap<CTestVector, CMapSet> Result;
 									[&]() inline_never
-										{
-											DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-											Result = fg_Move(Left).f_Or<t_Policy>(fg_Move(Right));
-											Left.f_Clear();
-											Right.f_Clear();
-										}
-										()
-									;
+									{
+										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+										Result = fg_Move(Left).f_Or<t_Policy>(fg_Move(Right));
+										Left.f_Clear();
+										Right.f_Clear();
+									}
+									();
 									DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
 								}
 								PerfTest.f_Add(MoveMeasure);
@@ -783,14 +778,13 @@ namespace
 									auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements, c_nNumElements);
 									TCMap<CTestVector, CMapSet> Result;
 									[&]() inline_never
-										{
-											DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-											Result = fg_Move(Left).f_Or<t_Policy>(Right);
-											Left.f_Clear();
-											Right.f_Clear();
-										}
-										()
-									;
+									{
+										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+										Result = fg_Move(Left).f_Or<t_Policy>(Right);
+										Left.f_Clear();
+										Right.f_Clear();
+									}
+									();
 									DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
 								}
 								PerfTest.f_Add(MoveMeasure);
@@ -808,14 +802,13 @@ namespace
 									auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements, c_nNumElements);
 									TCMap<CTestVector, CMapSet> Result;
 									[&]() inline_never
-										{
-											DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-											Result = Left.f_Or<t_Policy>(fg_Move(Right));
-											Left.f_Clear();
-											Right.f_Clear();
-										}
-										()
-									;
+									{
+										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+										Result = Left.f_Or<t_Policy>(fg_Move(Right));
+										Left.f_Clear();
+										Right.f_Clear();
+									}
+									();
 									DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
 								}
 								PerfTest.f_Add(MoveMeasure);
@@ -833,14 +826,13 @@ namespace
 									auto RightCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements, c_nNumElements);
 									TCMap<CTestVector, CMapSet> Result;
 									[&]() inline_never
-										{
-											DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-											Result = LeftCopy.f_Or<t_Policy>(RightCopy);
-											LeftCopy.f_Clear();
-											RightCopy.f_Clear();
-										}
-										()
-									;
+									{
+										DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+										Result = LeftCopy.f_Or<t_Policy>(RightCopy);
+										LeftCopy.f_Clear();
+										RightCopy.f_Clear();
+									}
+									();
 									DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
 								}
 								PerfTest.f_AddReference(CopyMeasure);
@@ -849,9 +841,9 @@ namespace
 						}
 					;
 
-					fRunMapTests.operator() <EMapOperationPolicy::mc_Fastest>();
-					fRunMapTests.operator() <EMapOperationPolicy::mc_PreferLeft>();
-					fRunMapTests.operator() <EMapOperationPolicy::mc_PreferRight>();
+					fRunMapTests.operator ()<EMapOperationPolicy::mc_Fastest>();
+					fRunMapTests.operator ()<EMapOperationPolicy::mc_PreferLeft>();
+					fRunMapTests.operator ()<EMapOperationPolicy::mc_PreferRight>();
 
 					DMibExpectTrue(PerfTest);
 				};
@@ -871,14 +863,13 @@ namespace
 							auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = fg_Move(Left) & fg_Move(Right);
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = fg_Move(Left) & fg_Move(Right);
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -896,14 +887,13 @@ namespace
 							auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = fg_Move(Left) & Right;
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = fg_Move(Left) & Right;
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -921,14 +911,13 @@ namespace
 							auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = Left & fg_Move(Right);
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = Left & fg_Move(Right);
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -946,14 +935,13 @@ namespace
 							auto RightCopy = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-									Result = LeftCopy & RightCopy;
-									LeftCopy.f_Clear();
-									RightCopy.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+								Result = LeftCopy & RightCopy;
+								LeftCopy.f_Clear();
+								RightCopy.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_AddReference(CopyMeasure);
@@ -981,14 +969,13 @@ namespace
 									auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
 									TCMap<CTestVector, CMapSet> Result;
 									[&]() inline_never
-										{
-											DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-											Result = fg_Move(Left).f_And<t_Policy>(fg_Move(Right));
-											Left.f_Clear();
-											Right.f_Clear();
-										}
-										()
-									;
+									{
+										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+										Result = fg_Move(Left).f_And<t_Policy>(fg_Move(Right));
+										Left.f_Clear();
+										Right.f_Clear();
+									}
+									();
 									DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 								}
 								PerfTest.f_Add(MoveMeasure);
@@ -1006,14 +993,13 @@ namespace
 									auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
 									TCMap<CTestVector, CMapSet> Result;
 									[&]() inline_never
-										{
-											DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-											Result = fg_Move(Left).f_And<t_Policy>(Right);
-											Left.f_Clear();
-											Right.f_Clear();
-										}
-										()
-									;
+									{
+										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+										Result = fg_Move(Left).f_And<t_Policy>(Right);
+										Left.f_Clear();
+										Right.f_Clear();
+									}
+									();
 									DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 								}
 								PerfTest.f_Add(MoveMeasure);
@@ -1031,14 +1017,13 @@ namespace
 									auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
 									TCMap<CTestVector, CMapSet> Result;
 									[&]() inline_never
-										{
-											DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-											Result = Left.f_And<t_Policy>(fg_Move(Right));
-											Left.f_Clear();
-											Right.f_Clear();
-										}
-										()
-									;
+									{
+										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+										Result = Left.f_And<t_Policy>(fg_Move(Right));
+										Left.f_Clear();
+										Right.f_Clear();
+									}
+									();
 									DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 								}
 								PerfTest.f_Add(MoveMeasure);
@@ -1056,14 +1041,13 @@ namespace
 									auto RightCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
 									TCMap<CTestVector, CMapSet> Result;
 									[&]() inline_never
-										{
-											DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-											Result = LeftCopy.f_And<t_Policy>(RightCopy);
-											LeftCopy.f_Clear();
-											RightCopy.f_Clear();
-										}
-										()
-									;
+									{
+										DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+										Result = LeftCopy.f_And<t_Policy>(RightCopy);
+										LeftCopy.f_Clear();
+										RightCopy.f_Clear();
+									}
+									();
 									DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 								}
 								PerfTest.f_AddReference(CopyMeasure);
@@ -1072,9 +1056,9 @@ namespace
 						}
 					;
 
-					fRunMapTests.operator() <EMapOperationPolicy::mc_Fastest>();
-					fRunMapTests.operator() <EMapOperationPolicy::mc_PreferLeft>();
-					fRunMapTests.operator() <EMapOperationPolicy::mc_PreferRight>();
+					fRunMapTests.operator ()<EMapOperationPolicy::mc_Fastest>();
+					fRunMapTests.operator ()<EMapOperationPolicy::mc_PreferLeft>();
+					fRunMapTests.operator ()<EMapOperationPolicy::mc_PreferRight>();
 
 					DMibExpectTrue(PerfTest);
 				};
@@ -1094,14 +1078,13 @@ namespace
 							auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = fg_Move(Left) ^ fg_Move(Right);
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = fg_Move(Left) ^ fg_Move(Right);
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -1119,14 +1102,13 @@ namespace
 							auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = fg_Move(Left) ^ Right;
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = fg_Move(Left) ^ Right;
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -1144,14 +1126,13 @@ namespace
 							auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = Left ^ fg_Move(Right);
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = Left ^ fg_Move(Right);
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -1169,14 +1150,13 @@ namespace
 							auto RightCopy = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-									Result = LeftCopy ^ RightCopy;
-									LeftCopy.f_Clear();
-									RightCopy.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+								Result = LeftCopy ^ RightCopy;
+								LeftCopy.f_Clear();
+								RightCopy.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_AddReference(CopyMeasure);
@@ -1194,14 +1174,13 @@ namespace
 							auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
 							TCMap<CTestVector, CMapSet> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = fg_Move(Left) ^ fg_Move(Right);
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = fg_Move(Left) ^ fg_Move(Right);
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -1219,14 +1198,13 @@ namespace
 							auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
 							TCMap<CTestVector, CMapSet> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = fg_Move(Left) ^ Right;
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = fg_Move(Left) ^ Right;
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -1244,14 +1222,13 @@ namespace
 							auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
 							TCMap<CTestVector, CMapSet> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = Left ^ fg_Move(Right);
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = Left ^ fg_Move(Right);
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -1269,14 +1246,13 @@ namespace
 							auto RightCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
 							TCMap<CTestVector, CMapSet> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-									Result = LeftCopy ^ RightCopy;
-									LeftCopy.f_Clear();
-									RightCopy.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+								Result = LeftCopy ^ RightCopy;
+								LeftCopy.f_Clear();
+								RightCopy.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_AddReference(CopyMeasure);
@@ -1301,14 +1277,13 @@ namespace
 							auto Right = f_CreateSet(c_nNumElements / 2, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = fg_Move(Left) - fg_Move(Right);
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = fg_Move(Left) - fg_Move(Right);
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -1326,14 +1301,13 @@ namespace
 							auto Right = f_CreateSet(c_nNumElements / 2, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = fg_Move(Left) - Right;
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = fg_Move(Left) - Right;
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -1351,14 +1325,13 @@ namespace
 							auto Right = f_CreateSet(c_nNumElements / 2, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = Left - fg_Move(Right);
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = Left - fg_Move(Right);
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -1376,14 +1349,13 @@ namespace
 							auto RightCopy = f_CreateSet(c_nNumElements / 2, c_nNumElements);
 							TCSet<CTestVector> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-									Result = LeftCopy - RightCopy;
-									LeftCopy.f_Clear();
-									RightCopy.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+								Result = LeftCopy - RightCopy;
+								LeftCopy.f_Clear();
+								RightCopy.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_AddReference(CopyMeasure);
@@ -1401,14 +1373,13 @@ namespace
 							auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
 							TCMap<CTestVector, CMapSet> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = fg_Move(Left) - fg_Move(Right);
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = fg_Move(Left) - fg_Move(Right);
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -1426,14 +1397,13 @@ namespace
 							auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
 							TCMap<CTestVector, CMapSet> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = fg_Move(Left) - Right;
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = fg_Move(Left) - Right;
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -1451,14 +1421,13 @@ namespace
 							auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
 							TCMap<CTestVector, CMapSet> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-									Result = Left - fg_Move(Right);
-									Left.f_Clear();
-									Right.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+								Result = Left - fg_Move(Right);
+								Left.f_Clear();
+								Right.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_Add(MoveMeasure);
@@ -1476,14 +1445,13 @@ namespace
 							auto RightCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
 							TCMap<CTestVector, CMapSet> Result;
 							[&]() inline_never
-								{
-									DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-									Result = LeftCopy - RightCopy;
-									LeftCopy.f_Clear();
-									RightCopy.f_Clear();
-								}
-								()
-							;
+							{
+								DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+								Result = LeftCopy - RightCopy;
+								LeftCopy.f_Clear();
+								RightCopy.f_Clear();
+							}
+							();
 							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
 						}
 						PerfTest.f_AddReference(CopyMeasure);
@@ -1493,7 +1461,6 @@ namespace
 					DMibExpectTrue(PerfTest);
 				};
 			};
-
 		}
 	};
 

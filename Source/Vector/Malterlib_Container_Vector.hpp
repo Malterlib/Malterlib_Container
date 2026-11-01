@@ -19,7 +19,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename... tfp_CParams>
+	template <typename ...tfp_CParams>
 	TCVector<t_CData, t_CAllocator, t_COptions>::TCVector(CAllocatorConstructTag const &, tfp_CParams && ...p_Params)
 		: mp_StaticData{t_CAllocator(fg_Forward<tfp_CParams>(p_Params)...), nullptr}
 	{
@@ -94,7 +94,7 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData &TCVector<t_CData, t_CAllocator, t_COptions>::f_GetLast()
 	{
-		return (*this)[f_GetLen()-1];
+		return (*this)[f_GetLen() - 1];
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
@@ -106,7 +106,7 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	t_CData const &TCVector<t_CData, t_CAllocator, t_COptions>::f_GetLast() const
 	{
-		return (*this)[f_GetLen()-1];
+		return (*this)[f_GetLen() - 1];
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
@@ -249,13 +249,13 @@ namespace NMib::NContainer
 		template <typename t_CType>
 		struct TCIsVector
 		{
-			constexpr static bool mc_bValue = false;
+			static constexpr bool mc_bValue = false;
 		};
 
 		template <typename t_CData, typename t_CAllocator, typename t_COptions>
 		struct TCIsVector<TCVector<t_CData, t_CAllocator, t_COptions>>
 		{
-			constexpr static bool mc_bValue = true;
+			static constexpr bool mc_bValue = true;
 		};
 	}
 }

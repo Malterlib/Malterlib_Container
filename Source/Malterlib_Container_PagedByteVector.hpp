@@ -11,7 +11,6 @@ namespace NMib::NContainer
 		, mp_iFirstPageStart(0)
 		, mp_iLastPageEnd(0)
 	{
-
 	}
 
 	bool CPagedByteVector::f_IsEmpty() const
@@ -41,7 +40,7 @@ namespace NMib::NContainer
 	}
 
 	// tf_FReader is of the format: bool (umint _iStart, uint8 const *_pPtr, umint _nBytes)
-	template<typename tf_FReader>
+	template <typename tf_FReader>
 	bool CPagedByteVector::f_Read(umint _iStart, umint _nBytes, tf_FReader &&_fReader) const
 	{
 		if ((_nBytes + _iStart) > mp_nBytes)
@@ -73,7 +72,7 @@ namespace NMib::NContainer
 	}
 
 	// tf_FReader is of the format: bool (umint _iStart, uint8 const *_pPtr, umint _nBytes)
-	template<typename tf_FMutate>
+	template <typename tf_FMutate>
 	bool CPagedByteVector::f_Mutate(umint _iStart, umint _nBytes, tf_FMutate &&_fMutate) const
 	{
 		if ((_nBytes + _iStart) > mp_nBytes)
@@ -162,9 +161,7 @@ namespace NMib::NContainer
 		}
 
 		if (_iPage == mp_Pages.f_GetLen())
-		{
 			_oPageSize -= (mp_PageSize - mp_iLastPageEnd);
-		}
 	}
 
 	// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes, umint _nTotalBytes)
@@ -232,13 +229,12 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CInherit>
-	void TCBinaryStreamPagedByteVector<t_CInherit>::f_FeedBytes(const void *_pMem, umint _nBytes)
+	void TCBinaryStreamPagedByteVector<t_CInherit>::f_FeedBytes(void const *_pMem, umint _nBytes)
 	{
 		m_Buffer.f_InsertBack((uint8 const *)_pMem, _nBytes);
 		m_Position += _nBytes;
 		if (m_Position > m_Length)
 			m_Length = m_Position;
-
 	}
 
 	template <typename t_CInherit>
@@ -401,7 +397,7 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CInherit>
-	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_FeedBytes(const void *_pMem, umint _nBytes)
+	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_FeedBytes(void const *_pMem, umint _nBytes)
 	{
 		DMibError("Paged byte vector read stream cannot be written to");
 	}

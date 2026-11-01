@@ -120,7 +120,7 @@ namespace NMib::NContainer
 			{
 				umint ScaledShrinkThreshold = mcp_ResizeThresholdScaled;
 				if constexpr (t_Options.m_bScanOriented)
-					ScaledShrinkThreshold = mcp_DensityScale / 2;  // 0.50
+					ScaledShrinkThreshold = mcp_DensityScale / 2; // 0.50
 
 				if (pData->m_nSegments > t_Options.m_MinSegments && pData->m_nElements < fsp_ScaledMulCeil(ScaledShrinkThreshold, pData->m_Capacity))
 				{

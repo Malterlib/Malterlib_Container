@@ -50,7 +50,7 @@ namespace NMib::NContainer::NPrivate
 		;
 
 		template <typename tf_CKey>
-		TCMapIterator(CMapQualified &_Map, const tf_CKey &_Key)
+		TCMapIterator(CMapQualified &_Map, tf_CKey const &_Key)
 			requires (!(t_Flags & EMapIteratorFlags_Reverse) && !(t_Flags & EMapIteratorFlags_Destructive))
 		;
 
@@ -128,11 +128,11 @@ namespace NMib::NContainer::NPrivate
 		constexpr inline_always explicit operator bool () const;
 
 		inline_small CUserDataQualified *f_GetCurrent() const;
-		inline_small operator CUserDataQualified *() const;
-		inline_small CUserDataQualified * operator ->() const;
+		inline_small operator CUserDataQualified * () const;
+		inline_small CUserDataQualified *operator -> () const;
 
-		inline_small void operator ++();
-		inline_small void operator --()
+		inline_small void operator ++ ();
+		inline_small void operator -- ()
 			requires (!!(t_Flags & EMapIteratorFlags_Bidirectional))
 		;
 

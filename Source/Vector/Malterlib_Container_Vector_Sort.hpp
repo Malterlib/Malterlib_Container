@@ -107,10 +107,10 @@ namespace NMib::NContainer
 		{
 			Temp = fg_Move(_pArray[i]);
 
-			for (j = i-1; j >= _Low && fg_CheckOrdering(_fCompare(Temp, _pArray[j])) < 0; j--)
-				_pArray[j+1] = fg_Move(_pArray[j]);
+			for (j = i - 1; j >= _Low && fg_CheckOrdering(_fCompare(Temp, _pArray[j])) < 0; j--)
+				_pArray[j + 1] = fg_Move(_pArray[j]);
 
-			_pArray[j+1] = fg_Move(Temp);
+			_pArray[j + 1] = fg_Move(Temp);
 		}
 	}
 
@@ -121,11 +121,11 @@ namespace NMib::NContainer
 		t_CData Temp, Pivot;
 		aint i, j, p;
 
-		p = _Low + ((_High - _Low)>>1);
+		p = _Low + ((_High - _Low) >> 1);
 		Pivot = fg_Move(_pArray[p]);
 		_pArray[p] = fg_Move(_pArray[_Low]);
 
-		i = _Low+1;
+		i = _Low + 1;
 		j = _High;
 		while (1)
 		{
@@ -138,7 +138,8 @@ namespace NMib::NContainer
 			Temp = fg_Move(_pArray[i]);
 			_pArray[i] = fg_Move(_pArray[j]);
 			_pArray[j] = fg_Move(Temp);
-			j--; i++;
+			j--;
+			i++;
 		}
 
 		if (_Low != j)
@@ -156,7 +157,6 @@ namespace NMib::NContainer
 
 		while (_Low < _High)
 		{
-
 			if (_High - _Low <= 12)
 			{
 				fp_InsertSort(_pArray, _Low, _High, _fCompare);

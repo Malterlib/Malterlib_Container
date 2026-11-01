@@ -67,7 +67,6 @@ namespace NMib::NContainer
 		return (_Entry & CEntryType(~(CEntryType(1) << _Bit))) | (CEntryType(_bValue) << _Bit);
 	}
 
-
 	///
 	/// Publics
 	/// =======
@@ -92,8 +91,8 @@ namespace NMib::NContainer
 		uint32 nBytes = (t_nBits + 7) / 8;
 		for (umint i = 0; i < nBytes; ++i)
 		{
-			umint iEntry = (i*8) / ENumBitsPerEntry;
-			umint iSubBit = (i*8) % ENumBitsPerEntry;
+			umint iEntry = (i * 8) / ENumBitsPerEntry;
+			umint iSubBit = (i * 8) % ENumBitsPerEntry;
 			uint8 Byte = (mp_Entries[iEntry] >> iSubBit) & CEntryType(0xff);
 			_Stream << Byte;
 		}
@@ -107,8 +106,8 @@ namespace NMib::NContainer
 		uint32 nBytes = (t_nBits + 7) / 8;
 		for (umint i = 0; i < nBytes; ++i)
 		{
-			umint iEntry = (i*8) / ENumBitsPerEntry;
-			umint iSubBit = (i*8) % ENumBitsPerEntry;
+			umint iEntry = (i * 8) / ENumBitsPerEntry;
+			umint iSubBit = (i * 8) % ENumBitsPerEntry;
 			uint8 Byte;
 			_Stream >> Byte;
 			mp_Entries[iEntry] |= CEntryType(Byte) << iSubBit;
@@ -183,9 +182,7 @@ namespace NMib::NContainer
 				return NewEntry == mcp_FullySetLast;
 		}
 		else
-		{
 			return NewEntry == mcp_FullySet;
-		}
 	}
 
 	template <umint t_nBits>
@@ -211,9 +208,7 @@ namespace NMib::NContainer
 				return NewEntry == mcp_FullySetLast;
 		}
 		else
-		{
 			return NewEntry == mcp_FullySet;
-		}
 	}
 
 	template <umint t_nBits>
@@ -234,9 +229,7 @@ namespace NMib::NContainer
 				return NewEntry == mcp_FullySetLast;
 		}
 		else
-		{
 			return NewEntry == mcp_FullySet;
-		}
 	}
 
 	template <umint t_nBits>
@@ -352,7 +345,6 @@ namespace NMib::NContainer
 		return -1;
 	}
 
-
 	template <umint t_nBits>
 	inline_small aint TCBitArray<t_nBits>::f_FindFreeBit(umint _StartBitApproximately) const
 	{
@@ -411,7 +403,7 @@ namespace NMib::NContainer
 				if (Entry != mcp_FullySet)
 					return false;
 			}
-//				if (ENumEntries > 1)
+			// if (ENumEntries > 1)
 			{
 				CEntryType const &Entry = mp_Entries[ENumEntries - 1];
 				if (Entry != mcp_FullySetLast)
@@ -442,7 +434,7 @@ namespace NMib::NContainer
 				if (Entry != 0)
 					return false;
 			}
-//				if (ENumEntries > 1)
+			// if (ENumEntries > 1)
 			{
 				CEntryType const &Entry = mp_Entries[ENumEntries - 1];
 				if (Entry != 0)
@@ -476,7 +468,7 @@ namespace NMib::NContainer
 					return FreeEntry;
 				}
 			}
-//				if (ENumEntries > 1)
+			// if (ENumEntries > 1)
 			{
 				CEntryType Entry = mp_Entries[ENumEntries - 1] | CEntryType(~mcp_FullySetLast);
 				if (Entry != mcp_FullySet)
@@ -631,8 +623,8 @@ namespace NMib::NContainer
 
 				++iFreeEntry;
 				// We need to do this in two stages because we might need to shift all bits which is undefined
-				Entry >>= iFreeEntry/2;
-				Entry >>= iFreeEntry - iFreeEntry/2;
+				Entry >>= iFreeEntry / 2;
+				Entry >>= iFreeEntry - iFreeEntry / 2;
 
 				iSubBitForward += iFreeEntry;
 			}
@@ -713,8 +705,8 @@ namespace NMib::NContainer
 
 					Entry = CEntryType(~(mp_Entries[iEntryForward]));
 					// We need to do this in two stages because we might need to shift all bits which is undefined
-					Entry >>= iSubBitForward/2;
-					Entry >>= iSubBitForward - iSubBitForward/2;
+					Entry >>= iSubBitForward / 2;
+					Entry >>= iSubBitForward - iSubBitForward / 2;
 					continue;
 				}
 				else
@@ -726,8 +718,8 @@ namespace NMib::NContainer
 						return;
 					++iSetEntry;
 					// We need to do this in two stages because we might need to shift all bits which is undefined
-					Entry >>= iSetEntry/2;
-					Entry >>= iSetEntry - iSetEntry/2;
+					Entry >>= iSetEntry / 2;
+					Entry >>= iSetEntry - iSetEntry / 2;
 					iSubBitForward += iSetEntry;
 				}
 			}
@@ -820,8 +812,8 @@ namespace NMib::NContainer
 						return;
 					++iSetEntry;
 					// We need to do this in two stages because we might need to shift all bits which is undefined
-					Entry >>= iSetEntry/2;
-					Entry >>= iSetEntry - iSetEntry/2;
+					Entry >>= iSetEntry / 2;
+					Entry >>= iSetEntry - iSetEntry / 2;
 					iSubBitForward += iSetEntry;
 				}
 			}

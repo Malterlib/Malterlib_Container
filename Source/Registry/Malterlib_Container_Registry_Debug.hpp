@@ -12,7 +12,7 @@ namespace NMib::NContainer
 		auto Iter = mp_Children.f_GetIterator();
 		while (Iter)
 		{
-			const TCRegistry *pReg = Iter;
+			TCRegistry const *pReg = Iter;
 			++Iter;
 			if (pReg->mp_pParent != this)
 				return false;
