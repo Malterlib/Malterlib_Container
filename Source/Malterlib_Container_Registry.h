@@ -247,11 +247,11 @@ namespace NMib::NContainer
 		void f_SetName(t_CKey const &_Name);
 
 		TCRegistry *f_InsertChild(t_CKey _Name, NMib::NStorage::TCUniquePointer<TCRegistry> &&_pChild);
-		TCRegistry *f_CreateChild(t_CStr _Name, bool _bForceCreate = false);
+		TCRegistry *f_CreateChild(t_CStr const &_Name, bool _bForceCreate = false);
 		TCRegistry *f_CreateChildNoPath(t_CKey const &_Name, bool _bForceCreate = false);
 		bool f_HasChildren() const;
-		TCRegistry const *f_GetChild(t_CStr _Str) const;
-		TCRegistry *f_GetChild(t_CStr _Str);
+		TCRegistry const *f_GetChild(t_CStr const &_Str) const;
+		TCRegistry *f_GetChild(t_CStr const &_Str);
 		TCRegistry const *f_GetChildNoPath(t_CKey const &_Str) const;
 		TCRegistry *f_GetChildNoPath(t_CKey const &_Str);
 		void f_DeleteChild(TCRegistry *_pChild);
@@ -363,15 +363,15 @@ namespace NMib::NContainer
 
 		t_CData const &f_GetThisValue() const;
 		t_CData &f_GetThisValue();
-		t_CData const &f_GetValue(t_CStr _Str, t_CData const &_Default) const;
+		t_CData const &f_GetValue(t_CStr const &_Str, t_CData const &_Default) const;
 		t_CData const &f_GetValue(t_CStr const &_Str) const;
 		t_CData f_GetValueMove(t_CStr const &_Str);
 		t_CData const &f_GetValueNoPath(t_CKey const &_Name) const;
 		t_CData f_GetValueNoPathMove(t_CKey const &_Name);
 		t_CData const &f_GetValueNoPath(t_CKey const &_Name, t_CData const &_Default) const;
-		bool f_GetValueIfExists(t_CStr _Str, t_CData &o_OutValue) const;
+		bool f_GetValueIfExists(t_CStr const &_Str, t_CData &o_OutValue) const;
 		void f_SetThisValue(t_CData const &_Data);
-		TCRegistry *f_SetValue(t_CStr _Name, t_CData const &_Data);
+		TCRegistry *f_SetValue(t_CStr const &_Name, t_CData const &_Data);
 		TCRegistry *f_SetValueNoPath(t_CKey const &_Name, t_CData const &_Data);
 
 		template <typename tf_CStr>

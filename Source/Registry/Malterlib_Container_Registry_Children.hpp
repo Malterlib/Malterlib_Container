@@ -98,8 +98,11 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_CreateChild(t_CStr _Name, bool _bForceCreate) -> TCRegistry *
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_CreateChild(t_CStr const &_Name, bool _bForceCreate) -> TCRegistry *
 	{
+		// Parsing consumes the path.
+		t_CStr Path = _Name;
+
 		if (!mc_bSupportForceCreate && _bForceCreate)
 			DMibError("You cannot do a force create in TCRegistry when the type does not support it.");
 
@@ -108,22 +111,22 @@ namespace NMib::NContainer
 			t_CStr NotFound;
 			TCRegistry *pPrev = this;
 			TCRegistry *pChild = nullptr;
-			if (_Name.f_FindChar('/') >= 0)
+			if (Path.f_FindChar('/') >= 0)
 			{
-				pChild = pPrev->fp_GetChildParse(_Name, &NotFound, &pPrev);
+				pChild = pPrev->fp_GetChildParse(Path, &NotFound, &pPrev);
 				while (!pChild)
 				{
 					pChild = fg_ConstructObject<TCRegistry>(NMemory::CDefaultAllocator(), pPrev);
 					pChild->mp_Key.f_Set(NotFound);
 					pPrev->mp_Children.f_Insert(pChild);
 					pPrev = pChild;
-					if (_Name.f_FindChar('/') < 0)
+					if (Path.f_FindChar('/') < 0)
 						break;
-					pChild = pPrev->fp_GetChildParse(_Name, &NotFound, &pPrev);
+					pChild = pPrev->fp_GetChildParse(Path, &NotFound, &pPrev);
 				}
 			}
 			pChild = fg_ConstructObject<TCRegistry>(NMemory::CDefaultAllocator(), pPrev);
-			pChild->mp_Key.f_Set(_Name);
+			pChild->mp_Key.f_Set(Path);
 			pPrev->mp_Children.f_Insert(pChild);
 			return pChild;
 		}
@@ -131,7 +134,7 @@ namespace NMib::NContainer
 		{
 			t_CStr NotFound;
 			TCRegistry *pPrev = this;
-			TCRegistry *pChild = pPrev->fp_GetChildParse(_Name, &NotFound, &pPrev);
+			TCRegistry *pChild = pPrev->fp_GetChildParse(Path, &NotFound, &pPrev);
 
 			while (!pChild)
 			{
@@ -139,9 +142,9 @@ namespace NMib::NContainer
 				pChild->mp_Key.f_Set(NotFound);
 				pPrev->mp_Children.f_Insert(pChild);
 				pPrev = pChild;
-				if (_Name.f_IsEmpty())
+				if (Path.f_IsEmpty())
 					break;
-				pChild = pPrev->fp_GetChildParse(_Name, &NotFound, &pPrev);
+				pChild = pPrev->fp_GetChildParse(Path, &NotFound, &pPrev);
 			}
 			return pChild;
 		}
@@ -184,16 +187,20 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetChild(t_CStr _Str) const -> TCRegistry const *
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetChild(t_CStr const &_Str) const -> TCRegistry const *
 	{
-		return fp_GetChildParse(_Str, fg_NullPtr<t_CStr>());
+		// Parsing consumes the path.
+		t_CStr Path = _Str;
+		return fp_GetChildParse(Path, fg_NullPtr<t_CStr>());
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetChild(t_CStr _Str) -> TCRegistry *
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetChild(t_CStr const &_Str) -> TCRegistry *
 	{
-		return fp_GetChildParse(_Str, fg_NullPtr<t_CStr>());
+		// Parsing consumes the path.
+		t_CStr Path = _Str;
+		return fp_GetChildParse(Path, fg_NullPtr<t_CStr>());
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>

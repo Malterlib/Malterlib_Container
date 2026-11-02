@@ -28,9 +28,11 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValue(t_CStr _Str, t_CData const &_Default) const
+	t_CData const &TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValue(t_CStr const &_Str, t_CData const &_Default) const
 	{
-		TCRegistry const *pRegistry = fp_GetChildParse(_Str, fg_NullPtr<t_CStr>());
+		// Parsing consumes the path.
+		t_CStr Path = _Str;
+		TCRegistry const *pRegistry = fp_GetChildParse(Path, fg_NullPtr<t_CStr>());
 		if (pRegistry)
 			return pRegistry->mp_Data;
 		else
@@ -96,9 +98,11 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueIfExists(t_CStr _Str, t_CData &_OutValue) const
+	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueIfExists(t_CStr const &_Str, t_CData &_OutValue) const
 	{
-		TCRegistry const *pRegistry = fp_GetChildParse(_Str, fg_NullPtr<t_CStr>());
+		// Parsing consumes the path.
+		t_CStr Path = _Str;
+		TCRegistry const *pRegistry = fp_GetChildParse(Path, fg_NullPtr<t_CStr>());
 		if (pRegistry)
 		{
 			_OutValue = pRegistry->mp_Data;
@@ -110,11 +114,13 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetValue(t_CStr _Name, t_CData const &_Data) -> TCRegistry *
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_SetValue(t_CStr const &_Name, t_CData const &_Data) -> TCRegistry *
 	{
+		// Parsing consumes the path.
+		t_CStr Path = _Name;
 		t_CStr NotFound;
 		TCRegistry *pPrev = this;
-		TCRegistry *pChild = pPrev->fp_GetChildParse(_Name, &NotFound, &pPrev);
+		TCRegistry *pChild = pPrev->fp_GetChildParse(Path, &NotFound, &pPrev);
 
 		while (!pChild)
 		{
@@ -122,9 +128,9 @@ namespace NMib::NContainer
 			pChild->mp_Key.f_Set(NotFound);
 			pPrev->mp_Children.f_Insert(pChild);
 			pPrev = pChild;
-			if (_Name.f_IsEmpty())
+			if (Path.f_IsEmpty())
 				break;
-			pChild = pPrev->fp_GetChildParse(_Name, &NotFound, &pPrev);
+			pChild = pPrev->fp_GetChildParse(Path, &NotFound, &pPrev);
 		}
 		pChild->mp_Data = _Data;
 
