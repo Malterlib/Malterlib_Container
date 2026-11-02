@@ -525,6 +525,8 @@ namespace NMib
 				return;
 			}
 
+			DMibFastCheck(_Count / 4 != 0);
+			DMibAnalyzerAssume(_Count / 4 != 0);
 			umint MaxDepth = (2 + fg_GetHighestBitSetNoZero(_Count / 4)) * 2;
 			NPrivate::fg_IntrospectiveLoop(_Iterator, _Count, MaxDepth, NPrivate::ETI7_RandomSeed, _Comp);
 		}
