@@ -62,28 +62,28 @@ namespace NMib::NStream
 
 	// Optimize for simple data cases
 
-#define DMibListVectorStreamSimpleImplement(_DataType) \
+#define DMibListVectorStreamSimpleImplement(d_DataType) \
 	template <typename t_CStream, typename t_CAllocator, typename t_COptions>\
-	class TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<_DataType, t_CAllocator, t_COptions> >\
+	class TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<d_DataType, t_CAllocator, t_COptions> >\
 	{\
 	public:\
-		static void fs_Feed(t_CStream &_Stream, NContainer::TCVector<_DataType, t_CAllocator, t_COptions> const &_Data)\
+		static void fs_Feed(t_CStream &_Stream, NContainer::TCVector<d_DataType, t_CAllocator, t_COptions> const &_Data)\
 		{\
 			umint nItems = _Data.f_GetLen();\
 			fg_FeedLenToStream(_Stream, nItems);\
-			if constexpr (sizeof(_DataType) != 1)\
+			if constexpr (sizeof(d_DataType) != 1)\
 				fg_FeedEndianArrayToStream(_Stream, _Data.f_GetArray(), nItems, _Stream.f_Endian());\
 			else\
-				_Stream.f_FeedBytes(_Data.f_GetArray(), nItems * sizeof(_DataType));\
+				_Stream.f_FeedBytes(_Data.f_GetArray(), nItems * sizeof(d_DataType));\
 		}\
-		static void fs_Consume(t_CStream &_Stream, NContainer::TCVector<_DataType, t_CAllocator, t_COptions> &_Data)\
+		static void fs_Consume(t_CStream &_Stream, NContainer::TCVector<d_DataType, t_CAllocator, t_COptions> &_Data)\
 		{\
 			uint64 nItems;\
 			fg_ConsumeLenFromStream(_Stream, nItems);\
 			fg_CheckLengthLimit(_Stream, nItems);\
 			_Data.f_SetLen(nItems);\
-			_Stream.f_ConsumeBytes(_Data.f_GetArray(), nItems * sizeof(_DataType));\
-			if constexpr (sizeof(_DataType) != 1)\
+			_Stream.f_ConsumeBytes(_Data.f_GetArray(), nItems * sizeof(d_DataType));\
+			if constexpr (sizeof(d_DataType) != 1)\
 				fg_ByteSwapArray(_Stream, _Data.f_GetArray(), nItems, _Stream.f_Endian());\
 		}\
 	};
