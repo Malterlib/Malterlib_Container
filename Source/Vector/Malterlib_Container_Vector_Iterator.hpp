@@ -17,6 +17,13 @@ namespace NMib::NContainer
 		return CIteratorConst(f_GetArray(), f_GetArray() + f_GetLen());
 	}
 
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	template <typename tf_CIteratorData>
+	umint TCVector<t_CData, t_CAllocator, t_COptions>::fp_GetIteratorPos(TCVectorIterator<tf_CIteratorData> const &_iIter) const
+	{
+		return _iIter - f_GetArray();
+	}
+
 	template <typename t_CIteratorData>
 	TCVectorIterator<t_CIteratorData>::TCVectorIterator()
 		: mp_pBegin(nullptr)

@@ -378,7 +378,7 @@ namespace NMib::NContainer
 		friend struct TCVector;
 
 #if defined(DCompiler_MSVC_Workaround)
-		static constexpr umint fsp_Alignment()
+		static constexpr umint fsp_Alignment() // NOLINT(malterlib-header-declarations-only): used in the alignas of CVectorData below, which needs its definition
 		{
 			return fg_MaxConstexpr(alignof(t_CData), alignof(umint));
 		}
@@ -389,10 +389,7 @@ namespace NMib::NContainer
 			umint m_Length;
 			umint m_AllocSize;
 
-			inline_small t_CData *f_GetData()
-			{
-				return (t_CData *)(this + 1);
-			}
+			inline_small t_CData *f_GetData();
 		};
 #else
 		static constexpr umint mcp_Alignment = fg_MaxConstexpr(alignof(t_CData), alignof(umint));
@@ -402,10 +399,7 @@ namespace NMib::NContainer
 			umint m_Length;
 			umint m_AllocSize;
 
-			inline_small t_CData *f_GetData()
-			{
-				return (t_CData *)(this + 1);
-			}
+			inline_small t_CData *f_GetData();
 		};
 #endif
 
@@ -446,10 +440,7 @@ namespace NMib::NContainer
 		void fp_Copy(TCVector const &_Source);
 
 		template <typename tf_CIteratorData>
-		umint fp_GetIteratorPos(TCVectorIterator<tf_CIteratorData> const &_iIter) const
-		{
-			return _iIter - f_GetArray();
-		}
+		umint fp_GetIteratorPos(TCVectorIterator<tf_CIteratorData> const &_iIter) const;
 
 		inline_never t_CData &fp_Insert();
 		template <typename tf_CType, typename ...tfp_CParams>

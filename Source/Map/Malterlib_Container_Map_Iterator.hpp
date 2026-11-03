@@ -212,6 +212,45 @@ namespace NMib::NContainer::NPrivate
 	}
 
 	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
+	TCMapIterator<t_CMap, t_Access, t_Flags>::TCMapIterator(TCMapIterator &&_iOther)
+		requires (!!(t_Flags & EMapIteratorFlags_Destructive))
+		: mp_Iter(_iOther.mp_Iter)
+		, mp_pMap(fg_Exchange(_iOther.mp_pMap, nullptr))
+	{
+	}
+
+	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
+	auto TCMapIterator<t_CMap, t_Access, t_Flags>::operator = (TCMapIterator &&_iOther) -> TCMapIterator &
+		requires (!!(t_Flags & EMapIteratorFlags_Destructive))
+	{
+		if (mp_pMap)
+			mp_pMap->f_Clear();
+		mp_Iter = _iOther.mp_Iter;
+		mp_pMap = fg_Exchange(_iOther.mp_pMap, nullptr);
+		return *this;
+	}
+
+	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
+	TCMapIterator<t_CMap, t_Access, t_Flags>::~TCMapIterator()
+	{
+		if constexpr (t_Flags & EMapIteratorFlags_Destructive)
+		{
+			if (mp_pMap)
+				mp_pMap->f_Clear();
+		}
+	}
+
+	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
+	auto TCMapIterator<t_CMap, t_Access, t_Flags>::f_GetIterator() const -> TCMapIterator
+		requires (!(t_Flags & EMapIteratorFlags_Destructive))
+	{
+		TCMapIterator iResult;
+		iResult.mp_Iter = mp_Iter;
+		iResult.mp_pMap = mp_pMap;
+		return iResult;
+	}
+
+	template <typename t_CMap, EMapIteratorAccess t_Access, EMapIteratorFlags t_Flags>
 	auto TCMapIterator<t_CMap, t_Access, t_Flags>::operator = (CMapQualified &_Map) -> TCMapIterator &
 		requires (!(t_Flags & EMapIteratorFlags_Destructive))
 	{

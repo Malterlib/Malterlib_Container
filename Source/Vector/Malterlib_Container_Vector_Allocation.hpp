@@ -15,6 +15,12 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
+	inline_small t_CData *TCVector<t_CData, t_CAllocator, t_COptions>::CVectorData::f_GetData()
+	{
+		return (t_CData *)(this + 1);
+	}
+
+	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	void TCVector<t_CData, t_CAllocator, t_COptions>::fp_FreeData(CVectorData *_pData)
 	{
 		fp_Allocator().f_Free(_pData, _pData->m_AllocSize);

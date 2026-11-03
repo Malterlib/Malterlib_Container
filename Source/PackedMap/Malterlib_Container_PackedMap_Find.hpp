@@ -5,6 +5,32 @@
 
 namespace NMib::NContainer
 {
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
+	template <typename tf_CProbeKey>
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_StaticAssertNothrowCompareProbeToStoredKey() noexcept
+	{
+		using CProbeKey = NTraits::TCRemoveReferenceAndQualifiers<tf_CProbeKey>;
+		static_assert
+			(
+				noexcept(fg_GetType<t_CCompare const &>()(fg_GetType<CProbeKey const &>(), fg_GetType<t_CKey const &>()))
+				, "TCPackedMap requires heterogeneous key comparisons (_Key, stored key) to be noexcept"
+			)
+		;
+	}
+
+	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
+	template <typename tf_CProbeKey>
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::fsp_StaticAssertNothrowCompareStoredKeyToProbe() noexcept
+	{
+		using CProbeKey = NTraits::TCRemoveReferenceAndQualifiers<tf_CProbeKey>;
+		static_assert
+			(
+				noexcept(fg_GetType<t_CCompare const &>()(fg_GetType<t_CKey const &>(), fg_GetType<CProbeKey const &>()))
+				, "TCPackedMap requires heterogeneous key comparisons (stored key, _Key) to be noexcept"
+			)
+		;
+	}
+
 	// Find which segment a key belongs to using the multi-level static index
 	// Uses top-down descent through B+-tree-like index structure
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>

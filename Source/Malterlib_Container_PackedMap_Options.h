@@ -30,17 +30,7 @@ namespace NMib::NContainer
 		pfp64 m_ResizeThreshold = 0.30; // Shrink threshold
 	};
 
-	constexpr CPackedMapOptions fg_PackedMapOptionsScanOriented(umint _SegmentSize = 64, umint _SegmentBytes = 0)
-	{
-		return CPackedMapOptions
-			{
-				.m_SegmentSize = _SegmentSize
-				, .m_SegmentBytes = _SegmentBytes
-				, .m_bScanOriented = true
-				, .m_LeafLowerBound = 0.0
-				, .m_RootLowerBound = 0.75
-				, .m_ResizeThreshold = 0.50
-			}
-		;
-	}
+	constexpr CPackedMapOptions fg_PackedMapOptionsScanOriented(umint _SegmentSize = 64, umint _SegmentBytes = 0);
 }
+
+#include "Malterlib_Container_PackedMap_Options.hpp"

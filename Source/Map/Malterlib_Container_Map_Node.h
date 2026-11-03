@@ -113,7 +113,6 @@ namespace NMib::NContainer
 		friend struct TCDestructiveMapNode;
 
 		TCMapNode() = default;
-
 		template <typename tf_CKey, typename ...tfp_CArg>
 		explicit inline_small TCMapNode(tf_CKey &&_Key, tfp_CArg && ...p_Args);
 
@@ -133,15 +132,8 @@ namespace NMib::NContainer
 		using CBase::f_Feed;
 		using CBase::f_Consume;
 
-		constexpr inline_small t_CKey &f_Key() & noexcept
-		{
-			return this->mp_Key;
-		}
-
-		constexpr inline_small t_CKey &&f_Key() && noexcept
-		{
-			return fg_Move(this->mp_Key);
-		}
+		constexpr inline_small t_CKey &f_Key() & noexcept;
+		constexpr inline_small t_CKey &&f_Key() && noexcept;
 	};
 
 	template <typename t_CNode, typename t_CAllocator>
@@ -160,88 +152,25 @@ namespace NMib::NContainer
 		;
 
 		TCMapNodeHandle() = default;
+		TCMapNodeHandle(TCMapNodeHandle &&_Other) noexcept;
+		~TCMapNodeHandle();
 
-		TCMapNodeHandle(TCMapNodeHandle &&_Other) noexcept
-			: mp_pNode(fg_Exchange(_Other.mp_pNode, nullptr))
-			, mp_Allocator(fg_Move(_Other.mp_Allocator))
-		{
-			if constexpr (NTraits::cIsPointer<CAllocatorStore>)
-				_Other.mp_Allocator = nullptr;
-		}
+		void f_Clear();
 
-		~TCMapNodeHandle()
-		{
-			if (mp_pNode)
-				fg_DeleteObjectDefiniteType(fp_Allocator(), mp_pNode);
-		}
+		TCMapNodeHandle &operator = (TCMapNodeHandle &&_Other) noexcept;
 
-		void f_Clear()
-		{
-			if (mp_pNode)
-				fg_DeleteObjectDefiniteType(fp_Allocator(), fg_Exchange(mp_pNode, nullptr));
-		}
+		[[nodiscard]] bool f_IsEmpty() const noexcept;
+		[[nodiscard]] explicit operator bool () const noexcept;
 
-		TCMapNodeHandle &operator = (TCMapNodeHandle &&_Other) noexcept
-		{
-			f_Clear();
+		inline_small CKey &f_Key() const noexcept;
+		inline_small CValue &f_Value() const noexcept;
+		inline_small CValue &operator * () const noexcept;
+		inline_small CValue *operator -> () const noexcept;
 
-			mp_Allocator = fg_Move(_Other.mp_Allocator);
-			if constexpr (NTraits::cIsPointer<CAllocatorStore>)
-				_Other.mp_Allocator = nullptr;
-
-			mp_pNode = fg_Exchange(_Other.mp_pNode, nullptr);
-
-			return *this;
-		}
-
-		[[nodiscard]] bool f_IsEmpty() const noexcept
-		{
-			return !mp_pNode;
-		}
-
-		[[nodiscard]] explicit operator bool () const noexcept
-		{
-			return !!mp_pNode;
-		}
-
-		inline_small CKey &f_Key() const noexcept
-		{
-			DMibFastCheck(mp_pNode);
-			return mp_pNode->mp_Key;
-		}
-
-		inline_small CValue &f_Value() const noexcept
-		{
-			DMibFastCheck(mp_pNode);
-			if constexpr (t_CNode::mc_bHasValue)
-				return mp_pNode->mp_Value;
-			else
-				return mp_pNode->mp_Key;
-		}
-
-		inline_small CValue &operator * () const noexcept
-		{
-			return f_Value();
-		}
-
-		inline_small CValue *operator -> () const noexcept
-		{
-			return &f_Value();
-		}
-
-		t_CAllocator &f_GetAllocator() const
-		{
-			return fp_Allocator();
-		}
+		t_CAllocator &f_GetAllocator() const;
 
 	private:
-		t_CAllocator &fp_Allocator() const
-		{
-			if constexpr (NTraits::cIsPointer<CAllocatorStore>)
-				return *mp_Allocator;
-			else
-				return (t_CAllocator &)mp_Allocator;
-		}
+		t_CAllocator &fp_Allocator() const;
 
 		template <typename t_CKey2, typename t_CValue2, typename t_CCompare2, typename t_CAllocator2>
 		friend struct TCMap;
@@ -249,21 +178,7 @@ namespace NMib::NContainer
 		template <typename t_CMap2, EMapIteratorAccess t_Access2, EMapIteratorFlags t_Flags2>
 		friend struct NPrivate::TCMapIterator;
 
-		TCMapNodeHandle(t_CNode *_pNode, t_CAllocator &_Allocator)
-			: mp_pNode(_pNode)
-			, mp_Allocator
-			(
-				[&]
-				{
-					if constexpr (NTraits::cIsPointer<CAllocatorStore>)
-						return &_Allocator;
-					else
-						return _Allocator;
-				}
-				()
-			)
-		{
-		}
+		TCMapNodeHandle(t_CNode *_pNode, t_CAllocator &_Allocator);
 
 		t_CNode *mp_pNode = nullptr;
 		DMibNoUniqueAddress CAllocatorStore mp_Allocator;

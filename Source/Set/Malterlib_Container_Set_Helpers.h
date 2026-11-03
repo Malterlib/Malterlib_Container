@@ -97,25 +97,10 @@ namespace NMib::NContainer
 		using CBase::f_Feed;
 		using CBase::f_Consume;
 
-		constexpr inline_small t_CKey &f_Key() & noexcept
-		{
-			return this->mp_Key;
-		}
-
-		constexpr inline_small t_CKey &&f_Key() && noexcept
-		{
-			return fg_Move(this->mp_Key);
-		}
-
-		constexpr inline_small t_CKey &f_Value() & noexcept
-		{
-			return this->mp_Key;
-		}
-
-		constexpr inline_small t_CKey &&f_Value() && noexcept
-		{
-			return fg_Move(this->mp_Key);
-		}
+		constexpr inline_small t_CKey &f_Key() & noexcept;
+		constexpr inline_small t_CKey &&f_Key() && noexcept;
+		constexpr inline_small t_CKey &f_Value() & noexcept;
+		constexpr inline_small t_CKey &&f_Value() && noexcept;
 	};
 }
 
@@ -154,3 +139,5 @@ namespace std
 		using type = t_CKey const;
 	};
 }
+
+#include "Malterlib_Container_Set_Helpers.hpp"

@@ -63,10 +63,7 @@ namespace NMib::NContainer::NPrivate
 
 		TCMapIterator(TCMapIterator &&_iOther)
 			requires (!!(t_Flags & EMapIteratorFlags_Destructive))
-			: mp_Iter(_iOther.mp_Iter)
-			, mp_pMap(fg_Exchange(_iOther.mp_pMap, nullptr))
-		{
-		}
+		;
 
 		TCMapIterator(TCMapIterator const &_iOther)
 			requires (!!(t_Flags & EMapIteratorFlags_Destructive))
@@ -77,31 +74,13 @@ namespace NMib::NContainer::NPrivate
 
 		TCMapIterator &operator = (TCMapIterator &&_iOther)
 			requires (!!(t_Flags & EMapIteratorFlags_Destructive))
-		{
-			if (mp_pMap)
-				mp_pMap->f_Clear();
-			mp_Iter = _iOther.mp_Iter;
-			mp_pMap = fg_Exchange(_iOther.mp_pMap, nullptr);
-			return *this;
-		}
+		;
 
-		~TCMapIterator()
-		{
-			if constexpr (t_Flags & EMapIteratorFlags_Destructive)
-			{
-				if (mp_pMap)
-					mp_pMap->f_Clear();
-			}
-		}
+		~TCMapIterator();
 
 		TCMapIterator f_GetIterator() const
 			requires (!(t_Flags & EMapIteratorFlags_Destructive))
-		{
-			TCMapIterator iResult;
-			iResult.mp_Iter = mp_Iter;
-			iResult.mp_pMap = mp_pMap;
-			return iResult;
-		}
+		;
 
 		TCMapIterator &operator = (CMapQualified &_Map)
 			requires (!(t_Flags & EMapIteratorFlags_Destructive))

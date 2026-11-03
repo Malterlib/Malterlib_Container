@@ -20,44 +20,16 @@ namespace NMib::NContainer
 		using CSuper = TCMap<t_CKey, t_CValue, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, t_CValue>, t_GrowSize, t_CAllocator, t_CPoolType, t_CLockType>>;
 
 	public:
-		TCMapWithPool()
-		{
-		}
-
-		TCMapWithPool(TCMapWithPool &&_Other)
-			: CSuper((CSuper &&)fg_Move(_Other))
-		{
-		}
-
-		TCMapWithPool(TCMapWithPool const &_Other)
-			: CSuper((CSuper const &)_Other)
-		{
-		}
-
+		TCMapWithPool();
+		TCMapWithPool(TCMapWithPool &&_Other);
+		TCMapWithPool(TCMapWithPool const &_Other);
 		template <typename tf_COther>
-		TCMapWithPool(tf_COther &&_Other)
-			: CSuper(fg_Forward<tf_COther>(_Other))
-		{
-		}
+		TCMapWithPool(tf_COther &&_Other);
 
-		TCMapWithPool &operator = (TCMapWithPool &&_Other)
-		{
-			*((CSuper *)this) = ((CSuper &&)fg_Move(_Other));
-			return *this;
-		}
-
-		TCMapWithPool &operator = (TCMapWithPool const &_Other)
-		{
-			*((CSuper *)this) = ((CSuper const &)_Other);
-			return *this;
-		}
-
+		TCMapWithPool &operator = (TCMapWithPool &&_Other);
+		TCMapWithPool &operator = (TCMapWithPool const &_Other);
 		template <typename tf_COther>
-		TCMapWithPool &operator = (tf_COther &&_Other)
-		{
-			*((CSuper *)this) = fg_Forward<tf_COther>(_Other);
-			return *this;
-		}
+		TCMapWithPool &operator = (tf_COther &&_Other);
 	};
 }
 
@@ -73,3 +45,5 @@ namespace NMib::NContainer::NPrivate
 #ifndef DMibPNoShortCuts
 using namespace NMib::NContainer;
 #endif
+
+#include "Malterlib_Container_MapWithPool.hpp"
