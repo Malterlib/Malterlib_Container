@@ -49,7 +49,7 @@ namespace NMib::NContainer::NPrivate
 			_Stream >> m_Bits;
 			for (umint iSuperBit = 0; iSuperBit < mc_nSuperBits; ++iSuperBit)
 			{
-				if (m_Bits.f_GetWholeEntrySet(iSuperBit * t_TCBitArray<t_nBits>::mc_BitsPerEntry))
+				if (m_Bits.f_GetBit(iSuperBit * 2) || m_Bits.f_GetBit(iSuperBit * 2 + 1))
 					CSuper::template f_SetBit<true>(iSuperBit);
 			}
 		}

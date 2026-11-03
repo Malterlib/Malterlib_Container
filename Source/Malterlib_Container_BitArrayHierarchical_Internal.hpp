@@ -56,7 +56,7 @@ namespace NMib::NContainer::NPrivate
 			for (umint iSuperBit = 0; iSuperBit < mc_nSuperBits; ++iSuperBit)
 			{
 				if (m_Bits.f_GetWholeEntrySet(iSuperBit * t_nBitsPerEntry))
-					CSuper::f_SetBit<true>(iSuperBit);
+					CSuper::template f_SetBit<true>(iSuperBit);
 			}
 		}
 	}
