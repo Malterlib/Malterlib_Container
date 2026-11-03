@@ -7,7 +7,7 @@ namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_DebugIsValid() const
+	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_DebugIsValid() const
 	{
 		auto Iter = mp_Children.f_GetIterator();
 		while (Iter)
@@ -16,7 +16,7 @@ namespace NMib::NContainer
 			++Iter;
 			if (pReg->mp_pParent != this)
 				return false;
-			if (!pReg->fpr_DebugIsValid())
+			if (!pReg->fp_DebugIsValid())
 				return false;
 		}
 		return true;
@@ -46,6 +46,6 @@ namespace NMib::NContainer
 	{
 		if (_bIsRoot && mp_pParent != nullptr)
 			return false;
-		return fpr_DebugIsValid();
+		return fp_DebugIsValid();
 	}
 }

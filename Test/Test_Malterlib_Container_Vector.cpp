@@ -98,7 +98,7 @@ namespace
 			return Ret;
 		}
 
-		TCVector<int32> fs_DefaultList()
+		static TCVector<int32> fs_DefaultList()
 		{
 			TCVector<int32> Ret;
 

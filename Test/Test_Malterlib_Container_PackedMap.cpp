@@ -331,12 +331,13 @@ namespace
 			return COrdering_Strong::equal;
 		}
 
-		static void fp_CheckAlloc()
+		static void fs_CheckAlloc()
 		{
 			if (ms_nAllocAfterFail >= 0 && ++ms_nAllocations >= ms_nAllocAfterFail)
 				DMibError("AllocFail");
 		}
 
+		// NOLINTBEGIN(malterlib-function-naming): the allocator interface, static in stateless allocators and not in the others
 		only_parameters_aliased malloc_like static auto f_AllocAligned
 			(
 				umint _Size
@@ -346,7 +347,7 @@ namespace
 			)
 			-> void *
 		{
-			fp_CheckAlloc();
+			fs_CheckAlloc();
 			return CAllocator_Heap::f_AllocAligned(_Size, _Alignment, _AllocFlags, _NumaNode);
 		}
 
@@ -359,19 +360,19 @@ namespace
 			)
 			-> void *
 		{
-			fp_CheckAlloc();
+			fs_CheckAlloc();
 			return CAllocator_Heap::f_AllocAlignedWithSize(_Size, _Alignment, _AllocFlags, _NumaNode);
 		}
 
 		only_parameters_aliased malloc_like static void *f_Alloc(umint _Size, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
 		{
-			fp_CheckAlloc();
+			fs_CheckAlloc();
 			return CAllocator_Heap::f_Alloc(_Size, _AllocFlags, _NumaNode);
 		}
 
 		only_parameters_aliased malloc_like static void *f_AllocWithSize(umint &_Size, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
 		{
-			fp_CheckAlloc();
+			fs_CheckAlloc();
 			return CAllocator_Heap::f_AllocWithSize(_Size, _AllocFlags, _NumaNode);
 		}
 
@@ -421,7 +422,7 @@ namespace
 			)
 			-> void *
 		{
-			fp_CheckAlloc();
+			fs_CheckAlloc();
 			return CAllocator_Heap::f_Realloc(_pMem, _Size, _OldSize, _AllocFlags, _NumaNode);
 		}
 
@@ -434,6 +435,8 @@ namespace
 		{
 			return CAllocator_Heap::f_OnlyOneAlloc();
 		}
+
+		// NOLINTEND(malterlib-function-naming)
 	};
 
 	static_assert(cIsEmpty<CFailingAllocator>);
@@ -4073,7 +4076,7 @@ namespace
 		};
 
 		template <typename t_CMap>
-		auto fg_FindThrowAfterCompletedBulkLoadSegment(umint _nCount) -> umint
+		auto f_FindThrowAfterCompletedBulkLoadSegment(umint _nCount) -> umint
 		{
 			CThrowingValue::fs_Reset();
 
@@ -4363,7 +4366,7 @@ namespace
 				constexpr umint c_nCount = 10;
 				using CThrowAccessMap = TCPackedMapTestAccess<CThrowMap>;
 
-				umint nThrowAfter = fg_FindThrowAfterCompletedBulkLoadSegment<CThrowMap>(c_nCount);
+				umint nThrowAfter = f_FindThrowAfterCompletedBulkLoadSegment<CThrowMap>(c_nCount);
 
 				CThrowingValue::fs_Reset(nThrowAfter);
 				CThrowAccessMap Map;
@@ -4393,7 +4396,7 @@ namespace
 				using CSourceMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
 				using CDestinationMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
 
-				umint nThrowAfter = fg_FindThrowAfterCompletedBulkLoadSegment<CDestinationMap>(c_nCount);
+				umint nThrowAfter = f_FindThrowAfterCompletedBulkLoadSegment<CDestinationMap>(c_nCount);
 
 				CThrowingValue::fs_Reset();
 				CSourceMap Source;

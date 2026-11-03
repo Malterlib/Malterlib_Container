@@ -159,7 +159,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bAllowLineBreakInEscapedString, typename tf_CParseContext>
-	ch8 const *TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_Parse(ch8 const *_pParse, tf_CParseContext &_ParseContext)
+	ch8 const *TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_ParseRecursive(ch8 const *_pParse, tf_CParseContext &_ParseContext)
 	{
 		ch8 const *pParse = _pParse;
 		auto Current = *pParse;
@@ -324,7 +324,7 @@ namespace NMib::NContainer
 						_ParseContext.f_SetStartWhiteSpace(pParse);
 					}
 
-					pParse = pReg->fpr_Parse<tf_bAllowLineBreakInEscapedString>(pParse, _ParseContext);
+					pParse = pReg->fp_ParseRecursive<tf_bAllowLineBreakInEscapedString>(pParse, _ParseContext);
 					Current = *pParse;
 					if (Current != '}')
 						DMibError(NStr::CStr::CFormat("{}No matching '}' found") << _ParseContext.f_FormatLocation(LineBeforeStartLocation));
@@ -489,7 +489,7 @@ namespace NMib::NContainer
 	template <bool tf_bAllowLineBreakInEscapedString, typename tf_CParseContext>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_Parse(ch8 const *_pParse, tf_CParseContext &_ParseContext)
 	{
-		ch8 const *pParse = fpr_Parse<tf_bAllowLineBreakInEscapedString>(_pParse, _ParseContext);
+		ch8 const *pParse = fp_ParseRecursive<tf_bAllowLineBreakInEscapedString>(_pParse, _ParseContext);
 		if (*pParse == '}')
 			DMibError(NStr::CStr::CFormat("{}No matching '{{' found") << _ParseContext.f_FormatLocation(pParse));
 

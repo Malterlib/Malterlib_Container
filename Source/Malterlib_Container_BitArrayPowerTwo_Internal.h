@@ -73,7 +73,6 @@ namespace NMib::NContainer::NPrivate
 		aint f_FindUpperBoundAtLevel(umint _Level, umint _StartBit) const;
 
 		bool f_IsFullySet(umint _Level) const;
-		bool fp_IsFullyFree() const;
 		bool f_IsFullyFree(umint _Level) const;
 
 		template <typename t_CFunctor>
@@ -85,6 +84,9 @@ namespace NMib::NContainer::NPrivate
 		void f_EnumSetBits(umint _Level, t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 		template <typename t_CFunctor>
 		void f_EnumSetBitRanges(umint _Level, t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+
+	protected:
+		bool fp_IsFullyFree() const;
 	};
 
 	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels>
@@ -102,7 +104,6 @@ namespace NMib::NContainer::NPrivate
 		template <bool tf_bValue>
 		void f_SetBit(umint _Bit);
 		void f_SetBit(umint _Bit, bool _bValue);
-		bool fp_IsFullyFree() const;
 		bool f_IsFullySet() const;
 		bool f_IsFullyFree() const;
 		bool f_GetBit(umint _Bit) const;
@@ -122,6 +123,9 @@ namespace NMib::NContainer::NPrivate
 		aint f_FindFreeBitReverse(umint _Level) const;
 		aint f_FindFreeBitReverseAndSet(umint _Level);
 		aint f_FindUpperBoundAtLevel(umint _Level, umint _StartBit) const;
+
+	protected:
+		bool fp_IsFullyFree() const;
 	};
 }
 

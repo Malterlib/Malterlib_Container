@@ -7,7 +7,7 @@ namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_FindDiffs
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_FindDiffs
 		(
 			t_CStr const &_Path
 			, TCRegistry const &_Original
@@ -33,7 +33,7 @@ namespace NMib::NContainer
 					t_CStr Path = fsp_AppendPath(_Path, Name);
 					_Deleted.f_Insert(Path);
 					if (_bRecursive)
-						pReg->fpr_AddAllChildren(Path, _Deleted);
+						pReg->fp_AddAllChildren(Path, _Deleted);
 				}
 			}
 		}
@@ -52,7 +52,7 @@ namespace NMib::NContainer
 				{
 					_Added.f_Insert(Path);
 					if (_bRecursive)
-						pReg->fpr_AddAllChildren(Path, _Added);
+						pReg->fp_AddAllChildren(Path, _Added);
 				}
 				else
 				{
@@ -60,7 +60,7 @@ namespace NMib::NContainer
 						_Changed.f_Insert(Path);
 
 					if (_bRecursive)
-						pReg->fpr_FindDiffs(Path, *pChild, _Changed, _Added, _Deleted, _bRecursive);
+						pReg->fp_FindDiffs(Path, *pChild, _Changed, _Added, _Deleted, _bRecursive);
 				}
 			}
 		}
@@ -68,7 +68,7 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_FindChanges(t_CStr const &_Path, TCRegistry const &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_FindChanges(t_CStr const &_Path, TCRegistry const &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
 	{
 		// Find added and changed
 		{
@@ -94,7 +94,7 @@ namespace NMib::NContainer
 					if (pChild->f_GetThisValue() != pReg->f_GetThisValue())
 						_Changed.f_SetValue(Path, pReg->f_GetThisValue());
 
-					pReg->fpr_FindChanges(Path, *pChild, _Changed, _bIncludeAdded);
+					pReg->fp_FindChanges(Path, *pChild, _Changed, _bIncludeAdded);
 				}
 			}
 		}
@@ -102,7 +102,7 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fpr_FindChanges
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fp_FindChanges
 		(
 			t_CStr const &_Path
 			, TCRegistry const &_Original
@@ -153,7 +153,7 @@ namespace NMib::NContainer
 					if (pChild->f_GetThisValue() != pReg->f_GetThisValue())
 						_Changed.f_SetValue(Path, pReg->f_GetThisValue());
 
-					pReg->fpr_FindChanges(Path, *pChild, _Changed, _Deleted, _bIncludeAdded);
+					pReg->fp_FindChanges(Path, *pChild, _Changed, _Deleted, _bIncludeAdded);
 				}
 			}
 		}
@@ -171,20 +171,20 @@ namespace NMib::NContainer
 		)
 		const
 	{
-		fpr_FindDiffs("", _Original, _Changed, _Added, _Deleted, _bRecursive);
+		fp_FindDiffs("", _Original, _Changed, _Added, _Deleted, _bRecursive);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FindChanges(TCRegistry const &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const
 	{
-		fpr_FindChanges("", _Original, _Changed, _bIncludeAdded);
+		fp_FindChanges("", _Original, _Changed, _bIncludeAdded);
 	}
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_FindChanges(TCRegistry const &_Original, TCRegistry &_Changed, NContainer::TCVector<t_CKey> &_Deleted, bool _bIncludeAdded) const
 	{
-		fpr_FindChanges("", _Original, _Changed, _Deleted, _bIncludeAdded);
+		fp_FindChanges("", _Original, _Changed, _Deleted, _bIncludeAdded);
 	}
 }

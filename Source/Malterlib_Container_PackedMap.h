@@ -59,30 +59,6 @@ namespace NMib::NContainer
 
 		static_assert(noexcept(fg_GetType<t_CCompare const &>()(fg_GetType<t_CKey const &>(), fg_GetType<t_CKey const &>())), "TCPackedMap requires key comparisons to be noexcept");
 
-		template <typename tf_CProbeKey>
-		static constexpr void fsp_StaticAssertNothrowCompareProbeToStoredKey() noexcept
-		{
-			using CProbeKey = NTraits::TCRemoveReferenceAndQualifiers<tf_CProbeKey>;
-			static_assert
-				(
-					noexcept(fg_GetType<t_CCompare const &>()(fg_GetType<CProbeKey const &>(), fg_GetType<t_CKey const &>()))
-					, "TCPackedMap requires heterogeneous key comparisons (_Key, stored key) to be noexcept"
-				)
-			;
-		}
-
-		template <typename tf_CProbeKey>
-		static constexpr void fsp_StaticAssertNothrowCompareStoredKeyToProbe() noexcept
-		{
-			using CProbeKey = NTraits::TCRemoveReferenceAndQualifiers<tf_CProbeKey>;
-			static_assert
-				(
-					noexcept(fg_GetType<t_CCompare const &>()(fg_GetType<t_CKey const &>(), fg_GetType<CProbeKey const &>()))
-					, "TCPackedMap requires heterogeneous key comparisons (stored key, _Key) to be noexcept"
-				)
-			;
-		}
-
 		using CIterator = TCPackedMapIterator<TCPackedMap, false, false>;
 		using CIteratorConst = TCPackedMapIterator<TCPackedMap, true, false>;
 		using CIteratorReverse = TCPackedMapIterator<TCPackedMap, false, true>;
@@ -645,6 +621,30 @@ namespace NMib::NContainer
 				, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
 			)
 		;
+
+		template <typename tf_CProbeKey>
+		static constexpr void fsp_StaticAssertNothrowCompareProbeToStoredKey() noexcept
+		{
+			using CProbeKey = NTraits::TCRemoveReferenceAndQualifiers<tf_CProbeKey>;
+			static_assert
+				(
+					noexcept(fg_GetType<t_CCompare const &>()(fg_GetType<CProbeKey const &>(), fg_GetType<t_CKey const &>()))
+					, "TCPackedMap requires heterogeneous key comparisons (_Key, stored key) to be noexcept"
+				)
+			;
+		}
+
+		template <typename tf_CProbeKey>
+		static constexpr void fsp_StaticAssertNothrowCompareStoredKeyToProbe() noexcept
+		{
+			using CProbeKey = NTraits::TCRemoveReferenceAndQualifiers<tf_CProbeKey>;
+			static_assert
+				(
+					noexcept(fg_GetType<t_CCompare const &>()(fg_GetType<t_CKey const &>(), fg_GetType<CProbeKey const &>()))
+					, "TCPackedMap requires heterogeneous key comparisons (stored key, _Key) to be noexcept"
+				)
+			;
+		}
 
 		// floor(density * capacity) — dispatches to fixed-point or float based on mcp_bUseFixedPoint
 		static constexpr umint fsp_ScaledMulFloor(umint _ScaledDensity, umint _Capacity) noexcept;

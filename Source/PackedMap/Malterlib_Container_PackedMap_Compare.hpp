@@ -7,7 +7,7 @@ namespace NMib::NContainer
 {
 	// Advance scan cursor to the next contiguous slot range using clustered segment pairs
 	template <typename tf_FGetFirstSlot>
-	constexpr void fsg_PackedMapAdvanceScanRange(umint &_iSeg, umint &_iSlot, umint &_iSlotEnd, auto const *_pMeta, umint _nSegments, tf_FGetFirstSlot &&_fGetFirstSlot)
+	constexpr void fg_PackedMapAdvanceScanRange(umint &_iSeg, umint &_iSlot, umint &_iSlotEnd, auto const *_pMeta, umint _nSegments, tf_FGetFirstSlot &&_fGetFirstSlot)
 	{
 		while (_iSeg < _nSegments)
 		{
@@ -74,9 +74,9 @@ namespace NMib::NContainer
 		for (umint iEntry = 0; iEntry < nLen; ++iEntry)
 		{
 			if (iSlot >= iSlotEnd)
-				fsg_PackedMapAdvanceScanRange(iSeg, iSlot, iSlotEnd, pData->m_pSegmentMeta, pData->m_nSegments, fsp_GetSegmentFirstSlot);
+				fg_PackedMapAdvanceScanRange(iSeg, iSlot, iSlotEnd, pData->m_pSegmentMeta, pData->m_nSegments, fsp_GetSegmentFirstSlot);
 			if (iOtherSlot >= iOtherSlotEnd)
-				fsg_PackedMapAdvanceScanRange(iOtherSeg, iOtherSlot, iOtherSlotEnd, pDataOther->m_pSegmentMeta, pDataOther->m_nSegments, COtherMap::fsp_GetSegmentFirstSlot);
+				fg_PackedMapAdvanceScanRange(iOtherSeg, iOtherSlot, iOtherSlotEnd, pDataOther->m_pSegmentMeta, pDataOther->m_nSegments, COtherMap::fsp_GetSegmentFirstSlot);
 
 			if (!(pKeys[iSlot] == pOtherKeys[iOtherSlot]))
 				return false;
@@ -131,9 +131,9 @@ namespace NMib::NContainer
 		for (umint iEntry = 0; iEntry < nLen; ++iEntry)
 		{
 			if (iSlot >= iSlotEnd)
-				fsg_PackedMapAdvanceScanRange(iSeg, iSlot, iSlotEnd, pData->m_pSegmentMeta, pData->m_nSegments, fsp_GetSegmentFirstSlot);
+				fg_PackedMapAdvanceScanRange(iSeg, iSlot, iSlotEnd, pData->m_pSegmentMeta, pData->m_nSegments, fsp_GetSegmentFirstSlot);
 			if (iOtherSlot >= iOtherSlotEnd)
-				fsg_PackedMapAdvanceScanRange(iOtherSeg, iOtherSlot, iOtherSlotEnd, pDataOther->m_pSegmentMeta, pDataOther->m_nSegments, COtherMap::fsp_GetSegmentFirstSlot);
+				fg_PackedMapAdvanceScanRange(iOtherSeg, iOtherSlot, iOtherSlotEnd, pDataOther->m_pSegmentMeta, pDataOther->m_nSegments, COtherMap::fsp_GetSegmentFirstSlot);
 
 			auto KeyComp = pKeys[iSlot] <=> pOtherKeys[iOtherSlot];
 			if (KeyComp != 0)
@@ -188,9 +188,9 @@ namespace NMib::NContainer
 		for (umint iEntry = 0; iEntry < nMinLen; ++iEntry)
 		{
 			if (iSlot >= iSlotEnd)
-				fsg_PackedMapAdvanceScanRange(iSeg, iSlot, iSlotEnd, pData->m_pSegmentMeta, pData->m_nSegments, fsp_GetSegmentFirstSlot);
+				fg_PackedMapAdvanceScanRange(iSeg, iSlot, iSlotEnd, pData->m_pSegmentMeta, pData->m_nSegments, fsp_GetSegmentFirstSlot);
 			if (iOtherSlot >= iOtherSlotEnd)
-				fsg_PackedMapAdvanceScanRange(iOtherSeg, iOtherSlot, iOtherSlotEnd, pDataOther->m_pSegmentMeta, pDataOther->m_nSegments, COtherMap::fsp_GetSegmentFirstSlot);
+				fg_PackedMapAdvanceScanRange(iOtherSeg, iOtherSlot, iOtherSlotEnd, pDataOther->m_pSegmentMeta, pDataOther->m_nSegments, COtherMap::fsp_GetSegmentFirstSlot);
 
 			auto KeyComp = pKeys[iSlot] <=> pOtherKeys[iOtherSlot];
 			if (KeyComp != 0)

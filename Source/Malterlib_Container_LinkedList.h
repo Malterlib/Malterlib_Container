@@ -46,7 +46,7 @@ namespace NMib::NContainer
 		{
 		}
 
-		inline_always static umint fs_GetOffset()
+		inline_always static umint fsp_GetOffset()
 		{
 			return DMibPOffsetOf(TCLinkedListMember, m_Object);
 		}
@@ -289,14 +289,14 @@ namespace NMib::NContainer
 
 		inline_always static CMember *fsp_MemberFromData(t_CData &_Data)
 		{
-			umint Offset = CMember::fs_GetOffset();
+			umint Offset = CMember::fsp_GetOffset();
 			CMember *pMember = (CMember *)(((uint8 *)&_Data) - Offset);
 			return pMember;
 		}
 
 		inline_always static CMember *fsp_MemberFromData(t_CData const &_Data)
 		{
-			umint Offset = CMember::fs_GetOffset();
+			umint Offset = CMember::fsp_GetOffset();
 			CMember *pMember = (CMember *)(((uint8 *)&_Data) - Offset);
 			return pMember;
 		}

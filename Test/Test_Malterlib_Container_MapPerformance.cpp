@@ -30,7 +30,7 @@ namespace NMib::NMisc
 		{
 		private: // Measure
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeysRandomSorted
+			inline_never void fp_MeasureForAllKeysRandomSorted
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -60,7 +60,7 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeysSorted
+			inline_never void fp_MeasureForAllKeysSorted
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -71,13 +71,13 @@ namespace NMib::NMisc
 				const
 			{
 				if (m_bRandom)
-					f_MeasureForAllKeysRandomSorted(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
+					fp_MeasureForAllKeysRandomSorted(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
 				else
-					f_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
+					fp_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeysRandom
+			inline_never void fp_MeasureForAllKeysRandom
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -107,7 +107,7 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeysLinear
+			inline_never void fp_MeasureForAllKeysLinear
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -135,7 +135,7 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeys
+			inline_never void fp_MeasureForAllKeys
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -146,13 +146,13 @@ namespace NMib::NMisc
 				const
 			{
 				if (m_bRandom)
-					f_MeasureForAllKeysRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
+					fp_MeasureForAllKeysRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
 				else
-					f_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
+					fp_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeyValuesRandom
+			inline_never void fp_MeasureForAllKeyValuesRandom
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -182,7 +182,7 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeyValuesLinear
+			inline_never void fp_MeasureForAllKeyValuesLinear
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -210,7 +210,7 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeyValues
+			inline_never void fp_MeasureForAllKeyValues
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -221,14 +221,14 @@ namespace NMib::NMisc
 				const
 			{
 				if (m_bRandom)
-					f_MeasureForAllKeyValuesRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
+					fp_MeasureForAllKeyValuesRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
 				else
-					f_MeasureForAllKeyValuesLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
+					fp_MeasureForAllKeyValuesLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct, _nTries);
 			}
 
 		private: // Generate test data
 			template <typename tf_CMap>
-			tf_CMap f_GetFilledMap() const
+			tf_CMap fp_GetFilledMap() const
 			{
 				if (m_bRandom)
 				{
@@ -247,7 +247,7 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_CSet>
-			tf_CSet f_GetFilledSet() const
+			tf_CSet fp_GetFilledSet() const
 			{
 				if (m_bRandom)
 				{
@@ -266,7 +266,7 @@ namespace NMib::NMisc
 			}
 
 			template <>
-			TCMap<umint, umint> f_GetFilledMap<TCMap<umint, umint>>() const
+			TCMap<umint, umint> fp_GetFilledMap<TCMap<umint, umint>>() const
 			{
 				if (m_bRandom)
 				{
@@ -285,7 +285,7 @@ namespace NMib::NMisc
 			}
 
 			template <>
-			TCSet<umint> f_GetFilledSet<TCSet<umint>>() const
+			TCSet<umint> fp_GetFilledSet<TCSet<umint>>() const
 			{
 				if (m_bRandom)
 				{
@@ -335,10 +335,10 @@ namespace NMib::NMisc
 					CTestPerformance PerfTest(mc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
-					auto PrecachSet = f_GetFilledSet<TCSet<umint>>();
+					auto PrecachSet = fp_GetFilledSet<TCSet<umint>>();
 
 					TCSet<umint> Set;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							MalterlibMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -358,7 +358,7 @@ namespace NMib::NMisc
 
 					CTestPerformanceMeasure StdMeasure("std");
 					std::set<umint> Set2;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							StdMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -388,7 +388,7 @@ namespace NMib::NMisc
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
 					TCMap<umint, umint> Map;
-					f_MeasureForAllKeyValues
+					fp_MeasureForAllKeyValues
 						(
 							MalterlibMeasure
 							, [&](umint _Key, umint _Value) inline_always_lambda
@@ -408,7 +408,7 @@ namespace NMib::NMisc
 
 					CTestPerformanceMeasure StdMeasure("std");
 					std::map<umint, umint> Map2;
-					f_MeasureForAllKeyValues
+					fp_MeasureForAllKeyValues
 						(
 							StdMeasure
 							, [&](umint _Key, umint _Value) inline_always_lambda
@@ -450,9 +450,9 @@ namespace NMib::NMisc
 					fp_CheckInit();
 					CTestPerformance PerfTest(mc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
-					auto Set = f_GetFilledSet<TCSet<umint>>();
+					auto Set = fp_GetFilledSet<TCSet<umint>>();
 					umint nFoundMalterlib = 0;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							MalterlibMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -472,9 +472,9 @@ namespace NMib::NMisc
 					PerfTest.f_Add(MalterlibMeasure);
 
 					CTestPerformanceMeasure StdMeasure("std");
-					auto Set2 = f_GetFilledSet<std::set<umint>>();
+					auto Set2 = fp_GetFilledSet<std::set<umint>>();
 					umint nFound = 0;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							StdMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -519,7 +519,7 @@ namespace NMib::NMisc
 							;
 							++pNode;
 						}
-						f_MeasureForAllKeys
+						fp_MeasureForAllKeys
 							(
 								IntrusiveMeasure
 								, [&](umint _Key) inline_always_lambda
@@ -554,7 +554,7 @@ namespace NMib::NMisc
 					CTestPerformance PerfTest(mc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
-					auto Set = f_GetFilledSet<TCSet<umint>>();
+					auto Set = fp_GetFilledSet<TCSet<umint>>();
 					TCSet<umint> SetCopy;
 					for (umint i = 0; i < 5; ++i)
 					{
@@ -569,7 +569,7 @@ namespace NMib::NMisc
 
 					PerfTest.f_Add(MalterlibMeasure);
 					CTestPerformanceMeasure StdMeasure("std");
-					auto Set2 = f_GetFilledSet<std::set<umint>>();
+					auto Set2 = fp_GetFilledSet<std::set<umint>>();
 
 					std::set<umint> Set2Copy;
 					for (umint i = 0; i < 5; ++i)
@@ -598,7 +598,7 @@ namespace NMib::NMisc
 
 					for (umint i = 0; i < 5; ++i)
 					{
-						auto Set = f_GetFilledSet<TCSet<umint>>();
+						auto Set = fp_GetFilledSet<TCSet<umint>>();
 						[&]() inline_never
 						{
 							DMibTestScopeMeasure(MalterlibMeasure, mc_nItemsToTest);
@@ -614,7 +614,7 @@ namespace NMib::NMisc
 					std::set<umint> Set2Copy;
 					for (umint i = 0; i < 5; ++i)
 					{
-						auto Set2 = f_GetFilledSet<std::set<umint>>();
+						auto Set2 = fp_GetFilledSet<std::set<umint>>();
 						[&]() inline_never
 						{
 							DMibTestScopeMeasure(StdMeasure, mc_nItemsToTest);
@@ -635,10 +635,10 @@ namespace NMib::NMisc
 					fp_CheckInit();
 					CTestPerformance PerfTest(mc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
-					auto SetSource = f_GetFilledSet<TCSet<umint>>();
+					auto SetSource = fp_GetFilledSet<TCSet<umint>>();
 					auto Set = SetSource;
 					umint nFoundMalterlib = 0;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							MalterlibMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -658,10 +658,10 @@ namespace NMib::NMisc
 					PerfTest.f_Add(MalterlibMeasure);
 
 					CTestPerformanceMeasure StdMeasure("std");
-					auto SetSource2 = f_GetFilledSet<std::set<umint>>();
+					auto SetSource2 = fp_GetFilledSet<std::set<umint>>();
 					auto Set2 = SetSource2;
 					umint nFound = 0;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							StdMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -693,10 +693,10 @@ namespace NMib::NMisc
 					fp_CheckInit();
 					CTestPerformance PerfTest(mc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
-					auto SetSource = f_GetFilledSet<TCSet<umint>>();
+					auto SetSource = fp_GetFilledSet<TCSet<umint>>();
 					auto Set = SetSource;
 					umint nFoundMalterlib = 0;
-					f_MeasureForAllKeysSorted
+					fp_MeasureForAllKeysSorted
 						(
 							MalterlibMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -716,10 +716,10 @@ namespace NMib::NMisc
 					PerfTest.f_Add(MalterlibMeasure);
 
 					CTestPerformanceMeasure StdMeasure("std");
-					auto SetSource2 = f_GetFilledSet<std::set<umint>>();
+					auto SetSource2 = fp_GetFilledSet<std::set<umint>>();
 					auto Set2 = SetSource2;
 					umint nFound = 0;
-					f_MeasureForAllKeysSorted
+					fp_MeasureForAllKeysSorted
 						(
 							StdMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -751,9 +751,9 @@ namespace NMib::NMisc
 					fp_CheckInit();
 					CTestPerformance PerfTest(mc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
-					auto Set = f_GetFilledSet<TCSet<umint>>();
+					auto Set = fp_GetFilledSet<TCSet<umint>>();
 					umint nFoundMalterlib = 0;
-					f_MeasureForAllKeysSorted
+					fp_MeasureForAllKeysSorted
 						(
 							MalterlibMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -773,9 +773,9 @@ namespace NMib::NMisc
 					PerfTest.f_Add(MalterlibMeasure);
 
 					CTestPerformanceMeasure StdMeasure("std");
-					auto Set2 = f_GetFilledSet<std::set<umint>>();
+					auto Set2 = fp_GetFilledSet<std::set<umint>>();
 					umint nFound = 0;
-					f_MeasureForAllKeysSorted
+					fp_MeasureForAllKeysSorted
 						(
 							StdMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -808,9 +808,9 @@ namespace NMib::NMisc
 					CTestPerformance PerfTest(mc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
-					auto Map = f_GetFilledMap<TCMap<umint, umint>>();
+					auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
 					umint Found = 0;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							MalterlibMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -829,8 +829,8 @@ namespace NMib::NMisc
 					PerfTest.f_Add(MalterlibMeasure);
 
 					CTestPerformanceMeasure StdMeasure("std");
-					auto Map2 = f_GetFilledMap<std::map<umint, umint>>();
-					f_MeasureForAllKeys
+					auto Map2 = fp_GetFilledMap<std::map<umint, umint>>();
+					fp_MeasureForAllKeys
 						(
 							StdMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -860,7 +860,7 @@ namespace NMib::NMisc
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
 					TCSet<umint> Set;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							MalterlibMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -869,7 +869,7 @@ namespace NMib::NMisc
 							}
 							, [&]
 							{
-								Set = f_GetFilledSet<TCSet<umint>>();
+								Set = fp_GetFilledSet<TCSet<umint>>();
 							}
 							, []
 							{
@@ -880,7 +880,7 @@ namespace NMib::NMisc
 
 					CTestPerformanceMeasure StdMeasure("std");
 					std::set<umint> Set2;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							StdMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -889,7 +889,7 @@ namespace NMib::NMisc
 							}
 							, [&]
 							{
-								Set2 = f_GetFilledSet<std::set<umint>>();
+								Set2 = fp_GetFilledSet<std::set<umint>>();
 							}
 							, []
 							{
@@ -910,7 +910,7 @@ namespace NMib::NMisc
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
 					TCMap<umint, umint> Map;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							MalterlibMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -919,7 +919,7 @@ namespace NMib::NMisc
 							}
 							, [&]
 							{
-								Map = f_GetFilledMap<TCMap<umint, umint>>();
+								Map = fp_GetFilledMap<TCMap<umint, umint>>();
 							}
 							, []
 							{
@@ -930,7 +930,7 @@ namespace NMib::NMisc
 
 					CTestPerformanceMeasure StdMeasure("std");
 					std::map<umint, umint> Map2;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							StdMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -939,7 +939,7 @@ namespace NMib::NMisc
 							}
 							, [&]
 							{
-								Map2 = f_GetFilledMap<std::map<umint, umint>>();
+								Map2 = fp_GetFilledMap<std::map<umint, umint>>();
 							}
 							, []
 							{

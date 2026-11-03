@@ -37,7 +37,7 @@ namespace NMib::NMisc
 		{
 		private: // Measure
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeysRandomSorted
+			inline_never void fp_MeasureForAllKeysRandomSorted
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -66,7 +66,7 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeysSorted
+			inline_never void fp_MeasureForAllKeysSorted
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -76,13 +76,13 @@ namespace NMib::NMisc
 				const
 			{
 				if (fp_IsRandom())
-					f_MeasureForAllKeysRandomSorted(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
+					fp_MeasureForAllKeysRandomSorted(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
 				else
-					f_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
+					fp_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeysRandom
+			inline_never void fp_MeasureForAllKeysRandom
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -111,7 +111,7 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeysLinear
+			inline_never void fp_MeasureForAllKeysLinear
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -138,7 +138,7 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeys
+			inline_never void fp_MeasureForAllKeys
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -148,13 +148,13 @@ namespace NMib::NMisc
 				const
 			{
 				if (fp_IsRandom())
-					f_MeasureForAllKeysRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
+					fp_MeasureForAllKeysRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
 				else
-					f_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
+					fp_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeyValuesRandom
+			inline_never void fp_MeasureForAllKeyValuesRandom
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -183,7 +183,7 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeyValuesLinear
+			inline_never void fp_MeasureForAllKeyValuesLinear
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -210,7 +210,7 @@ namespace NMib::NMisc
 			}
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
-			inline_never void f_MeasureForAllKeyValues
+			inline_never void fp_MeasureForAllKeyValues
 				(
 					CTestPerformanceMeasure &_PerformanceMeasure
 					, tf_FOperation const &_fOperation
@@ -220,14 +220,14 @@ namespace NMib::NMisc
 				const
 			{
 				if (fp_IsRandom())
-					f_MeasureForAllKeyValuesRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
+					fp_MeasureForAllKeyValuesRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
 				else
-					f_MeasureForAllKeyValuesLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
+					fp_MeasureForAllKeyValuesLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
 			}
 
 		private: // Generate test data
 			template <typename tf_CMap>
-			tf_CMap f_GetFilledMap() const
+			tf_CMap fp_GetFilledMap() const
 			{
 				if (fp_IsRandom())
 				{
@@ -261,7 +261,7 @@ namespace NMib::NMisc
 			}
 
 			template <>
-			TCMap<umint, umint> f_GetFilledMap<TCMap<umint, umint>>() const
+			TCMap<umint, umint> fp_GetFilledMap<TCMap<umint, umint>>() const
 			{
 				if (fp_IsRandom())
 				{
@@ -280,6 +280,16 @@ namespace NMib::NMisc
 			}
 
 		private: // Operations
+			bool fp_IsRandom() const
+			{
+				return m_PopulateMode == EPopulateMode_Random;
+			}
+
+			bool fp_IsBulkLoad() const
+			{
+				return m_PopulateMode == EPopulateMode_LinearBulkLoad;
+			}
+
 			void fp_CheckInit()
 			{
 				if (!fp_IsRandom())
@@ -303,16 +313,6 @@ namespace NMib::NMisc
 			CPackedMapTester(EPopulateMode _PopulateMode)
 				: m_PopulateMode(_PopulateMode)
 			{
-			}
-
-			bool fp_IsRandom() const
-			{
-				return m_PopulateMode == EPopulateMode_Random;
-			}
-
-			bool fp_IsBulkLoad() const
-			{
-				return m_PopulateMode == EPopulateMode_LinearBulkLoad;
 			}
 
 			void f_Insert()
@@ -355,7 +355,7 @@ namespace NMib::NMisc
 					else
 					{
 						TCPackedMap<umint, umint> PackedMap;
-						f_MeasureForAllKeyValues
+						fp_MeasureForAllKeyValues
 							(
 								PackedMapMeasure
 								, [&](umint _Key, umint _Value) inline_always_lambda
@@ -378,7 +378,7 @@ namespace NMib::NMisc
 
 					CTestPerformanceMeasure MapMeasure("Map");
 					TCMap<umint, umint> Map;
-					f_MeasureForAllKeyValues
+					fp_MeasureForAllKeyValues
 						(
 							MapMeasure
 							, [&](umint _Key, umint _Value) inline_always_lambda
@@ -409,9 +409,9 @@ namespace NMib::NMisc
 					CTestPerformance PerfTest(mc_AllowedPerformance);
 					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
 
-					auto PackedMap = f_GetFilledMap<TCPackedMap<umint, umint>>();
+					auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
 					umint FoundPackedMap = 0;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							PackedMapMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -430,9 +430,9 @@ namespace NMib::NMisc
 					PerfTest.f_Add(PackedMapMeasure);
 
 					CTestPerformanceMeasure MapMeasure("Map");
-					auto Map = f_GetFilledMap<TCMap<umint, umint>>();
+					auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
 					umint FoundMap = 0;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							MapMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -463,9 +463,9 @@ namespace NMib::NMisc
 					CTestPerformance PerfTest(mc_AllowedPerformance);
 					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
 
-					auto PackedMap = f_GetFilledMap<TCPackedMap<umint, umint>>();
+					auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
 					umint FoundPackedMap = 0;
-					f_MeasureForAllKeysSorted
+					fp_MeasureForAllKeysSorted
 						(
 							PackedMapMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -484,9 +484,9 @@ namespace NMib::NMisc
 					PerfTest.f_Add(PackedMapMeasure);
 
 					CTestPerformanceMeasure MapMeasure("Map");
-					auto Map = f_GetFilledMap<TCMap<umint, umint>>();
+					auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
 					umint FoundMap = 0;
-					f_MeasureForAllKeysSorted
+					fp_MeasureForAllKeysSorted
 						(
 							MapMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -518,7 +518,7 @@ namespace NMib::NMisc
 					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
 
 					TCPackedMap<umint, umint> PackedMap;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							PackedMapMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -527,7 +527,7 @@ namespace NMib::NMisc
 							}
 							, [&]
 							{
-								PackedMap = f_GetFilledMap<TCPackedMap<umint, umint>>();
+								PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
 							}
 							, [&]
 							{
@@ -539,7 +539,7 @@ namespace NMib::NMisc
 
 					CTestPerformanceMeasure MapMeasure("Map");
 					TCMap<umint, umint> Map;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							MapMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -548,7 +548,7 @@ namespace NMib::NMisc
 							}
 							, [&]
 							{
-								Map = f_GetFilledMap<TCMap<umint, umint>>();
+								Map = fp_GetFilledMap<TCMap<umint, umint>>();
 							}
 							, [&]
 							{
@@ -571,7 +571,7 @@ namespace NMib::NMisc
 
 					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 					{
-						auto PackedMap = f_GetFilledMap<TCPackedMap<umint, umint>>();
+						auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
 						[&]() inline_never
 						{
 							DMibTestScopeMeasure(PackedMapMeasure, mc_nItemsToTest);
@@ -586,7 +586,7 @@ namespace NMib::NMisc
 
 					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 					{
-						auto Map = f_GetFilledMap<TCMap<umint, umint>>();
+						auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
 						[&]() inline_never
 						{
 							DMibTestScopeMeasure(MapMeasure, mc_nItemsToTest);
@@ -608,7 +608,7 @@ namespace NMib::NMisc
 					CTestPerformance PerfTest(mc_AllowedPerformance);
 					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
 
-					auto PackedMapSource = f_GetFilledMap<TCPackedMap<umint, umint>>();
+					auto PackedMapSource = fp_GetFilledMap<TCPackedMap<umint, umint>>();
 					TCPackedMap<umint, umint> PackedMapCopy;
 					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 					{
@@ -624,7 +624,7 @@ namespace NMib::NMisc
 					PerfTest.f_Add(PackedMapMeasure);
 
 					CTestPerformanceMeasure MapMeasure("Map");
-					auto MapSource = f_GetFilledMap<TCMap<umint, umint>>();
+					auto MapSource = fp_GetFilledMap<TCMap<umint, umint>>();
 					TCMap<umint, umint> MapCopy;
 					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 					{
@@ -650,10 +650,10 @@ namespace NMib::NMisc
 					CTestPerformance PerfTest(mc_AllowedPerformance);
 					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
 
-					auto PackedMapSource = f_GetFilledMap<TCPackedMap<umint, umint>>();
+					auto PackedMapSource = fp_GetFilledMap<TCPackedMap<umint, umint>>();
 					auto PackedMap = PackedMapSource;
 					umint FoundPackedMap = 0;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							PackedMapMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -672,10 +672,10 @@ namespace NMib::NMisc
 					PerfTest.f_Add(PackedMapMeasure);
 
 					CTestPerformanceMeasure MapMeasure("Map");
-					auto MapSource = f_GetFilledMap<TCMap<umint, umint>>();
+					auto MapSource = fp_GetFilledMap<TCMap<umint, umint>>();
 					auto Map = MapSource;
 					umint FoundMap = 0;
-					f_MeasureForAllKeys
+					fp_MeasureForAllKeys
 						(
 							MapMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -707,10 +707,10 @@ namespace NMib::NMisc
 					CTestPerformance PerfTest(mc_AllowedPerformance);
 					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
 
-					auto PackedMapSource = f_GetFilledMap<TCPackedMap<umint, umint>>();
+					auto PackedMapSource = fp_GetFilledMap<TCPackedMap<umint, umint>>();
 					auto PackedMap = PackedMapSource;
 					umint FoundPackedMap = 0;
-					f_MeasureForAllKeysSorted
+					fp_MeasureForAllKeysSorted
 						(
 							PackedMapMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -729,10 +729,10 @@ namespace NMib::NMisc
 					PerfTest.f_Add(PackedMapMeasure);
 
 					CTestPerformanceMeasure MapMeasure("Map");
-					auto MapSource = f_GetFilledMap<TCMap<umint, umint>>();
+					auto MapSource = fp_GetFilledMap<TCMap<umint, umint>>();
 					auto Map = MapSource;
 					umint FoundMap = 0;
-					f_MeasureForAllKeysSorted
+					fp_MeasureForAllKeysSorted
 						(
 							MapMeasure
 							, [&](umint _Key) inline_always_lambda
@@ -765,7 +765,7 @@ namespace NMib::NMisc
 					{
 						CTestPerformanceMeasure PackedMapMeasure("PackedMap");
 
-						auto PackedMap = f_GetFilledMap<TCPackedMap<umint, umint>>();
+						auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
 						umint SumPackedMap = 0;
 						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 						{
@@ -784,7 +784,7 @@ namespace NMib::NMisc
 					{
 						CTestPerformanceMeasure PackedMapScanMeasure("PackedMapScan");
 
-						auto PackedMap = f_GetFilledMap<TCPackedMap<umint, umint>>();
+						auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
 						umint SumPackedMap = 0;
 						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 						{
@@ -810,7 +810,7 @@ namespace NMib::NMisc
 						// This tests the overhead of having the early exit branch in the scan algorithm
 						CTestPerformanceMeasure PackedMapScanMeasure("PackedMapScanEarly");
 
-						auto PackedMap = f_GetFilledMap<TCPackedMap<umint, umint>>();
+						auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
 						umint SumPackedMap = 0;
 						umint CheckValue = 0;
 						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
@@ -837,7 +837,7 @@ namespace NMib::NMisc
 
 					{
 						CTestPerformanceMeasure MapMeasure("Map");
-						auto Map = f_GetFilledMap<TCMap<umint, umint>>();
+						auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
 						umint SumMap = 0;
 						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 						{

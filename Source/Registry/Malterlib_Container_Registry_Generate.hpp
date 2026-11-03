@@ -88,7 +88,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bIncludeFileLine, bool tf_bEscapeNewLines, typename tf_CStr>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fspr_GenerateStr(tf_CStr &_Stream, umint _Level, TCRegistry const *_pReg, ch8 const *_pNewLine)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::fsp_GenerateStr(tf_CStr &_Stream, umint _Level, TCRegistry const *_pReg, ch8 const *_pNewLine)
 	{
 		t_CStr PreData;
 		if constexpr (tf_bIncludeFileLine && mc_bSupportLocation)
@@ -226,7 +226,7 @@ namespace NMib::NContainer
 			auto Iter = _pReg->mp_Children.f_GetIterator();
 			while (Iter)
 			{
-				fspr_GenerateStr<tf_bIncludeFileLine, tf_bEscapeNewLines>(_Stream, _Level + 1, Iter, _pNewLine);
+				fsp_GenerateStr<tf_bIncludeFileLine, tf_bEscapeNewLines>(_Stream, _Level + 1, Iter, _pNewLine);
 				++Iter;
 			}
 
@@ -267,7 +267,7 @@ namespace NMib::NContainer
 		auto Iter = mp_Children.f_GetIterator();
 		while (Iter)
 		{
-			fspr_GenerateStr<tf_bIncludeFileLine, tf_bEscapeNewLines>(Temp, 0, Iter, _pNewLine);
+			fsp_GenerateStr<tf_bIncludeFileLine, tf_bEscapeNewLines>(Temp, 0, Iter, _pNewLine);
 			++Iter;
 		}
 		return Temp;

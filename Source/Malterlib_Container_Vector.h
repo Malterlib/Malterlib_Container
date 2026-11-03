@@ -431,7 +431,7 @@ namespace NMib::NContainer
 		template <typename tf_CCompare>
 		aint fp_Partition(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare);
 		template <typename tf_CCompare>
-		void fpr_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare);
+		void fp_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare);
 
 		t_CData *fp_MakeRoomBegin(umint _Len);
 		void fp_MakeRoomBeginUndo(umint _Len);

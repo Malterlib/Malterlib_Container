@@ -612,6 +612,7 @@ namespace
 			return Result;
 		}
 
+	private:
 		void fp_GarbageCollect()
 		{
 			auto Checkout = fg_GetSys()->f_MemoryManager_Checkout();
@@ -619,6 +620,7 @@ namespace
 			Checkout.f_GarbageCollectLocalArena(false); // Garbage collect memory
 		}
 
+	public:
 		void f_DoTests()
 		{
 			DMibTestSuite(NTest::CTestCategory("MoveSemantics") << NTest::CTestGroup("Performance"))

@@ -382,10 +382,10 @@ namespace NMib::NContainer
 
 		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
 		void fp_Copy(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> const &_Source);
-		bool fpr_DebugIsValid() const;
+		bool fp_DebugIsValid() const;
 		void fp_FixChildren();
-		void fpr_AddAllChildren(t_CStr const &_Path, NContainer::TCVector<t_CStr> &_Added) const;
-		void fpr_FindDiffs
+		void fp_AddAllChildren(t_CStr const &_Path, NContainer::TCVector<t_CStr> &_Added) const;
+		void fp_FindDiffs
 			(
 				t_CStr const &_Path
 				, TCRegistry const &_Original
@@ -396,21 +396,21 @@ namespace NMib::NContainer
 			)
 			const
 		;
-		void fpr_FindChanges(t_CStr const &_Path, TCRegistry const &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const;
-		void fpr_FindChanges(t_CStr const &_Path, TCRegistry const &_Original, TCRegistry &_Changed, NContainer::TCVector<t_CStr> &_Deleted, bool _bIncludeAdded) const;
-		void fpr_Merge(TCRegistry const *_pMergeWith);
+		void fp_FindChanges(t_CStr const &_Path, TCRegistry const &_Original, TCRegistry &_Changed, bool _bIncludeAdded) const;
+		void fp_FindChanges(t_CStr const &_Path, TCRegistry const &_Original, TCRegistry &_Changed, NContainer::TCVector<t_CStr> &_Deleted, bool _bIncludeAdded) const;
+		void fp_Merge(TCRegistry const *_pMergeWith);
 		template <typename tf_FPredicate>
-		void fpr_MergeIncludingValue(TCRegistry const *_pMergeWith, tf_FPredicate const &_fPredicate);
-		void fpr_Add(TCRegistry const *_pAdd);
+		void fp_MergeIncludingValue(TCRegistry const *_pMergeWith, tf_FPredicate const &_fPredicate);
+		void fp_Add(TCRegistry const *_pAdd);
 		TCRegistry const *fp_GetChildParse(t_CStr &_Str, t_CStr *_pNotFound, TCRegistry const **_pPrev = nullptr) const;
 		TCRegistry *fp_GetChildParse(t_CStr &_Str, t_CStr *_pNotFound, TCRegistry **_pPrev = nullptr);
 
 		template <typename tf_CParseContext>
-		bool fsp_ParseToEndOfLine(ch8 const * &o_pParse, tf_CParseContext &_ParseContext);
+		static bool fsp_ParseToEndOfLine(ch8 const * &o_pParse, tf_CParseContext &_ParseContext);
 		template <typename tf_CParseContext>
-		bool fsp_ParseToEndOfComment(ch8 const * &o_pParse, tf_CParseContext &_ParseContext);
+		static bool fsp_ParseToEndOfComment(ch8 const * &o_pParse, tf_CParseContext &_ParseContext);
 		template <bool tf_bAllowLineBreakInEscapedString, typename tf_CParseContext>
-		ch8 const *fpr_Parse(ch8 const *_pParse, tf_CParseContext &_ParseContext);
+		ch8 const *fp_ParseRecursive(ch8 const *_pParse, tf_CParseContext &_ParseContext);
 		template <bool tf_bAllowLineBreakInEscapedString, typename tf_CParseContext>
 		void fp_Parse(ch8 const *_pParse, tf_CParseContext &_ParseContext);
 		template <bool tf_bEscapeNewLines, typename tf_CStr>
@@ -422,7 +422,7 @@ namespace NMib::NContainer
 		void fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
 		void fp_SetParsedWhiteSpace(ERegistryWhiteSpaceLocation _Location);
 		template <bool tf_bIncludeFileLine, bool tf_bEscapeNewLines, typename tf_CStr>
-		static void fspr_GenerateStr(tf_CStr &_Stream, umint _Level, TCRegistry const *_pReg, ch8 const *_pNewLine);
+		static void fsp_GenerateStr(tf_CStr &_Stream, umint _Level, TCRegistry const *_pReg, ch8 const *_pNewLine);
 		static t_CStr fsp_AppendPath(t_CStr const &_Path, t_CStr const &_Append);
 
 #ifdef DMibDebug

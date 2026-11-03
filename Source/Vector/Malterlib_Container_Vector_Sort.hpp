@@ -9,7 +9,7 @@ namespace NMib::NContainer
 	template <typename tf_CCompare>
 	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Sort(tf_CCompare &&_fCompare)
 	{
-		fpr_QuickSort(f_GetArray(), 0, f_GetLen() - 1, _fCompare);
+		fp_QuickSort(f_GetArray(), 0, f_GetLen() - 1, _fCompare);
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
@@ -151,7 +151,7 @@ namespace NMib::NContainer
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CCompare>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::fpr_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare)
+	void TCVector<t_CData, t_CAllocator, t_COptions>::fp_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare)
 	{
 		aint m;
 
@@ -167,12 +167,12 @@ namespace NMib::NContainer
 
 			if (m - _Low <= _High - m)
 			{
-				fpr_QuickSort(_pArray, _Low, m - 1, _fCompare);
+				fp_QuickSort(_pArray, _Low, m - 1, _fCompare);
 				_Low = m + 1;
 			}
 			else
 			{
-				fpr_QuickSort(_pArray, m + 1, _High, _fCompare);
+				fp_QuickSort(_pArray, m + 1, _High, _fCompare);
 				_High = m - 1;
 			}
 		}
