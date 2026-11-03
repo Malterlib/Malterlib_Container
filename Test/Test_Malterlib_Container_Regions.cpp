@@ -5,9 +5,8 @@
 
 namespace
 {
-	class CRegion_Tests : public NMib::NTest::CTest
+	struct CRegion_Tests : public NMib::NTest::CTest
 	{
-	public:
 		void f_DoTests()
 		{
 			DMibTestCategory("Basic")

@@ -54,13 +54,13 @@ namespace NMib::NContainer
 	};
 
 	template <typename t_CKey, typename t_CRegionData = NMib::CVoidTag, typename t_CAllocator = NMemory::CAllocator_Heap>
-	class TCRegions
+	struct TCRegions
 	{
-		class CRegionData;
+	private:
+		struct CRegionData;
 		using CMap = TCMap<t_CKey, CRegionData, CSort_Default, t_CAllocator>;
-		class CRegionData : public TCRegionData<t_CKey, t_CRegionData>
+		struct CRegionData : public TCRegionData<t_CKey, t_CRegionData>
 		{
-		public:
 			CRegionData()
 			{
 			}

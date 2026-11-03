@@ -550,8 +550,196 @@ namespace NMib
 				char dummy[1000];
 			};
 
-			class CVectorPerformance_Tests : public CTest
+			struct CVectorPerformance_Tests : public CTest
 			{
+				struct CThing
+				{
+					int32 m_Val;
+					CThing()
+						: m_Val(-1)
+					{
+					}
+
+					CThing(int32 _V)
+						: m_Val(_V)
+					{
+					}
+
+				private:
+					CThing(CThing const &_CopyThis)
+						: m_Val(_CopyThis.m_Val)
+					{
+					}
+
+				public:
+					CThing(CThing &&_MoveThis)
+					{
+						*this = fg_Move(_MoveThis);
+					}
+
+					CThing &operator = (CThing &&_MoveThis)
+					{
+						DMibTest(DMibExpr(this != &_MoveThis))(ETestFlag_Aggregated);
+						DMibTest(DMibExpr(_MoveThis.m_Val != -1))(ETestFlag_Aggregated);
+						m_Val = _MoveThis.m_Val;
+						_MoveThis.m_Val = -1;
+						return *this;
+					}
+				};
+
+				template <int32 tf_nItems>
+				void f_TestItems()
+				{
+					DMibTestCategory(NMib::NStr::CStr(NMib::NStr::CStr::CFormat("{} items") << tf_nItems))
+					{
+						DMibTestSuite("Insert simple Items")
+						{
+							fp_Insert_Simple<tf_nItems>();
+						};
+						DMibTestSuite("Insert big Items")
+						{
+							fp_Insert_Big<tf_nItems>();
+						};
+						DMibTestSuite("Insert vectors")
+						{
+							fp_Insert_Vector<tf_nItems>();
+						};
+#if 1
+						DMibTestSuite("Sort random")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_Random>();
+						};
+						DMibTestSuite("Sort sorted")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_Sorted>();
+						};
+						DMibTestSuite("Sort reversed")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_Reversed>();
+						};
+						DMibTestSuite("Sort half sorted half reversed")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_HalfSortedHalfReversed>();
+						};
+						DMibTestSuite("Sort two sorted ranges")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_TwoSortedRanges>();
+						};
+						DMibTestSuite("Sort almost sorted")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_AlmostSorted>();
+						};
+						DMibTestSuite("Sort almost reversed")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_AlmostReversed>();
+						};
+						DMibTestSuite("Sort many same")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_ManySame>();
+						};
+						DMibTestSuite("Sort same")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_AllSame>();
+						};
+						DMibTestSuite("Sort uneven")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_Uneven>();
+						};
+						DMibTestSuite("Sort one unsorted")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_OneUnsorted>();
+						};
+#else
+						DMibTestSuite("Sort same")
+						{
+							fp_Sort_Simple<tf_nItems, ESortType_AllSame>();
+						};
+#endif
+#if 0
+						DMibTestSuite("Sort stable random")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_Random>();
+						};
+						DMibTestSuite("Sort stable sorted")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_Sorted>();
+						};
+						DMibTestSuite("Sort stable reversed")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_Reversed>();
+						};
+						DMibTestSuite("Sort stable almost sorted")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_AlmostSorted>();
+						};
+						DMibTestSuite("Sort stable many same")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_ManySame>();
+						};
+						DMibTestSuite("Sort stable all same")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_AllSame>();
+						};
+						DMibTestSuite("Sort stable uneven")
+						{
+							fp_Sort_Stability<tf_nItems, ESortType_Uneven>();
+						};
+#endif
+					};
+				}
+
+				void f_DoTests()
+				{
+					DMibTestSuite("Regressions")
+					{
+						using CThing = CThing;
+						{
+							NMib::NContainer::TCVector<CThing> lVec;
+
+							for (int32 i = 0; i < 19; ++i)
+								lVec.f_Insert(CThing(i + 1));
+
+							lVec[9] = CThing(0);
+
+							lVec.f_Sort
+								(
+									[](CThing const &_A, CThing const &_B)
+									{
+										return _A.m_Val <=> _B.m_Val;
+									}
+								)
+							;
+
+							for (int32 i = 1; i < 19; ++i)
+							{
+								DMibTest(DMibExpr(lVec[i].m_Val) != DMibExpr(-1))(ETestFlag_Aggregated);
+								DMibTest(DMibExpr(lVec[i - 1].m_Val) < DMibExpr(lVec[i].m_Val))(ETestFlag_Aggregated);
+							}
+						}
+					};
+					DMibTestCategory(CTestCategory("Performace") << CTestGroup("Unfinished"))
+					{
+						// f_TestItems<2>();
+						// f_TestItems<100000>();
+						DMibTestSuite("Debug")
+						{
+							fp_Sort_Simple<21, ESortType_Reversed>();
+						};
+
+#if 0
+						f_TestItems<10>();
+						f_TestItems<100>();
+						f_TestItems<1000>();
+						f_TestItems<10000>();
+						f_TestItems<100000>();
+						f_TestItems<1000000>();
+						f_TestItems<10000000>();
+#endif
+						f_TestItems<100000000>();
+					};
+				}
+
+			private:
 				template <int32 tf_nItems>
 				void fp_Insert_Big()
 				{
@@ -866,194 +1054,6 @@ namespace NMib
 						StdTime.f_Stop();
 					}
 					DMibTest(DMibExpr(StdTime) / DMibExpr(MalterlibTime) > DMibExpr(1.0));
-				}
-
-			public:
-				struct CThing
-				{
-					int32 m_Val;
-					CThing()
-						: m_Val(-1)
-					{
-					}
-
-					CThing(int32 _V)
-						: m_Val(_V)
-					{
-					}
-
-				private:
-					CThing(CThing const &_CopyThis)
-						: m_Val(_CopyThis.m_Val)
-					{
-					}
-
-				public:
-					CThing(CThing &&_MoveThis)
-					{
-						*this = fg_Move(_MoveThis);
-					}
-
-					CThing &operator = (CThing &&_MoveThis)
-					{
-						DMibTest(DMibExpr(this != &_MoveThis))(ETestFlag_Aggregated);
-						DMibTest(DMibExpr(_MoveThis.m_Val != -1))(ETestFlag_Aggregated);
-						m_Val = _MoveThis.m_Val;
-						_MoveThis.m_Val = -1;
-						return *this;
-					}
-				};
-
-				template <int32 tf_nItems>
-				void f_TestItems()
-				{
-					DMibTestCategory(NMib::NStr::CStr(NMib::NStr::CStr::CFormat("{} items") << tf_nItems))
-					{
-						DMibTestSuite("Insert simple Items")
-						{
-							fp_Insert_Simple<tf_nItems>();
-						};
-						DMibTestSuite("Insert big Items")
-						{
-							fp_Insert_Big<tf_nItems>();
-						};
-						DMibTestSuite("Insert vectors")
-						{
-							fp_Insert_Vector<tf_nItems>();
-						};
-#if 1
-						DMibTestSuite("Sort random")
-						{
-							fp_Sort_Simple<tf_nItems, ESortType_Random>();
-						};
-						DMibTestSuite("Sort sorted")
-						{
-							fp_Sort_Simple<tf_nItems, ESortType_Sorted>();
-						};
-						DMibTestSuite("Sort reversed")
-						{
-							fp_Sort_Simple<tf_nItems, ESortType_Reversed>();
-						};
-						DMibTestSuite("Sort half sorted half reversed")
-						{
-							fp_Sort_Simple<tf_nItems, ESortType_HalfSortedHalfReversed>();
-						};
-						DMibTestSuite("Sort two sorted ranges")
-						{
-							fp_Sort_Simple<tf_nItems, ESortType_TwoSortedRanges>();
-						};
-						DMibTestSuite("Sort almost sorted")
-						{
-							fp_Sort_Simple<tf_nItems, ESortType_AlmostSorted>();
-						};
-						DMibTestSuite("Sort almost reversed")
-						{
-							fp_Sort_Simple<tf_nItems, ESortType_AlmostReversed>();
-						};
-						DMibTestSuite("Sort many same")
-						{
-							fp_Sort_Simple<tf_nItems, ESortType_ManySame>();
-						};
-						DMibTestSuite("Sort same")
-						{
-							fp_Sort_Simple<tf_nItems, ESortType_AllSame>();
-						};
-						DMibTestSuite("Sort uneven")
-						{
-							fp_Sort_Simple<tf_nItems, ESortType_Uneven>();
-						};
-						DMibTestSuite("Sort one unsorted")
-						{
-							fp_Sort_Simple<tf_nItems, ESortType_OneUnsorted>();
-						};
-#else
-						DMibTestSuite("Sort same")
-						{
-							fp_Sort_Simple<tf_nItems, ESortType_AllSame>();
-						};
-#endif
-#if 0
-						DMibTestSuite("Sort stable random")
-						{
-							fp_Sort_Stability<tf_nItems, ESortType_Random>();
-						};
-						DMibTestSuite("Sort stable sorted")
-						{
-							fp_Sort_Stability<tf_nItems, ESortType_Sorted>();
-						};
-						DMibTestSuite("Sort stable reversed")
-						{
-							fp_Sort_Stability<tf_nItems, ESortType_Reversed>();
-						};
-						DMibTestSuite("Sort stable almost sorted")
-						{
-							fp_Sort_Stability<tf_nItems, ESortType_AlmostSorted>();
-						};
-						DMibTestSuite("Sort stable many same")
-						{
-							fp_Sort_Stability<tf_nItems, ESortType_ManySame>();
-						};
-						DMibTestSuite("Sort stable all same")
-						{
-							fp_Sort_Stability<tf_nItems, ESortType_AllSame>();
-						};
-						DMibTestSuite("Sort stable uneven")
-						{
-							fp_Sort_Stability<tf_nItems, ESortType_Uneven>();
-						};
-#endif
-					};
-				}
-
-				void f_DoTests()
-				{
-					DMibTestSuite("Regressions")
-					{
-						using CThing = CThing;
-						{
-							NMib::NContainer::TCVector<CThing> lVec;
-
-							for (int32 i = 0; i < 19; ++i)
-								lVec.f_Insert(CThing(i + 1));
-
-							lVec[9] = CThing(0);
-
-							lVec.f_Sort
-								(
-									[](CThing const &_A, CThing const &_B)
-									{
-										return _A.m_Val <=> _B.m_Val;
-									}
-								)
-							;
-
-							for (int32 i = 1; i < 19; ++i)
-							{
-								DMibTest(DMibExpr(lVec[i].m_Val) != DMibExpr(-1))(ETestFlag_Aggregated);
-								DMibTest(DMibExpr(lVec[i - 1].m_Val) < DMibExpr(lVec[i].m_Val))(ETestFlag_Aggregated);
-							}
-						}
-					};
-					DMibTestCategory(CTestCategory("Performace") << CTestGroup("Unfinished"))
-					{
-						// f_TestItems<2>();
-						// f_TestItems<100000>();
-						DMibTestSuite("Debug")
-						{
-							fp_Sort_Simple<21, ESortType_Reversed>();
-						};
-
-#if 0
-						f_TestItems<10>();
-						f_TestItems<100>();
-						f_TestItems<1000>();
-						f_TestItems<10000>();
-						f_TestItems<100000>();
-						f_TestItems<1000000>();
-						f_TestItems<10000000>();
-#endif
-						f_TestItems<100000000>();
-					};
 				}
 			};
 

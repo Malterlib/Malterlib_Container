@@ -11,9 +11,8 @@ namespace
 	using namespace NMib::NStr;
 	using namespace NMib::NContainer;
 
-	class CSet_Tests : public NMib::NTest::CTest
+	struct CSet_Tests : public NMib::NTest::CTest
 	{
-	public:
 		void f_DoTests()
 		{
 			DMibTestSuite("SetOperations")
@@ -592,9 +591,8 @@ namespace
 
 	DMibTestRegister(CSet_Tests, Malterlib::Container);
 
-	class CSetPerformance_Tests : public NMib::NTest::CTest
+	struct CSetPerformance_Tests : public NMib::NTest::CTest
 	{
-	public:
 		using CTestVector = TCVector<umint>;
 
 		static CTestVector fs_CreateVector(umint _Value)

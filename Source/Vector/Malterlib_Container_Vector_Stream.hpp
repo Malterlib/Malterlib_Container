@@ -25,9 +25,8 @@ namespace NMib::NStream
 	}
 
 	template <typename t_CStream, typename t_CData, typename t_CAllocator, typename t_COptions>
-	class TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions>>
+	struct TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions>>
 	{
-	public:
 		static constexpr void fs_Feed(t_CStream &_Stream, NContainer::TCVector<t_CData, t_CAllocator, t_COptions> const &_Data)
 		{
 			umint nItems = _Data.f_GetLen();
@@ -64,9 +63,8 @@ namespace NMib::NStream
 
 #define DMibListVectorStreamSimpleImplement(d_DataType) \
 	template <typename t_CStream, typename t_CAllocator, typename t_COptions>\
-	class TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<d_DataType, t_CAllocator, t_COptions> >\
+	struct TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<d_DataType, t_CAllocator, t_COptions> >\
 	{\
-	public:\
 		static void fs_Feed(t_CStream &_Stream, NContainer::TCVector<d_DataType, t_CAllocator, t_COptions> const &_Data)\
 		{\
 			umint nItems = _Data.f_GetLen();\
@@ -110,9 +108,8 @@ namespace NMib::NStream
 #endif
 
 	template <typename t_CStream>
-	class TCBinaryStreamTypeReference<t_CStream, NContainer::CByteVector> : public TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8>>
+	struct TCBinaryStreamTypeReference<t_CStream, NContainer::CByteVector> : public TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8>>
 	{
-	public:
 		using TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8>>::fs_Feed;
 		using TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8>>::fs_Consume;
 
@@ -135,9 +132,8 @@ namespace NMib::NStream
 	};
 
 	template <typename t_CStream>
-	class TCBinaryStreamTypeReference<t_CStream, NContainer::CSecureByteVector> : public TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8, NMemory::CAllocator_HeapSecure>>
+	struct TCBinaryStreamTypeReference<t_CStream, NContainer::CSecureByteVector> : public TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8, NMemory::CAllocator_HeapSecure>>
 	{
-	public:
 		using TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8, NMemory::CAllocator_HeapSecure>>::fs_Feed;
 		using TCBinaryStreamTypeReference<t_CStream, NContainer::TCVector<uint8, NMemory::CAllocator_HeapSecure>>::fs_Consume;
 

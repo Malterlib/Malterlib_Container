@@ -397,9 +397,8 @@ namespace NMib::NContainer
 #else
 		static constexpr umint mcp_Alignment = fg_MaxConstexpr(alignof(t_CData), alignof(umint));
 
-		class alignas(mcp_Alignment) CVectorData
+		struct alignas(mcp_Alignment) CVectorData
 		{
-		public:
 			umint m_Length;
 			umint m_AllocSize;
 

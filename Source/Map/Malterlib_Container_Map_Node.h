@@ -107,7 +107,7 @@ namespace NMib::NContainer
 		friend struct TCMapNodeHandle;
 
 		template <auto t_pLinkMember2, typename t_CCompare2, typename t_CAllocator2, typename t_COverrideNodeType2>
-		friend class NIntrusive::TCAVLTreeAggregate;
+		friend struct NIntrusive::TCAVLTreeAggregate;
 
 		template <typename t_CKey2, typename t_CValue2>
 		friend struct TCDestructiveMapNode;

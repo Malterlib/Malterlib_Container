@@ -6,9 +6,8 @@
 
 namespace
 {
-	class CPagedByteVector_Tests : public NMib::NTest::CTest
+	struct CPagedByteVector_Tests : public NMib::NTest::CTest
 	{
-	public:
 		using CPagedByteVector = NMib::NContainer::CPagedByteVector;
 		template <typename t_CInherit>
 		using TCBinaryStreamPagedByteVectorPtr = NMib::NContainer::TCBinaryStreamPagedByteVectorPtr<t_CInherit>;

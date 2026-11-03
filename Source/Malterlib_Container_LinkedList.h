@@ -6,10 +6,10 @@
 namespace NMib::NContainer
 {
 	template <typename t_CData>
-	class TCLinkedListMember;
+	struct TCLinkedListMember;
 
 	template <typename t_CData, typename t_CAllocator = NMib::NMemory::CAllocator_Heap>
-	class TCLinkedList;
+	struct TCLinkedList;
 
 	template <typename t_CNode, typename t_CAllocator>
 	struct TCLinkedListNodeHandle;
@@ -20,12 +20,8 @@ namespace NMib::NContainer
 	};
 
 	template <typename t_CData>
-	class TCLinkedListMember final : public CLinkedListMemberBase
+	struct TCLinkedListMember final : public CLinkedListMemberBase
 	{
-		template <typename t_CData2, typename t_CAllocator2> friend class TCLinkedList;
-		template <typename t_CNode2, typename t_CAllocator2> friend struct TCLinkedListNodeHandle;
-
-	public:
 		using CData = t_CData;
 
 	private:
@@ -71,6 +67,10 @@ namespace NMib::NContainer
 		~TCLinkedListMember()
 		{
 		}
+
+	private:
+		template <typename t_CData2, typename t_CAllocator2> friend struct TCLinkedList;
+		template <typename t_CNode2, typename t_CAllocator2> friend struct TCLinkedListNodeHandle;
 	};
 
 	template <typename t_CNode, typename t_CAllocator>
@@ -159,7 +159,7 @@ namespace NMib::NContainer
 		}
 
 	private:
-		template <typename t_CData2, typename t_CAllocator2> friend class TCLinkedList;
+		template <typename t_CData2, typename t_CAllocator2> friend struct TCLinkedList;
 
 		t_CAllocator &fp_Allocator() const
 		{
@@ -190,14 +190,13 @@ namespace NMib::NContainer
 	};
 
 	template <typename t_CData, typename t_CAllocator>
-	class TCLinkedList
+	struct TCLinkedList
 	{
 	private:
 		using CMember = TCLinkedListMember<t_CData>;
 
-		class CAllocatorDisable : public NMemory::CAllocator_Base
+		struct CAllocatorDisable : public NMemory::CAllocator_Base
 		{
-		public:
 		};
 
 		using CList = NMib::NIntrusive::TCDLinkList
@@ -216,9 +215,8 @@ namespace NMib::NContainer
 		using COffset = typename CList::COffset;
 		using CLink = typename CList::CLink;
 
-		class CLocalData : public t_CAllocator
+		struct CLocalData : public t_CAllocator
 		{
-		public:
 			CList m_List;
 
 			CLocalData()
@@ -333,14 +331,8 @@ namespace NMib::NContainer
 	public:
 		using CNodeHandle = TCLinkedListNodeHandle<CMember, t_CAllocator>;
 
-		class CIterator
+		struct CIterator
 		{
-			friend class TCLinkedList;
-			using CIntrusiveIterator = CInternalIterator;
-			CIntrusiveIterator m_Iter;
-			TCLinkedList *m_pLinkedList;
-
-		public:
 			CIterator()
 			{
 				m_pLinkedList = nullptr;
@@ -424,15 +416,16 @@ namespace NMib::NContainer
 			{
 				f_Prev();
 			}
+
+		private:
+			friend struct TCLinkedList;
+			using CIntrusiveIterator = CInternalIterator;
+			CIntrusiveIterator m_Iter;
+			TCLinkedList *m_pLinkedList;
 		};
 
-		class CIteratorConst
+		struct CIteratorConst
 		{
-			friend class TCLinkedList;
-			using CIntrusiveIterator = typename DMibListLinkAllocatorDS_IterConst_FromTemplate(CMember, m_ListLink, CAllocatorDisable);
-			CIntrusiveIterator m_Iter;
-
-		public:
 			CIteratorConst() = default;
 
 			CIteratorConst(TCLinkedList const &_Map)
@@ -495,6 +488,11 @@ namespace NMib::NContainer
 			{
 				f_Prev();
 			}
+
+		private:
+			friend struct TCLinkedList;
+			using CIntrusiveIterator = typename DMibListLinkAllocatorDS_IterConst_FromTemplate(CMember, m_ListLink, CAllocatorDisable);
+			CIntrusiveIterator m_Iter;
 		};
 
 		TCLinkedList()

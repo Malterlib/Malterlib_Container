@@ -10,9 +10,8 @@
 namespace NMib::NContainer
 {
 	template <umint t_nBits>
-	class TCBitArrayHierarchical
+	struct TCBitArrayHierarchical
 	{
-	public:
 		using CEntryType = typename TCBitArray<t_nBits>::CEntryType;
 
 	public:

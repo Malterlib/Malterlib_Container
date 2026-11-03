@@ -10,9 +10,8 @@ namespace
 	using namespace NMib::NContainer;
 	using namespace NMib::NException;
 
-	class CVectorFunctional_Tests : public NMib::NTest::CTest
+	struct CVectorFunctional_Tests : public NMib::NTest::CTest
 	{
-	public:
 		struct CTrackedObject
 		{
 			CStr m_Value;

@@ -19,9 +19,8 @@ namespace
 
 	static_assert(fg_ConstexprEmptyMapIsConstructible());
 
-	class CMap_Tests : public NMib::NTest::CTest
+	struct CMap_Tests : public NMib::NTest::CTest
 	{
-	public:
 		void f_Dynamic()
 		{
 		}

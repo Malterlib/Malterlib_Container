@@ -13,12 +13,10 @@
 #endif
 namespace
 {
-	class CLinkedList_Tests : public NMib::NTest::CTest
+	struct CLinkedList_Tests : public NMib::NTest::CTest
 	{
-	public:
-		class CTestClass
+		struct CTestClass
 		{
-		public:
 			DMibListLinkD_Link(CTestClass, m_Link);
 			umint m_Value;
 		};
@@ -171,9 +169,8 @@ namespace
 			}
 		}
 
-		class CTestS
+		struct CTestS
 		{
-		public:
 			DMibListLinkDS_Link(CTestS, m_Link);
 			umint m_Value;
 		};

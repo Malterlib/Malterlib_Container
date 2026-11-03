@@ -9,9 +9,8 @@
 namespace NMib::NContainer
 {
 	template <umint t_nBits, umint t_nMaxLevels = 64, template <umint t_nBits2> class t_TCBitArray = TCBitArrayHierarchical>
-	class TCBitArrayPowerTwo
+	struct TCBitArrayPowerTwo
 	{
-	public:
 		constexpr TCBitArrayPowerTwo(bool _bInitValues = true);
 		void f_Clear();
 		template <typename tf_CStream>

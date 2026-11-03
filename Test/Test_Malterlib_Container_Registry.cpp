@@ -275,9 +275,8 @@ namespace
 		}
 	};
 
-	class CMalterlibRegistry_Tests : public NMib::NTest::CTest
+	struct CMalterlibRegistry_Tests : public NMib::NTest::CTest
 	{
-	public:
 		void f_DoTests()
 		{
 			DMibTestSuite("Basic")

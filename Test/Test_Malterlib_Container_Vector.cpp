@@ -20,9 +20,8 @@ namespace
 
 	constinit NAtomic::TCAtomic<umint> g_nObjects = 0;
 
-	class CVector_Tests : public NMib::NTest::CTest
+	struct CVector_Tests : public NMib::NTest::CTest
 	{
-	public:
 		struct CCountedObject
 		{
 			CCountedObject(CStr const &_Value)

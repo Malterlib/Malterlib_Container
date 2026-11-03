@@ -39,9 +39,8 @@ namespace NMib::NStream
 	// Wire compatible with a byte vector (length prefix + bytes): either side of a stream
 	// can use CSharedByteVector or CIOByteVector interchangeably
 	template <typename t_CStream>
-	class TCBinaryStreamTypeReference<t_CStream, NContainer::CSharedByteVector>
+	struct TCBinaryStreamTypeReference<t_CStream, NContainer::CSharedByteVector>
 	{
-	public:
 		static void fs_Feed(t_CStream &_Stream, NContainer::CSharedByteVector const &_Data)
 		{
 			umint nItems = _Data.f_GetLen();

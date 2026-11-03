@@ -6,9 +6,8 @@
 
 namespace NMib::NContainer
 {
-	class CPagedByteVector
+	struct CPagedByteVector
 	{
-	public:
 		enum EMatchResult
 		{
 			EMatchResult_None
@@ -96,7 +95,7 @@ namespace NMib::NContainer
 
 	private:
 		template <typename t_CInherit>
-		friend class TCBinaryStreamPagedByteVectorPtr;
+		friend struct TCBinaryStreamPagedByteVectorPtr;
 
 		struct CPageSizeScope
 		{
@@ -128,9 +127,8 @@ namespace NMib::NContainer
 	};
 
 	template <typename t_CInherit = NStream::CBinaryStreamLittleEndian>
-	class TCBinaryStreamPagedByteVector : public t_CInherit
+	struct TCBinaryStreamPagedByteVector : public t_CInherit
 	{
-	public:
 		DMibStreamImplementOperators(TCBinaryStreamPagedByteVector);
 
 		TCBinaryStreamPagedByteVector(CPagedByteVector &_Buffer);
@@ -170,9 +168,8 @@ namespace NMib::NContainer
 	// the cache updated after each crossed boundary. The stream optionally exposes a sub-range
 	// of the buffer, so callers can frame messages without copying bytes out.
 	template <typename t_CInherit = NStream::CBinaryStreamLittleEndian>
-	class TCBinaryStreamPagedByteVectorPtr : public t_CInherit
+	struct TCBinaryStreamPagedByteVectorPtr : public t_CInherit
 	{
-	public:
 		DMibStreamImplementOperators(TCBinaryStreamPagedByteVectorPtr);
 
 		TCBinaryStreamPagedByteVectorPtr();

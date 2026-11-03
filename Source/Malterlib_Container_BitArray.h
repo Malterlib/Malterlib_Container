@@ -6,9 +6,8 @@
 namespace NMib::NContainer
 {
 	template <umint t_nBits>
-	class TCBitArray
+	struct TCBitArray
 	{
-	public:
 		constexpr TCBitArray(bool _bInitValues = true);
 
 		void f_Clear();
@@ -63,16 +62,14 @@ namespace NMib::NContainer
 
 	private:
 		template <bool t_bIsSmaller, typename t_CDummy = void>
-		class TCSizeHelper
+		struct TCSizeHelper
 		{
-		public:
 			using CType = uaint;
 		};
 
 		template <typename t_CDummy>
-		class TCSizeHelper<true, t_CDummy>
+		struct TCSizeHelper<true, t_CDummy>
 		{
-		public:
 			using CType = NTraits::TCUnsigned<NTraits::TCIntFromSizeLarger<(t_nBits + 7) / 8, true>>;
 		};
 

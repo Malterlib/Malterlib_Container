@@ -971,9 +971,8 @@ namespace
 		return nMoves;
 	}
 
-	class CPackedMap_Tests : public NMib::NTest::CTest
+	struct CPackedMap_Tests : public NMib::NTest::CTest
 	{
-	public:
 		void f_DoTests()
 		{
 			DMibTestSuite("Basic")
