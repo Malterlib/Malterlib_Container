@@ -140,10 +140,7 @@ namespace NMib::NContainer
 				template <typename t_CClass, umint t_Offset = sizeof(CRegistryKey) + sizeof(t_CData) + sizeof(NIntrusive::TCAVLLink<>)>
 				struct TCOffset
 				{
-					enum
-					{
-						mc_Offset = DMibPOffsetOf(t_CClass, mp_Children.m_Link)
-					};
+					static constexpr aint mc_Offset = DMibPOffsetOf(t_CClass, mp_Children.m_Link);
 				};
 			};
 

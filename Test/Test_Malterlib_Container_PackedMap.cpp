@@ -305,13 +305,10 @@ namespace
 	// scratch buffer allocations (temp keys/values, Targets vector) also go through it.
 	struct CFailingAllocator : CAllocator_Base
 	{
-		enum
-		{
-			mc_bIsDefault       = false
-			, mc_Reporting      = true
-			, mc_CanBeStatic    = false
-			, mc_bMethodsStatic = true
-		};
+		static constexpr bool mc_bIsDefault = false;
+		static constexpr aint mc_Reporting = true;
+		static constexpr aint mc_CanBeStatic = false;
+		static constexpr bool mc_bMethodsStatic = true;
 
 		static inline umint ms_nAllocAfterFail = TCLimitsInt<umint>::mc_Max;
 		static inline umint ms_nAllocations = 0;
@@ -3439,7 +3436,7 @@ namespace
 			{
 				DMibTestCategory("RejectDuplicateKeysOnConsume")
 				{
-					CBinaryStreamMemory<> Stream;
+					TCBinaryStreamMemory<> Stream;
 					fg_FeedLenToStream(Stream, uint64(3));
 					Stream.f_Feed((int32)1);
 					Stream.f_Feed((int32)10);
@@ -3449,14 +3446,14 @@ namespace
 					Stream.f_Feed((int32)30);
 
 					CByteVector RawData = Stream.f_GetVector();
-					CBinaryStreamMemoryRef<> Input(RawData);
+					TCBinaryStreamMemoryRef<> Input(RawData);
 
 					TCPackedMap<int32, int32> Map;
 					DMibExpectException(Map.f_Consume(Input), DMibErrorInstance("TCPackedMap stream contained a duplicate key"));
 				};
 				DMibTestCategory("RejectDuplicateKeysRollsBackToEmpty")
 				{
-					CBinaryStreamMemory<> Stream;
+					TCBinaryStreamMemory<> Stream;
 					fg_FeedLenToStream(Stream, uint64(3));
 					Stream.f_Feed((int32)1);
 					Stream.f_Feed((int32)10);
@@ -3466,7 +3463,7 @@ namespace
 					Stream.f_Feed((int32)30);
 
 					CByteVector RawData = Stream.f_GetVector();
-					CBinaryStreamMemoryRef<> Input(RawData);
+					TCBinaryStreamMemoryRef<> Input(RawData);
 
 					TCPackedMap<int32, int32> Map;
 					Map.f_Insert(99, 990);

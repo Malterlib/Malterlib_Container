@@ -16,13 +16,10 @@ namespace NMib::NContainer::NPrivate
 	>
 	struct TCBitArrayPowerTwoInternalArray : public TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>
 	{
-		enum
-		{
-			mc_bIsFirstLevel      = t_nBitsInternal == t_nBits
-			, mc_bIsLastLevelCalc = false
-			, mc_bIsLastLevel     = TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>::mc_bIsLastLevelCalc
-			, mc_nSuperBits       = t_nBitsInternal / 2
-		};
+		static constexpr bool mc_bIsFirstLevel = t_nBitsInternal == t_nBits;
+		static constexpr bool mc_bIsLastLevelCalc = false;
+		static constexpr bool mc_bIsLastLevel = TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>::mc_bIsLastLevelCalc;
+		static constexpr aint mc_nSuperBits = t_nBitsInternal / 2;
 
 		using CSuper = TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>;
 

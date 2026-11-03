@@ -89,18 +89,15 @@ namespace NMib::NContainer
 		template <bool tf_bValue>
 		CEntryType fp_SetBitRange(CEntryType _Entry, umint _Bit, umint _nBits);
 
-		enum
-		{
-			ENumBitsPerEntry = sizeof(CEntryType) * 8
-			, ENumEntries    = (t_nBits + ENumBitsPerEntry - 1) / ENumBitsPerEntry
-		};
+		static constexpr aint mc_NumBitsPerEntry = sizeof(CEntryType) * 8;
+		static constexpr aint mc_NumEntries = (t_nBits + mc_NumBitsPerEntry - 1) / mc_NumBitsPerEntry;
 
 	private:
-		CEntryType mp_Entries[ENumEntries];
+		CEntryType mp_Entries[mc_NumEntries];
 
 	private:
 		static constexpr CEntryType mcp_FullySet = TCLimitsInt<CEntryType>::mc_Max;
-		static constexpr CEntryType mcp_FullySetLast = ((CEntryType(1) << (t_nBits - (t_nBits / (ENumBitsPerEntry)) * (ENumBitsPerEntry))) - 1);
+		static constexpr CEntryType mcp_FullySetLast = ((CEntryType(1) << (t_nBits - (t_nBits / (mc_NumBitsPerEntry)) * (mc_NumBitsPerEntry))) - 1);
 		static constexpr CEntryType mcp_FullyUnset = 0;
 	};
 }

@@ -80,7 +80,7 @@ namespace NMib::NContainer
 	template <umint t_nBits>
 	void TCBitArray<t_nBits>::f_Clear()
 	{
-		for (umint i = 0; i < ENumEntries; ++i)
+		for (umint i = 0; i < mc_NumEntries; ++i)
 			mp_Entries[i] = 0;
 	}
 
@@ -91,8 +91,8 @@ namespace NMib::NContainer
 		uint32 nBytes = (t_nBits + 7) / 8;
 		for (umint i = 0; i < nBytes; ++i)
 		{
-			umint iEntry = (i * 8) / ENumBitsPerEntry;
-			umint iSubBit = (i * 8) % ENumBitsPerEntry;
+			umint iEntry = (i * 8) / mc_NumBitsPerEntry;
+			umint iSubBit = (i * 8) % mc_NumBitsPerEntry;
 			uint8 Byte = (mp_Entries[iEntry] >> iSubBit) & CEntryType(0xff);
 			_Stream << Byte;
 		}
@@ -106,8 +106,8 @@ namespace NMib::NContainer
 		uint32 nBytes = (t_nBits + 7) / 8;
 		for (umint i = 0; i < nBytes; ++i)
 		{
-			umint iEntry = (i * 8) / ENumBitsPerEntry;
-			umint iSubBit = (i * 8) % ENumBitsPerEntry;
+			umint iEntry = (i * 8) / mc_NumBitsPerEntry;
+			umint iSubBit = (i * 8) % mc_NumBitsPerEntry;
 			uint8 Byte;
 			_Stream >> Byte;
 			mp_Entries[iEntry] |= CEntryType(Byte) << iSubBit;
@@ -118,8 +118,8 @@ namespace NMib::NContainer
 	inline_small void TCBitArray<t_nBits>::f_SetBit(umint _Bit, bool _bValue)
 	{
 		DMibFastCheck(_Bit < t_nBits);
-		umint iEntry = _Bit / ENumBitsPerEntry;
-		umint iSubBit = _Bit % ENumBitsPerEntry;
+		umint iEntry = _Bit / mc_NumBitsPerEntry;
+		umint iSubBit = _Bit % mc_NumBitsPerEntry;
 		mp_Entries[iEntry] = fp_SetBit(mp_Entries[iEntry], iSubBit, _bValue);
 	}
 
@@ -128,8 +128,8 @@ namespace NMib::NContainer
 	inline_small void TCBitArray<t_nBits>::f_SetBit(umint _Bit)
 	{
 		DMibFastCheck(_Bit < t_nBits);
-		umint iEntry = _Bit / ENumBitsPerEntry;
-		umint iSubBit = _Bit % ENumBitsPerEntry;
+		umint iEntry = _Bit / mc_NumBitsPerEntry;
+		umint iSubBit = _Bit % mc_NumBitsPerEntry;
 		mp_Entries[iEntry] = fp_SetBit<tf_bValue>(mp_Entries[iEntry], iSubBit);
 	}
 
@@ -138,10 +138,10 @@ namespace NMib::NContainer
 	inline_small void TCBitArray<t_nBits>::f_SetBitRange(umint _StartBit, umint _nBits)
 	{
 		DMibFastCheck(_StartBit + _nBits <= t_nBits);
-		umint iEntry = _StartBit / ENumBitsPerEntry;
-		umint iSubBit = _StartBit % ENumBitsPerEntry;
+		umint iEntry = _StartBit / mc_NumBitsPerEntry;
+		umint iSubBit = _StartBit % mc_NumBitsPerEntry;
 
-		umint nBitsToSet = fg_Min(_nBits, ENumBitsPerEntry - iSubBit);
+		umint nBitsToSet = fg_Min(_nBits, mc_NumBitsPerEntry - iSubBit);
 
 		mp_Entries[iEntry] = fp_SetBitRange<tf_bValue>(mp_Entries[iEntry], iSubBit, nBitsToSet);
 		++iEntry;
@@ -149,7 +149,7 @@ namespace NMib::NContainer
 
 		while (_nBits)
 		{
-			nBitsToSet = fg_Min(_nBits, ENumBitsPerEntry);
+			nBitsToSet = fg_Min(_nBits, mc_NumBitsPerEntry);
 			mp_Entries[iEntry] = fp_SetBitRange<tf_bValue>(mp_Entries[iEntry], 0, nBitsToSet);
 			++iEntry;
 			_nBits -= nBitsToSet;
@@ -169,13 +169,13 @@ namespace NMib::NContainer
 	inline_small bool TCBitArray<t_nBits>::f_SetBitWholeEntrySet(umint _Bit, bool _bValue)
 	{
 		DMibFastCheck(_Bit < t_nBits);
-		umint iEntry = _Bit / ENumBitsPerEntry;
-		umint iSubBit = _Bit % ENumBitsPerEntry;
+		umint iEntry = _Bit / mc_NumBitsPerEntry;
+		umint iSubBit = _Bit % mc_NumBitsPerEntry;
 		auto NewEntry = fp_SetBit(mp_Entries[iEntry], iSubBit, _bValue);
 		mp_Entries[iEntry] = NewEntry;
-		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != mc_NumEntries * mc_NumBitsPerEntry)
 		{
-			umint NumEntries = ENumEntries - 1;
+			umint NumEntries = mc_NumEntries - 1;
 			if (iEntry < NumEntries)
 				return NewEntry == mcp_FullySet;
 			else
@@ -190,18 +190,18 @@ namespace NMib::NContainer
 	inline_small bool TCBitArray<t_nBits>::f_SetBitRangeWholeEntrySet(umint _StartBit, umint _nBits)
 	{
 		DMibFastCheck(_StartBit + _nBits <= t_nBits);
-		umint iEntry = _StartBit / ENumBitsPerEntry;
-		umint iSubBit = _StartBit % ENumBitsPerEntry;
+		umint iEntry = _StartBit / mc_NumBitsPerEntry;
+		umint iSubBit = _StartBit % mc_NumBitsPerEntry;
 
-		umint nBitsToSet = fg_Min(_nBits, ENumBitsPerEntry - iSubBit);
+		umint nBitsToSet = fg_Min(_nBits, mc_NumBitsPerEntry - iSubBit);
 		DMibFastCheck(nBitsToSet == _nBits); // Only one entry supported
 
 		auto NewEntry = fp_SetBitRange<tf_bValue>(mp_Entries[iEntry], iSubBit, nBitsToSet);
 		mp_Entries[iEntry] = NewEntry;
 
-		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != mc_NumEntries * mc_NumBitsPerEntry)
 		{
-			umint NumEntries = ENumEntries - 1;
+			umint NumEntries = mc_NumEntries - 1;
 			if (iEntry < NumEntries)
 				return NewEntry == mcp_FullySet;
 			else
@@ -216,13 +216,13 @@ namespace NMib::NContainer
 	inline_small bool TCBitArray<t_nBits>::f_SetBitWholeEntrySet(umint _Bit)
 	{
 		DMibFastCheck(_Bit < t_nBits);
-		umint iEntry = _Bit / ENumBitsPerEntry;
-		umint iSubBit = _Bit % ENumBitsPerEntry;
+		umint iEntry = _Bit / mc_NumBitsPerEntry;
+		umint iSubBit = _Bit % mc_NumBitsPerEntry;
 		auto NewEntry = fp_SetBit<tf_bValue>(mp_Entries[iEntry], iSubBit);
 		mp_Entries[iEntry] = NewEntry;
-		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != mc_NumEntries * mc_NumBitsPerEntry)
 		{
-			umint NumEntries = ENumEntries - 1;
+			umint NumEntries = mc_NumEntries - 1;
 			if (iEntry < NumEntries)
 				return NewEntry == mcp_FullySet;
 			else
@@ -236,8 +236,8 @@ namespace NMib::NContainer
 	inline_small bool TCBitArray<t_nBits>::f_GetBit(umint _Bit) const
 	{
 		DMibFastCheck(_Bit < t_nBits);
-		umint iEntry = _Bit / ENumBitsPerEntry;
-		umint iSubBit = _Bit % ENumBitsPerEntry;
+		umint iEntry = _Bit / mc_NumBitsPerEntry;
+		umint iSubBit = _Bit % mc_NumBitsPerEntry;
 
 		return ((mp_Entries[iEntry] >> iSubBit) & CEntryType(1)) != 0;
 	}
@@ -246,11 +246,11 @@ namespace NMib::NContainer
 	inline_small bool TCBitArray<t_nBits>::f_GetWholeEntrySet(umint _Bit) const
 	{
 		DMibFastCheck(_Bit < t_nBits);
-		umint iEntry = _Bit / ENumBitsPerEntry;
+		umint iEntry = _Bit / mc_NumBitsPerEntry;
 
-		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != mc_NumEntries * mc_NumBitsPerEntry)
 		{
-			umint NumEntries = ENumEntries - 1;
+			umint NumEntries = mc_NumEntries - 1;
 			if (iEntry < NumEntries)
 				return mp_Entries[iEntry] == mcp_FullySet;
 			else
@@ -263,11 +263,11 @@ namespace NMib::NContainer
 	template <umint t_nBits>
 	inline_always aint TCBitArray<t_nBits>::fp_FindFreeBit(umint _StartBitApproximately, umint &_iEntry) const
 	{
-		umint iEntry = _StartBitApproximately / ENumBitsPerEntry;
-		DMibFastCheck(iEntry < ENumEntries);
-		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
+		umint iEntry = _StartBitApproximately / mc_NumBitsPerEntry;
+		DMibFastCheck(iEntry < mc_NumEntries);
+		if constexpr (t_nBits != mc_NumEntries * mc_NumBitsPerEntry)
 		{
-			umint NumEntries = ENumEntries - 1;
+			umint NumEntries = mc_NumEntries - 1;
 			if (iEntry < NumEntries)
 			{
 				CEntryType const &Entry = mp_Entries[iEntry];
@@ -305,11 +305,11 @@ namespace NMib::NContainer
 	template <umint t_nBits>
 	inline_always aint TCBitArray<t_nBits>::fp_FindFreeBitReverse(umint _StartBitApproximately, umint &_iEntry) const
 	{
-		aint iEntry = _StartBitApproximately / ENumBitsPerEntry;
-		DMibFastCheck(iEntry < ENumEntries);
-		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
+		aint iEntry = _StartBitApproximately / mc_NumBitsPerEntry;
+		DMibFastCheck(iEntry < mc_NumEntries);
+		if constexpr (t_nBits != mc_NumEntries * mc_NumBitsPerEntry)
 		{
-			aint NumEntries = ENumEntries - 1;
+			aint NumEntries = mc_NumEntries - 1;
 			if (iEntry < NumEntries)
 			{
 				CEntryType const &Entry = mp_Entries[iEntry];
@@ -352,7 +352,7 @@ namespace NMib::NContainer
 		aint iFreeEntry = fp_FindFreeBit(_StartBitApproximately, iEntry);
 		if (iFreeEntry < 0)
 			return -1;
-		return iEntry * ENumBitsPerEntry + iFreeEntry;
+		return iEntry * mc_NumBitsPerEntry + iFreeEntry;
 	}
 
 	template <umint t_nBits>
@@ -362,7 +362,7 @@ namespace NMib::NContainer
 		aint iFreeEntry = fp_FindFreeBitReverse(_StartBitApproximately, iEntry);
 		if (iFreeEntry < 0)
 			return -1;
-		return iEntry * ENumBitsPerEntry + iFreeEntry;
+		return iEntry * mc_NumBitsPerEntry + iFreeEntry;
 	}
 
 	template <umint t_nBits>
@@ -375,7 +375,7 @@ namespace NMib::NContainer
 
 		mp_Entries[iEntry] = fp_SetBit(mp_Entries[iEntry], iFreeEntry, 1);
 
-		return iEntry * ENumBitsPerEntry + iFreeEntry;
+		return iEntry * mc_NumBitsPerEntry + iFreeEntry;
 	}
 
 	template <umint t_nBits>
@@ -388,15 +388,15 @@ namespace NMib::NContainer
 
 		mp_Entries[iEntry] = fp_SetBit(mp_Entries[iEntry], iFreeEntry, 1);
 
-		return iEntry * ENumBitsPerEntry + iFreeEntry;
+		return iEntry * mc_NumBitsPerEntry + iFreeEntry;
 	}
 
 	template <umint t_nBits>
 	inline_small bool TCBitArray<t_nBits>::f_IsFullySet() const
 	{
-		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != mc_NumEntries * mc_NumBitsPerEntry)
 		{
-			umint nEntries = ENumEntries - 1;
+			umint nEntries = mc_NumEntries - 1;
 			for (umint i = 0; i < nEntries; ++i)
 			{
 				CEntryType const &Entry = mp_Entries[i];
@@ -405,14 +405,14 @@ namespace NMib::NContainer
 			}
 			// if (ENumEntries > 1)
 			{
-				CEntryType const &Entry = mp_Entries[ENumEntries - 1];
+				CEntryType const &Entry = mp_Entries[mc_NumEntries - 1];
 				if (Entry != mcp_FullySetLast)
 					return false;
 			}
 		}
 		else
 		{
-			for (umint i = 0; i < ENumEntries; ++i)
+			for (umint i = 0; i < mc_NumEntries; ++i)
 			{
 				CEntryType const &Entry = mp_Entries[i];
 				if (Entry != mcp_FullySet)
@@ -425,9 +425,9 @@ namespace NMib::NContainer
 	template <umint t_nBits>
 	inline_small bool TCBitArray<t_nBits>::f_IsFullyFree() const
 	{
-		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != mc_NumEntries * mc_NumBitsPerEntry)
 		{
-			umint nEntries = ENumEntries - 1;
+			umint nEntries = mc_NumEntries - 1;
 			for (umint i = 0; i < nEntries; ++i)
 			{
 				CEntryType const &Entry = mp_Entries[i];
@@ -436,14 +436,14 @@ namespace NMib::NContainer
 			}
 			// if (ENumEntries > 1)
 			{
-				CEntryType const &Entry = mp_Entries[ENumEntries - 1];
+				CEntryType const &Entry = mp_Entries[mc_NumEntries - 1];
 				if (Entry != 0)
 					return false;
 			}
 		}
 		else
 		{
-			for (umint i = 0; i < ENumEntries; ++i)
+			for (umint i = 0; i < mc_NumEntries; ++i)
 			{
 				CEntryType const &Entry = mp_Entries[i];
 				if (Entry != 0)
@@ -456,9 +456,9 @@ namespace NMib::NContainer
 	template <umint t_nBits>
 	inline_always aint TCBitArray<t_nBits>::fp_FindFreeBit(umint &_iEntry) const
 	{
-		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != mc_NumEntries * mc_NumBitsPerEntry)
 		{
-			for (umint i = 0; i < ENumEntries - 1; ++i)
+			for (umint i = 0; i < mc_NumEntries - 1; ++i)
 			{
 				CEntryType const &Entry = mp_Entries[i];
 				if (Entry != mcp_FullySet)
@@ -470,18 +470,18 @@ namespace NMib::NContainer
 			}
 			// if (ENumEntries > 1)
 			{
-				CEntryType Entry = mp_Entries[ENumEntries - 1] | CEntryType(~mcp_FullySetLast);
+				CEntryType Entry = mp_Entries[mc_NumEntries - 1] | CEntryType(~mcp_FullySetLast);
 				if (Entry != mcp_FullySet)
 				{
 					umint FreeEntry = fg_GetLowestBitSetNoZero(CEntryType(~Entry));
-					_iEntry = ENumEntries - 1;
+					_iEntry = mc_NumEntries - 1;
 					return FreeEntry;
 				}
 			}
 		}
 		else
 		{
-			for (umint i = 0; i < ENumEntries; ++i)
+			for (umint i = 0; i < mc_NumEntries; ++i)
 			{
 				CEntryType const &Entry = mp_Entries[i];
 				if (Entry != mcp_FullySet)
@@ -498,18 +498,18 @@ namespace NMib::NContainer
 	template <umint t_nBits>
 	inline_always aint TCBitArray<t_nBits>::fp_FindFreeBitReverse(umint &_iEntry) const
 	{
-		if constexpr (t_nBits != ENumEntries * ENumBitsPerEntry)
+		if constexpr (t_nBits != mc_NumEntries * mc_NumBitsPerEntry)
 		{
 			{
-				CEntryType Entry = mp_Entries[ENumEntries - 1] | (CEntryType(~mcp_FullySetLast));
+				CEntryType Entry = mp_Entries[mc_NumEntries - 1] | (CEntryType(~mcp_FullySetLast));
 				if (Entry != mcp_FullySet)
 				{
 					umint FreeEntry = fg_GetHighestBitSetNoZero(CEntryType(~Entry));
-					_iEntry = ENumEntries - 1;
+					_iEntry = mc_NumEntries - 1;
 					return FreeEntry;
 				}
 			}
-			for (aint i = ENumEntries - 2; i >= 0; --i)
+			for (aint i = mc_NumEntries - 2; i >= 0; --i)
 			{
 				CEntryType const &Entry = mp_Entries[i];
 				if (Entry != mcp_FullySet)
@@ -522,7 +522,7 @@ namespace NMib::NContainer
 		}
 		else
 		{
-			for (aint i = ENumEntries - 1; i >= 0; --i)
+			for (aint i = mc_NumEntries - 1; i >= 0; --i)
 			{
 				CEntryType const &Entry = mp_Entries[i];
 				if (Entry != mcp_FullySet)
@@ -543,7 +543,7 @@ namespace NMib::NContainer
 		aint iFreeEntry = fp_FindFreeBit(iEntry);
 		if (iFreeEntry < 0)
 			return -1;
-		return iEntry * ENumBitsPerEntry + iFreeEntry;
+		return iEntry * mc_NumBitsPerEntry + iFreeEntry;
 	}
 
 	template <umint t_nBits>
@@ -553,7 +553,7 @@ namespace NMib::NContainer
 		aint iFreeEntry = fp_FindFreeBitReverse(iEntry);
 		if (iFreeEntry < 0)
 			return -1;
-		return iEntry * ENumBitsPerEntry + iFreeEntry;
+		return iEntry * mc_NumBitsPerEntry + iFreeEntry;
 	}
 
 	template <umint t_nBits>
@@ -563,13 +563,13 @@ namespace NMib::NContainer
 		DMibFastCheck(_StartBit < _EndBit);
 		DMibFastCheck(_EndBit <= t_nBits);
 
-		umint iEntry = _StartBit / ENumBitsPerEntry;
-		umint iSubBit = _StartBit % ENumBitsPerEntry;
+		umint iEntry = _StartBit / mc_NumBitsPerEntry;
+		umint iSubBit = _StartBit % mc_NumBitsPerEntry;
 
 		umint iEntryForward = iEntry;
 		umint iSubBitForward = iSubBit;
 
-		umint EntryStartBit = iEntryForward * ENumBitsPerEntry;
+		umint EntryStartBit = iEntryForward * mc_NumBitsPerEntry;
 
 		while (EntryStartBit < _EndBit)
 		{
@@ -589,7 +589,7 @@ namespace NMib::NContainer
 				iSubBitForward += iFreeEntry;
 			}
 			iSubBitForward = 0;
-			EntryStartBit += ENumBitsPerEntry;
+			EntryStartBit += mc_NumBitsPerEntry;
 			++iEntryForward;
 		}
 	}
@@ -601,13 +601,13 @@ namespace NMib::NContainer
 		DMibFastCheck(_StartBit < _EndBit);
 		DMibFastCheck(_EndBit <= t_nBits);
 
-		umint iEntry = _StartBit / ENumBitsPerEntry;
-		umint iSubBit = _StartBit % ENumBitsPerEntry;
+		umint iEntry = _StartBit / mc_NumBitsPerEntry;
+		umint iSubBit = _StartBit % mc_NumBitsPerEntry;
 
 		umint iEntryForward = iEntry;
 		umint iSubBitForward = iSubBit;
 
-		umint EntryStartBit = iEntryForward * ENumBitsPerEntry;
+		umint EntryStartBit = iEntryForward * mc_NumBitsPerEntry;
 
 		while (EntryStartBit < _EndBit)
 		{
@@ -629,7 +629,7 @@ namespace NMib::NContainer
 				iSubBitForward += iFreeEntry;
 			}
 			iSubBitForward = 0;
-			EntryStartBit += ENumBitsPerEntry;
+			EntryStartBit += mc_NumBitsPerEntry;
 			++iEntryForward;
 		}
 	}
@@ -641,13 +641,13 @@ namespace NMib::NContainer
 		DMibFastCheck(_StartBit < _EndBit);
 		DMibFastCheck(_EndBit <= t_nBits);
 
-		umint iEntry = _StartBit / ENumBitsPerEntry;
-		umint iSubBit = _StartBit % ENumBitsPerEntry;
+		umint iEntry = _StartBit / mc_NumBitsPerEntry;
+		umint iSubBit = _StartBit % mc_NumBitsPerEntry;
 
 		umint iEntryForward = iEntry;
 		umint iSubBitForward = iSubBit;
 
-		umint EntryStartBit = iEntryForward * ENumBitsPerEntry;
+		umint EntryStartBit = iEntryForward * mc_NumBitsPerEntry;
 
 		while (EntryStartBit < _EndBit)
 		{
@@ -674,7 +674,7 @@ namespace NMib::NContainer
 				if (!EndEntry)
 				{
 					++iEntryForward;
-					EntryStartBit += ENumBitsPerEntry;
+					EntryStartBit += mc_NumBitsPerEntry;
 
 					umint iEndFinalEntry = EntryStartBit;
 
@@ -692,7 +692,7 @@ namespace NMib::NContainer
 						else
 						{
 							++iEntryForward;
-							EntryStartBit += ENumBitsPerEntry;
+							EntryStartBit += mc_NumBitsPerEntry;
 							iEndFinalEntry = EntryStartBit;
 						}
 					}
@@ -724,7 +724,7 @@ namespace NMib::NContainer
 				}
 			}
 			iSubBitForward = 0;
-			EntryStartBit += ENumBitsPerEntry;
+			EntryStartBit += mc_NumBitsPerEntry;
 			++iEntryForward;
 		}
 	}
@@ -736,13 +736,13 @@ namespace NMib::NContainer
 		DMibFastCheck(_StartBit < _EndBit);
 		DMibFastCheck(_EndBit <= t_nBits);
 
-		umint iEntry = _StartBit / ENumBitsPerEntry;
-		umint iSubBit = _StartBit % ENumBitsPerEntry;
+		umint iEntry = _StartBit / mc_NumBitsPerEntry;
+		umint iSubBit = _StartBit % mc_NumBitsPerEntry;
 
 		umint iEntryForward = iEntry;
 		umint iSubBitForward = iSubBit;
 
-		umint EntryStartBit = iEntryForward * ENumBitsPerEntry;
+		umint EntryStartBit = iEntryForward * mc_NumBitsPerEntry;
 
 		while (EntryStartBit < _EndBit)
 		{
@@ -769,7 +769,7 @@ namespace NMib::NContainer
 				if (!EndEntry)
 				{
 					++iEntryForward;
-					EntryStartBit += ENumBitsPerEntry;
+					EntryStartBit += mc_NumBitsPerEntry;
 
 					umint iEndFinalEntry = EntryStartBit;
 
@@ -786,7 +786,7 @@ namespace NMib::NContainer
 						else
 						{
 							++iEntryForward;
-							EntryStartBit += ENumBitsPerEntry;
+							EntryStartBit += mc_NumBitsPerEntry;
 							iEndFinalEntry = EntryStartBit;
 						}
 					}
@@ -818,7 +818,7 @@ namespace NMib::NContainer
 				}
 			}
 			iSubBitForward = 0;
-			EntryStartBit += ENumBitsPerEntry;
+			EntryStartBit += mc_NumBitsPerEntry;
 			++iEntryForward;
 		}
 	}
@@ -833,7 +833,7 @@ namespace NMib::NContainer
 
 		mp_Entries[iEntry] = fp_SetBit(mp_Entries[iEntry], iFreeEntry, 1);
 
-		return iEntry * ENumBitsPerEntry + iFreeEntry;
+		return iEntry * mc_NumBitsPerEntry + iFreeEntry;
 	}
 
 	template <umint t_nBits>
@@ -846,7 +846,7 @@ namespace NMib::NContainer
 
 		mp_Entries[iEntry] = fp_SetBit(mp_Entries[iEntry], iFreeEntry, 1);
 
-		return iEntry * ENumBitsPerEntry + iFreeEntry;
+		return iEntry * mc_NumBitsPerEntry + iFreeEntry;
 	}
 
 	template <umint t_nBits>
@@ -854,27 +854,27 @@ namespace NMib::NContainer
 	{
 		DMibFastCheck(_StartBit < t_nBits);
 
-		umint StartEntry = _StartBit / ENumBitsPerEntry;
-		umint StartBit = _StartBit % ENumBitsPerEntry;
+		umint StartEntry = _StartBit / mc_NumBitsPerEntry;
+		umint StartBit = _StartBit % mc_NumBitsPerEntry;
 
 		CEntryType const &Entry = mp_Entries[StartEntry];
 		if (Entry)
 		{
 			aint FoundBit = fg_GetLowestBitSet(Entry >> StartBit);
 			if (FoundBit >= 0)
-				return StartEntry * ENumBitsPerEntry + StartBit + FoundBit;
+				return StartEntry * mc_NumBitsPerEntry + StartBit + FoundBit;
 		}
 
 		++StartEntry;
 
-		for (umint i = StartEntry; i < ENumEntries; ++i)
+		for (umint i = StartEntry; i < mc_NumEntries; ++i)
 		{
 			CEntryType const &Entry = mp_Entries[i];
 			if (Entry)
 			{
 				aint FoundBit = fg_GetLowestBitSet(Entry);
 				if (FoundBit >= 0)
-					return i * ENumBitsPerEntry + FoundBit;
+					return i * mc_NumBitsPerEntry + FoundBit;
 			}
 		}
 

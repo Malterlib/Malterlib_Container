@@ -54,12 +54,9 @@ namespace NMib::NContainer
 		void f_EnumSetBitRanges(t_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
 
 	private:
-		enum
-		{
-			EBitsPerEntry = sizeof(CEntryType) * 8
-		};
+		static constexpr aint mc_BitsPerEntry = sizeof(CEntryType) * 8;
 
-		NPrivate::TCBitArrayHierarchicalInternalArray<EBitsPerEntry, t_nBits, t_nBits> m_Bits;
+		NPrivate::TCBitArrayHierarchicalInternalArray<mc_BitsPerEntry, t_nBits, t_nBits> m_Bits;
 	};
 }
 

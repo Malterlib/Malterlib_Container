@@ -9,12 +9,9 @@ namespace NMib::NContainer::NPrivate
 	struct TCBitArrayHierarchicalInternalArray
 		: public TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>
 	{
-		enum
-		{
-			mc_bIsRoot         = (t_nBitsInternal <= t_nBitsPerEntry)
-			, mc_bIsFirstLevel = t_nBitsInternal == t_nBits
-			, mc_nSuperBits    = t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)
-		};
+		static constexpr bool mc_bIsRoot = (t_nBitsInternal <= t_nBitsPerEntry);
+		static constexpr bool mc_bIsFirstLevel = t_nBitsInternal == t_nBits;
+		static constexpr aint mc_nSuperBits = t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry);
 
 		using CSuper = TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>;
 

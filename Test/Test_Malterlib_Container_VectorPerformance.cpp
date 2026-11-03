@@ -86,10 +86,7 @@ namespace NMib
 			}*/
 		}
 
-		enum
-		{
-			EInsertSortTryMaxSwaps = 16
-		};
+		constexpr aint gc_InsertSortTryMaxSwaps = 16;
 
 		template <typename t_CData, typename tf_CType>
 		inline_always t_CData *fg_InsertSortTryReverse(t_CData *_pLow, t_CData *_pHigh, tf_CType &&_fCompare)
@@ -113,7 +110,7 @@ namespace NMib
 					for (; pJ < _pHigh && COrdering_Partial(_fCompare(Temp, *pJ)) < 0; pJ++)
 					{
 						++Swaps;
-						if (Swaps - SwapsBefore >= EInsertSortTryMaxSwaps)
+						if (Swaps - SwapsBefore >= gc_InsertSortTryMaxSwaps)
 						{
 							for (; pJ > pI; --pJ)
 								*pJ = fg_Move(pJ[-1]);
@@ -140,7 +137,7 @@ namespace NMib
 
 			auto fl_Swap = [&](t_CData *pL) -> bool
 				{
-					if (Swaps >= umint(pL - _pLow) + EInsertSortTryMaxSwaps)
+					if (Swaps >= umint(pL - _pLow) + gc_InsertSortTryMaxSwaps)
 						return true;
 					t_CData *pJ = pL;
 
@@ -155,7 +152,7 @@ namespace NMib
 					for (; pJ >= _pLow && COrdering_Partial(_fCompare(Temp, *pJ)) < 0; pJ--)
 					{
 						++Swaps;
-						if (Swaps - SwapsBefore >= EInsertSortTryMaxSwaps)
+						if (Swaps - SwapsBefore >= gc_InsertSortTryMaxSwaps)
 						{
 							for (; pJ <= pL; ++pJ)
 								*pJ = fg_Move(pJ[1]);
@@ -246,12 +243,9 @@ namespace NMib
 
 		namespace NPrivate
 		{
-			enum
-			{
-				ETI7_RandomSeed                     = 123456789
-				, ETI7_InsertionSortLimit           = 20
-				, EIntrospective_InsertionSortLimit = 20
-			};
+			constexpr aint gc_TI7_RandomSeed = 123456789;
+			constexpr aint gc_TI7_InsertionSortLimit = 20;
+			constexpr aint gc_Introspective_InsertionSortLimit = 20;
 
 			inline_always static umint fg_TI7Rand(umint _Old)
 			{
@@ -347,9 +341,9 @@ namespace NMib
 			template <typename tf_CIterator, typename tf_CCompare>
 			static umint fg_TI7Loop(tf_CIterator _Iterator, umint _Length, umint _DepthLeft, umint _Random, tf_CCompare &&_Comp)
 			{
-				static_assert(ETI7_InsertionSortLimit >= 4, "what");
+				static_assert(gc_TI7_InsertionSortLimit >= 4, "what");
 
-				while (_Length > ETI7_InsertionSortLimit)
+				while (_Length > gc_TI7_InsertionSortLimit)
 				{
 					if (fg_IsSorted(_Iterator, _Iterator + _Length, _Comp))
 						return _Random;
@@ -401,8 +395,8 @@ namespace NMib
 			template <typename tf_CIterator, typename tf_CCompare>
 			inline_never static umint fg_IntrospectiveLoop(tf_CIterator _Iterator, umint _Length, umint _DepthLeft, umint _Random, tf_CCompare &&_Comp)
 			{
-				static_assert(EIntrospective_InsertionSortLimit >= 4, "what");
-				if (_Length > EIntrospective_InsertionSortLimit)
+				static_assert(gc_Introspective_InsertionSortLimit >= 4, "what");
+				if (_Length > gc_Introspective_InsertionSortLimit)
 				{
 #if 0
 					auto pLow = _Iterator;
@@ -416,7 +410,7 @@ namespace NMib
 					if (pInsertResultLow == pHigh)
 						return _Random;
 
-					if (pInsertResultLow - pLow > EInsertSortTryMaxSwaps)
+					if (pInsertResultLow - pLow > gc_InsertSortTryMaxSwaps)
 						pLow = pInsertResultLow;
 
 					auto *pInsertResultHigh = fg_InsertSortTryReverse(pLow, pHigh, _Comp);
@@ -509,7 +503,7 @@ namespace NMib
 					for (umint n = _Count / 4; n; n /= 2)
 						++MaxDepth;
 					MaxDepth *= 2;
-					NPrivate::fg_TI7Loop(_Iterator, _Count, MaxDepth, NPrivate::ETI7_RandomSeed, _Comp);
+					NPrivate::fg_TI7Loop(_Iterator, _Count, MaxDepth, NPrivate::gc_TI7_RandomSeed, _Comp);
 				}
 				else
 					fg_Reverse(_Iterator, _Iterator + _Count);
@@ -528,7 +522,7 @@ namespace NMib
 			DMibFastCheck(_Count / 4 != 0);
 			DMibAnalyzerAssume(_Count / 4 != 0);
 			umint MaxDepth = (2 + fg_GetHighestBitSetNoZero(_Count / 4)) * 2;
-			NPrivate::fg_IntrospectiveLoop(_Iterator, _Count, MaxDepth, NPrivate::ETI7_RandomSeed, _Comp);
+			NPrivate::fg_IntrospectiveLoop(_Iterator, _Count, MaxDepth, NPrivate::gc_TI7_RandomSeed, _Comp);
 		}
 
 		template <typename tf_CIterator>
@@ -543,9 +537,9 @@ namespace NMib
 {
 	namespace NContainer
 	{
-		namespace Tests
+		namespace NTests
 		{
-			struct Big
+			struct CBig
 			{
 				char dummy[1000];
 			};
@@ -751,7 +745,7 @@ namespace NMib
 						nRep = 10;
 #endif
 
-					Big Item;
+					CBig Item;
 					for (int32 i = 0; i < 1000; ++i)
 						Item.dummy[i] = i;
 					CPerfTimeMeasureMin MalterlibTime;
@@ -759,7 +753,7 @@ namespace NMib
 
 					for (int32 i = 0; i < nRep; ++i)
 					{
-						TCVector<Big> Vec1;
+						TCVector<CBig> Vec1;
 						MalterlibTime.f_Start();
 						for (int32 i = 0; i < tf_nItems; ++i)
 							Vec1.f_Insert(Item);
@@ -767,7 +761,7 @@ namespace NMib
 					}
 					for (int32 i = 0; i < nRep; ++i)
 					{
-						std::vector<Big> Vec2;
+						std::vector<CBig> Vec2;
 						StdTime.f_Start();
 						for (int32 i = 0; i < tf_nItems; ++i)
 							Vec2.push_back(Item);

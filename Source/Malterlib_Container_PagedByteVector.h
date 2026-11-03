@@ -107,10 +107,7 @@ namespace NMib::NContainer
 
 		struct CPageAllocator : public NMemory::CAllocator_Heap
 		{
-			enum
-			{
-				mc_bIsDefault = false
-			};
+			static constexpr bool mc_bIsDefault = false;
 
 			only_parameters_aliased static void f_Free(void *_pBlock, umint _Size);
 		};
