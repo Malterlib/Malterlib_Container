@@ -170,8 +170,8 @@ namespace NMib::NContainer
 	constexpr TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::CReciprocalTable::CReciprocalTable() noexcept
 	{
 		m_Values[0] = 0;
-		for (umint i = 1; i < mcp_MaxCalibratorLevels; ++i)
-			m_Values[i] = ((umint(1) << mcp_ReciprocalShift) + i - 1) / i;
+		for (umint iLevel = 1; iLevel < mcp_MaxCalibratorLevels; ++iLevel)
+			m_Values[iLevel] = ((umint(1) << mcp_ReciprocalShift) + iLevel - 1) / iLevel;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>

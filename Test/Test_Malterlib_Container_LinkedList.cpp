@@ -26,10 +26,10 @@ namespace
 			DMibListLinkD_List(CTestClass, m_Link) TestList;
 			DMibListLinkD_List(CTestClass, m_Link) OtherList;
 			CTestClass Tests[10];
-			for (aint i = 0; i < 10; ++i)
+			for (aint iItem = 0; iItem < 10; ++iItem)
 			{
-				Tests[i].m_Value = i;
-				TestList.f_Insert(Tests[i]);
+				Tests[iItem].m_Value = iItem;
+				TestList.f_Insert(Tests[iItem]);
 			}
 
 			// Whole list
@@ -44,16 +44,16 @@ namespace
 			DMibTest(DMibExpr(TestList.f_GetLen()) == DMibExpr(10u));
 			DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u));
 
-			for (umint i = 0; i < 4; ++i)
+			for (umint iCase = 0; iCase < 4; ++iCase)
 			{
-				DMibTestPath(NMib::NStr::CStr::CFormat("Split {}") << i);
+				DMibTestPath(NMib::NStr::CStr::CFormat("Split {}") << iCase);
 				umint nItems = 10;
 				umint nToSplit = 5;
-				if (i == 1)
+				if (iCase == 1)
 					nToSplit = 1;
-				else if (i == 2)
+				else if (iCase == 2)
 					nToSplit = 9;
-				else if (i == 3)
+				else if (iCase == 3)
 				{
 					nToSplit = 1;
 					TestList.f_Clear();
@@ -79,8 +79,8 @@ namespace
 
 				{
 					bool bCorrectOrder = true;
-					for (umint i = 0; i < nItems; ++i)
-						bCorrectOrder = bCorrectOrder && DMibListLinkD_Iter(CTestClass, m_Link)(TestList)[aint(i)]->m_Value == i;
+					for (umint iItem = 0; iItem < nItems; ++iItem)
+						bCorrectOrder = bCorrectOrder && DMibListLinkD_Iter(CTestClass, m_Link)(TestList)[aint(iItem)]->m_Value == iItem;
 					DMibTest(DMibExpr(bCorrectOrder));
 				}
 
@@ -104,8 +104,8 @@ namespace
 					DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u));
 					{
 						bool bCorrectOrder = true;
-						for (umint i = 0; i < nItems; ++i)
-							bCorrectOrder = bCorrectOrder && DMibListLinkD_Iter(CTestClass, m_Link)(TestList)[aint(i)]->m_Value == i;
+						for (umint iItem = 0; iItem < nItems; ++iItem)
+							bCorrectOrder = bCorrectOrder && DMibListLinkD_Iter(CTestClass, m_Link)(TestList)[aint(iItem)]->m_Value == iItem;
 						DMibTest(DMibExpr(bCorrectOrder));
 					}
 
@@ -127,8 +127,8 @@ namespace
 					DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u) && DMibExpr(2));
 					{
 						bool bCorrectOrder = true;
-						for (umint i = 0; i < nItems; ++i)
-							bCorrectOrder = bCorrectOrder && DMibListLinkD_Iter(CTestClass, m_Link)(TestList)[aint(i)]->m_Value == i;
+						for (umint iItem = 0; iItem < nItems; ++iItem)
+							bCorrectOrder = bCorrectOrder && DMibListLinkD_Iter(CTestClass, m_Link)(TestList)[aint(iItem)]->m_Value == iItem;
 						DMibTest(DMibExpr(bCorrectOrder) && DMibExpr(2));
 					}
 				}
@@ -180,10 +180,10 @@ namespace
 			DMibListLinkDS_List(CTestS, m_Link) TestList;
 			DMibListLinkDS_List(CTestS, m_Link) OtherList;
 			CTestS Tests[10];
-			for (aint i = 0; i < 10; ++i)
+			for (aint iItem = 0; iItem < 10; ++iItem)
 			{
-				Tests[i].m_Value = i;
-				TestList.f_Insert(Tests[i]);
+				Tests[iItem].m_Value = iItem;
+				TestList.f_Insert(Tests[iItem]);
 			}
 
 			// Whole list
@@ -198,16 +198,16 @@ namespace
 			DMibTest(DMibExpr(TestList.f_GetLen()) == DMibExpr(10u));
 			DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u));
 
-			for (umint i = 0; i < 4; ++i)
+			for (umint iCase = 0; iCase < 4; ++iCase)
 			{
-				DMibTestPath(NMib::NStr::CStr::CFormat("Split {}") << i);
+				DMibTestPath(NMib::NStr::CStr::CFormat("Split {}") << iCase);
 				umint nItems = 10;
 				umint nToSplit = 5;
-				if (i == 1)
+				if (iCase == 1)
 					nToSplit = 1;
-				else if (i == 2)
+				else if (iCase == 2)
 					nToSplit = 9;
-				else if (i == 3)
+				else if (iCase == 3)
 				{
 					nToSplit = 1;
 					TestList.f_Clear();
@@ -235,8 +235,8 @@ namespace
 					DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u));
 					{
 						bool bCorrectOrder = true;
-						for (umint i = 0; i < nItems; ++i)
-							bCorrectOrder = bCorrectOrder && DMibListLinkDS_Iter(CTestS, m_Link)(TestList)[aint(i)]->m_Value == i;
+						for (umint iItem = 0; iItem < nItems; ++iItem)
+							bCorrectOrder = bCorrectOrder && DMibListLinkDS_Iter(CTestS, m_Link)(TestList)[aint(iItem)]->m_Value == iItem;
 						DMibTest(DMibExpr(bCorrectOrder));
 					}
 				}
@@ -262,8 +262,8 @@ namespace
 					DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u));
 					{
 						bool bCorrectOrder = true;
-						for (umint i = 0; i < nItems; ++i)
-							bCorrectOrder = bCorrectOrder && DMibListLinkDS_Iter(CTestS, m_Link)(TestList)[aint(i)]->m_Value == i;
+						for (umint iItem = 0; iItem < nItems; ++iItem)
+							bCorrectOrder = bCorrectOrder && DMibListLinkDS_Iter(CTestS, m_Link)(TestList)[aint(iItem)]->m_Value == iItem;
 						DMibTest(DMibExpr(bCorrectOrder));
 					}
 				}
@@ -289,8 +289,8 @@ namespace
 					DMibTest(DMibExpr(OtherList.f_GetLen()) == DMibExpr(0u));
 					{
 						bool bCorrectOrder = true;
-						for (umint i = 0; i < nItems; ++i)
-							bCorrectOrder = bCorrectOrder && DMibListLinkDS_Iter(CTestS, m_Link)(TestList)[aint(i)]->m_Value == i;
+						for (umint iItem = 0; iItem < nItems; ++iItem)
+							bCorrectOrder = bCorrectOrder && DMibListLinkDS_Iter(CTestS, m_Link)(TestList)[aint(iItem)]->m_Value == iItem;
 						DMibTest(DMibExpr(bCorrectOrder));
 					}
 				}
@@ -338,8 +338,8 @@ namespace
 			// Test const insert
 			List.f_Insert(0);
 			// Test non-const insert
-			for (int32 i = 1; i < 10; ++i)
-				List.f_Insert(i);
+			for (int32 iItem = 1; iItem < 10; ++iItem)
+				List.f_Insert(iItem);
 
 			int32 nItems = 10;
 
@@ -347,15 +347,15 @@ namespace
 			{
 				bool bCorrectOrder = true;
 				NMib::NContainer::TCLinkedList<int32>::CIterator Iter = List;
-				for (int32 i = 0; i < nItems; ++i, ++Iter)
-					bCorrectOrder = bCorrectOrder && *Iter == i;
+				for (int32 iItem = 0; iItem < nItems; ++iItem, ++Iter)
+					bCorrectOrder = bCorrectOrder && *Iter == iItem;
 				DMibTest(DMibExpr(bCorrectOrder));
 			}
 			{
 				bool bCorrectOrder = true;
 				NMib::NContainer::TCLinkedList<int32>::CIteratorConst Iter = List;
-				for (int32 i = 0; i < nItems; ++i, ++Iter)
-					bCorrectOrder = bCorrectOrder && *Iter == i;
+				for (int32 iItem = 0; iItem < nItems; ++iItem, ++Iter)
+					bCorrectOrder = bCorrectOrder && *Iter == iItem;
 				DMibTest(DMibExpr(bCorrectOrder) && DMibExpr(2));
 			}
 
@@ -605,8 +605,8 @@ namespace
 
 					// Verify order is preserved
 					auto CheckIter = Dest.f_GetIterator();
-					for (int32 i = 1; i <= 5; ++i, ++CheckIter)
-						DMibExpect(*CheckIter, ==, i)(ETestFlag_Aggregated);
+					for (int32 iItem = 1; iItem <= 5; ++iItem, ++CheckIter)
+						DMibExpect(*CheckIter, ==, iItem)(ETestFlag_Aggregated);
 				};
 
 				// Test handle destructor properly cleans up

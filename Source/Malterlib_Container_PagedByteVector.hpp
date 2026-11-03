@@ -198,15 +198,15 @@ namespace NMib::NContainer
 		if ((_Pos < 0) || fg_SafeLargerThan(_Pos, TCLimitsInt<umint>::mc_Max))
 			DMibError("Memory stream positions are limited to 0 -> TCLimitsInt<umint>::mc_Max");
 
-		m_Position = _Pos;
+		mp_Position = _Pos;
 	}
 
 	template <typename t_CInherit>
 	TCBinaryStreamPagedByteVector<t_CInherit>::TCBinaryStreamPagedByteVector(CPagedByteVector &_Buffer)
-		: m_Buffer(_Buffer)
+		: mp_Buffer(_Buffer)
 	{
-		m_Position = 0;
-		m_Length = _Buffer.f_GetLen();
+		mp_Position = 0;
+		mp_Length = _Buffer.f_GetLen();
 	}
 
 	template <typename t_CInherit>
@@ -217,24 +217,24 @@ namespace NMib::NContainer
 	template <typename t_CInherit>
 	void TCBinaryStreamPagedByteVector<t_CInherit>::f_ResetStream()
 	{
-		m_Position = 0;
-		m_Length = 0;
+		mp_Position = 0;
+		mp_Length = 0;
 	}
 
 	template <typename t_CInherit>
 	void TCBinaryStreamPagedByteVector<t_CInherit>::f_Clear()
 	{
-		m_Position = 0;
-		m_Length = 0;
+		mp_Position = 0;
+		mp_Length = 0;
 	}
 
 	template <typename t_CInherit>
 	void TCBinaryStreamPagedByteVector<t_CInherit>::f_FeedBytes(void const *_pMem, umint _nBytes)
 	{
-		m_Buffer.f_InsertBack((uint8 const *)_pMem, _nBytes);
-		m_Position += _nBytes;
-		if (m_Position > m_Length)
-			m_Length = m_Position;
+		mp_Buffer.f_InsertBack((uint8 const *)_pMem, _nBytes);
+		mp_Position += _nBytes;
+		if (mp_Position > mp_Length)
+			mp_Length = mp_Position;
 	}
 
 	template <typename t_CInherit>
@@ -253,13 +253,13 @@ namespace NMib::NContainer
 	bool TCBinaryStreamPagedByteVector<t_CInherit>::f_IsAtEndOfStream() const
 	{
 		DMibPDebugBreak; // Not supported
-		return m_Position == m_Length;
+		return mp_Position == mp_Length;
 	}
 
 	template <typename t_CInherit>
 	NStream::CFilePos TCBinaryStreamPagedByteVector<t_CInherit>::f_GetPosition() const
 	{
-		return m_Position;
+		return mp_Position;
 	}
 
 	template <typename t_CInherit>
@@ -271,19 +271,19 @@ namespace NMib::NContainer
 	template <typename t_CInherit>
 	void TCBinaryStreamPagedByteVector<t_CInherit>::f_SetPositionFromEnd(NStream::CFilePos _Pos)
 	{
-		fp_SetPositionInternal(m_Length + _Pos);
+		fp_SetPositionInternal(mp_Length + _Pos);
 	}
 
 	template <typename t_CInherit>
 	void TCBinaryStreamPagedByteVector<t_CInherit>::f_AddPosition(NStream::CFilePos _Pos)
 	{
-		fp_SetPositionInternal(m_Position + _Pos);
+		fp_SetPositionInternal(mp_Position + _Pos);
 	}
 
 	template <typename t_CInherit>
 	bool TCBinaryStreamPagedByteVector<t_CInherit>::f_IsValidReadPosition(NStream::CFilePos _Pos) const
 	{
-		return _Pos >= 0 && _Pos < NStream::CFilePos(m_Length);
+		return _Pos >= 0 && _Pos < NStream::CFilePos(mp_Length);
 	}
 
 	template <typename t_CInherit>
@@ -294,7 +294,7 @@ namespace NMib::NContainer
 	template <typename t_CInherit>
 	NStream::CFilePos TCBinaryStreamPagedByteVector<t_CInherit>::f_GetLength() const
 	{
-		return m_Length;
+		return mp_Length;
 	}
 
 	template <typename t_CInherit>
@@ -336,25 +336,25 @@ namespace NMib::NContainer
 		if (_Offset > _Buffer.f_GetLen() || _Length > _Buffer.f_GetLen() - _Offset)
 			DMibError("Paged byte vector stream range exceeds buffer length");
 
-		m_pBuffer = &_Buffer;
-		m_BaseOffset = _Offset;
-		m_Length = _Length;
-		m_Position = 0;
+		mp_pBuffer = &_Buffer;
+		mp_BaseOffset = _Offset;
+		mp_Length = _Length;
+		mp_Position = 0;
 		fp_RebuildPageCache();
 	}
 
 	template <typename t_CInherit>
 	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::fp_RebuildPageCache()
 	{
-		if (m_pBuffer == nullptr || m_Position >= m_Length)
+		if (mp_pBuffer == nullptr || mp_Position >= mp_Length)
 		{
-			m_pCurrentPage = nullptr;
-			m_nCurrentPageRemaining = 0;
+			mp_pCurrentPage = nullptr;
+			mp_nCurrentPageRemaining = 0;
 			return;
 		}
 
-		CPagedByteVector const &Buffer = *m_pBuffer;
-		umint AbsolutePos = m_BaseOffset + m_Position + Buffer.mp_iFirstPageStart;
+		CPagedByteVector const &Buffer = *mp_pBuffer;
+		umint AbsolutePos = mp_BaseOffset + mp_Position + Buffer.mp_iFirstPageStart;
 		umint iCurPage = AbsolutePos / Buffer.mp_PageSize;
 		umint iCurPagePos = AbsolutePos - iCurPage * Buffer.mp_PageSize;
 		umint iLastPage = Buffer.mp_Pages.f_GetLen() - 1;
@@ -364,36 +364,36 @@ namespace NMib::NContainer
 			nPageBytes -= (Buffer.mp_PageSize - Buffer.mp_iLastPageEnd);
 
 		// Cap by remaining bytes in our window.
-		umint nWindowRemaining = m_Length - m_Position;
+		umint nWindowRemaining = mp_Length - mp_Position;
 		if (nPageBytes > nWindowRemaining)
 			nPageBytes = nWindowRemaining;
 
-		m_iCurrentPage = iCurPage;
-		m_pCurrentPage = static_cast<uint8 const *>(Buffer.mp_Pages[iCurPage].f_Get()) + iCurPagePos;
-		m_nCurrentPageRemaining = nPageBytes;
+		mp_iCurrentPage = iCurPage;
+		mp_pCurrentPage = static_cast<uint8 const *>(Buffer.mp_Pages[iCurPage].f_Get()) + iCurPagePos;
+		mp_nCurrentPageRemaining = nPageBytes;
 	}
 
 	template <typename t_CInherit>
 	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::fp_AdvanceToNextPage()
 	{
-		// Caller guarantees m_pBuffer != nullptr, m_iCurrentPage is the page just exhausted,
-		// and m_Position < m_Length (more data ahead). The next page always begins at offset 0,
+		// Caller guarantees mp_pBuffer != nullptr, mp_iCurrentPage is the page just exhausted,
+		// and mp_Position < mp_Length (more data ahead). The next page always begins at offset 0,
 		// so no division or modulo is needed.
-		CPagedByteVector const &Buffer = *m_pBuffer;
-		++m_iCurrentPage;
+		CPagedByteVector const &Buffer = *mp_pBuffer;
+		++mp_iCurrentPage;
 
 		umint nPageBytes;
-		if (m_iCurrentPage == Buffer.mp_Pages.f_GetLen() - 1)
+		if (mp_iCurrentPage == Buffer.mp_Pages.f_GetLen() - 1)
 			nPageBytes = Buffer.mp_iLastPageEnd;
 		else
 			nPageBytes = Buffer.mp_PageSize;
 
-		umint nWindowRemaining = m_Length - m_Position;
+		umint nWindowRemaining = mp_Length - mp_Position;
 		if (nPageBytes > nWindowRemaining)
 			nPageBytes = nWindowRemaining;
 
-		m_pCurrentPage = static_cast<uint8 const *>(Buffer.mp_Pages[m_iCurrentPage].f_Get());
-		m_nCurrentPageRemaining = nPageBytes;
+		mp_pCurrentPage = static_cast<uint8 const *>(Buffer.mp_Pages[mp_iCurrentPage].f_Get());
+		mp_nCurrentPageRemaining = nPageBytes;
 	}
 
 	template <typename t_CInherit>
@@ -405,29 +405,29 @@ namespace NMib::NContainer
 	template <typename t_CInherit>
 	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_ConsumeBytes(void *_pMem, umint _nBytes)
 	{
-		if (m_Length - m_Position < _nBytes) [[unlikely]]
+		if (mp_Length - mp_Position < _nBytes) [[unlikely]]
 			this->fp_ThrowEndOfStreamException();
 
-		if (_nBytes <= m_nCurrentPageRemaining) [[likely]]
+		if (_nBytes <= mp_nCurrentPageRemaining) [[likely]]
 		{
-			NMemory::fg_MemCopy(_pMem, m_pCurrentPage, _nBytes);
-			m_pCurrentPage += _nBytes;
-			m_nCurrentPageRemaining -= _nBytes;
-			m_Position += _nBytes;
+			NMemory::fg_MemCopy(_pMem, mp_pCurrentPage, _nBytes);
+			mp_pCurrentPage += _nBytes;
+			mp_nCurrentPageRemaining -= _nBytes;
+			mp_Position += _nBytes;
 			return;
 		}
 
 		uint8 *pDest = static_cast<uint8 *>(_pMem);
 		while (_nBytes != 0)
 		{
-			if (m_nCurrentPageRemaining == 0)
+			if (mp_nCurrentPageRemaining == 0)
 				fp_AdvanceToNextPage();
 
-			umint nCopy = _nBytes < m_nCurrentPageRemaining ? _nBytes : m_nCurrentPageRemaining;
-			NMemory::fg_MemCopy(pDest, m_pCurrentPage, nCopy);
-			m_pCurrentPage += nCopy;
-			m_nCurrentPageRemaining -= nCopy;
-			m_Position += nCopy;
+			umint nCopy = _nBytes < mp_nCurrentPageRemaining ? _nBytes : mp_nCurrentPageRemaining;
+			NMemory::fg_MemCopy(pDest, mp_pCurrentPage, nCopy);
+			mp_pCurrentPage += nCopy;
+			mp_nCurrentPageRemaining -= nCopy;
+			mp_Position += nCopy;
 			pDest += nCopy;
 			_nBytes -= nCopy;
 		}
@@ -436,19 +436,19 @@ namespace NMib::NContainer
 	template <typename t_CInherit>
 	bool TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_IsValid() const
 	{
-		return m_pBuffer != nullptr;
+		return mp_pBuffer != nullptr;
 	}
 
 	template <typename t_CInherit>
 	bool TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_IsAtEndOfStream() const
 	{
-		return m_Position == m_Length;
+		return mp_Position == mp_Length;
 	}
 
 	template <typename t_CInherit>
 	NStream::CFilePos TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_GetPosition() const
 	{
-		return m_Position;
+		return mp_Position;
 	}
 
 	template <typename t_CInherit>
@@ -457,10 +457,10 @@ namespace NMib::NContainer
 		if (_Pos < 0 || fg_SafeLargerThan(_Pos, TCLimitsInt<umint>::mc_Max))
 			DMibError("Paged byte vector stream positions are limited to 0 -> TCLimitsInt<umint>::mc_Max");
 
-		if (umint(_Pos) > m_Length)
+		if (umint(_Pos) > mp_Length)
 			DMibError("Position is past end of stream");
 
-		m_Position = umint(_Pos);
+		mp_Position = umint(_Pos);
 		fp_RebuildPageCache();
 	}
 
@@ -473,19 +473,19 @@ namespace NMib::NContainer
 	template <typename t_CInherit>
 	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_SetPositionFromEnd(NStream::CFilePos _Pos)
 	{
-		fp_SetPositionInternal(NStream::CFilePos(m_Length) + _Pos);
+		fp_SetPositionInternal(NStream::CFilePos(mp_Length) + _Pos);
 	}
 
 	template <typename t_CInherit>
 	void TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_AddPosition(NStream::CFilePos _Pos)
 	{
-		fp_SetPositionInternal(NStream::CFilePos(m_Position) + _Pos);
+		fp_SetPositionInternal(NStream::CFilePos(mp_Position) + _Pos);
 	}
 
 	template <typename t_CInherit>
 	bool TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_IsValidReadPosition(NStream::CFilePos _Pos) const
 	{
-		return _Pos >= 0 && _Pos < NStream::CFilePos(m_Length);
+		return _Pos >= 0 && _Pos < NStream::CFilePos(mp_Length);
 	}
 
 	template <typename t_CInherit>
@@ -496,7 +496,7 @@ namespace NMib::NContainer
 	template <typename t_CInherit>
 	NStream::CFilePos TCBinaryStreamPagedByteVectorPtr<t_CInherit>::f_GetLength() const
 	{
-		return m_Length;
+		return mp_Length;
 	}
 
 	template <typename t_CInherit>

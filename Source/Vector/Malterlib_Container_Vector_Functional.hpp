@@ -17,9 +17,9 @@ namespace NMib::NContainer
 		umint Len = Data.m_Length;
 		t_CData const *pArray = Data.f_GetData();
 
-		for (umint i = 0; i < Len; ++i)
+		for (umint iElement = 0; iElement < Len; ++iElement)
 		{
-			if (!NPrivate::fg_InvokeVectorIteratorFunctor(_fPredicate, pArray[i], i, *this))
+			if (!NPrivate::fg_InvokeVectorIteratorFunctor(_fPredicate, pArray[iElement], iElement, *this))
 				return false;
 		}
 		return true;
@@ -37,9 +37,9 @@ namespace NMib::NContainer
 		umint Len = Data.m_Length;
 		t_CData const *pArray = Data.f_GetData();
 
-		for (umint i = 0; i < Len; ++i)
+		for (umint iElement = 0; iElement < Len; ++iElement)
 		{
-			if (NPrivate::fg_InvokeVectorIteratorFunctor(_fPredicate, pArray[i], i, *this))
+			if (NPrivate::fg_InvokeVectorIteratorFunctor(_fPredicate, pArray[iElement], iElement, *this))
 				return true;
 		}
 		return false;
@@ -68,15 +68,15 @@ namespace NMib::NContainer
 
 		if constexpr (NTraits::cIsVoid<CAccumulator>)
 		{
-			for (umint i = 0; i < Len; ++i)
-				NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Forward<tf_CAccumulator>(_Accumulator), fg_ForwardAs<tf_CThis>(pArray[i]), i, fg_Forward<tf_CThis>(_This));
+			for (umint iElement = 0; iElement < Len; ++iElement)
+				NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Forward<tf_CAccumulator>(_Accumulator), fg_ForwardAs<tf_CThis>(pArray[iElement]), iElement, fg_Forward<tf_CThis>(_This));
 		}
 		else
 		{
 			CAccumulator Accumulator = fg_Forward<tf_CAccumulator>(_Accumulator);
 
-			for (umint i = 0; i < Len; ++i)
-				Accumulator = NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Move(Accumulator), fg_ForwardAs<tf_CThis>(pArray[i]), i, fg_Forward<tf_CThis>(_This));
+			for (umint iElement = 0; iElement < Len; ++iElement)
+				Accumulator = NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Move(Accumulator), fg_ForwardAs<tf_CThis>(pArray[iElement]), iElement, fg_Forward<tf_CThis>(_This));
 
 			return Accumulator;
 		}
@@ -101,8 +101,8 @@ namespace NMib::NContainer
 
 		CAccumulator Accumulator{};
 
-		for (umint i = 0; i < Len; ++i)
-			Accumulator = NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Move(Accumulator), fg_ForwardAs<tf_CThis>(pArray[i]), i, fg_Forward<tf_CThis>(_This));
+		for (umint iElement = 0; iElement < Len; ++iElement)
+			Accumulator = NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Move(Accumulator), fg_ForwardAs<tf_CThis>(pArray[iElement]), iElement, fg_Forward<tf_CThis>(_This));
 
 		return Accumulator;
 	}
@@ -130,15 +130,35 @@ namespace NMib::NContainer
 
 		if constexpr (NTraits::cIsVoid<CAccumulator>)
 		{
-			for (umint i = Len; i > 0; --i)
-				NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Forward<tf_CAccumulator>(_Accumulator), fg_ForwardAs<tf_CThis>(pArray[i - 1]), i - 1, fg_Forward<tf_CThis>(_This));
+			for (umint iElement = Len; iElement > 0; --iElement)
+			{
+				NPrivate::fg_InvokeVectorReduceFunctor
+					(
+						_fReducer
+						, fg_Forward<tf_CAccumulator>(_Accumulator)
+						, fg_ForwardAs<tf_CThis>(pArray[iElement - 1])
+						, iElement - 1
+						, fg_Forward<tf_CThis>(_This)
+					)
+				;
+			}
 		}
 		else
 		{
 			CAccumulator Accumulator = fg_Forward<tf_CAccumulator>(_Accumulator);
 
-			for (umint i = Len; i > 0; --i)
-				Accumulator = NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Move(Accumulator), fg_ForwardAs<tf_CThis>(pArray[i - 1]), i - 1, fg_Forward<tf_CThis>(_This));
+			for (umint iElement = Len; iElement > 0; --iElement)
+			{
+				Accumulator = NPrivate::fg_InvokeVectorReduceFunctor
+					(
+						_fReducer
+						, fg_Move(Accumulator)
+						, fg_ForwardAs<tf_CThis>(pArray[iElement - 1])
+						, iElement - 1
+						, fg_Forward<tf_CThis>(_This)
+					)
+				;
+			}
 
 			return Accumulator;
 		}
@@ -163,8 +183,8 @@ namespace NMib::NContainer
 
 		CAccumulator Accumulator{};
 
-		for (umint i = Len; i > 0; --i)
-			Accumulator = NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Move(Accumulator), fg_ForwardAs<tf_CThis>(pArray[i - 1]), i - 1, fg_Forward<tf_CThis>(_This));
+		for (umint iElement = Len; iElement > 0; --iElement)
+			Accumulator = NPrivate::fg_InvokeVectorReduceFunctor(_fReducer, fg_Move(Accumulator), fg_ForwardAs<tf_CThis>(pArray[iElement - 1]), iElement - 1, fg_Forward<tf_CThis>(_This));
 
 		return Accumulator;
 	}

@@ -143,9 +143,9 @@ namespace NMib::NContainer
 		auto pSrc = f_GetArray();
 
 		auto &NewLen = Ret.mp_StaticData.m_pData->m_Length;
-		for (umint i = 0; i < Len; ++i)
+		for (umint iElement = 0; iElement < Len; ++iElement)
 		{
-			new((void *)(pDst + i)) t_CData(pSrc[Len - i - 1]);
+			new((void *)(pDst + iElement)) t_CData(pSrc[Len - iElement - 1]);
 			++NewLen;
 		}
 
@@ -169,9 +169,9 @@ namespace NMib::NContainer
 		auto pSrc = f_GetArray();
 
 		auto &NewLen = Ret.mp_StaticData.m_pData->m_Length;
-		for (umint i = 0; i < Len; ++i)
+		for (umint iElement = 0; iElement < Len; ++iElement)
 		{
-			new((void *)(pDst + i)) t_CData(fg_Move(pSrc[Len - i - 1]));
+			new((void *)(pDst + iElement)) t_CData(fg_Move(pSrc[Len - iElement - 1]));
 			++NewLen;
 		}
 

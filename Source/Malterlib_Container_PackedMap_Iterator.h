@@ -52,11 +52,11 @@ namespace NMib::NContainer
 		constexpr void fp_RetreatToPrevElement() noexcept;
 
 		CMapPointer mp_pMap = nullptr;
-		umint m_iSegment = 0;  // Current segment
-		umint m_iLocalPos = 0; // Position within segment (relative to first element)
-		umint m_iCurrent = 0;  // Absolute position in forward order
-		umint m_nElements = 0; // Total number of elements
-		bool m_bValid = false;
+		umint mp_iSegment = 0;  // Current segment
+		umint mp_iLocalPos = 0; // Position within segment (relative to first element)
+		umint mp_iCurrent = 0;  // Absolute position in forward order
+		umint mp_nElements = 0; // Total number of elements
+		bool mp_bValid = false;
 	};
 
 	// Key iterator - yields keys instead of values
@@ -95,11 +95,11 @@ namespace NMib::NContainer
 		constexpr void fp_RetreatToPrevElement() noexcept;
 
 		CMapPointer mp_pMap = nullptr;
-		umint m_iSegment = 0;
-		umint m_iLocalPos = 0;
-		umint m_iCurrent = 0;
-		umint m_nElements = 0;
-		bool m_bValid = false;
+		umint mp_iSegment = 0;
+		umint mp_iLocalPos = 0;
+		umint mp_iCurrent = 0;
+		umint mp_nElements = 0;
+		bool mp_bValid = false;
 	};
 
 	// Key-Value iterator - yields TCPackedMapRef
@@ -137,10 +137,10 @@ namespace NMib::NContainer
 		constexpr void fp_RetreatToPrevElement() noexcept;
 
 		CMapPointer mp_pMap = nullptr;
-		umint m_iSegment = 0;
-		umint m_iLocalPos = 0;
-		umint m_iCurrent = 0;
-		umint m_nElements = 0;
-		bool m_bValid = false;
+		umint mp_iSegment = 0;
+		umint mp_iLocalPos = 0;
+		umint mp_iCurrent = 0;
+		umint mp_nElements = 0;
+		bool mp_bValid = false;
 	};
 }

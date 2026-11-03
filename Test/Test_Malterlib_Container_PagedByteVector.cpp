@@ -19,8 +19,8 @@ namespace
 		{
 			NMib::NContainer::CByteVector Source;
 			Source.f_Reserve(_nBytes);
-			for (umint i = 0; i < _nBytes; ++i)
-				Source.f_InsertLast(uint8(i & 0xFF));
+			for (umint iByte = 0; iByte < _nBytes; ++iByte)
+				Source.f_InsertLast(uint8(iByte & 0xFF));
 
 			_Buffer.f_InsertBack(Source.f_GetArray(), Source.f_GetLen());
 		}
@@ -41,11 +41,11 @@ namespace
 			DMibExpect(Stream.f_IsAtEndOfStream(), ==, false);
 
 			bool bAllMatch = true;
-			for (umint i = 0; i < 32; ++i)
+			for (umint iItem = 0; iItem < 32; ++iItem)
 			{
 				uint8 Byte = 0;
 				Stream >> Byte;
-				if (umint(Byte) != i)
+				if (umint(Byte) != iItem)
 					bAllMatch = false;
 			}
 
@@ -65,11 +65,11 @@ namespace
 			Stream.f_OpenRead(Buffer);
 
 			bool bAllMatch = true;
-			for (umint i = 0; i < 24; ++i)
+			for (umint iItem = 0; iItem < 24; ++iItem)
 			{
 				uint8 Byte = 0;
 				Stream >> Byte;
-				if (umint(Byte) != (i & 0xFF))
+				if (umint(Byte) != (iItem & 0xFF))
 					bAllMatch = false;
 			}
 
@@ -121,9 +121,9 @@ namespace
 			Stream.f_ConsumeBytes(Out, sizeof(Out));
 
 			bool bAllMatch = true;
-			for (umint i = 0; i < 100; ++i)
+			for (umint iItem = 0; iItem < 100; ++iItem)
 			{
-				if (umint(Out[i]) != (i & 0xFF))
+				if (umint(Out[iItem]) != (iItem & 0xFF))
 					bAllMatch = false;
 			}
 
@@ -145,11 +145,11 @@ namespace
 			DMibExpect(umint(Stream.f_GetLength()), ==, umint(20));
 
 			bool bAllMatch = true;
-			for (umint i = 0; i < 20; ++i)
+			for (umint iItem = 0; iItem < 20; ++iItem)
 			{
 				uint8 Byte = 0;
 				Stream >> Byte;
-				if (umint(Byte) != ((10 + i) & 0xFF))
+				if (umint(Byte) != ((10 + iItem) & 0xFF))
 					bAllMatch = false;
 			}
 
@@ -171,11 +171,11 @@ namespace
 			DMibExpect(umint(Stream.f_GetLength()), ==, umint(35));
 
 			bool bAllMatch = true;
-			for (umint i = 0; i < 35; ++i)
+			for (umint iItem = 0; iItem < 35; ++iItem)
 			{
 				uint8 Byte = 0;
 				Stream >> Byte;
-				if (umint(Byte) != ((5 + i) & 0xFF))
+				if (umint(Byte) != ((5 + iItem) & 0xFF))
 					bAllMatch = false;
 			}
 

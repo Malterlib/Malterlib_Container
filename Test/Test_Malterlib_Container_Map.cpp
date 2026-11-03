@@ -72,8 +72,8 @@ namespace
 					TCMap<CStr, CStr> Testing;
 					static_assert(sizeof(Testing) == sizeof(void *));
 
-					for (int i = 0; i < 10; ++i)
-						Testing[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+					for (int iItem = 0; iItem < 10; ++iItem)
+						Testing[CStr("Key {}"_f << iItem)] = "Value {}"_f << iItem;
 
 					TCMap<CStr, CStr> Testing2;
 					{
@@ -239,8 +239,8 @@ namespace
 					TCSet<CStr> Testing;
 					static_assert(sizeof(Testing) == sizeof(void *));
 
-					for (int i = 0; i < 10; ++i)
-						Testing[CStr("Key {}"_f << i)];
+					for (int iItem = 0; iItem < 10; ++iItem)
+						Testing[CStr("Key {}"_f << iItem)];
 
 					TCSet<CStr> Testing2;
 					{
@@ -847,8 +847,8 @@ namespace
 			{
 				TCSet<int32> Source;
 
-				for (int32 i = 0; i < 50; ++i)
-					Source[i];
+				for (int32 iItem = 0; iItem < 50; ++iItem)
+					Source[iItem];
 
 				TCSet<int32> Copied = Source;
 				DMibExpect(Copied, ==, Source);
@@ -863,8 +863,8 @@ namespace
 			{
 				TCMap<int32, int32> Source;
 
-				for (int32 i = 0; i < 50; ++i)
-					Source[i] = i;
+				for (int32 iItem = 0; iItem < 50; ++iItem)
+					Source[iItem] = iItem;
 
 				TCMap<int32, int32> Copied = Source;
 				DMibExpect(Copied, ==, Source);
@@ -875,10 +875,10 @@ namespace
 				TCMap<int32, int64> CopiedOtherType = Source;
 				DMibExpect(CopiedOtherType, ==, Source);
 
-				for (int32 i = 50; i < 100; ++i)
+				for (int32 iItem = 50; iItem < 100; ++iItem)
 				{
-					Source[i] = i;
-					CopiedOtherType[i] = i;
+					Source[iItem] = iItem;
+					CopiedOtherType[iItem] = iItem;
 				}
 				{
 					DMibTestPath("After addition");
@@ -890,8 +890,8 @@ namespace
 				TCSet<int> Testing;
 				static_assert(sizeof(Testing) == sizeof(void *));
 
-				for (int i = 0; i < 10; ++i)
-					Testing[i];
+				for (int iItem = 0; iItem < 10; ++iItem)
+					Testing[iItem];
 
 				auto Iter = Testing.f_GetIterator();
 				{
@@ -925,8 +925,8 @@ namespace
 				TCSet<int> Testing;
 
 				static_assert(sizeof(Testing) == sizeof(void *));
-				for (int i = 0; i < 10; ++i)
-					Testing[i];
+				for (int iItem = 0; iItem < 10; ++iItem)
+					Testing[iItem];
 
 				auto Iter = Testing.f_GetIteratorBidirectional();
 				{
@@ -983,8 +983,8 @@ namespace
 				TCSet<int> Testing;
 				static_assert(sizeof(Testing) == sizeof(void *));
 
-				for (int i = 0; i < 10; ++i)
-					Testing[i];
+				for (int iItem = 0; iItem < 10; ++iItem)
+					Testing[iItem];
 
 				auto Iter = Testing.f_GetIteratorReverse();
 				{
@@ -1018,8 +1018,8 @@ namespace
 				TCSet<int> Testing;
 				static_assert(sizeof(Testing) == sizeof(void *));
 
-				for (int i = 0; i < 10; ++i)
-					Testing[i];
+				for (int iItem = 0; iItem < 10; ++iItem)
+					Testing[iItem];
 
 				auto Iter = Testing.f_GetIteratorBidirectionalReverse();
 				{
@@ -1078,8 +1078,8 @@ namespace
 				TCMap<int, int const &> Testing;
 				static_assert(sizeof(Testing) == sizeof(void *));
 
-				for (int i = 0; i < 10; ++i)
-					Testing[i, Values[i]];
+				for (int iItem = 0; iItem < 10; ++iItem)
+					Testing[iItem, Values[iItem]];
 
 				auto Iter = Testing.f_GetIterator();
 				{
@@ -1131,8 +1131,8 @@ namespace
 					TCSet<int> Testing;
 					static_assert(sizeof(Testing) == sizeof(void *));
 
-					for (int i = 0; i < 10; ++i)
-						Testing[i];
+					for (int iItem = 0; iItem < 10; ++iItem)
+						Testing[iItem];
 
 					int iTest = 0;
 					for (auto &Key : Testing.f_Keys())
@@ -1146,8 +1146,8 @@ namespace
 					TCMap<int, CStr> Testing;
 					static_assert(sizeof(Testing) == sizeof(void *));
 
-					for (int i = 0; i < 10; ++i)
-						Testing(i, CStr::fs_ToStr(i));
+					for (int iItem = 0; iItem < 10; ++iItem)
+						Testing(iItem, CStr::fs_ToStr(iItem));
 
 					int iTest = 0;
 					for (auto &Key : Testing.f_Keys())
@@ -1164,8 +1164,8 @@ namespace
 					TCSet<int> Testing;
 					static_assert(sizeof(Testing) == sizeof(void *));
 
-					for (int i = 0; i < 10; ++i)
-						Testing[i];
+					for (int iItem = 0; iItem < 10; ++iItem)
+						Testing[iItem];
 
 					int iTest = 0;
 					for (auto &Key : Testing.f_Entries())
@@ -1180,8 +1180,8 @@ namespace
 					TCMap<int, CStr> Testing;
 					static_assert(sizeof(Testing) == sizeof(void *));
 
-					for (int i = 0; i < 10; ++i)
-						Testing(i, CStr::fs_ToStr(i));
+					for (int iItem = 0; iItem < 10; ++iItem)
+						Testing(iItem, CStr::fs_ToStr(iItem));
 
 					int iTest = 0;
 					for (auto &Key : Testing.f_Entries())
@@ -1208,8 +1208,8 @@ namespace
 						DMibTestPath("Set");
 						TCSet<int, CCompare> Testing;
 						static_assert(sizeof(Testing) == sizeof(void *));
-						for (int i = 0; i < 10; ++i)
-							Testing[i];
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Testing[iItem];
 
 						int iTest = 9;
 						for (auto &Key : Testing.f_Entries())
@@ -1223,8 +1223,8 @@ namespace
 						DMibTestPath("Map");
 						TCMap<int, CStr, CCompare> Testing;
 						static_assert(sizeof(Testing) == sizeof(void *));
-						for (int i = 0; i < 10; ++i)
-							Testing(i, CStr::fs_ToStr(i));
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Testing(iItem, CStr::fs_ToStr(iItem));
 
 						int iTest = 9;
 						for (auto &Key : Testing.f_Entries())
@@ -1242,8 +1242,8 @@ namespace
 					{
 						// static_assert(sizeof(_Set) == tf_ExpectedSize);
 
-						for (int i = 0; i < 10; ++i)
-							_Set[i];
+						for (int iItem = 0; iItem < 10; ++iItem)
+							_Set[iItem];
 					}
 				;
 				auto fInitMap = []
@@ -1252,8 +1252,8 @@ namespace
 					{
 						static_assert(sizeof(_Map) == tf_ExpectedSize);
 
-						for (int i = 0; i < 10; ++i)
-							_Map(i, CStr::fs_ToStr(i));
+						for (int iItem = 0; iItem < 10; ++iItem)
+							_Map(iItem, CStr::fs_ToStr(iItem));
 					}
 				;
 
@@ -1803,8 +1803,8 @@ namespace
 					{
 						DMibTestPath("MoveCtor Transfers Ownership");
 						TCMap<int, int> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[i] = i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[iItem] = iItem;
 
 						{
 							auto iIter0 = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive();
@@ -1835,12 +1835,12 @@ namespace
 					{
 						DMibTestPath("MoveAssign Clears Previous Map");
 						TCMap<int, int> SourceA;
-						for (int i = 0; i < 10; ++i)
-							SourceA[i] = i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							SourceA[iItem] = iItem;
 
 						TCMap<int, int> SourceB;
-						for (int i = 0; i < 7; ++i)
-							SourceB[i] = i;
+						for (int iItem = 0; iItem < 7; ++iItem)
+							SourceB[iItem] = iItem;
 
 						{
 							auto iIterA = fg_Move(SourceA).f_Entries().f_GetIteratorBidirectionalDestructive();
@@ -1873,8 +1873,8 @@ namespace
 					{
 						DMibTestPath("Forward");
 						TCMap<CStr, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)] = "Value {}"_f << iItem;
 
 						TCVector<CStr> Collected;
 						for (auto iIter = fg_Move(Source).f_Keys().f_GetIteratorDestructive(); iIter; ++iIter)
@@ -1885,15 +1885,15 @@ namespace
 
 						DMibExpect(Source.f_GetLen(), ==, 0);
 						DMibExpect(Collected.f_GetLen(), ==, 10);
-						for (int i = 0; i < 10; ++i)
-							DMibExpect(Collected[i], ==, CStr("Key {}"_f << i))(ETestFlag_Aggregated);
+						for (int iItem = 0; iItem < 10; ++iItem)
+							DMibExpect(Collected[iItem], ==, CStr("Key {}"_f << iItem))(ETestFlag_Aggregated);
 					}
 
 					{
 						DMibTestPath("Reverse");
 						TCMap<CStr, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)] = "Value {}"_f << iItem;
 
 						TCVector<CStr> Collected;
 						for (auto iIter = fg_Move(Source).f_Keys().f_GetIteratorReverseDestructive(); iIter; ++iIter)
@@ -1904,15 +1904,15 @@ namespace
 
 						DMibExpect(Source.f_GetLen(), ==, 0);
 						DMibExpect(Collected.f_GetLen(), ==, 10);
-						for (int i = 0; i < 10; ++i)
-							DMibExpect(Collected[i], ==, CStr("Key {}"_f << (9 - i)))(ETestFlag_Aggregated);
+						for (int iItem = 0; iItem < 10; ++iItem)
+							DMibExpect(Collected[iItem], ==, CStr("Key {}"_f << (9 - iItem)))(ETestFlag_Aggregated);
 					}
 
 					{
 						DMibTestPath("Bidirectional");
 						TCMap<CStr, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)] = "Value {}"_f << iItem;
 
 						auto iIter = fg_Move(Source).f_Keys().f_GetIteratorBidirectionalDestructive();
 
@@ -1929,8 +1929,8 @@ namespace
 					{
 						DMibTestPath("BidirectionalReverse");
 						TCMap<CStr, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)] = "Value {}"_f << iItem;
 
 						{
 							auto iIter = fg_Move(Source).f_Keys().f_GetIteratorBidirectionalReverseDestructive();
@@ -1957,8 +1957,8 @@ namespace
 					{
 						DMibTestPath("Map");
 						TCMap<CStr, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)] = "Value {}"_f << iItem;
 
 						TCVector<TCTuple<CStr, CStr>> Collected;
 						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorDestructive(); iIter; ++iIter)
@@ -1973,17 +1973,17 @@ namespace
 						DMibExpect(Collected.f_GetLen(), ==, 10);
 
 						// Verify ordering (should be sorted by key)
-						for (int i = 0; i < 10; ++i)
+						for (int iItem = 0; iItem < 10; ++iItem)
 						{
-							DMibExpect(fg_Get<0>(Collected[i]), ==, CStr("Key {}"_f << i))(ETestFlag_Aggregated);
-							DMibExpect(fg_Get<1>(Collected[i]), ==, CStr("Value {}"_f << i))(ETestFlag_Aggregated);
+							DMibExpect(fg_Get<0>(Collected[iItem]), ==, CStr("Key {}"_f << iItem))(ETestFlag_Aggregated);
+							DMibExpect(fg_Get<1>(Collected[iItem]), ==, CStr("Value {}"_f << iItem))(ETestFlag_Aggregated);
 						}
 					}
 					{
 						DMibTestPath("Set");
 						TCSet<CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)];
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)];
 
 						TCVector<CStr> Collected;
 						for (auto iIter = fg_Move(Source).f_GetIteratorDestructive(); iIter; ++iIter)
@@ -1995,8 +1995,8 @@ namespace
 						DMibExpect(Source.f_GetLen(), ==, 0);
 						DMibExpect(Collected.f_GetLen(), ==, 10);
 
-						for (int i = 0; i < 10; ++i)
-							DMibExpect(Collected[i], ==, CStr("Key {}"_f << i))(ETestFlag_Aggregated);
+						for (int iItem = 0; iItem < 10; ++iItem)
+							DMibExpect(Collected[iItem], ==, CStr("Key {}"_f << iItem))(ETestFlag_Aggregated);
 					}
 				};
 				DMibTestCategory("Reverse Non-Extracting")
@@ -2004,8 +2004,8 @@ namespace
 					{
 						DMibTestPath("Map");
 						TCMap<CStr, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)] = "Value {}"_f << iItem;
 
 						TCVector<TCTuple<CStr, CStr>> Collected;
 						for (auto iIter = fg_Move(Source).f_Entries().f_GetIteratorReverseDestructive(); iIter; ++iIter)
@@ -2019,17 +2019,17 @@ namespace
 						DMibExpect(Collected.f_GetLen(), ==, 10);
 
 						// Reverse order - should be from 9 down to 0
-						for (int i = 0; i < 10; ++i)
+						for (int iItem = 0; iItem < 10; ++iItem)
 						{
-							DMibExpect(fg_Get<0>(Collected[i]), ==, CStr("Key {}"_f << (9 - i)))(ETestFlag_Aggregated);
-							DMibExpect(fg_Get<1>(Collected[i]), ==, CStr("Value {}"_f << (9 - i)))(ETestFlag_Aggregated);
+							DMibExpect(fg_Get<0>(Collected[iItem]), ==, CStr("Key {}"_f << (9 - iItem)))(ETestFlag_Aggregated);
+							DMibExpect(fg_Get<1>(Collected[iItem]), ==, CStr("Value {}"_f << (9 - iItem)))(ETestFlag_Aggregated);
 						}
 					}
 					{
 						DMibTestPath("Set");
 						TCSet<CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)];
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)];
 
 						TCVector<CStr> Collected;
 						for (auto iIter = fg_Move(Source).f_GetIteratorReverseDestructive(); iIter; ++iIter)
@@ -2041,8 +2041,8 @@ namespace
 						DMibExpect(Source.f_GetLen(), ==, 0);
 						DMibExpect(Collected.f_GetLen(), ==, 10);
 
-						for (int i = 0; i < 10; ++i)
-							DMibExpect(Collected[i], ==, CStr("Key {}"_f << (9 - i)))(ETestFlag_Aggregated);
+						for (int iItem = 0; iItem < 10; ++iItem)
+							DMibExpect(Collected[iItem], ==, CStr("Key {}"_f << (9 - iItem)))(ETestFlag_Aggregated);
 					}
 				};
 				DMibTestCategory("Bidirectional Non-Extracting")
@@ -2050,19 +2050,19 @@ namespace
 					{
 						DMibTestPath("Map");
 						TCMap<CStr, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)] = "Value {}"_f << iItem;
 
 						auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive();
 
 						// Move forward 5 steps
 						TCVector<CStr> ForwardKeys;
-						for (int i = 0; i < 5 && iIter; ++i, ++iIter)
+						for (int iStep = 0; iStep < 5 && iIter; ++iStep, ++iIter)
 							ForwardKeys.f_InsertLast(iIter->f_Key());
 
 						DMibExpect(ForwardKeys.f_GetLen(), ==, 5);
-						for (int i = 0; i < 5; ++i)
-							DMibExpect(ForwardKeys[i], ==, CStr("Key {}"_f << i))(ETestFlag_Aggregated);
+						for (int iItem = 0; iItem < 5; ++iItem)
+							DMibExpect(ForwardKeys[iItem], ==, CStr("Key {}"_f << iItem))(ETestFlag_Aggregated);
 
 						// Move backward 2 steps
 						TCVector<CStr> BackwardKeys;
@@ -2080,14 +2080,14 @@ namespace
 					{
 						DMibTestPath("Set");
 						TCSet<CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)];
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)];
 
 						auto iIter = fg_Move(Source).f_GetIteratorBidirectionalDestructive();
 
 						// Move forward 5 steps
 						TCVector<CStr> ForwardKeys;
-						for (int i = 0; i < 5 && iIter; ++i, ++iIter)
+						for (int iStep = 0; iStep < 5 && iIter; ++iStep, ++iIter)
 							ForwardKeys.f_InsertLast(*iIter);
 
 						DMibExpect(ForwardKeys.f_GetLen(), ==, 5);
@@ -2103,8 +2103,8 @@ namespace
 					{
 						DMibTestPath("Map");
 						TCMap<CStr, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)] = "Value {}"_f << iItem;
 
 						auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalReverseDestructive();
 
@@ -2127,8 +2127,8 @@ namespace
 					{
 						DMibTestPath("Set");
 						TCSet<CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)];
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)];
 
 						auto iIter = fg_Move(Source).f_GetIteratorBidirectionalReverseDestructive();
 
@@ -2147,8 +2147,8 @@ namespace
 					{
 						DMibTestPath("Map ExtractAll");
 						TCMap<CStr, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)] = "Value {}"_f << iItem;
 
 						TCMap<CStr, CStr> Target;
 						// f_ExtractNode() requires bidirectional iterator (maintains full ancestor path for parent lookup)
@@ -2164,19 +2164,19 @@ namespace
 						DMibExpect(Target.f_GetLen(), ==, 10);
 
 						// Verify all keys/values transferred correctly
-						for (int i = 0; i < 10; ++i)
+						for (int iItem = 0; iItem < 10; ++iItem)
 						{
-							CStr Key = "Key {}"_f << i;
+							CStr Key = "Key {}"_f << iItem;
 							auto *pValue = Target.f_FindEqual(Key);
 							DMibAssertTrue(pValue)(ETestFlag_Aggregated);
-							DMibExpect(*pValue, ==, CStr("Value {}"_f << i))(ETestFlag_Aggregated);
+							DMibExpect(*pValue, ==, CStr("Value {}"_f << iItem))(ETestFlag_Aggregated);
 						}
 					}
 					{
 						DMibTestPath("Map ExtractConditional");
 						TCMap<CStr, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)] = "Value {}"_f << iItem;
 
 						TCMap<CStr, CStr> Target;
 						// f_ExtractNode() requires bidirectional iterator
@@ -2201,9 +2201,9 @@ namespace
 						DMibExpect(Target.f_GetLen(), ==, 5);
 
 						// Verify only even keys transferred
-						for (int i = 0; i < 10; i += 2)
+						for (int iItem = 0; iItem < 10; iItem += 2)
 						{
-							CStr Key = "Key {}"_f << i;
+							CStr Key = "Key {}"_f << iItem;
 							auto *pValue = Target.f_FindEqual(Key);
 							DMibAssertTrue(pValue)(ETestFlag_Aggregated);
 						}
@@ -2211,8 +2211,8 @@ namespace
 					{
 						DMibTestPath("Set ExtractAll");
 						TCSet<CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)];
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)];
 
 						TCSet<CStr> Target;
 						// f_ExtractNode() requires bidirectional iterator
@@ -2231,8 +2231,8 @@ namespace
 					{
 						DMibTestPath("Map ExtractAll");
 						TCMap<CStr, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)] = "Value {}"_f << iItem;
 
 						TCMap<CStr, CStr> Target;
 						TCVector<CStr> ExtractOrder;
@@ -2249,14 +2249,14 @@ namespace
 						DMibExpect(ExtractOrder.f_GetLen(), ==, 10);
 
 						// Verify extraction was in reverse order
-						for (int i = 0; i < 10; ++i)
-							DMibExpect(ExtractOrder[i], ==, CStr("Key {}"_f << (9 - i)))(ETestFlag_Aggregated);
+						for (int iItem = 0; iItem < 10; ++iItem)
+							DMibExpect(ExtractOrder[iItem], ==, CStr("Key {}"_f << (9 - iItem)))(ETestFlag_Aggregated);
 					}
 					{
 						DMibTestPath("Set ExtractConditional");
 						TCSet<CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[CStr("Key {}"_f << i)];
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[CStr("Key {}"_f << iItem)];
 
 						TCSet<CStr> Target;
 						// f_ExtractNode() requires bidirectional iterator
@@ -2285,15 +2285,15 @@ namespace
 					{
 						DMibTestPath("Map Forward Then Back");
 						TCMap<int, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[i] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[iItem] = "Value {}"_f << iItem;
 
 						TCMap<int, CStr> Target;
 
 						auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive();
 
 						// Extract first 3 elements going forward
-						for (int i = 0; i < 3; ++i)
+						for (int iStep = 0; iStep < 3; ++iStep)
 							Target.f_Insert(iIter.f_ExtractNode());
 
 						// Now at element 3, move forward to 5
@@ -2322,8 +2322,8 @@ namespace
 					{
 						DMibTestPath("Set Zigzag");
 						TCSet<int> Source;
-						for (int i = 0; i < 20; ++i)
-							Source[i];
+						for (int iItem = 0; iItem < 20; ++iItem)
+							Source[iItem];
 
 						TCSet<int> Target;
 						{
@@ -2332,7 +2332,7 @@ namespace
 							// Extract 0
 							Target.f_Insert(iIter.f_ExtractNode());
 							// Now at 1, skip to 5
-							for (int i = 0; i < 4; ++i)
+							for (int iStep = 0; iStep < 4; ++iStep)
 								++iIter;
 							DMibExpect(*iIter, ==, 5);
 							Target.f_Insert(iIter.f_ExtractNode());
@@ -2358,8 +2358,8 @@ namespace
 					{
 						DMibTestPath("Map");
 						TCMap<int, CStr> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[i] = "Value {}"_f << i;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[iItem] = "Value {}"_f << iItem;
 
 						TCMap<int, CStr> Target;
 
@@ -2392,15 +2392,15 @@ namespace
 					{
 						DMibTestPath("ExtractLastElementForward");
 						TCSet<int> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[i];
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[iItem];
 
 						TCSet<int> Target;
 						{
 							auto iIter = fg_Move(Source).f_GetIteratorBidirectionalDestructive();
 
 							// Advance to last element (9)
-							for (int i = 0; i < 9; ++i)
+							for (int iStep = 0; iStep < 9; ++iStep)
 								++iIter;
 							DMibExpectTrue(iIter);
 							DMibExpect(*iIter, ==, 9);
@@ -2418,8 +2418,8 @@ namespace
 					{
 						DMibTestPath("ExtractAndDropHandle");
 						TCMap<int, int> Source;
-						for (int i = 0; i < 10; ++i)
-							Source[i] = i * 10;
+						for (int iItem = 0; iItem < 10; ++iItem)
+							Source[iItem] = iItem * 10;
 
 						{
 							auto iIter = fg_Move(Source).f_Entries().f_GetIteratorBidirectionalDestructive();
@@ -2443,8 +2443,8 @@ namespace
 					{
 						DMibTestPath("Large Map");
 						TCMap<int, int> Source;
-						for (int i = 0; i < 100; ++i)
-							Source[i] = i * 10;
+						for (int iItem = 0; iItem < 100; ++iItem)
+							Source[iItem] = iItem * 10;
 
 						TCMap<int, int> Target;
 						TCVector<int> ExtractedKeys;
@@ -2477,8 +2477,8 @@ namespace
 					{
 						DMibTestPath("Large Set Reverse");
 						TCSet<int> Source;
-						for (int i = 0; i < 100; ++i)
-							Source[i];
+						for (int iItem = 0; iItem < 100; ++iItem)
+							Source[iItem];
 
 						TCSet<int> Target;
 						int nExtracted = 0;

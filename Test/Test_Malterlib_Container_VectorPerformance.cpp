@@ -93,38 +93,38 @@ namespace NMib
 		{
 			//return _pHigh;
 			umint Swaps = 0;
-			tf_CData *pI = _pHigh - 2;
-			for (; pI >= _pLow; pI--)
+			tf_CData *pCurrent = _pHigh - 2;
+			for (; pCurrent >= _pLow; pCurrent--)
 			{
-				tf_CData *pJ = pI + 1;
+				tf_CData *pShift = pCurrent + 1;
 
-				if (COrdering_Partial(_fCompare(*pI, *pJ)) < 0)
+				if (COrdering_Partial(_fCompare(*pCurrent, *pShift)) < 0)
 				{
-					if (Swaps >= umint(_pHigh - pI))
+					if (Swaps >= umint(_pHigh - pCurrent))
 						break; // Brake if we are above n*2
-					tf_CData Temp(fg_Move(*pI));
-					pJ[-1] = fg_Move(*pJ);
-					pJ++;
+					tf_CData Temp(fg_Move(*pCurrent));
+					pShift[-1] = fg_Move(*pShift);
+					pShift++;
 					umint SwapsBefore = Swaps;
 					++Swaps;
-					for (; pJ < _pHigh && COrdering_Partial(_fCompare(Temp, *pJ)) < 0; pJ++)
+					for (; pShift < _pHigh && COrdering_Partial(_fCompare(Temp, *pShift)) < 0; pShift++)
 					{
 						++Swaps;
 						if (Swaps - SwapsBefore >= gc_InsertSortTryMaxSwaps)
 						{
-							for (; pJ > pI; --pJ)
-								*pJ = fg_Move(pJ[-1]);
-							*pJ = fg_Move(Temp);
-							return pI + 1;
+							for (; pShift > pCurrent; --pShift)
+								*pShift = fg_Move(pShift[-1]);
+							*pShift = fg_Move(Temp);
+							return pCurrent + 1;
 						}
-						pJ[-1] = fg_Move(*pJ);
+						pShift[-1] = fg_Move(*pShift);
 					}
 
-					pJ[-1] = fg_Move(Temp);
+					pShift[-1] = fg_Move(Temp);
 				}
 			}
 
-			return pI + 1;
+			return pCurrent + 1;
 		}
 
 		template <typename tf_CType, typename tf_CData>
@@ -132,71 +132,71 @@ namespace NMib
 		{
 			//return _pLow;
 			umint Swaps = 0;
-			tf_CData *pL = _pLow;
+			tf_CData *pCurrent = _pLow;
 			tf_CData *pEnd = _pHigh - 1;
 
-			auto fl_Swap = [&](tf_CData *_pLeft) -> bool
+			auto fSwap = [&](tf_CData *_pLeft) -> bool
 				{
 					if (Swaps >= umint(_pLeft - _pLow) + gc_InsertSortTryMaxSwaps)
 						return true;
-					tf_CData *pJ = _pLeft;
+					tf_CData *pShift = _pLeft;
 
 					tf_CData Temp(fg_Move(_pLeft[1]));
-					pJ[1] = fg_Move(*pJ);
-					pJ--;
+					pShift[1] = fg_Move(*pShift);
+					pShift--;
 
 					umint SwapsBefore = Swaps;
 
 					++Swaps;
 
-					for (; pJ >= _pLow && COrdering_Partial(_fCompare(Temp, *pJ)) < 0; pJ--)
+					for (; pShift >= _pLow && COrdering_Partial(_fCompare(Temp, *pShift)) < 0; pShift--)
 					{
 						++Swaps;
 						if (Swaps - SwapsBefore >= gc_InsertSortTryMaxSwaps)
 						{
-							for (; pJ <= _pLeft; ++pJ)
-								*pJ = fg_Move(pJ[1]);
-							*pJ = fg_Move(Temp);
+							for (; pShift <= _pLeft; ++pShift)
+								*pShift = fg_Move(pShift[1]);
+							*pShift = fg_Move(Temp);
 							return true;
 						}
-						pJ[1] = fg_Move(*pJ);
+						pShift[1] = fg_Move(*pShift);
 					}
 
-					pJ[1] = fg_Move(Temp);
+					pShift[1] = fg_Move(Temp);
 					return false;
 				}
 			;
 
-			for (; pL < pEnd; ++pL)
+			for (; pCurrent < pEnd; ++pCurrent)
 			{
-				if (COrdering_Partial(_fCompare(pL[1], *pL)) < 0)
+				if (COrdering_Partial(_fCompare(pCurrent[1], *pCurrent)) < 0)
 				{
-					if (fl_Swap(pL))
+					if (fSwap(pCurrent))
 						break;
 				}
 			}
 
-			return pL + 1;
+			return pCurrent + 1;
 		}
 
 		template <typename tf_CType, typename tf_CData>
 		inline_always void fg_InsertSort(tf_CData *_pLow, tf_CData *_pHigh, tf_CType &&_fCompare)
 		{
-			tf_CData *pI = _pLow + 1;
-			for (; pI < _pHigh; pI++)
+			tf_CData *pCurrent = _pLow + 1;
+			for (; pCurrent < _pHigh; pCurrent++)
 			{
-				tf_CData *pJ = pI - 1;
+				tf_CData *pShift = pCurrent - 1;
 
-				if (COrdering_Partial(_fCompare(*pI, *pJ)) < 0)
+				if (COrdering_Partial(_fCompare(*pCurrent, *pShift)) < 0)
 				{
-					tf_CData Temp(fg_Move(*pI));
-					pJ[1] = fg_Move(*pJ);
-					pJ--;
+					tf_CData Temp(fg_Move(*pCurrent));
+					pShift[1] = fg_Move(*pShift);
+					pShift--;
 
-					for (; pJ >= _pLow && COrdering_Partial(_fCompare(Temp, *pJ)) < 0; pJ--)
-						pJ[1] = fg_Move(*pJ);
+					for (; pShift >= _pLow && COrdering_Partial(_fCompare(Temp, *pShift)) < 0; pShift--)
+						pShift[1] = fg_Move(*pShift);
 
-					pJ[1] = fg_Move(Temp);
+					pShift[1] = fg_Move(Temp);
 				}
 			}
 		}
@@ -277,13 +277,13 @@ namespace NMib
 						if (COrdering_Partial(_Comp(*_Iterator, *iFirst)) < 0)
 						{
 							iMiddle = _Iterator;
-							auto temp = *iMiddle;
+							auto Temp = *iMiddle;
 							do
 							{
 								*(iMiddle--) = *(iFirst--);
 							}
-							while (COrdering_Partial(_Comp(temp, *iFirst)) < 0);
-							*iMiddle = temp;
+							while (COrdering_Partial(_Comp(Temp, *iFirst)) < 0);
+							*iMiddle = Temp;
 						}
 					}
 				}
@@ -292,29 +292,29 @@ namespace NMib
 			template <typename tf_CIterator, typename tf_CCompare>
 			inline_always static void fg_TI7SiftDownMiddle(tf_CIterator _Iterator, umint _iStart, umint _iLast, tf_CCompare &&_Comp)
 			{
-				umint p = _iStart;
-				umint c = p * 2;
-				auto temp = _Iterator[p];
+				umint iParent = _iStart;
+				umint iChild = iParent * 2;
+				auto Temp = _Iterator[iParent];
 
-				while (_iLast - p > p)
+				while (_iLast - iParent > iParent)
 				{
-					if (COrdering_Partial(_Comp(*(_Iterator + c), *(_Iterator + c + 1))) < 0)
-						++c;
-					if (COrdering_Partial(_Comp(temp, *(_Iterator + c))) < 0)
+					if (COrdering_Partial(_Comp(*(_Iterator + iChild), *(_Iterator + iChild + 1))) < 0)
+						++iChild;
+					if (COrdering_Partial(_Comp(Temp, *(_Iterator + iChild))) < 0)
 					{
-						_Iterator[p] = _Iterator[c];
-						p = c;
-						c *= 2;
+						_Iterator[iParent] = _Iterator[iChild];
+						iParent = iChild;
+						iChild *= 2;
 					}
 					else
 						break;
 				}
-				if ((_iLast == c) && COrdering_Partial(_Comp(temp, *(_Iterator + c))) < 0)
+				if ((_iLast == iChild) && COrdering_Partial(_Comp(Temp, *(_Iterator + iChild))) < 0)
 				{
-					_Iterator[p] = _Iterator[c];
-					p = c;
+					_Iterator[iParent] = _Iterator[iChild];
+					iParent = iChild;
 				}
-				_Iterator[p] = temp;
+				_Iterator[iParent] = Temp;
 			}
 
 			template <typename tf_CIterator, typename tf_CCompare>
@@ -322,12 +322,12 @@ namespace NMib
 			{
 				if (_Length > 1)
 				{
-					umint i = --_Length / 2;
+					umint iNode = --_Length / 2;
 					do
 					{
-						fg_TI7SiftDownMiddle(_Iterator, i, _Length, _Comp);
+						fg_TI7SiftDownMiddle(_Iterator, iNode, _Length, _Comp);
 					}
-					while (i-- != 0);
+					while (iNode-- != 0);
 
 					NMib::fg_Swap(*_Iterator, *(_Iterator + _Length));
 					while (--_Length != 0)
@@ -500,7 +500,7 @@ namespace NMib
 				if (!fg_IsReverseSorted(_Iterator, _Iterator + _Count, _Comp))
 				{
 					umint MaxDepth = 2;
-					for (umint n = _Count / 4; n; n /= 2)
+					for (umint nRemaining = _Count / 4; nRemaining; nRemaining /= 2)
 						++MaxDepth;
 					MaxDepth *= 2;
 					NPrivate::fg_TI7Loop(_Iterator, _Count, MaxDepth, NPrivate::gc_TI7_RandomSeed, _Comp);
@@ -541,7 +541,7 @@ namespace NMib
 		{
 			struct CBig
 			{
-				char dummy[1000];
+				char m_Payload[1000];
 			};
 
 			struct CVectorPerformance_Tests : public CTest
@@ -688,14 +688,14 @@ namespace NMib
 					{
 						using CThing = CThing;
 						{
-							NMib::NContainer::TCVector<CThing> lVec;
+							NMib::NContainer::TCVector<CThing> Vec;
 
-							for (int32 i = 0; i < 19; ++i)
-								lVec.f_Insert(CThing(i + 1));
+							for (int32 iItem = 0; iItem < 19; ++iItem)
+								Vec.f_Insert(CThing(iItem + 1));
 
-							lVec[9] = CThing(0);
+							Vec[9] = CThing(0);
 
-							lVec.f_Sort
+							Vec.f_Sort
 								(
 									[](CThing const &_Left, CThing const &_Right)
 									{
@@ -704,10 +704,10 @@ namespace NMib
 								)
 							;
 
-							for (int32 i = 1; i < 19; ++i)
+							for (int32 iItem = 1; iItem < 19; ++iItem)
 							{
-								DMibTest(DMibExpr(lVec[i].m_Val) != DMibExpr(-1))(ETestFlag_Aggregated);
-								DMibTest(DMibExpr(lVec[i - 1].m_Val) < DMibExpr(lVec[i].m_Val))(ETestFlag_Aggregated);
+								DMibTest(DMibExpr(Vec[iItem].m_Val) != DMibExpr(-1))(ETestFlag_Aggregated);
+								DMibTest(DMibExpr(Vec[iItem - 1].m_Val) < DMibExpr(Vec[iItem].m_Val))(ETestFlag_Aggregated);
 							}
 						}
 					};
@@ -746,24 +746,24 @@ namespace NMib
 #endif
 
 					CBig Item;
-					for (int32 i = 0; i < 1000; ++i)
-						Item.dummy[i] = i;
+					for (int32 iItem = 0; iItem < 1000; ++iItem)
+						Item.m_Payload[iItem] = iItem;
 					CPerfTimeMeasureMin MalterlibTime;
 					CPerfTimeMeasureMin StdTime;
 
-					for (int32 i = 0; i < nRep; ++i)
+					for (int32 iRep = 0; iRep < nRep; ++iRep)
 					{
 						TCVector<CBig> Vec1;
 						MalterlibTime.f_Start();
-						for (int32 i = 0; i < tf_nItems; ++i)
+						for (int32 iItem = 0; iItem < tf_nItems; ++iItem)
 							Vec1.f_Insert(Item);
 						MalterlibTime.f_Stop();
 					}
-					for (int32 i = 0; i < nRep; ++i)
+					for (int32 iRep = 0; iRep < nRep; ++iRep)
 					{
 						std::vector<CBig> Vec2;
 						StdTime.f_Start();
-						for (int32 i = 0; i < tf_nItems; ++i)
+						for (int32 iItem = 0; iItem < tf_nItems; ++iItem)
 							Vec2.push_back(Item);
 						StdTime.f_Stop();
 					}
@@ -784,19 +784,19 @@ namespace NMib
 					int32 Item = 1;
 					CPerfTimeMeasureMin MalterlibTime;
 					CPerfTimeMeasureMin StdTime;
-					for (int32 i = 0; i < nRep; ++i)
+					for (int32 iRep = 0; iRep < nRep; ++iRep)
 					{
 						TCVector<int32> Vec1;
 						MalterlibTime.f_Start();
-						for (int32 i = 0; i < tf_nItems; ++i)
+						for (int32 iItem = 0; iItem < tf_nItems; ++iItem)
 							Vec1.f_Insert(Item);
 						MalterlibTime.f_Stop();
 					}
-					for (int32 i = 0; i < nRep; ++i)
+					for (int32 iRep = 0; iRep < nRep; ++iRep)
 					{
 						std::vector<int32> Vec2;
 						StdTime.f_Start();
-						for (int32 i = 0; i < tf_nItems; ++i)
+						for (int32 iItem = 0; iItem < tf_nItems; ++iItem)
 							Vec2.push_back(Item);
 						StdTime.f_Stop();
 					}
@@ -816,29 +816,29 @@ namespace NMib
 
 					TCVector<int32> Vec1;
 					std::vector<int32> Vec2;
-					for (int32 i = 0; i < 100; ++i)
+					for (int32 iStep = 0; iStep < 100; ++iStep)
 						Vec1.f_Insert(1);
 
-					for (int32 i = 0; i < 100; ++i)
+					for (int32 iStep = 0; iStep < 100; ++iStep)
 						Vec2.push_back(1);
 
-					TCVector<TCVector<int32>> vecvec1;
-					std::vector<std::vector<int32>> vecvec2;
+					TCVector<TCVector<int32>> VecVec1;
+					std::vector<std::vector<int32>> VecVec2;
 
 					CPerfTimeMeasureMin MalterlibTime;
 					CPerfTimeMeasureMin StdTime;
-					for (int32 i = 0; i < nRep; ++i)
+					for (int32 iRep = 0; iRep < nRep; ++iRep)
 					{
 						MalterlibTime.f_Start();
-						for (int32 i = 0; i < tf_nItems; ++i)
-							vecvec1.f_Insert(Vec1);
+						for (int32 iItem = 0; iItem < tf_nItems; ++iItem)
+							VecVec1.f_Insert(Vec1);
 						MalterlibTime.f_Stop();
 					}
-					for (int32 i = 0; i < nRep; ++i)
+					for (int32 iRep = 0; iRep < nRep; ++iRep)
 					{
 						StdTime.f_Start();
-						for (int32 i = 0; i < tf_nItems; ++i)
-							vecvec2.push_back(Vec2);
+						for (int32 iItem = 0; iItem < tf_nItems; ++iItem)
+							VecVec2.push_back(Vec2);
 						StdTime.f_Stop();
 					}
 
@@ -877,7 +877,7 @@ namespace NMib
 
 					TCVector<int32> ToSortMalterlib;
 
-					for (int i = 0; i < tf_nItems; ++i)
+					for (int iItem = 0; iItem < tf_nItems; ++iItem)
 					{
 						int32 Value;
 						switch (tf_SortType)
@@ -886,35 +886,35 @@ namespace NMib
 							Value = Random.f_GetValue<uint32>() % tf_nItems;
 							//Value = Random.f_GetValue<uint32>() % TCLimitsInt<int32>::mc_Max;
 							break;
-						case ESortType_Sorted: Value = i; break;
+						case ESortType_Sorted: Value = iItem; break;
 						case ESortType_OneUnsorted:
-							if (i == tf_nItems / 2)
+							if (iItem == tf_nItems / 2)
 								Value = tf_nItems * 2;
 							else
-								Value = i;
+								Value = iItem;
 							break;
-						case ESortType_Reversed: Value = (tf_nItems - 1) - i; break;
+						case ESortType_Reversed: Value = (tf_nItems - 1) - iItem; break;
 						case ESortType_HalfSortedHalfReversed:
-							if (i < tf_nItems / 2)
-								Value = i;
+							if (iItem < tf_nItems / 2)
+								Value = iItem;
 							else
-								Value = (tf_nItems - 1) - i;
+								Value = (tf_nItems - 1) - iItem;
 							break;
 						case ESortType_TwoSortedRanges:
-							if (i < tf_nItems / 2)
-								Value = i;
+							if (iItem < tf_nItems / 2)
+								Value = iItem;
 							else
-								Value = i - tf_nItems / 2;
+								Value = iItem - tf_nItems / 2;
 							break;
-						case ESortType_AlmostSorted: Value = i + Random.f_GetValue<uint32>() % 5; break;
-						case ESortType_AlmostReversed: Value = ((tf_nItems - 1) - i) + Random.f_GetValue<uint32>() % 5; break;
+						case ESortType_AlmostSorted: Value = iItem + Random.f_GetValue<uint32>() % 5; break;
+						case ESortType_AlmostReversed: Value = ((tf_nItems - 1) - iItem) + Random.f_GetValue<uint32>() % 5; break;
 						case ESortType_ManySame: Value = Random.f_GetValue<uint32>() % 100; break;
 						case ESortType_AllSame: Value = 0; break;
 						case ESortType_Uneven:
-							if ((i & 1) == 0)
+							if ((iItem & 1) == 0)
 								Value = 0;
 							else
-								Value = i;
+								Value = iItem;
 							break;
 						}
 
@@ -924,7 +924,7 @@ namespace NMib
 					CPerfTimeMeasureMin MalterlibTime;
 					CPerfTimeMeasureMin StdTime;
 
-					for (int32 i = 0; i < nRep; ++i)
+					for (int32 iRep = 0; iRep < nRep; ++iRep)
 					{
 						TCVector<int32> Vec1 = ToSortMalterlib;
 						MalterlibTime.f_Start();
@@ -932,13 +932,13 @@ namespace NMib
 						//Vec1.f_Sort2();
 						//fg_IntroSort(Vec1.f_GetArray(), Vec1.f_GetArray() + Vec1.f_GetLen(), CSort_Default());
 						MalterlibTime.f_Stop();
-						if (i == 0)
+						if (iRep == 0)
 						{
 							if (!Vec1.f_IsAdjacentUnique())
 								DMibTest(DMibExpr(Vec1.f_IsAdjacentUnique()))(ETestFlag_Aggregated);
 						}
 					}
-					for (int32 i = 0; i < nRep; ++i)
+					for (int32 iRep = 0; iRep < nRep; ++iRep)
 					{
 						TCVector<int32> Vec2 = ToSortMalterlib;
 						StdTime.f_Start();
@@ -946,7 +946,7 @@ namespace NMib
 						NMib::NAlgorithm::fg_TI7Sort(Vec2.f_GetArray(), Vec2.f_GetLen(), NMib::CSort_Default());
 						// std::sort(Vec2.begin(), Vec2.end());
 						StdTime.f_Stop();
-						// if (i == 0)
+						// if (iRep == 0)
 						// 	DMibTest(DMibExpr(Vec2.f_IsAdjacentUnique()))(ETestFlag_Aggregated);
 					}
 					DMibTest(DMibExpr(StdTime) / DMibExpr(MalterlibTime) > DMibExpr(0.90));
@@ -980,7 +980,7 @@ namespace NMib
 					std::vector<CTestClass> ToSortStl;
 
 					int32 Sequence = 0;
-					for (int i = 0; i < tf_nItems; ++i)
+					for (int iItem = 0; iItem < tf_nItems; ++iItem)
 					{
 						int32 Value;
 						switch (tf_SortType)
@@ -989,16 +989,16 @@ namespace NMib
 							//Value = Random.f_GetValue<uint32>() % tf_nItems;
 							Value = Random.f_GetValue<uint32>() % TCLimitsInt<int32>::mc_Max;
 							break;
-						case ESortType_Sorted: Value = i; break;
-						case ESortType_Reversed: Value = (tf_nItems - 1) - i; break;
-						case ESortType_AlmostSorted: Value = i + Random.f_GetValue<int32>() % 10; break;
-						case ESortType_ManySame: Value = i / 100; break;
+						case ESortType_Sorted: Value = iItem; break;
+						case ESortType_Reversed: Value = (tf_nItems - 1) - iItem; break;
+						case ESortType_AlmostSorted: Value = iItem + Random.f_GetValue<int32>() % 10; break;
+						case ESortType_ManySame: Value = iItem / 100; break;
 						case ESortType_AllSame: Value = 0; break;
 						case ESortType_Uneven:
-							if ((i & 1) == 0)
+							if ((iItem & 1) == 0)
 								Value = 0;
 							else
-								Value = i;
+								Value = iItem;
 							break;
 						}
 
@@ -1007,7 +1007,7 @@ namespace NMib
 						Item.m_Sequence = Sequence++;
 						ToSortStl.push_back(Item);
 					}
-					auto fl_IsStable = [](TCVector<CTestClass> const &_Vector) -> bool
+					auto fIsStable = [](TCVector<CTestClass> const &_Vector) -> bool
 						{
 							CTestClass const *pPrev = nullptr;
 							for (auto iItem = _Vector.f_GetIterator(); iItem; ++iItem)
@@ -1027,20 +1027,20 @@ namespace NMib
 					;
 					CPerfTimeMeasureMin MalterlibTime;
 					CPerfTimeMeasureMin StdTime;
-					for (int32 i = 0; i < nRep; ++i)
+					for (int32 iRep = 0; iRep < nRep; ++iRep)
 					{
 						TCVector<CTestClass> Vec1 = ToSortMalterlib;
 						MalterlibTime.f_Start();
 						Vec1.f_Sort();
 						MalterlibTime.f_Stop();
-						if (i == 0)
+						if (iRep == 0)
 						{
 							DMibTest(DMibExpr(Vec1.f_IsAdjacentUnique()))(ETestFlag_Aggregated);
-							DMibTest(DMibExpr(fl_IsStable(Vec1)));
+							DMibTest(DMibExpr(fIsStable(Vec1)));
 						}
 					}
 
-					for (int32 i = 0; i < nRep; ++i)
+					for (int32 iRep = 0; iRep < nRep; ++iRep)
 					{
 						std::vector<CTestClass> Vec2 = ToSortStl;
 						StdTime.f_Start();

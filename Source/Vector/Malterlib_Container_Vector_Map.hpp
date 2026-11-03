@@ -24,9 +24,9 @@ namespace NMib::NContainer
 		auto pDst = Ret.f_GetArray();
 		auto &NewLen = Ret.mp_StaticData.m_pData->m_Length;
 
-		for (umint i = 0; i < Len; ++i)
+		for (umint iElement = 0; iElement < Len; ++iElement)
 		{
-			new((void *)(pDst + i)) CResult(NPrivate::fg_InvokeVectorIteratorFunctor(_fTransform, fg_ForwardAs<tf_CThis>(pSrc[i]), i, fg_Forward<tf_CThis>(_This)));
+			new((void *)(pDst + iElement)) CResult(NPrivate::fg_InvokeVectorIteratorFunctor(_fTransform, fg_ForwardAs<tf_CThis>(pSrc[iElement]), iElement, fg_Forward<tf_CThis>(_This)));
 			++NewLen;
 		}
 

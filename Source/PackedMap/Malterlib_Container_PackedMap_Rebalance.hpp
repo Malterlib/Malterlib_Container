@@ -587,13 +587,13 @@ namespace NMib::NContainer
 		umint TotalBufferSize = nTargetsAligned + nKeysAligned + nValuesAligned + nOldMetaAligned + nOldPrefixBytes;
 
 		constexpr umint c_nStackThreshold = 16384;
-		alignas(c_nBufferAlign) uint8 aStackBuffer[c_nStackThreshold];
+		alignas(c_nBufferAlign) uint8 StackBuffer[c_nStackThreshold];
 
 		uint8 *pBuffer;
 		umint AllocatedBufferSize;
 		if (TotalBufferSize <= c_nStackThreshold)
 		{
-			pBuffer = aStackBuffer;
+			pBuffer = StackBuffer;
 			AllocatedBufferSize = 0;
 		}
 		else
@@ -672,10 +672,10 @@ namespace NMib::NContainer
 			// Collect without destroying sources first, so on exception no gaps exist
 			auto CollectCleanup = g_OnScopeExit / [&]
 				{
-					for (umint i = 0; i < iTempPos; ++i)
+					for (umint iElement = 0; iElement < iTempPos; ++iElement)
 					{
-						pTempKeys[i].~t_CKey();
-						pTempValues[i].~t_CValue();
+						pTempKeys[iElement].~t_CKey();
+						pTempValues[iElement].~t_CValue();
 					}
 				}
 			;
@@ -734,10 +734,10 @@ namespace NMib::NContainer
 			{
 				if constexpr (!mcp_bNothrowElementMove)
 				{
-					for (umint i = iTempPos; i < nTotalElements; ++i)
+					for (umint iElement = iTempPos; iElement < nTotalElements; ++iElement)
 					{
-						pTempKeys[i].~t_CKey();
-						pTempValues[i].~t_CValue();
+						pTempKeys[iElement].~t_CKey();
+						pTempValues[iElement].~t_CValue();
 					}
 					umint nActual = 0;
 					for (umint iSeg = _iStartSeg; iSeg < _iEndSeg; ++iSeg)
@@ -785,10 +785,10 @@ namespace NMib::NContainer
 					umint nPlacedInSeg = 0;
 					auto SegCleanup = g_OnScopeExit / [&]
 						{
-							for (umint i = 0; i < nPlacedInSeg; ++i)
+							for (umint iElement = 0; iElement < nPlacedInSeg; ++iElement)
 							{
-								pKeys[iFirst + i].~t_CKey();
-								pValues[iFirst + i].~t_CValue();
+								pKeys[iFirst + iElement].~t_CKey();
+								pValues[iFirst + iElement].~t_CValue();
 							}
 							pMeta[iSeg].m_Count = 0;
 						}

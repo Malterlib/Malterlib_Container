@@ -128,10 +128,10 @@ namespace NMib::NContainer
 						if (SegCount == 0)
 							continue;
 						umint iSegFirst = fsp_GetSegmentFirstSlot(iSeg, SegCount);
-						for (umint i = 0; i < SegCount; ++i)
+						for (umint iElement = 0; iElement < SegCount; ++iElement)
 						{
-							pData->m_pKeys[iSegFirst + i].~t_CKey();
-							pData->m_pValues[iSegFirst + i].~t_CValue();
+							pData->m_pKeys[iSegFirst + iElement].~t_CKey();
+							pData->m_pValues[iSegFirst + iElement].~t_CValue();
 						}
 					}
 					// Destroy partially placed elements in current segment
@@ -140,10 +140,10 @@ namespace NMib::NContainer
 					{
 						umint FullCount = pOtherData->m_pSegmentMeta[iCleanupSeg].m_Count;
 						umint iSegFirst = fsp_GetSegmentFirstSlot(iCleanupSeg, FullCount);
-						for (umint i = 0; i < nCleanupPlacedInSeg; ++i)
+						for (umint iElement = 0; iElement < nCleanupPlacedInSeg; ++iElement)
 						{
-							pData->m_pKeys[iSegFirst + i].~t_CKey();
-							pData->m_pValues[iSegFirst + i].~t_CValue();
+							pData->m_pKeys[iSegFirst + iElement].~t_CKey();
+							pData->m_pValues[iSegFirst + iElement].~t_CValue();
 						}
 					}
 					// Destroy segment metadata and index entries, free allocation
@@ -443,10 +443,10 @@ namespace NMib::NContainer
 						if (SegCount == 0)
 							continue;
 						umint iSegFirst = fsp_GetSegmentFirstSlot(iSeg, SegCount);
-						for (umint i = 0; i < SegCount; ++i)
+						for (umint iElement = 0; iElement < SegCount; ++iElement)
 						{
-							pData->m_pKeys[iSegFirst + i].~t_CKey();
-							pData->m_pValues[iSegFirst + i].~t_CValue();
+							pData->m_pKeys[iSegFirst + iElement].~t_CKey();
+							pData->m_pValues[iSegFirst + iElement].~t_CValue();
 						}
 						pData->m_pSegmentMeta[iSeg].m_Count = 0;
 					}
@@ -455,10 +455,10 @@ namespace NMib::NContainer
 					{
 						umint FullCount = pOtherData->m_pSegmentMeta[iAssignCleanupSeg].m_Count;
 						umint iSegFirst = fsp_GetSegmentFirstSlot(iAssignCleanupSeg, FullCount);
-						for (umint i = 0; i < nAssignCleanupPlacedInSeg; ++i)
+						for (umint iElement = 0; iElement < nAssignCleanupPlacedInSeg; ++iElement)
 						{
-							pData->m_pKeys[iSegFirst + i].~t_CKey();
-							pData->m_pValues[iSegFirst + i].~t_CValue();
+							pData->m_pKeys[iSegFirst + iElement].~t_CKey();
+							pData->m_pValues[iSegFirst + iElement].~t_CValue();
 						}
 					}
 					pData->m_nElements = 0;

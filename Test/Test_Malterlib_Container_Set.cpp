@@ -607,8 +607,8 @@ namespace
 		tf_CSet f_CreateSet(umint _Start, umint _Count)
 		{
 			tf_CSet Result;
-			for (umint i = 0; i < _Count; ++i)
-				Result[fs_CreateVector(_Start + i)];
+			for (umint iItem = 0; iItem < _Count; ++iItem)
+				Result[fs_CreateVector(_Start + iItem)];
 			return Result;
 		}
 
@@ -632,11 +632,11 @@ namespace
 				static constexpr umint c_nNumElements = 1000000;
 				static constexpr umint c_nNumIterations = 5;
 #endif
-				static constexpr pfp64 AllowedPerformance = 1.001;
+				static constexpr pfp64 c_AllowedPerformance = 1.001;
 
 				DMibTestCategory("Union")
 				{
-					NTest::CTestPerformance PerfTest(AllowedPerformance);
+					NTest::CTestPerformance PerfTest(c_AllowedPerformance);
 					[&] inline_never
 					{
 						DMibTestPath("Move");
@@ -850,7 +850,7 @@ namespace
 
 				DMibTestCategory("Intersection")
 				{
-					NTest::CTestPerformance PerfTest(AllowedPerformance);
+					NTest::CTestPerformance PerfTest(c_AllowedPerformance);
 
 					[&] inline_never
 					{
@@ -1065,7 +1065,7 @@ namespace
 
 				DMibTestCategory("Xor")
 				{
-					NTest::CTestPerformance PerfTest(AllowedPerformance);
+					NTest::CTestPerformance PerfTest(c_AllowedPerformance);
 
 					[&] inline_never
 					{
@@ -1264,7 +1264,7 @@ namespace
 
 				DMibTestCategory("Difference")
 				{
-					NTest::CTestPerformance PerfTest(AllowedPerformance);
+					NTest::CTestPerformance PerfTest(c_AllowedPerformance);
 
 					[&] inline_never
 					{

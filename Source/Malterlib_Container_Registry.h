@@ -62,6 +62,7 @@ namespace NMib::NContainer
 {
 	struct CRegistryLinks
 	{
+	protected:
 		NIntrusive::TCAVLLink<> mp_ChildLink;
 	};
 
@@ -108,7 +109,7 @@ namespace NMib::NContainer
 			inline_small COrdering_Partial operator () (tf_CKey const &_Left, CRegistryKey const &_Right) const;
 		};
 
-		using CTree = NIntrusive::TCAVLTree<&CRegistryLinks::mp_ChildLink, CAVLCompare_TCRegistry, NMib::NMemory::CDefaultAllocator, TCRegistry>;
+		using CTree = NIntrusive::TCAVLTree<&TCRegistry::mp_ChildLink, CAVLCompare_TCRegistry, NMib::NMemory::CDefaultAllocator, TCRegistry>;
 
 		struct CChildren_Sorted
 		{

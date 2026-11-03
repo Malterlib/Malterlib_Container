@@ -50,7 +50,7 @@ namespace NMib::NContainer
 		TCRegistryKeyStr(TCRegistryKeyStr &&_Other) = delete;
 		TCRegistryKeyStr &operator = (TCRegistryKeyStr &&_Other) = delete;
 
-		t_CKey m_Name;
+		t_CKey mp_Name;
 	};
 
 	template <typename t_CKey, typename t_CStr>
@@ -105,9 +105,9 @@ namespace NMib::NContainer
 		TCRegistryKeyStrMulti(TCRegistryKeyStrMulti &&_Other) = delete;
 		TCRegistryKeyStrMulti &operator = (TCRegistryKeyStrMulti &&_Other) = delete;
 
-		t_CKey m_Name;
-		uint32 m_Sequence = 0;
-		uint32 m_GenSequence = 0;
+		t_CKey mp_Name;
+		uint32 mp_Sequence = 0;
+		uint32 mp_GenSequence = 0;
 	};
 
 	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>
@@ -176,17 +176,17 @@ namespace NMib::NContainer
 		TCRegistryKeyStrPreserve(TCRegistryKeyStrPreserve &&_Other) = delete;
 		TCRegistryKeyStrPreserve &operator = (TCRegistryKeyStrPreserve &&_Other) = delete;
 
-		t_CKey m_Name;
-		uint32 m_Sequence = 0;
-		uint32 m_GenSequence = 0;
+		t_CKey mp_Name;
+		uint32 mp_Sequence = 0;
+		uint32 mp_GenSequence = 0;
 
-		CLocation m_Location;
+		CLocation mp_Location;
 
-		t_CStr m_WhiteSpace[ERegistryWhiteSpaceLocation_Max];
-		CValueLocation m_ValueLocation;
-		NContainer::TCBitArray<ERegistryWhiteSpaceLocation_Max> m_Parsed;
-		uint8 m_bForceEscapedKey:1;
-		uint8 m_bForceEscapedValue:1;
+		t_CStr mp_WhiteSpace[ERegistryWhiteSpaceLocation_Max];
+		CValueLocation mp_ValueLocation;
+		NContainer::TCBitArray<ERegistryWhiteSpaceLocation_Max> mp_Parsed;
+		uint8 mp_bForceEscapedKey:1;
+		uint8 mp_bForceEscapedValue:1;
 	};
 
 	template <typename tf_CKey>

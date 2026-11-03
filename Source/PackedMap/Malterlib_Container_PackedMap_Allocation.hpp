@@ -388,10 +388,10 @@ namespace NMib::NContainer
 				// Collect without destroying sources; on exception revert to old data
 				auto CollectCleanup = g_OnScopeExit / [&]
 					{
-						for (umint i = 0; i < iTemp; ++i)
+						for (umint iElement = 0; iElement < iTemp; ++iElement)
 						{
-							pTempKeys[i].~t_CKey();
-							pTempValues[i].~t_CValue();
+							pTempKeys[iElement].~t_CKey();
+							pTempValues[iElement].~t_CValue();
 						}
 						// NewDataGuard handles pNewData cleanup
 					}
@@ -447,10 +447,10 @@ namespace NMib::NContainer
 			// Cleanup guard can safely free the raw buffers.
 			auto DistributeGuard = g_OnScopeExit / [&]
 				{
-					for (umint i = 0; i < iTemp; ++i)
+					for (umint iElement = 0; iElement < iTemp; ++iElement)
 					{
-						pTempKeys[i].~t_CKey();
-						pTempValues[i].~t_CValue();
+						pTempKeys[iElement].~t_CKey();
+						pTempValues[iElement].~t_CValue();
 					}
 					iTemp = 0;
 				}
@@ -478,10 +478,10 @@ namespace NMib::NContainer
 					if constexpr (!mcp_bNothrowElementMove)
 					{
 						// Destroy remaining temp elements
-						for (umint i = iCursor; i < nTotalElements; ++i)
+						for (umint iElement = iCursor; iElement < nTotalElements; ++iElement)
 						{
-							pTempKeys[i].~t_CKey();
-							pTempValues[i].~t_CValue();
+							pTempKeys[iElement].~t_CKey();
+							pTempValues[iElement].~t_CValue();
 						}
 						// Destroy placed elements in new storage (tracked by incremental m_Count)
 						for (umint iSeg = 0; iSeg < _nNewSegments; ++iSeg)
@@ -529,10 +529,10 @@ namespace NMib::NContainer
 						umint nPlacedInSeg = 0;
 						auto SegCleanup = g_OnScopeExit / [&]
 							{
-								for (umint i = 0; i < nPlacedInSeg; ++i)
+								for (umint iElement = 0; iElement < nPlacedInSeg; ++iElement)
 								{
-									pNewData->m_pKeys[iFirst + i].~t_CKey();
-									pNewData->m_pValues[iFirst + i].~t_CValue();
+									pNewData->m_pKeys[iFirst + iElement].~t_CKey();
+									pNewData->m_pValues[iFirst + iElement].~t_CValue();
 								}
 								pNewData->m_pSegmentMeta[iSeg].m_Count = 0;
 							}

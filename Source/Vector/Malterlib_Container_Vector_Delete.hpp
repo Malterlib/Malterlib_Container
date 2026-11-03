@@ -10,9 +10,9 @@ namespace NMib::NContainer
 	{
 		umint Len = f_GetLen();
 		t_CData *pArray = f_GetArray();
-		for (smint i = Len - 1; i >= 0; --i)
+		for (smint iElement = Len - 1; iElement >= 0; --iElement)
 		{
-			fg_DeleteObject(NMemory::CDefaultAllocator(), pArray[i]);
+			fg_DeleteObject(NMemory::CDefaultAllocator(), pArray[iElement]);
 			--mp_StaticData.m_pData->m_Length;
 		}
 
@@ -28,9 +28,9 @@ namespace NMib::NContainer
 	{
 		umint Len = f_GetLen();
 		t_CData *pArray = f_GetArray();
-		for (smint i = Len - 1; i >= 0; --i)
+		for (smint iElement = Len - 1; iElement >= 0; --iElement)
 		{
-			fg_DeleteObjectDefiniteType(NMemory::CDefaultAllocator(), pArray[i]);
+			fg_DeleteObjectDefiniteType(NMemory::CDefaultAllocator(), pArray[iElement]);
 			--mp_StaticData.m_pData->m_Length;
 		}
 
@@ -54,9 +54,9 @@ namespace NMib::NContainer
 	{
 		umint Len = f_GetLen();
 		t_CData *pArray = f_GetArray();
-		for (smint i = Len - 1; i >= 0; --i)
+		for (smint iElement = Len - 1; iElement >= 0; --iElement)
 		{
-			fsp_DeleteAllAllocatorHelper<tf_CAllocator>(pArray[i]);
+			fsp_DeleteAllAllocatorHelper<tf_CAllocator>(pArray[iElement]);
 			--mp_StaticData.m_pData->m_Length;
 		}
 
@@ -80,9 +80,9 @@ namespace NMib::NContainer
 	{
 		umint Len = f_GetLen();
 		t_CData *pArray = f_GetArray();
-		for (smint i = Len - 1; i >= 0; --i)
+		for (smint iElement = Len - 1; iElement >= 0; --iElement)
 		{
-			fsp_DeleteAllAllocatorHelperDefiniteType<tf_CAllocator>(pArray[i]);
+			fsp_DeleteAllAllocatorHelperDefiniteType<tf_CAllocator>(pArray[iElement]);
 			--mp_StaticData.m_pData->m_Length;
 		}
 
@@ -99,9 +99,9 @@ namespace NMib::NContainer
 	{
 		umint Len = f_GetLen();
 		t_CData *pArray = f_GetArray();
-		for (smint i = Len - 1; i >= 0; --i)
+		for (smint iElement = Len - 1; iElement >= 0; --iElement)
 		{
-			tf_CDeleter::fs_Delete(pArray[i]);
+			tf_CDeleter::fs_Delete(pArray[iElement]);
 			--mp_StaticData.m_pData->m_Length;
 		}
 

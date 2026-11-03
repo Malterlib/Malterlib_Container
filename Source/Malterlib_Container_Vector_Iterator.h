@@ -25,7 +25,7 @@ namespace NMib::NContainer
 	private:
 		inline_small t_CIteratorData *fp_GetCurrent() const;
 
-		t_CIteratorData *m_pBegin;
-		t_CIteratorData *m_pEnd;
+		t_CIteratorData *mp_pBegin;
+		t_CIteratorData *mp_pEnd;
 	};
 };

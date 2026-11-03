@@ -27,9 +27,9 @@ namespace NMib::NContainer
 			return true;
 
 		t_CData const *pArray = f_GetArray();
-		for (umint i = 0, j = 1; j != Length; ++i, ++j)
+		for (umint iPrevious = 0, iCurrent = 1; iCurrent != Length; ++iPrevious, ++iCurrent)
 		{
-			if (fg_CheckOrdering(_fCompare(pArray[j], pArray[i])) < 0)
+			if (fg_CheckOrdering(_fCompare(pArray[iCurrent], pArray[iPrevious])) < 0)
 				return false;
 		}
 
@@ -52,9 +52,9 @@ namespace NMib::NContainer
 
 		t_CData const *pArray = f_GetArray();
 
-		for (umint i = 0, j = 1; j != Length; ++i, ++j)
+		for (umint iPrevious = 0, iCurrent = 1; iCurrent != Length; ++iPrevious, ++iCurrent)
 		{
-			if (fg_CheckOrdering(_fCompare(pArray[i], pArray[j])) >= 0)
+			if (fg_CheckOrdering(_fCompare(pArray[iPrevious], pArray[iCurrent])) >= 0)
 				return false;
 		}
 
@@ -101,16 +101,16 @@ namespace NMib::NContainer
 	void TCVector<t_CData, t_CAllocator, t_COptions>::fp_InsertSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare)
 	{
 		t_CData Temp;
-		aint i, j;
+		aint iUnsorted, iSorted;
 
-		for (i = _Low + 1; i <= _High; i++)
+		for (iUnsorted = _Low + 1; iUnsorted <= _High; iUnsorted++)
 		{
-			Temp = fg_Move(_pArray[i]);
+			Temp = fg_Move(_pArray[iUnsorted]);
 
-			for (j = i - 1; j >= _Low && fg_CheckOrdering(_fCompare(Temp, _pArray[j])) < 0; j--)
-				_pArray[j + 1] = fg_Move(_pArray[j]);
+			for (iSorted = iUnsorted - 1; iSorted >= _Low && fg_CheckOrdering(_fCompare(Temp, _pArray[iSorted])) < 0; iSorted--)
+				_pArray[iSorted + 1] = fg_Move(_pArray[iSorted]);
 
-			_pArray[j + 1] = fg_Move(Temp);
+			_pArray[iSorted + 1] = fg_Move(Temp);
 		}
 	}
 
@@ -119,41 +119,41 @@ namespace NMib::NContainer
 	aint TCVector<t_CData, t_CAllocator, t_COptions>::fp_Partition(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare)
 	{
 		t_CData Temp, Pivot;
-		aint i, j, p;
+		aint iLeft, iRight, iPivot;
 
-		p = _Low + ((_High - _Low) >> 1);
-		Pivot = fg_Move(_pArray[p]);
-		_pArray[p] = fg_Move(_pArray[_Low]);
+		iPivot = _Low + ((_High - _Low) >> 1);
+		Pivot = fg_Move(_pArray[iPivot]);
+		_pArray[iPivot] = fg_Move(_pArray[_Low]);
 
-		i = _Low + 1;
-		j = _High;
+		iLeft = _Low + 1;
+		iRight = _High;
 		while (1)
 		{
-			while (i < j && fg_CheckOrdering(_fCompare(_pArray[i], Pivot)) < 0)
-				i++;
-			while (j >= i && fg_CheckOrdering(_fCompare(Pivot, _pArray[j])) < 0)
-				j--;
-			if (i >= j)
+			while (iLeft < iRight && fg_CheckOrdering(_fCompare(_pArray[iLeft], Pivot)) < 0)
+				iLeft++;
+			while (iRight >= iLeft && fg_CheckOrdering(_fCompare(Pivot, _pArray[iRight])) < 0)
+				iRight--;
+			if (iLeft >= iRight)
 				break;
-			Temp = fg_Move(_pArray[i]);
-			_pArray[i] = fg_Move(_pArray[j]);
-			_pArray[j] = fg_Move(Temp);
-			j--;
-			i++;
+			Temp = fg_Move(_pArray[iLeft]);
+			_pArray[iLeft] = fg_Move(_pArray[iRight]);
+			_pArray[iRight] = fg_Move(Temp);
+			iRight--;
+			iLeft++;
 		}
 
-		if (_Low != j)
-			_pArray[_Low] = fg_Move(_pArray[j]);
-		_pArray[j] = fg_Move(Pivot);
+		if (_Low != iRight)
+			_pArray[_Low] = fg_Move(_pArray[iRight]);
+		_pArray[iRight] = fg_Move(Pivot);
 
-		return j;
+		return iRight;
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
 	template <typename tf_CCompare>
 	void TCVector<t_CData, t_CAllocator, t_COptions>::fp_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare)
 	{
-		aint m;
+		aint iPivot;
 
 		while (_Low < _High)
 		{
@@ -163,17 +163,17 @@ namespace NMib::NContainer
 				return;
 			}
 
-			m = fp_Partition(_pArray, _Low, _High, _fCompare);
+			iPivot = fp_Partition(_pArray, _Low, _High, _fCompare);
 
-			if (m - _Low <= _High - m)
+			if (iPivot - _Low <= _High - iPivot)
 			{
-				fp_QuickSort(_pArray, _Low, m - 1, _fCompare);
-				_Low = m + 1;
+				fp_QuickSort(_pArray, _Low, iPivot - 1, _fCompare);
+				_Low = iPivot + 1;
 			}
 			else
 			{
-				fp_QuickSort(_pArray, m + 1, _High, _fCompare);
-				_High = m - 1;
+				fp_QuickSort(_pArray, iPivot + 1, _High, _fCompare);
+				_High = iPivot - 1;
 			}
 		}
 	}

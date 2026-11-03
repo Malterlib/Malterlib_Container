@@ -99,10 +99,10 @@ namespace NMib::NContainer
 							if (fsp_IsOddSegment(iSegment))
 							{
 								umint nToDestroy = Count - FindResult.m_iLocalPos;
-								for (umint i = 0; i < nToDestroy; ++i)
+								for (umint iElement = 0; iElement < nToDestroy; ++iElement)
 								{
-									pKeys[iInsertSlot + 1 + i].~t_CKey();
-									pValues[iInsertSlot + 1 + i].~t_CValue();
+									pKeys[iInsertSlot + 1 + iElement].~t_CKey();
+									pValues[iInsertSlot + 1 + iElement].~t_CValue();
 								}
 								pMeta[iSegment].m_Count -= (uint16)nToDestroy;
 								pData->m_nElements -= nToDestroy;
@@ -110,10 +110,10 @@ namespace NMib::NContainer
 							else
 							{
 								umint iShiftStart = fsp_GetSegmentFirstSlot(iSegment, Count) - 1;
-								for (umint i = 0; i < FindResult.m_iLocalPos; ++i)
+								for (umint iElement = 0; iElement < FindResult.m_iLocalPos; ++iElement)
 								{
-									pKeys[iShiftStart + i].~t_CKey();
-									pValues[iShiftStart + i].~t_CValue();
+									pKeys[iShiftStart + iElement].~t_CKey();
+									pValues[iShiftStart + iElement].~t_CValue();
 								}
 								pMeta[iSegment].m_Count -= (uint16)FindResult.m_iLocalPos;
 								pData->m_nElements -= FindResult.m_iLocalPos;

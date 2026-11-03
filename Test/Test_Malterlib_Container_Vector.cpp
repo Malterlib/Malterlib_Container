@@ -102,8 +102,8 @@ namespace
 		{
 			TCVector<int32> Ret;
 
-			for (int32 i = 0; i < 10; ++i)
-				Ret.f_Insert(i);
+			for (int32 iItem = 0; iItem < 10; ++iItem)
+				Ret.f_Insert(iItem);
 
 			return Ret;
 		}
@@ -117,8 +117,8 @@ namespace
 				int32 Test(0);
 				List.f_Insert(Test);
 				// Test non-const insert
-				for (int32 i = 1; i < 10; ++i)
-					List.f_Insert(i);
+				for (int32 iItem = 1; iItem < 10; ++iItem)
+					List.f_Insert(iItem);
 
 				int32 nItems = 10;
 
@@ -126,15 +126,15 @@ namespace
 				{
 					bool bCorrectOrder = true;
 					TCVector<int32>::CIterator Iter = List.f_GetIterator();
-					for (int32 i = 0; i < nItems; ++i, ++Iter)
-						bCorrectOrder = bCorrectOrder && *Iter == i;
+					for (int32 iItem = 0; iItem < nItems; ++iItem, ++Iter)
+						bCorrectOrder = bCorrectOrder && *Iter == iItem;
 					DMibTest(DMibExpr(bCorrectOrder));
 				}
 				{
 					bool bCorrectOrder2 = true;
 					TCVector<int32>::CIteratorConst Iter = NMib::fg_Const(List).f_GetIterator();
-					for (int32 i = 0; i < nItems; ++i, ++Iter)
-						bCorrectOrder2 = bCorrectOrder2 && *Iter == i;
+					for (int32 iItem = 0; iItem < nItems; ++iItem, ++Iter)
+						bCorrectOrder2 = bCorrectOrder2 && *Iter == iItem;
 					DMibTest(DMibExpr(bCorrectOrder2));
 				}
 
@@ -369,8 +369,8 @@ namespace
 				{
 					CTestMemoryMeasure MeasureMemory("Alloc");
 					MeasureMemory.f_Start();
-					for (int32 i = 0; i < 500; ++i)
-						TestVector.f_Insert(i);
+					for (int32 iItem = 0; iItem < 500; ++iItem)
+						TestVector.f_Insert(iItem);
 
 					MeasureMemory.f_Stop(1);
 					NMib::NTest::CTestMemoryResult Results;
@@ -381,8 +381,8 @@ namespace
 				{
 					CTestMemoryMeasure MeasureMemory("Alloc");
 					MeasureMemory.f_Start();
-					for (int32 i = 0; i < 500; ++i)
-						TestVector.f_Insert(i);
+					for (int32 iItem = 0; iItem < 500; ++iItem)
+						TestVector.f_Insert(iItem);
 					MeasureMemory.f_Stop(1);
 					NMib::NTest::CTestMemoryResult Results;
 					MeasureMemory.f_GetResults(Results);
@@ -396,8 +396,8 @@ namespace
 				{
 					CTestMemoryMeasure MeasureMemory("Alloc");
 					MeasureMemory.f_Start();
-					for (int32 i = 0; i < 500; ++i)
-						TestVector.f_Insert(i);
+					for (int32 iItem = 0; iItem < 500; ++iItem)
+						TestVector.f_Insert(iItem);
 
 					MeasureMemory.f_Stop(1);
 					NMib::NTest::CTestMemoryResult Results;
@@ -410,8 +410,8 @@ namespace
 				{
 					CTestMemoryMeasure MeasureMemory("Alloc");
 					MeasureMemory.f_Start();
-					for (int32 i = 0; i < 500; ++i)
-						TestVector.f_Insert(i);
+					for (int32 iItem = 0; iItem < 500; ++iItem)
+						TestVector.f_Insert(iItem);
 					MeasureMemory.f_Stop(1);
 					NMib::NTest::CTestMemoryResult Results;
 					MeasureMemory.f_GetResults(Results);
@@ -427,8 +427,8 @@ namespace
 						{
 							TCVector<CCountedObject> Vector;
 
-							for (umint i = 0; i < _DestLen; ++i)
-								Vector.f_Insert(CStr("Dst {}"_f << i));
+							for (umint iItem = 0; iItem < _DestLen; ++iItem)
+								Vector.f_Insert(CStr("Dst {}"_f << iItem));
 
 							return Vector;
 						}
@@ -437,8 +437,8 @@ namespace
 						{
 							TCVector<CCountedObject> Vector;
 
-							for (umint i = 0; i < _SourceLen; ++i)
-								Vector.f_Insert(CStr("Src {}"_f << i));
+							for (umint iItem = 0; iItem < _SourceLen; ++iItem)
+								Vector.f_Insert(CStr("Src {}"_f << iItem));
 
 							Vector[fg_Min(_SourceStart + _SourceCopyLen / 2, Vector.f_GetLen() - 1)].m_bThrowCopy = _bThrowCopy;
 							return Vector;
@@ -480,7 +480,7 @@ namespace
 							{
 								if (Expected.m_Type == "D")
 								{
-									for (umint i = 0; i < Expected.m_Len; ++i)
+									for (umint iItem = 0; iItem < Expected.m_Len; ++iItem)
 									{
 										Return.f_Insert().m_Value = "Dst {}"_f << iDest;
 										++iDest;
@@ -488,7 +488,7 @@ namespace
 								}
 								else if (Expected.m_Type == "S")
 								{
-									for (umint i = 0; i < Expected.m_Len; ++i)
+									for (umint iItem = 0; iItem < Expected.m_Len; ++iItem)
 									{
 										Return.f_Insert().m_Value = "Src {}"_f << iSource;
 										++iSource;
@@ -499,7 +499,7 @@ namespace
 									iSource += Expected.m_Len;
 								else
 								{
-									for (umint i = 0; i < Expected.m_Len; ++i)
+									for (umint iItem = 0; iItem < Expected.m_Len; ++iItem)
 									{
 										Return.f_Insert();
 										++iDest;
@@ -753,7 +753,7 @@ namespace
 					TCVector<umint> AllocSizes{0};
 					TCVector<umint> ShrinkSizes;
 					// Test grow
-					for (umint i = 0; i < 10000; ++i)
+					for (umint iStep = 0; iStep < 10000; ++iStep)
 					{
 						TestVector0.f_Insert();
 						umint AllocSize = TestVector0.f_GetArrayAllocSize();
@@ -765,7 +765,7 @@ namespace
 					}
 					ShrinkSizes.f_InsertFirst(TestVector0.f_GetArrayAllocSize());
 					// Test shrink
-					for (umint i = 0; i < 10000; ++i)
+					for (umint iStep = 0; iStep < 10000; ++iStep)
 					{
 						TestVector0.f_PopBack();
 						umint AllocSize = TestVector0.f_GetArrayAllocSize();
@@ -995,8 +995,8 @@ namespace
 					{
 						CVectorStatic VectorA;
 						// Add enough data to overflow the 128-byte static buffer (128 bytes / 4 bytes per int32 = 32, but need header too)
-						for (umint i = 0; i < 50; ++i)
-							VectorA.f_Insert((int32)i);
+						for (umint iItem = 0; iItem < 50; ++iItem)
+							VectorA.f_Insert((int32)iItem);
 
 						int32 *pOriginalData = VectorA.f_GetArray();
 
@@ -1011,8 +1011,8 @@ namespace
 					DMibTestCategory("MoveAssign")
 					{
 						CVectorStatic VectorA;
-						for (umint i = 0; i < 50; ++i)
-							VectorA.f_Insert((int32)i);
+						for (umint iItem = 0; iItem < 50; ++iItem)
+							VectorA.f_Insert((int32)iItem);
 
 						int32 *pOriginalData = VectorA.f_GetArray();
 

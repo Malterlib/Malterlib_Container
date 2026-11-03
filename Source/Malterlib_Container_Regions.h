@@ -81,7 +81,7 @@ namespace NMib::NContainer
 			}
 		};
 
-		CMap m_Regions;
+		CMap mp_Regions;
 
 	public:
 		using CIterator = typename CMap::CIterator;
@@ -89,59 +89,59 @@ namespace NMib::NContainer
 
 		void f_Clear()
 		{
-			m_Regions.f_Clear();
+			mp_Regions.f_Clear();
 		}
 
 		bool f_IsEmpty() const
 		{
-			return m_Regions.f_IsEmpty();
+			return mp_Regions.f_IsEmpty();
 		}
 
 		CIterator f_GetIterator()
 		{
-			return m_Regions.f_GetIterator();
+			return mp_Regions.f_GetIterator();
 		}
 
 		CIteratorConst f_GetIterator() const
 		{
-			return m_Regions.f_GetIterator();
+			return mp_Regions.f_GetIterator();
 		}
 
 		CIterator f_GetIterator(t_CKey const &_Start)
 		{
-			auto Iter = m_Regions.f_GetIterator_SmallestGreaterThanEqual(_Start);
+			auto Iter = mp_Regions.f_GetIterator_SmallestGreaterThanEqual(_Start);
 			if (Iter == nullptr)
-				Iter = m_Regions.f_GetIterator();
+				Iter = mp_Regions.f_GetIterator();
 			return Iter;
 		}
 
 		CIteratorConst f_GetIterator(t_CKey const &_Start) const
 		{
-			auto Iter = m_Regions.f_GetIterator_SmallestGreaterThanEqual(_Start);
+			auto Iter = mp_Regions.f_GetIterator_SmallestGreaterThanEqual(_Start);
 			if (Iter == nullptr)
-				Iter = m_Regions.f_GetIterator();
+				Iter = mp_Regions.f_GetIterator();
 			return Iter;
 		}
 
 		CIterator f_GetIteratorLower(t_CKey const &_Start)
 		{
-			auto Iter = m_Regions.f_GetIterator_LargestLessThanEqual(_Start);
+			auto Iter = mp_Regions.f_GetIterator_LargestLessThanEqual(_Start);
 			if (Iter == nullptr)
-				Iter = m_Regions.f_GetIterator();
+				Iter = mp_Regions.f_GetIterator();
 			return Iter;
 		}
 
 		CIteratorConst f_GetIteratorLower(t_CKey const &_Start) const
 		{
-			auto Iter = m_Regions.f_GetIterator_LargestLessThanEqual(_Start);
+			auto Iter = mp_Regions.f_GetIterator_LargestLessThanEqual(_Start);
 			if (Iter == nullptr)
-				Iter = m_Regions.f_GetIterator();
+				Iter = mp_Regions.f_GetIterator();
 			return Iter;
 		}
 
 		CRegionData const *f_GetData(t_CKey const &_Key) const
 		{
-			auto *pValue = m_Regions.f_FindLargestLessThanEqual(_Key);
+			auto *pValue = mp_Regions.f_FindLargestLessThanEqual(_Key);
 			if (pValue && _Key < pValue->f_End())
 				return pValue;
 			return nullptr;
@@ -162,9 +162,9 @@ namespace NMib::NContainer
 
 			DMibFastCheck(_Start < _End);
 			DMibListLinkD_List_FromTemplate(CRegionData, m_Link) ToProcess;
-			auto Iter = m_Regions.f_GetIterator_LargestLessThanEqual(Search);
+			auto Iter = mp_Regions.f_GetIterator_LargestLessThanEqual(Search);
 			if (Iter == nullptr)
-				Iter = m_Regions.f_GetIterator();
+				Iter = mp_Regions.f_GetIterator();
 			if (Iter != nullptr)
 			{
 				auto *pSlice = Iter.f_GetCurrent();
@@ -191,7 +191,7 @@ namespace NMib::NContainer
 
 						if (CurrentRegion < pSlice->f_Start())
 						{
-							auto &New = m_Regions[CurrentRegion];
+							auto &New = mp_Regions[CurrentRegion];
 							New.f_End() = fg_Min(pSlice->f_Start(), _End);
 							_Transform(New.f_Data());
 							CurrentRegion = New.f_End();
@@ -213,13 +213,13 @@ namespace NMib::NContainer
 							{
 								//DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Split" DMibNewLine, pSlice->f_Start(), pSlice->f_End(), iOper++);
 								// We are inside and need to split in three
-								auto &New0 = m_Regions[CurrentRegion];
+								auto &New0 = mp_Regions[CurrentRegion];
 								New0.f_End() = _End;
 								New0.f_Data() = pSlice->f_Data();
 								_Transform(New0.f_Data());
 								ToProcess.f_InsertAfter(&New0, pSlice);
 
-								auto &New1 = m_Regions[_End];
+								auto &New1 = mp_Regions[_End];
 								New1.f_End() = pSlice->f_End();
 								pSlice->f_End() = CurrentRegion;
 								New1.f_Data() = pSlice->f_Data();
@@ -234,7 +234,7 @@ namespace NMib::NContainer
 									//DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Same start" DMibNewLine, pSlice->m_TimeStart, pSlice->f_End(), iOper++);
 									DMibSafeCheck(_End != pSlice->f_End(), "");
 
-									auto &New0 = m_Regions[_End];
+									auto &New0 = mp_Regions[_End];
 									New0.f_End() = pSlice->f_End();
 									pSlice->f_End() = _End;
 									New0.f_Data() = pSlice->f_Data();
@@ -247,7 +247,7 @@ namespace NMib::NContainer
 									//DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Same end" DMibNewLine, pSlice->m_TimeStart, pSlice->f_End(), iOper++);
 									DMibSafeCheck(CurrentRegion != pSlice->f_Start(), "");
 
-									auto &New0 = m_Regions[CurrentRegion];
+									auto &New0 = mp_Regions[CurrentRegion];
 									New0.f_End() = pSlice->f_End();
 									New0.f_Data() = pSlice->f_Data();
 									_Transform(New0.f_Data());
@@ -262,7 +262,7 @@ namespace NMib::NContainer
 					if (CurrentRegion < _End)
 					{
 						// Just add off of end
-						auto &New = m_Regions[CurrentRegion];
+						auto &New = mp_Regions[CurrentRegion];
 						New.f_End() = _End;
 						CurrentRegion = _End;
 						_Transform(New.f_Data());
@@ -274,8 +274,8 @@ namespace NMib::NContainer
 			{
 				//DMibSafeCheck(_Start == 0, "Must be whole block");
 				// Just create the new region
-				auto pSmallest = m_Regions.f_FindSmallest();
-				auto &New = m_Regions[_Start];
+				auto pSmallest = mp_Regions.f_FindSmallest();
+				auto &New = mp_Regions[_Start];
 				New.f_End() = _End;
 				_Transform(New.f_Data());
 				ToProcess.f_Insert(New);
@@ -305,7 +305,7 @@ namespace NMib::NContainer
 							// 	DDTrace("0x{nfh,sj16,sf0} 0x{nfh,sj16,sf0} {}: Merge" DMibNewLine, pPrevSlice->m_TimeStart, pSlice->f_End(), iOper++);
 							// Merge
 							pPrevSlice->f_End() = pSlice->f_End();
-							m_Regions.f_Remove(pSlice);
+							mp_Regions.f_Remove(pSlice);
 							pSlice = pPrevSlice;
 						}
 					}

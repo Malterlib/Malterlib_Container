@@ -53,10 +53,10 @@ namespace NMib::NContainer::NPrivate
 		{
 			CSuper::f_Clear();
 			_Stream >> m_Bits;
-			for (umint i = 0; i < mc_nSuperBits; ++i)
+			for (umint iSuperBit = 0; iSuperBit < mc_nSuperBits; ++iSuperBit)
 			{
-				if (m_Bits.f_GetWholeEntrySet(i * t_nBitsPerEntry))
-					CSuper::f_SetBit<true>(i);
+				if (m_Bits.f_GetWholeEntrySet(iSuperBit * t_nBitsPerEntry))
+					CSuper::f_SetBit<true>(iSuperBit);
 			}
 		}
 	}

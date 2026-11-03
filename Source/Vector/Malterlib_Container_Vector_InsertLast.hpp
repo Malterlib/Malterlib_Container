@@ -79,9 +79,9 @@ namespace NMib::NContainer
 			}
 		;
 
-		for (umint i = 0; i < _Size; ++i)
+		for (umint iElement = 0; iElement < _Size; ++iElement)
 		{
-			new((void *)(pArray + PrevLen + i)) t_CData();
+			new((void *)(pArray + PrevLen + iElement)) t_CData();
 			++nAdded;
 		}
 

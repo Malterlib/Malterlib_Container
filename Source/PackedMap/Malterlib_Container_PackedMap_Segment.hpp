@@ -241,9 +241,9 @@ namespace NMib::NContainer
 				umint nShifted = 0;
 				auto ShiftCleanup = g_OnScopeExit / [&]
 					{
-						for (umint i = 0; i < nShifted; ++i)
+						for (umint iElement = 0; iElement < nShifted; ++iElement)
 						{
-							umint iSlot = iSegStart + Count - i;
+							umint iSlot = iSegStart + Count - iElement;
 							pKeys[iSlot].~t_CKey();
 							pValues[iSlot].~t_CValue();
 						}
@@ -320,9 +320,9 @@ namespace NMib::NContainer
 				umint nShifted = 0;
 				auto ShiftCleanup = g_OnScopeExit / [&]
 					{
-						for (umint i = 0; i < nShifted; ++i)
+						for (umint iElement = 0; iElement < nShifted; ++iElement)
 						{
-							umint iSlot = iFirst - 1 + i;
+							umint iSlot = iFirst - 1 + iElement;
 							pKeys[iSlot].~t_CKey();
 							pValues[iSlot].~t_CValue();
 						}

@@ -19,22 +19,22 @@ namespace NMib::NContainer
 
 	template <typename t_CIteratorData>
 	TCVectorIterator<t_CIteratorData>::TCVectorIterator()
-		: m_pBegin(nullptr)
-		, m_pEnd(nullptr)
+		: mp_pBegin(nullptr)
+		, mp_pEnd(nullptr)
 	{
 	}
 
 	template <typename t_CIteratorData>
 	TCVectorIterator<t_CIteratorData>::TCVectorIterator(t_CIteratorData *_Begin, t_CIteratorData *_End)
-		: m_pBegin(_Begin)
-		, m_pEnd(_End)
+		: mp_pBegin(_Begin)
+		, mp_pEnd(_End)
 	{
 	}
 
 	template <typename t_CIteratorData>
 	TCVectorIterator<t_CIteratorData>::TCVectorIterator(TCVectorIterator const &_ToCopy)
-		: m_pBegin(_ToCopy.m_pBegin)
-		, m_pEnd(_ToCopy.m_pEnd)
+		: mp_pBegin(_ToCopy.mp_pBegin)
+		, mp_pEnd(_ToCopy.mp_pEnd)
 	{
 	}
 
@@ -47,15 +47,15 @@ namespace NMib::NContainer
 	template <typename t_CIteratorData>
 	inline_small auto TCVectorIterator<t_CIteratorData>::operator = (TCVectorIterator const &_ToCopy) -> TCVectorIterator &
 	{
-		m_pBegin = _ToCopy.m_pBegin;
-		m_pEnd = _ToCopy.m_pEnd;
+		mp_pBegin = _ToCopy.mp_pBegin;
+		mp_pEnd = _ToCopy.mp_pEnd;
 		return *this;
 	}
 
 	template <typename t_CIteratorData>
 	inline_small bool TCVectorIterator<t_CIteratorData>::operator == (TCVectorIterator const &_Other) const noexcept
 	{
-		return (m_pBegin == _Other.m_pBegin) && (m_pEnd == _Other.m_pEnd);
+		return (mp_pBegin == _Other.mp_pBegin) && (mp_pEnd == _Other.mp_pEnd);
 	}
 
 	template <typename t_CIteratorData>
@@ -73,8 +73,8 @@ namespace NMib::NContainer
 	template <typename t_CIteratorData>
 	inline_small auto TCVectorIterator<t_CIteratorData>::operator ++ () -> TCVectorIterator &
 	{
-		m_pBegin = m_pBegin + 1;
-		DMibFastCheck(m_pBegin <= m_pEnd);
+		mp_pBegin = mp_pBegin + 1;
+		DMibFastCheck(mp_pBegin <= mp_pEnd);
 
 		return *this;
 	}
@@ -82,8 +82,8 @@ namespace NMib::NContainer
 	template <typename t_CIteratorData>
 	inline_small auto TCVectorIterator<t_CIteratorData>::operator += (smint _Offset) -> TCVectorIterator &
 	{
-		m_pBegin = m_pBegin + _Offset;
-		DMibFastCheck(m_pBegin <= m_pEnd);
+		mp_pBegin = mp_pBegin + _Offset;
+		DMibFastCheck(mp_pBegin <= mp_pEnd);
 
 		return *this;
 	}
@@ -91,14 +91,14 @@ namespace NMib::NContainer
 	template <typename t_CIteratorData>
 	inline_small umint TCVectorIterator<t_CIteratorData>::f_GetLen() const
 	{
-		return m_pEnd - m_pBegin;
+		return mp_pEnd - mp_pBegin;
 	}
 
 	template <typename t_CIteratorData>
 	inline_small t_CIteratorData *TCVectorIterator<t_CIteratorData>::fp_GetCurrent() const
 	{
-		if (m_pBegin != m_pEnd)
-			return m_pBegin;
+		if (mp_pBegin != mp_pEnd)
+			return mp_pBegin;
 		else
 			return nullptr;
 	}

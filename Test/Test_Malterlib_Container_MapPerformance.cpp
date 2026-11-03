@@ -15,11 +15,11 @@
 namespace NMib::NMisc
 {
 #if defined(DMibDebug) || defined(DMibSanitizerEnabled)
-	static constexpr umint mc_nItemsToTest = 100'000;
+	static constexpr umint gc_nItemsToTest = 100'000;
 #else
-	static constexpr umint mc_nItemsToTest = 5'000'000;
+	static constexpr umint gc_nItemsToTest = 5'000'000;
 #endif
-	static constexpr double mc_AllowedPerformance = 0.95;
+	static constexpr double gc_AllowedPerformance = 0.95;
 
 	namespace
 	{
@@ -41,18 +41,18 @@ namespace NMib::NMisc
 				const
 			{
 				auto pDataStart = m_Key_DataSorted.f_GetArray();
-				auto pDataEnd = pDataStart + mc_nItemsToTest;
+				auto pDataEnd = pDataStart + gc_nItemsToTest;
 				auto fMeasure = [_fOperation, pDataStart, pDataEnd]() inline_never
 					{
 						for (auto *pData = pDataStart; pData != pDataEnd; ++pData)
 							_fOperation(pData->m_Key);
 					}
 				;
-				for (umint i = 0; i < _nTries; ++i)
+				for (umint iTry = 0; iTry < _nTries; ++iTry)
 				{
 					_fInit();
 					{
-						DMibTestScopeMeasure(_PerformanceMeasure, mc_nItemsToTest);
+						DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
 						fMeasure();
 					}
 					_fDestruct();
@@ -88,18 +88,18 @@ namespace NMib::NMisc
 				const
 			{
 				auto pDataStart = m_Key_Data.f_GetArray();
-				auto pDataEnd = pDataStart + mc_nItemsToTest;
+				auto pDataEnd = pDataStart + gc_nItemsToTest;
 				auto fMeasure = [_fOperation, pDataStart, pDataEnd]() inline_never
 					{
 						for (auto *pData = pDataStart; pData != pDataEnd; ++pData)
 							_fOperation(pData->m_Key);
 					}
 				;
-				for (umint i = 0; i < _nTries; ++i)
+				for (umint iTry = 0; iTry < _nTries; ++iTry)
 				{
 					_fInit();
 					{
-						DMibTestScopeMeasure(_PerformanceMeasure, mc_nItemsToTest);
+						DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
 						fMeasure();
 					}
 					_fDestruct();
@@ -119,15 +119,15 @@ namespace NMib::NMisc
 			{
 				auto fMeasure = [_fOperation]() inline_never
 					{
-						for (umint i = 0; i < mc_nItemsToTest; ++i)
-							_fOperation(i);
+						for (umint iItem = 0; iItem < gc_nItemsToTest; ++iItem)
+							_fOperation(iItem);
 					}
 				;
-				for (umint i = 0; i < _nTries; ++i)
+				for (umint iTry = 0; iTry < _nTries; ++iTry)
 				{
 					_fInit();
 					{
-						DMibTestScopeMeasure(_PerformanceMeasure, mc_nItemsToTest);
+						DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
 						fMeasure();
 					}
 					_fDestruct();
@@ -163,18 +163,18 @@ namespace NMib::NMisc
 				const
 			{
 				auto pDataStart = m_Key_Data.f_GetArray();
-				auto pDataEnd = pDataStart + mc_nItemsToTest;
+				auto pDataEnd = pDataStart + gc_nItemsToTest;
 				auto fMeasure = [_fOperation, pDataStart, pDataEnd]() inline_never
 					{
 						for (auto *pData = pDataStart; pData != pDataEnd; ++pData)
 							_fOperation(pData->m_Key, pData->m_Value);
 					}
 				;
-				for (umint i = 0; i < _nTries; ++i)
+				for (umint iTry = 0; iTry < _nTries; ++iTry)
 				{
 					_fInit();
 					{
-						DMibTestScopeMeasure(_PerformanceMeasure, mc_nItemsToTest);
+						DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
 						fMeasure();
 					}
 					_fDestruct();
@@ -194,15 +194,15 @@ namespace NMib::NMisc
 			{
 				auto fMeasure = [_fOperation]() inline_never
 					{
-						for (umint i = 0; i < mc_nItemsToTest; ++i)
-							_fOperation(i, i);
+						for (umint iItem = 0; iItem < gc_nItemsToTest; ++iItem)
+							_fOperation(iItem, iItem);
 					}
 				;
-				for (umint i = 0; i < _nTries; ++i)
+				for (umint iTry = 0; iTry < _nTries; ++iTry)
 				{
 					_fInit();
 					{
-						DMibTestScopeMeasure(_PerformanceMeasure, mc_nItemsToTest);
+						DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
 						fMeasure();
 					}
 					_fDestruct();
@@ -240,8 +240,8 @@ namespace NMib::NMisc
 				else
 				{
 					tf_CMap Map;
-					for (umint i = 0; i < mc_nItemsToTest; ++i)
-						Map[i] = i;
+					for (umint iItem = 0; iItem < gc_nItemsToTest; ++iItem)
+						Map[iItem] = iItem;
 					return Map;
 				}
 			}
@@ -259,8 +259,8 @@ namespace NMib::NMisc
 				else
 				{
 					tf_CSet Set;
-					for (umint i = 0; i < mc_nItemsToTest; ++i)
-						Set.insert(i);
+					for (umint iItem = 0; iItem < gc_nItemsToTest; ++iItem)
+						Set.insert(iItem);
 					return Set;
 				}
 			}
@@ -278,8 +278,8 @@ namespace NMib::NMisc
 				else
 				{
 					TCMap<umint, umint> Map;
-					for (umint i = 0; i < mc_nItemsToTest; ++i)
-						Map[i] = i;
+					for (umint iItem = 0; iItem < gc_nItemsToTest; ++iItem)
+						Map[iItem] = iItem;
 					return Map;
 				}
 			}
@@ -297,8 +297,8 @@ namespace NMib::NMisc
 				else
 				{
 					TCSet<umint> Set;
-					for (umint i = 0; i < mc_nItemsToTest; ++i)
-						Set[i];
+					for (umint iItem = 0; iItem < gc_nItemsToTest; ++iItem)
+						Set[iItem];
 					return Set;
 				}
 			}
@@ -311,9 +311,9 @@ namespace NMib::NMisc
 
 				if (m_Key_Data.f_IsEmpty())
 				{
-					m_Key_Data.f_Reserve(mc_nItemsToTest);
+					m_Key_Data.f_Reserve(gc_nItemsToTest);
 					NMisc::CRandomShiftRNG RandomRng;
-					for (umint i = 0; i < mc_nItemsToTest; ++i)
+					for (umint iItem = 0; iItem < gc_nItemsToTest; ++iItem)
 						m_Key_Data.f_Insert({RandomRng.f_GetValue<umint>(), RandomRng.f_GetValue<umint>()});
 
 					m_Key_DataSorted = m_Key_Data;
@@ -332,7 +332,7 @@ namespace NMib::NMisc
 				DMibTestSuite("Insert")
 				{
 					fp_CheckInit();
-					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformance PerfTest(gc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
 					auto PrecachSet = fp_GetFilledSet<TCSet<umint>>();
@@ -384,7 +384,7 @@ namespace NMib::NMisc
 				DMibTestSuite("Insert")
 				{
 					fp_CheckInit();
-					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformance PerfTest(gc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
 					TCMap<umint, umint> Map;
@@ -448,7 +448,7 @@ namespace NMib::NMisc
 				DMibTestSuite("Access")
 				{
 					fp_CheckInit();
-					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformance PerfTest(gc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 					auto Set = fp_GetFilledSet<TCSet<umint>>();
 					umint nFoundMalterlib = 0;
@@ -496,7 +496,7 @@ namespace NMib::NMisc
 					CTestPerformanceMeasure IntrusiveMeasure("IntrusiveVector");
 					umint nFoundIntrusive = 0;
 					{
-						NContainer::TCVector<CIntrusiveSetNode> SetVector3(mc_nItemsToTest * 2);
+						NContainer::TCVector<CIntrusiveSetNode> SetVector3(gc_nItemsToTest * 2);
 						CIntrusiveSetNode *pNode = SetVector3.f_GetArray();
 						CIntrusiveSetNode *pStartArray = pNode;
 						umint CacheConflictPreventionSize = 16 * 1024;
@@ -539,9 +539,9 @@ namespace NMib::NMisc
 					}
 
 					PerfTest.f_AddBaseline(IntrusiveMeasure);
-					DMibExpect(nFoundMalterlib, ==, mc_nItemsToTest * 5);
-					DMibExpect(nFoundIntrusive, ==, mc_nItemsToTest * 5);
-					DMibExpect(nFound, ==, mc_nItemsToTest * 5);
+					DMibExpect(nFoundMalterlib, ==, gc_nItemsToTest * 5);
+					DMibExpect(nFoundIntrusive, ==, gc_nItemsToTest * 5);
+					DMibExpect(nFound, ==, gc_nItemsToTest * 5);
 					DMibExpectTrue(PerfTest);
 				};
 			}
@@ -551,16 +551,16 @@ namespace NMib::NMisc
 				DMibTestSuite("Copy")
 				{
 					fp_CheckInit();
-					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformance PerfTest(gc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
 					auto Set = fp_GetFilledSet<TCSet<umint>>();
 					TCSet<umint> SetCopy;
-					for (umint i = 0; i < 5; ++i)
+					for (umint iRep = 0; iRep < 5; ++iRep)
 					{
 						[&]() inline_never
 						{
-							DMibTestScopeMeasure(MalterlibMeasure, mc_nItemsToTest);
+							DMibTestScopeMeasure(MalterlibMeasure, gc_nItemsToTest);
 							SetCopy = Set;
 						}
 						();
@@ -572,11 +572,11 @@ namespace NMib::NMisc
 					auto Set2 = fp_GetFilledSet<std::set<umint>>();
 
 					std::set<umint> Set2Copy;
-					for (umint i = 0; i < 5; ++i)
+					for (umint iRep = 0; iRep < 5; ++iRep)
 					{
 						[&]() inline_never
 						{
-							DMibTestScopeMeasure(StdMeasure, mc_nItemsToTest);
+							DMibTestScopeMeasure(StdMeasure, gc_nItemsToTest);
 							Set2Copy = Set2;
 						}
 						();
@@ -593,15 +593,15 @@ namespace NMib::NMisc
 				DMibTestSuite("Clear")
 				{
 					fp_CheckInit();
-					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformance PerfTest(gc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
-					for (umint i = 0; i < 5; ++i)
+					for (umint iRep = 0; iRep < 5; ++iRep)
 					{
 						auto Set = fp_GetFilledSet<TCSet<umint>>();
 						[&]() inline_never
 						{
-							DMibTestScopeMeasure(MalterlibMeasure, mc_nItemsToTest);
+							DMibTestScopeMeasure(MalterlibMeasure, gc_nItemsToTest);
 							Set.f_Clear();
 						}
 						();
@@ -612,12 +612,12 @@ namespace NMib::NMisc
 					CTestPerformanceMeasure StdMeasure("std");
 
 					std::set<umint> Set2Copy;
-					for (umint i = 0; i < 5; ++i)
+					for (umint iRep = 0; iRep < 5; ++iRep)
 					{
 						auto Set2 = fp_GetFilledSet<std::set<umint>>();
 						[&]() inline_never
 						{
-							DMibTestScopeMeasure(StdMeasure, mc_nItemsToTest);
+							DMibTestScopeMeasure(StdMeasure, gc_nItemsToTest);
 							Set2.clear();
 						}
 						();
@@ -633,7 +633,7 @@ namespace NMib::NMisc
 				DMibTestSuite("AccessAfterCopy")
 				{
 					fp_CheckInit();
-					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformance PerfTest(gc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 					auto SetSource = fp_GetFilledSet<TCSet<umint>>();
 					auto Set = SetSource;
@@ -680,8 +680,8 @@ namespace NMib::NMisc
 					;
 					PerfTest.f_AddReference(StdMeasure);
 
-					DMibExpect(nFoundMalterlib, ==, mc_nItemsToTest * 5);
-					DMibExpect(nFound, ==, mc_nItemsToTest * 5);
+					DMibExpect(nFoundMalterlib, ==, gc_nItemsToTest * 5);
+					DMibExpect(nFound, ==, gc_nItemsToTest * 5);
 					DMibExpectTrue(PerfTest);
 				};
 			}
@@ -691,7 +691,7 @@ namespace NMib::NMisc
 				DMibTestSuite("AccessAfterCopySorted")
 				{
 					fp_CheckInit();
-					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformance PerfTest(gc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 					auto SetSource = fp_GetFilledSet<TCSet<umint>>();
 					auto Set = SetSource;
@@ -738,8 +738,8 @@ namespace NMib::NMisc
 					;
 					PerfTest.f_AddReference(StdMeasure);
 
-					DMibExpect(nFoundMalterlib, ==, mc_nItemsToTest * 5);
-					DMibExpect(nFound, ==, mc_nItemsToTest * 5);
+					DMibExpect(nFoundMalterlib, ==, gc_nItemsToTest * 5);
+					DMibExpect(nFound, ==, gc_nItemsToTest * 5);
 					DMibExpectTrue(PerfTest);
 				};
 			}
@@ -749,7 +749,7 @@ namespace NMib::NMisc
 				DMibTestSuite("AccessSorted")
 				{
 					fp_CheckInit();
-					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformance PerfTest(gc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 					auto Set = fp_GetFilledSet<TCSet<umint>>();
 					umint nFoundMalterlib = 0;
@@ -794,8 +794,8 @@ namespace NMib::NMisc
 					;
 					PerfTest.f_AddReference(StdMeasure);
 
-					DMibExpect(nFoundMalterlib, ==, mc_nItemsToTest * 5);
-					DMibExpect(nFound, ==, mc_nItemsToTest * 5);
+					DMibExpect(nFoundMalterlib, ==, gc_nItemsToTest * 5);
+					DMibExpect(nFound, ==, gc_nItemsToTest * 5);
 					DMibExpectTrue(PerfTest);
 				};
 			}
@@ -805,7 +805,7 @@ namespace NMib::NMisc
 				DMibTestSuite("Access")
 				{
 					fp_CheckInit();
-					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformance PerfTest(gc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
 					auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
@@ -856,7 +856,7 @@ namespace NMib::NMisc
 				DMibTestSuite("Erase")
 				{
 					fp_CheckInit();
-					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformance PerfTest(gc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
 					TCSet<umint> Set;
@@ -906,7 +906,7 @@ namespace NMib::NMisc
 				DMibTestSuite("Erase")
 				{
 					fp_CheckInit();
-					CTestPerformance PerfTest(mc_AllowedPerformance);
+					CTestPerformance PerfTest(gc_AllowedPerformance);
 					CTestPerformanceMeasure MalterlibMeasure("Malterlib");
 
 					TCMap<umint, umint> Map;

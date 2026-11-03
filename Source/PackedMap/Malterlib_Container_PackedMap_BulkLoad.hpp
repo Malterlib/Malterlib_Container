@@ -143,10 +143,10 @@ namespace NMib::NContainer
 					{
 						if (iSeg < nSegments)
 						{
-							for (umint i = 0; i < iLocalInSeg; ++i)
+							for (umint iElement = 0; iElement < iLocalInSeg; ++iElement)
 							{
-								pKeys[iSegFirst + i].~t_CKey();
-								pValues[iSegFirst + i].~t_CValue();
+								pKeys[iSegFirst + iElement].~t_CKey();
+								pValues[iSegFirst + iElement].~t_CValue();
 							}
 							pData->m_pSegmentMeta[iSeg].m_Count = 0;
 						}
@@ -527,10 +527,10 @@ namespace NMib::NContainer
 				{
 					auto CollectCleanup = g_OnScopeExit / [&]
 						{
-							for (umint i = 0; i < iOut; ++i)
+							for (umint iElement = 0; iElement < iOut; ++iElement)
 							{
-								pTempKeys[i].~t_CKey();
-								pTempValues[i].~t_CValue();
+								pTempKeys[iElement].~t_CKey();
+								pTempValues[iElement].~t_CValue();
 							}
 						}
 					;
@@ -606,10 +606,10 @@ namespace NMib::NContainer
 				auto PlaceCleanup = g_OnScopeExit / [&]
 					{
 						// Destroy remaining temp elements not yet placed
-						for (umint i = iCursor; i < iOut; ++i)
+						for (umint iElement = iCursor; iElement < iOut; ++iElement)
 						{
-							pTempKeys[i].~t_CKey();
-							pTempValues[i].~t_CValue();
+							pTempKeys[iElement].~t_CKey();
+							pTempValues[iElement].~t_CValue();
 						}
 						// Placed elements are tracked by m_Count and handled by the destructor
 						umint nActual = 0;
@@ -730,10 +730,10 @@ namespace NMib::NContainer
 							umint nPlacedInSeg = 0;
 							auto SegCleanup = g_OnScopeExit / [&]
 								{
-									for (umint i = 0; i < nPlacedInSeg; ++i)
+									for (umint iElement = 0; iElement < nPlacedInSeg; ++iElement)
 									{
-										pData->m_pKeys[iFirst + i].~t_CKey();
-										pData->m_pValues[iFirst + i].~t_CValue();
+										pData->m_pKeys[iFirst + iElement].~t_CKey();
+										pData->m_pValues[iFirst + iElement].~t_CValue();
 									}
 									pData->m_pSegmentMeta[iSeg].m_Count = 0;
 								}

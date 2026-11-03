@@ -175,7 +175,7 @@ namespace NMib::NContainer
 		bool bHadChildren = false;
 		bool bKeyWithoutLine = false;
 
-		auto fl_FixupWhitespaceBeforeKey = [&](ch8 const *_pBeforeParse)
+		auto fFixupWhitespaceBeforeKey = [&](ch8 const *_pBeforeParse)
 			{
 				if constexpr (mc_bSupportWhiteSpace)
 				{
@@ -221,7 +221,7 @@ namespace NMib::NContainer
 			}
 		;
 
-		auto fl_FixupWhitespaceBeforeValue = [&](ch8 const *_pBeforeParse)
+		auto fFixupWhitespaceBeforeValue = [&](ch8 const *_pBeforeParse)
 			{
 				if constexpr (mc_bSupportWhiteSpace)
 				{
@@ -393,7 +393,7 @@ namespace NMib::NContainer
 						Temp = fs_ParseIdentifierStr<tf_bAllowLineBreakInEscapedString>(pParse, _ParseContext, bWasEscaped);
 
 					if constexpr (mc_bSupportWhiteSpace)
-						fl_FixupWhitespaceBeforeKey(pBeforeParse);
+						fFixupWhitespaceBeforeKey(pBeforeParse);
 					bHadChildren = false;
 					KeyName = Temp;
 					bKeyNameWasEscaped = bWasEscaped;
@@ -425,7 +425,7 @@ namespace NMib::NContainer
 								pReg->mp_Key.f_SetValueLocation(ValueLocation);
 						}
 						if constexpr (mc_bSupportWhiteSpace)
-							fl_FixupWhitespaceBeforeValue(pBeforeParse);
+							fFixupWhitespaceBeforeValue(pBeforeParse);
 						ParseMode = 0;
 					}
 					else
@@ -458,7 +458,7 @@ namespace NMib::NContainer
 								}
 							}
 							if constexpr (mc_bSupportWhiteSpace)
-								fl_FixupWhitespaceBeforeValue(pBeforeParse);
+								fFixupWhitespaceBeforeValue(pBeforeParse);
 							ParseMode = 0;
 						}
 						catch (NStr::CExceptionParse const &)

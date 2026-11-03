@@ -73,8 +73,8 @@ namespace NMib::NContainer
 	private:
 		using CInternal = NPrivate::TCBitArrayPowerTwoInternalArray<t_nBits, t_nBits, 0, t_TCBitArray, t_nMaxLevels>;
 
-		CInternal m_Bits;
-		static constexpr umint mc_nLevels = CInternal::mc_nLevels;
+		CInternal mp_Bits;
+		static constexpr umint mcp_nLevels = CInternal::mc_nLevels;
 	};
 }
 

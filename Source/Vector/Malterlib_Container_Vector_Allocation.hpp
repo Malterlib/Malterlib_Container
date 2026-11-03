@@ -26,11 +26,11 @@ namespace NMib::NContainer
 		DMibFastCheck(_nObjects != 0);
 
 #if defined(DCompiler_MSVC_Workaround)
-		static constexpr umint mc_MaxObjects = fg_AlignDownConstExpr(TCLimitsInt<umint>::mc_Max - sizeof(CVectorData), fsp_Alignment()) / sizeof(t_CData);
+		static constexpr umint c_MaxObjects = fg_AlignDownConstExpr(TCLimitsInt<umint>::mc_Max - sizeof(CVectorData), fsp_Alignment()) / sizeof(t_CData);
 #else
-		static constexpr umint mc_MaxObjects = fg_AlignDownConstExpr(TCLimitsInt<umint>::mc_Max - sizeof(CVectorData), mcp_Alignment) / sizeof(t_CData);
+		static constexpr umint c_MaxObjects = fg_AlignDownConstExpr(TCLimitsInt<umint>::mc_Max - sizeof(CVectorData), mcp_Alignment) / sizeof(t_CData);
 #endif
-		if (_nObjects >= mc_MaxObjects)
+		if (_nObjects >= c_MaxObjects)
 			DMibErrorMemory("Out of memory trying to allocate objects in vector");
 
 		umint Size = _nObjects * sizeof(t_CData) + sizeof(CVectorData);

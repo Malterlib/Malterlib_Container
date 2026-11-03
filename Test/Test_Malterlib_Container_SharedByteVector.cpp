@@ -136,8 +136,8 @@ namespace
 				{
 					uint8 *pWritable = nullptr;
 					auto Bytes = CSharedByteVector::fs_AllocateExact(8, pWritable);
-					for (umint i = 0; i < 8; ++i)
-						pWritable[i] = uint8(i);
+					for (umint iItem = 0; iItem < 8; ++iItem)
+						pWritable[iItem] = uint8(iItem);
 
 					DMibExpect(Bytes.f_GetLen(), ==, umint(8));
 					DMibExpect(Bytes.f_GetArray(), ==, pWritable);

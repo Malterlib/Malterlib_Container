@@ -18,9 +18,9 @@ namespace NMib::NContainer
 		auto pThisArray = f_GetArray();
 		auto pOtherArray = _Other.f_GetArray();
 
-		for (umint i = 0; i < Len; ++i)
+		for (umint iElement = 0; iElement < Len; ++iElement)
 		{
-			if (!(pThisArray[i] == pOtherArray[i]))
+			if (!(pThisArray[iElement] == pOtherArray[iElement]))
 				return false;
 		}
 
@@ -44,10 +44,10 @@ namespace NMib::NContainer
 		auto pThisArray = f_GetArray();
 		auto pOtherArray = _Other.f_GetArray();
 
-		for (umint i = 0; i < Len; ++i)
+		for (umint iElement = 0; iElement < Len; ++iElement)
 		{
-			auto &Left = pThisArray[i];
-			auto &Right = pOtherArray[i];
+			auto &Left = pThisArray[iElement];
+			auto &Right = pOtherArray[iElement];
 
 			auto Result = Left <=> Right;
 
@@ -72,9 +72,9 @@ namespace NMib::NContainer
 		t_CData const *pData0 = f_GetArray();
 		tf_CData const *pData1 = _Other.f_GetArray();
 
-		for (umint i = 0; i < Len0; ++i)
+		for (umint iElement = 0; iElement < Len0; ++iElement)
 		{
-			aint iCompare = _Functor(pData0[i], pData1[i]);
+			aint iCompare = _Functor(pData0[iElement], pData1[iElement]);
 			if (iCompare)
 				return iCompare;
 		}
@@ -95,11 +95,11 @@ namespace NMib::NContainer
 		t_CData const *pData0 = f_GetArray();
 		tf_CData const *pData1 = _Other.f_GetArray();
 
-		for (umint i = 0; i < Len0; ++i)
+		for (umint iElement = 0; iElement < Len0; ++iElement)
 		{
-			if (pData0[i] > pData1[i])
+			if (pData0[iElement] > pData1[iElement])
 				return 1;
-			else if (pData0[i] < pData1[i])
+			else if (pData0[iElement] < pData1[iElement])
 				return -1;
 		}
 		return 0;
@@ -160,9 +160,9 @@ namespace NMib::NContainer
 			TCVector Sorted = *this;
 			Sorted.f_Sort();
 			umint nItems = _CompareTo.f_GetLen();
-			for (umint i = 0; i < nItems; ++i)
+			for (umint iElement = 0; iElement < nItems; ++iElement)
 			{
-				tf_CData0 const &CompareTo = _CompareTo[i];
+				tf_CData0 const &CompareTo = _CompareTo[iElement];
 				if (Sorted.f_BinarySearch(CompareTo) < 0)
 					_pAdded->f_Insert(CompareTo);
 			}
@@ -174,9 +174,9 @@ namespace NMib::NContainer
 			TCVector<tf_CData0> Sorted = _CompareTo;
 			Sorted.f_Sort();
 			umint nItems = f_GetLen();
-			for (umint i = 0; i < nItems; ++i)
+			for (umint iElement = 0; iElement < nItems; ++iElement)
 			{
-				t_CData const &CompareTo = (*this)[i];
+				t_CData const &CompareTo = (*this)[iElement];
 				if (Sorted.f_BinarySearch(CompareTo) < 0)
 					_pRemoved->f_Insert(CompareTo);
 			}

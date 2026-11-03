@@ -185,9 +185,9 @@ namespace NMib::NContainer
 
 		uint8 const *pThis = mp_pData;
 		uint8 const *pOther = _Other.mp_pData;
-		for (umint i = 0; i < mp_nBytes; ++i)
+		for (umint iByte = 0; iByte < mp_nBytes; ++iByte)
 		{
-			if (pThis[i] != pOther[i])
+			if (pThis[iByte] != pOther[iByte])
 				return false;
 		}
 

@@ -484,15 +484,15 @@ namespace
 				DMibTestSuite("Change state")
 				{
 					NMib::NContainer::TCRegions<int32, NMib::TCAutoClearInt<int32>> Regions;
-					auto fl_Set1 = [](NMib::TCAutoClearInt<int32> &_Data)
+					auto fSet1 = [](NMib::TCAutoClearInt<int32> &_Data)
 						{
 							_Data = 1;
 						}
 					;
 					Regions.f_MakeRegion(0, 8);
-					Regions.f_MakeRegion(0, 2, fl_Set1);
-					Regions.f_MakeRegion(2, 4, fl_Set1);
-					Regions.f_MakeRegion(4, 6, fl_Set1);
+					Regions.f_MakeRegion(0, 2, fSet1);
+					Regions.f_MakeRegion(2, 4, fSet1);
+					Regions.f_MakeRegion(4, 6, fSet1);
 					auto Iter = Regions.f_GetIterator();
 					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
 					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));

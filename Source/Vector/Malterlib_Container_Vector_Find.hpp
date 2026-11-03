@@ -12,10 +12,10 @@ namespace NMib::NContainer
 		aint Len = f_GetLen();
 		t_CData const *pArray = f_GetArray();
 
-		for (int i = 0; i < Len; ++i)
+		for (int iElement = 0; iElement < Len; ++iElement)
 		{
-			if (pArray[i] == _Data)
-				return i;
+			if (pArray[iElement] == _Data)
+				return iElement;
 		}
 		return -1;
 	}

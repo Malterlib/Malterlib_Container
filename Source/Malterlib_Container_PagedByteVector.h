@@ -102,6 +102,7 @@ namespace NMib::NContainer
 			CPageSizeScope(umint _PageSize);
 			~CPageSizeScope();
 
+		private:
 			DMibThreadLocalScopeDebugMember;
 		};
 
@@ -153,9 +154,9 @@ namespace NMib::NContainer
 		void fp_SetPositionInternal(NStream::CFilePos _Pos);
 		DMibStreamImplementProtected(TCBinaryStreamPagedByteVector);
 
-		umint m_Position;
-		umint m_Length;
-		CPagedByteVector &m_Buffer;
+		umint mp_Position;
+		umint mp_Length;
+		CPagedByteVector &mp_Buffer;
 
 	private:
 		TCBinaryStreamPagedByteVector(TCBinaryStreamPagedByteVector const &_Other) = delete;
@@ -198,20 +199,20 @@ namespace NMib::NContainer
 		void fp_SetPositionInternal(NStream::CFilePos _Pos);
 		DMibStreamImplementProtected(TCBinaryStreamPagedByteVectorPtr);
 
-		// Recomputes m_iCurrentPage, m_pCurrentPage and m_nCurrentPageRemaining from m_BaseOffset + m_Position.
+		// Recomputes mp_iCurrentPage, mp_pCurrentPage and mp_nCurrentPageRemaining from mp_BaseOffset + mp_Position.
 		// Performs a division by mp_PageSize to locate the page; used at open and after arbitrary seeks.
 		void fp_RebuildPageCache();
-		// Fast path for sequential page crossings: assumes m_iCurrentPage is valid and advances by one.
+		// Fast path for sequential page crossings: assumes mp_iCurrentPage is valid and advances by one.
 		// Does no division.
 		void fp_AdvanceToNextPage();
 
-		CPagedByteVector const *m_pBuffer = nullptr;
-		umint m_BaseOffset = 0;
-		umint m_Position = 0;
-		umint m_Length = 0;
-		uint8 const *m_pCurrentPage = nullptr;
-		umint m_nCurrentPageRemaining = 0;
-		umint m_iCurrentPage = 0;
+		CPagedByteVector const *mp_pBuffer = nullptr;
+		umint mp_BaseOffset = 0;
+		umint mp_Position = 0;
+		umint mp_Length = 0;
+		uint8 const *mp_pCurrentPage = nullptr;
+		umint mp_nCurrentPageRemaining = 0;
+		umint mp_iCurrentPage = 0;
 
 	private:
 		TCBinaryStreamPagedByteVectorPtr(TCBinaryStreamPagedByteVectorPtr const &_Other) = delete;

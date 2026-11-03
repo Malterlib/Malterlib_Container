@@ -27,7 +27,7 @@ namespace NMib::NContainer
 
 	template <typename t_CStr, typename t_CIndex>
 	TCRegistryStringTable<t_CStr, t_CIndex>::TCRegistryStringTable()
-		: m_CurrentIndex(0)
+		: mp_CurrentIndex(0)
 	{
 	}
 
@@ -35,18 +35,18 @@ namespace NMib::NContainer
 	template <typename tf_CStream>
 	void TCRegistryStringTable<t_CStr, t_CIndex>::f_Feed(tf_CStream &_Stream) const
 	{
-		_Stream << m_CurrentIndex;
-		_Stream << m_Strings;
+		_Stream << mp_CurrentIndex;
+		_Stream << mp_Strings;
 	}
 
 	template <typename t_CStr, typename t_CIndex>
 	template <typename tf_CStream>
 	void TCRegistryStringTable<t_CStr, t_CIndex>::f_Consume(tf_CStream &_Stream)
 	{
-		_Stream >> m_CurrentIndex;
-		_Stream >> m_Strings;
-		for (auto iString = m_Strings.f_GetIterator(); iString; ++iString)
-			m_IndexToString.f_Insert(*iString);
+		_Stream >> mp_CurrentIndex;
+		_Stream >> mp_Strings;
+		for (auto iString = mp_Strings.f_GetIterator(); iString; ++iString)
+			mp_IndexToString.f_Insert(*iString);
 	}
 
 	template <typename t_CStr, typename t_CIndex>
@@ -73,13 +73,13 @@ namespace NMib::NContainer
 	template <typename tf_CStr>
 	t_CIndex TCRegistryStringTable<t_CStr, t_CIndex>::f_GetIndex(tf_CStr const &_String)
 	{
-		auto Mapped = m_Strings(_String);
+		auto Mapped = mp_Strings(_String);
 		CIndex &Index = *Mapped;
 		if (Mapped.f_WasCreated())
 		{
-			Index.m_Index = m_CurrentIndex;
-			++m_CurrentIndex;
-			m_IndexToString.f_Insert(Index);
+			Index.m_Index = mp_CurrentIndex;
+			++mp_CurrentIndex;
+			mp_IndexToString.f_Insert(Index);
 		}
 
 		return Index.m_Index;
@@ -88,9 +88,9 @@ namespace NMib::NContainer
 	template <typename t_CStr, typename t_CIndex>
 	t_CStr const *TCRegistryStringTable<t_CStr, t_CIndex>::f_GetString(t_CIndex const &_Index) const
 	{
-		CIndex const *pIndex = m_IndexToString.f_FindEqual(_Index);
+		CIndex const *pIndex = mp_IndexToString.f_FindEqual(_Index);
 		if (pIndex)
-			return &m_Strings.fs_GetKey(pIndex);
+			return &mp_Strings.fs_GetKey(pIndex);
 		return nullptr;
 	}
 }

@@ -42,9 +42,9 @@ namespace NMib::NContainer
 			NIntrusive::TCAVLLink<> m_IndexLink;
 		};
 
-		NContainer::TCMap<t_CStr, CIndex> m_Strings;
-		NIntrusive::TCAVLTree<&CIndex::m_IndexLink, typename CIndex::CCompare_Index> m_IndexToString;
-		t_CIndex m_CurrentIndex;
+		NContainer::TCMap<t_CStr, CIndex> mp_Strings;
+		NIntrusive::TCAVLTree<&CIndex::m_IndexLink, typename CIndex::CCompare_Index> mp_IndexToString;
+		t_CIndex mp_CurrentIndex;
 	};
 }
 

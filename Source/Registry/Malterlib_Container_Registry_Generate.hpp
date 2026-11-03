@@ -29,9 +29,9 @@ namespace NMib::NContainer
 			umint Len = _Str.f_GetLen();
 
 			typename t_CStr::CMaxChar Current, Prev = 0;
-			for (umint i = 0; i < Len; ++i, (Prev = Current))
+			for (umint iChar = 0; iChar < Len; ++iChar, (Prev = Current))
 			{
-				Current = _Str.f_GetAt(i);
+				Current = _Str.f_GetAt(iChar);
 				if (Current == '\"' || Current == '{' || Current == '}' || Current == '#' || Current == '\\')
 				{
 					bNeedEscape = true;
@@ -64,16 +64,16 @@ namespace NMib::NContainer
 			{
 				umint Len = _Str.f_GetLen();
 				umint iStart = 0;
-				for (umint i = 0; i < Len; ++i)
+				for (umint iChar = 0; iChar < Len; ++iChar)
 				{
-					typename t_CStr::CMaxChar Current = _Str.f_GetAt(i);
+					typename t_CStr::CMaxChar Current = _Str.f_GetAt(iChar);
 					if (Current == '\n')
 					{
-						_Dest += _Str.f_Extract(iStart, (i + 1) - iStart).f_EscapeStr("\\\"\r\n\t", "\\\"rnt");
+						_Dest += _Str.f_Extract(iStart, (iChar + 1) - iStart).f_EscapeStr("\\\"\r\n\t", "\\\"rnt");
 						_Dest += "\\";
 						_Dest += _pNewLine;
 						_Dest += _PreData;
-						iStart = i + 1;
+						iStart = iChar + 1;
 					}
 				}
 				_Dest += _Str.f_Extract(iStart, Len - iStart).f_EscapeStr("\\\"\r\n\t", "\\\"rnt");
