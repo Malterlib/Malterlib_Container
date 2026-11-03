@@ -772,8 +772,8 @@ namespace NMib::NMisc
 							[&]() inline_never
 							{
 								DMibTestScopeMeasure(PackedMapMeasure, gc_nItemsToTest);
-								for (auto Iter = PackedMap.f_GetIterator(); Iter; ++Iter)
-									SumPackedMap += *Iter;
+								for (auto iIter = PackedMap.f_GetIterator(); iIter; ++iIter)
+									SumPackedMap += *iIter;
 							}
 							();
 						}
@@ -844,8 +844,8 @@ namespace NMib::NMisc
 							[&]() inline_never
 							{
 								DMibTestScopeMeasure(MapMeasure, gc_nItemsToTest);
-								for (auto Iter = Map.f_GetIterator(); Iter; ++Iter)
-									SumMap += *Iter;
+								for (auto iIter = Map.f_GetIterator(); iIter; ++iIter)
+									SumMap += *iIter;
 							}
 							();
 						}

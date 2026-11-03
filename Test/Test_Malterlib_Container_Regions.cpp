@@ -15,28 +15,28 @@ namespace
 				{
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Separate")
 				{
 					NMib::NContainer::TCRegions<int32, NMib::CVoidTag> Regions;
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(150));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(150));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Merge overlapping")
 				{
@@ -44,12 +44,12 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(50, 175);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Merge overlapping left")
 				{
@@ -57,16 +57,16 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(50, 120);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(120));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(150));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(120));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(150));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Merge overlapping right")
 				{
@@ -74,16 +74,16 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(120, 175);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(120));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(120));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Merge equal left")
 				{
@@ -91,16 +91,16 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(100, 120);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(120));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(150));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(120));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(150));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Merge equal right")
 				{
@@ -108,16 +108,16 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(120, 150);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(120));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(120));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Merge overlapping left equal right")
 				{
@@ -125,12 +125,12 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(50, 150);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Merge overlapping right equal left")
 				{
@@ -138,12 +138,12 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(100, 175);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Merge equal")
 				{
@@ -151,12 +151,12 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(100, 150);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Before")
 				{
@@ -164,20 +164,20 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(-100, -10);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(-100));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(-10));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("3"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(150));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(-100));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(-10));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("3"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(150));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Before equal")
 				{
@@ -185,16 +185,16 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(-100, 0);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(-100));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(150));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(-100));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(150));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Before overlapping")
 				{
@@ -202,16 +202,16 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(-100, 10);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(-100));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(150));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(-100));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(150));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("After")
 				{
@@ -219,20 +219,20 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(210, 300);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(150));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(200));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("3"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(210));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(300));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(150));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(200));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("3"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(210));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(300));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("After equal")
 				{
@@ -240,16 +240,16 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(200, 300);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(150));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(300));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(150));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(300));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("After overlapping")
 				{
@@ -257,16 +257,16 @@ namespace
 					Regions.f_MakeRegion(0, 100);
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(190, 300);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(150));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(300));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(150));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(300));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Over")
 				{
@@ -275,12 +275,12 @@ namespace
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(210, 300);
 					Regions.f_MakeRegion(-10, 310);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(-10));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(310));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(-10));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(310));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Over equal left")
 				{
@@ -289,12 +289,12 @@ namespace
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(210, 300);
 					Regions.f_MakeRegion(0, 310);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(310));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(310));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Over equal right")
 				{
@@ -303,12 +303,12 @@ namespace
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(210, 300);
 					Regions.f_MakeRegion(-10, 300);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(-10));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(300));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(-10));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(300));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Over equal")
 				{
@@ -317,12 +317,12 @@ namespace
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(210, 300);
 					Regions.f_MakeRegion(0, 300);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(300));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(300));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Over middle")
 				{
@@ -331,12 +331,12 @@ namespace
 					Regions.f_MakeRegion(150, 200);
 					Regions.f_MakeRegion(210, 300);
 					Regions.f_MakeRegion(10, 290);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(300));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(300));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Split left ovelapping")
 				{
@@ -352,18 +352,18 @@ namespace
 							}
 						)
 					;
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(-10));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(10));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(1));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(10));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(0));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(-10));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(10));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(1));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(10));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(0));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Split left equal")
 				{
@@ -379,18 +379,18 @@ namespace
 							}
 						)
 					;
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(10));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(1));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(10));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(0));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(10));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(1));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(10));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(0));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Split right ovelapping")
 				{
@@ -406,18 +406,18 @@ namespace
 							}
 						)
 					;
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(90));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(0));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(90));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(110));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(1));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(90));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(0));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(90));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(110));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(1));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Split right equal")
 				{
@@ -433,18 +433,18 @@ namespace
 							}
 						)
 					;
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(90));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(0));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(90));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(1));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(90));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(0));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(90));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(1));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 				DMibTestSuite("Split middle")
 				{
@@ -460,23 +460,23 @@ namespace
 							}
 						)
 					;
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(40));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(0));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(40));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(60));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(1));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("3"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(60));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(100));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(0) && DMibExpr("4"));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(40));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(0));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(40));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(60));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(1));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("3"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(60));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(100));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(0) && DMibExpr("4"));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 			};
 			DMibTestCategory("Bugs")
@@ -493,18 +493,18 @@ namespace
 					Regions.f_MakeRegion(0, 2, fSet1);
 					Regions.f_MakeRegion(2, 4, fSet1);
 					Regions.f_MakeRegion(4, 6, fSet1);
-					auto Iter = Regions.f_GetIterator();
-					DMibTest(DMibExpr(Iter))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(0));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(6));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(1));
-					++Iter;
-					DMibTest(DMibExpr(Iter) && DMibExpr("2"))(ETest_FailAndStop);
-					DMibTest(DMibExpr(Iter->f_Start()) == DMibExpr(6));
-					DMibTest(DMibExpr(Iter->f_End()) == DMibExpr(8));
-					DMibTest(DMibExpr(Iter->f_Data()) == DMibExpr(0));
-					++Iter;
-					DMibTest(DMibExpr(!Iter))(ETest_FailAndStop);
+					auto iIter = Regions.f_GetIterator();
+					DMibTest(DMibExpr(iIter))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(0));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(6));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(1));
+					++iIter;
+					DMibTest(DMibExpr(iIter) && DMibExpr("2"))(ETest_FailAndStop);
+					DMibTest(DMibExpr(iIter->f_Start()) == DMibExpr(6));
+					DMibTest(DMibExpr(iIter->f_End()) == DMibExpr(8));
+					DMibTest(DMibExpr(iIter->f_Data()) == DMibExpr(0));
+					++iIter;
+					DMibTest(DMibExpr(!iIter))(ETest_FailAndStop);
 				};
 			};
 		}

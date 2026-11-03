@@ -588,7 +588,7 @@ namespace
 				};
 				DMibTestSuite("Exceptions")
 				{
-					auto DoTest = [&](CStr const &_String, ch8 const *_pDesc, ch8 const *_pDescDisambiguate)
+					auto fDoTest = [&](CStr const &_String, ch8 const *_pDesc, ch8 const *_pDescDisambiguate)
 						{
 							CStr Category;
 							if (*_pDescDisambiguate)
@@ -606,22 +606,22 @@ namespace
 						}
 					;
 
-					DoTest("Key value /* Comment not ending", "No end found for block comment", "");
-					DoTest("{ }", "Children without key not supported", "");
-					DoTest("Key value {} {}", "You cannot specify two child sections for one key", "");
-					DoTest("key value key", "Mismatching key/value pairs within scope", "(root)");
-					DoTest("key value {key value key}", "Mismatching key/value pairs within scope", "(children)");
-					DoTest("Key value { ", "No matching '}' found", "");
-					DoTest("Key value { key { }", "No matching '}' found", "(recursive)");
-					DoTest("Key \"Value", "No matching end for escaped text (\")", "");
-					DoTest("Key \"Value\r\n", "No matching end for escaped text (\") before end of line", "");
-					DoTest("Key \"V\\alue\"", "Invalid escape character", "");
-					DoTest("Key Value\\", "\\ needs to be followed with a continuation of the text", "(eof)");
-					DoTest("Key Value\\{", "\\ needs to be followed with a continuation of the text", "({)");
-					DoTest("Key Value\\}", "\\ needs to be followed with a continuation of the text", "(})");
-					DoTest("Key Value\\//", "\\ needs to be followed with a continuation of the text", "(comment)");
-					DoTest("Key Value\\/*", "\\ needs to be followed with a continuation of the text", "(multicommment)");
-					DoTest("Key {} }", "No matching '{' found", "");
+					fDoTest("Key value /* Comment not ending", "No end found for block comment", "");
+					fDoTest("{ }", "Children without key not supported", "");
+					fDoTest("Key value {} {}", "You cannot specify two child sections for one key", "");
+					fDoTest("key value key", "Mismatching key/value pairs within scope", "(root)");
+					fDoTest("key value {key value key}", "Mismatching key/value pairs within scope", "(children)");
+					fDoTest("Key value { ", "No matching '}' found", "");
+					fDoTest("Key value { key { }", "No matching '}' found", "(recursive)");
+					fDoTest("Key \"Value", "No matching end for escaped text (\")", "");
+					fDoTest("Key \"Value\r\n", "No matching end for escaped text (\") before end of line", "");
+					fDoTest("Key \"V\\alue\"", "Invalid escape character", "");
+					fDoTest("Key Value\\", "\\ needs to be followed with a continuation of the text", "(eof)");
+					fDoTest("Key Value\\{", "\\ needs to be followed with a continuation of the text", "({)");
+					fDoTest("Key Value\\}", "\\ needs to be followed with a continuation of the text", "(})");
+					fDoTest("Key Value\\//", "\\ needs to be followed with a continuation of the text", "(comment)");
+					fDoTest("Key Value\\/*", "\\ needs to be followed with a continuation of the text", "(multicommment)");
+					fDoTest("Key {} }", "No matching '{' found", "");
 				};
 				DMibTestSuite("Copy")
 				{

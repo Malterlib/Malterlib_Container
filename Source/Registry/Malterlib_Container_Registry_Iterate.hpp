@@ -7,8 +7,8 @@ namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	template <typename tf_CTransform>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Transform(tf_CTransform const &_fTransformer)
+	template <typename tf_FTransform>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Transform(tf_FTransform const &_fTransformer)
 	{
 		NContainer::TCVector<TCRegistry *> Children;
 		{
@@ -31,8 +31,8 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	template <typename tf_CFunctor>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_TransformFunc(tf_CFunctor const &_fTransformer)
+	template <typename tf_FFunctor>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_TransformFunc(tf_FFunctor const &_fTransformer)
 	{
 		NContainer::TCVector<TCRegistry *> Children;
 		{
@@ -55,8 +55,8 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	template <typename tf_CFunctor>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ForEachInTree(tf_CFunctor const &_fFunctor) const
+	template <typename tf_FFunctor>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_ForEachInTree(tf_FFunctor const &_fFunctor) const
 	{
 		auto Iter = mp_Children.f_GetIterator();
 		while (Iter)

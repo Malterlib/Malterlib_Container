@@ -36,11 +36,11 @@ namespace NMib::NContainer
 			return CKeyIterator();
 
 		umint Rank = TCPackedMap::fsp_ComputeRank(mp_Map.mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
-		CKeyIterator Iter(&mp_Map, mp_Map.f_GetLen());
-		Iter.mp_iSegment = FindResult.m_iSegment;
-		Iter.mp_iLocalPos = FindResult.m_iLocalPos;
-		Iter.mp_iCurrent = Rank;
-		return Iter;
+		CKeyIterator iResult(&mp_Map, mp_Map.f_GetLen());
+		iResult.mp_iSegment = FindResult.m_iSegment;
+		iResult.mp_iLocalPos = FindResult.m_iLocalPos;
+		iResult.mp_iCurrent = Rank;
+		return iResult;
 	}
 
 	//
@@ -74,11 +74,11 @@ namespace NMib::NContainer
 			return CKeyIteratorConst();
 
 		umint Rank = TCPackedMap::fsp_ComputeRank(mp_Map.mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
-		CKeyIteratorConst Iter(&mp_Map, mp_Map.f_GetLen());
-		Iter.mp_iSegment = FindResult.m_iSegment;
-		Iter.mp_iLocalPos = FindResult.m_iLocalPos;
-		Iter.mp_iCurrent = Rank;
-		return Iter;
+		CKeyIteratorConst iResult(&mp_Map, mp_Map.f_GetLen());
+		iResult.mp_iSegment = FindResult.m_iSegment;
+		iResult.mp_iLocalPos = FindResult.m_iLocalPos;
+		iResult.mp_iCurrent = Rank;
+		return iResult;
 	}
 
 	//
@@ -112,11 +112,11 @@ namespace NMib::NContainer
 			return CKeyValueIterator();
 
 		umint Rank = TCPackedMap::fsp_ComputeRank(mp_Map.mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
-		CKeyValueIterator Iter(&mp_Map, mp_Map.f_GetLen());
-		Iter.mp_iSegment = FindResult.m_iSegment;
-		Iter.mp_iLocalPos = FindResult.m_iLocalPos;
-		Iter.mp_iCurrent = Rank;
-		return Iter;
+		CKeyValueIterator iResult(&mp_Map, mp_Map.f_GetLen());
+		iResult.mp_iSegment = FindResult.m_iSegment;
+		iResult.mp_iLocalPos = FindResult.m_iLocalPos;
+		iResult.mp_iCurrent = Rank;
+		return iResult;
 	}
 
 	//
@@ -150,10 +150,10 @@ namespace NMib::NContainer
 			return CKeyValueIteratorConst();
 
 		umint Rank = TCPackedMap::fsp_ComputeRank(mp_Map.mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
-		CKeyValueIteratorConst Iter(&mp_Map, mp_Map.f_GetLen());
-		Iter.mp_iSegment = FindResult.m_iSegment;
-		Iter.mp_iLocalPos = FindResult.m_iLocalPos;
-		Iter.mp_iCurrent = Rank;
-		return Iter;
+		CKeyValueIteratorConst iResult(&mp_Map, mp_Map.f_GetLen());
+		iResult.mp_iSegment = FindResult.m_iSegment;
+		iResult.mp_iLocalPos = FindResult.m_iLocalPos;
+		iResult.mp_iCurrent = Rank;
+		return iResult;
 	}
 }

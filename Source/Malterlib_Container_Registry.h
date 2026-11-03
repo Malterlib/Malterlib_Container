@@ -289,12 +289,12 @@ namespace NMib::NContainer
 		t_CStr f_GenerateStr(ch8 const *_pNewLine = DMibNewLine) const;
 		t_CStr f_GenerateStrLax(ch8 const *_pNewLine = DMibNewLine) const;
 
-		template <typename tf_CTransform>
-		void f_Transform(tf_CTransform const &_fTransformer);
-		template <typename tf_CFunctor>
-		void f_TransformFunc(tf_CFunctor const &_fTransformer);
-		template <typename tf_CFunctor>
-		void f_ForEachInTree(tf_CFunctor const &_fFunctor) const;
+		template <typename tf_FTransform>
+		void f_Transform(tf_FTransform const &_fTransformer);
+		template <typename tf_FFunctor>
+		void f_TransformFunc(tf_FFunctor const &_fTransformer);
+		template <typename tf_FFunctor>
+		void f_ForEachInTree(tf_FFunctor const &_fFunctor) const;
 		CIterator f_GetChildIterator() const;
 		template <typename tf_CStr>
 		typename CTree::CIterator f_GetChildIterator(tf_CStr const &_Str) const;
@@ -343,7 +343,7 @@ namespace NMib::NContainer
 		template <typename tf_FPredicate>
 		void f_MergeIncludingValue(TCRegistry const &_MergeWith, bool _bMergeRoot, tf_FPredicate const &_fPredicate);
 		void f_MergeIncludingValue(TCRegistry const &_MergeWith, bool _bMergeRoot = false);
-		void f_Add(TCRegistry const &_ToAdd, bool _SetRootValue = false);
+		void f_Add(TCRegistry const &_ToAdd, bool _bSetRootValue = false);
 		void f_Subtract(TCRegistry const &_ToSubtract);
 
 		template <typename tf_CStream>

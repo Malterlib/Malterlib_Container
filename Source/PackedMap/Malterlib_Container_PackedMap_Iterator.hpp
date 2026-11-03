@@ -21,13 +21,13 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::TCPackedMapIterator(TCPackedMapIterator const &_ToCopy) noexcept
-		: mp_pMap(_ToCopy.mp_pMap)
-		, mp_iSegment(_ToCopy.mp_iSegment)
-		, mp_iLocalPos(_ToCopy.mp_iLocalPos)
-		, mp_iCurrent(_ToCopy.mp_iCurrent)
-		, mp_nElements(_ToCopy.mp_nElements)
-		, mp_bValid(_ToCopy.mp_bValid)
+	constexpr TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::TCPackedMapIterator(TCPackedMapIterator const &_iToCopy) noexcept
+		: mp_pMap(_iToCopy.mp_pMap)
+		, mp_iSegment(_iToCopy.mp_iSegment)
+		, mp_iLocalPos(_iToCopy.mp_iLocalPos)
+		, mp_iCurrent(_iToCopy.mp_iCurrent)
+		, mp_nElements(_iToCopy.mp_nElements)
+		, mp_bValid(_iToCopy.mp_bValid)
 	{
 	}
 
@@ -106,14 +106,14 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr auto TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::operator = (TCPackedMapIterator const &_ToCopy) noexcept -> TCPackedMapIterator &
+	constexpr auto TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::operator = (TCPackedMapIterator const &_iToCopy) noexcept -> TCPackedMapIterator &
 	{
-		mp_pMap = _ToCopy.mp_pMap;
-		mp_iSegment = _ToCopy.mp_iSegment;
-		mp_iLocalPos = _ToCopy.mp_iLocalPos;
-		mp_iCurrent = _ToCopy.mp_iCurrent;
-		mp_nElements = _ToCopy.mp_nElements;
-		mp_bValid = _ToCopy.mp_bValid;
+		mp_pMap = _iToCopy.mp_pMap;
+		mp_iSegment = _iToCopy.mp_iSegment;
+		mp_iLocalPos = _iToCopy.mp_iLocalPos;
+		mp_iCurrent = _iToCopy.mp_iCurrent;
+		mp_nElements = _iToCopy.mp_nElements;
+		mp_bValid = _iToCopy.mp_bValid;
 		return *this;
 	}
 
@@ -169,9 +169,9 @@ namespace NMib::NContainer
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
 	constexpr auto TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::operator ++ (int) noexcept -> TCPackedMapIterator
 	{
-		auto Copy = *this;
+		auto iCopy = *this;
 		++(*this);
-		return Copy;
+		return iCopy;
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
@@ -242,21 +242,21 @@ namespace NMib::NContainer
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
 	constexpr auto TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::operator -- (int) noexcept -> TCPackedMapIterator
 	{
-		auto Copy = *this;
+		auto iCopy = *this;
 		--(*this);
-		return Copy;
+		return iCopy;
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr bool TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::operator == (TCPackedMapIterator const &_Other) const noexcept
+	constexpr bool TCPackedMapIterator<t_CMap, t_bConst, t_bReverse>::operator == (TCPackedMapIterator const &_iOther) const noexcept
 	{
-		if (mp_pMap != _Other.mp_pMap)
+		if (mp_pMap != _iOther.mp_pMap)
 			return false;
 
-		if (!mp_bValid || !_Other.mp_bValid)
-			return mp_bValid == _Other.mp_bValid;
+		if (!mp_bValid || !_iOther.mp_bValid)
+			return mp_bValid == _iOther.mp_bValid;
 
-		return mp_iCurrent == _Other.mp_iCurrent;
+		return mp_iCurrent == _iOther.mp_iCurrent;
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
@@ -318,13 +318,13 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::TCPackedMapKeyIterator(TCPackedMapKeyIterator const &_ToCopy) noexcept
-		: mp_pMap(_ToCopy.mp_pMap)
-		, mp_iSegment(_ToCopy.mp_iSegment)
-		, mp_iLocalPos(_ToCopy.mp_iLocalPos)
-		, mp_iCurrent(_ToCopy.mp_iCurrent)
-		, mp_nElements(_ToCopy.mp_nElements)
-		, mp_bValid(_ToCopy.mp_bValid)
+	constexpr TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::TCPackedMapKeyIterator(TCPackedMapKeyIterator const &_iToCopy) noexcept
+		: mp_pMap(_iToCopy.mp_pMap)
+		, mp_iSegment(_iToCopy.mp_iSegment)
+		, mp_iLocalPos(_iToCopy.mp_iLocalPos)
+		, mp_iCurrent(_iToCopy.mp_iCurrent)
+		, mp_nElements(_iToCopy.mp_nElements)
+		, mp_bValid(_iToCopy.mp_bValid)
 	{
 	}
 
@@ -400,14 +400,14 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse> &TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::operator = (TCPackedMapKeyIterator const &_ToCopy) noexcept
+	constexpr TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse> &TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::operator = (TCPackedMapKeyIterator const &_iToCopy) noexcept
 	{
-		mp_pMap = _ToCopy.mp_pMap;
-		mp_iSegment = _ToCopy.mp_iSegment;
-		mp_iLocalPos = _ToCopy.mp_iLocalPos;
-		mp_iCurrent = _ToCopy.mp_iCurrent;
-		mp_nElements = _ToCopy.mp_nElements;
-		mp_bValid = _ToCopy.mp_bValid;
+		mp_pMap = _iToCopy.mp_pMap;
+		mp_iSegment = _iToCopy.mp_iSegment;
+		mp_iLocalPos = _iToCopy.mp_iLocalPos;
+		mp_iCurrent = _iToCopy.mp_iCurrent;
+		mp_nElements = _iToCopy.mp_nElements;
+		mp_bValid = _iToCopy.mp_bValid;
 		return *this;
 	}
 
@@ -463,9 +463,9 @@ namespace NMib::NContainer
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
 	constexpr TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse> TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::operator ++ (int) noexcept
 	{
-		auto Copy = *this;
+		auto iCopy = *this;
 		++(*this);
-		return Copy;
+		return iCopy;
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
@@ -536,21 +536,21 @@ namespace NMib::NContainer
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
 	constexpr TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse> TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::operator -- (int) noexcept
 	{
-		auto Copy = *this;
+		auto iCopy = *this;
 		--(*this);
-		return Copy;
+		return iCopy;
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr bool TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::operator == (TCPackedMapKeyIterator const &_Other) const noexcept
+	constexpr bool TCPackedMapKeyIterator<t_CMap, t_bConst, t_bReverse>::operator == (TCPackedMapKeyIterator const &_iOther) const noexcept
 	{
-		if (mp_pMap != _Other.mp_pMap)
+		if (mp_pMap != _iOther.mp_pMap)
 			return false;
 
-		if (!mp_bValid || !_Other.mp_bValid)
-			return mp_bValid == _Other.mp_bValid;
+		if (!mp_bValid || !_iOther.mp_bValid)
+			return mp_bValid == _iOther.mp_bValid;
 
-		return mp_iCurrent == _Other.mp_iCurrent;
+		return mp_iCurrent == _iOther.mp_iCurrent;
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
@@ -611,13 +611,13 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::TCPackedMapKeyValueIterator(TCPackedMapKeyValueIterator const &_ToCopy) noexcept
-		: mp_pMap(_ToCopy.mp_pMap)
-		, mp_iSegment(_ToCopy.mp_iSegment)
-		, mp_iLocalPos(_ToCopy.mp_iLocalPos)
-		, mp_iCurrent(_ToCopy.mp_iCurrent)
-		, mp_nElements(_ToCopy.mp_nElements)
-		, mp_bValid(_ToCopy.mp_bValid)
+	constexpr TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::TCPackedMapKeyValueIterator(TCPackedMapKeyValueIterator const &_iToCopy) noexcept
+		: mp_pMap(_iToCopy.mp_pMap)
+		, mp_iSegment(_iToCopy.mp_iSegment)
+		, mp_iLocalPos(_iToCopy.mp_iLocalPos)
+		, mp_iCurrent(_iToCopy.mp_iCurrent)
+		, mp_nElements(_iToCopy.mp_nElements)
+		, mp_bValid(_iToCopy.mp_bValid)
 	{
 	}
 
@@ -693,15 +693,15 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr auto TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::operator = (TCPackedMapKeyValueIterator const &_ToCopy) noexcept
+	constexpr auto TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::operator = (TCPackedMapKeyValueIterator const &_iToCopy) noexcept
 		-> TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse> &
 	{
-		mp_pMap = _ToCopy.mp_pMap;
-		mp_iSegment = _ToCopy.mp_iSegment;
-		mp_iLocalPos = _ToCopy.mp_iLocalPos;
-		mp_iCurrent = _ToCopy.mp_iCurrent;
-		mp_nElements = _ToCopy.mp_nElements;
-		mp_bValid = _ToCopy.mp_bValid;
+		mp_pMap = _iToCopy.mp_pMap;
+		mp_iSegment = _iToCopy.mp_iSegment;
+		mp_iLocalPos = _iToCopy.mp_iLocalPos;
+		mp_iCurrent = _iToCopy.mp_iCurrent;
+		mp_nElements = _iToCopy.mp_nElements;
+		mp_bValid = _iToCopy.mp_bValid;
 		return *this;
 	}
 
@@ -751,9 +751,9 @@ namespace NMib::NContainer
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
 	constexpr TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse> TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::operator ++ (int) noexcept
 	{
-		auto Copy = *this;
+		auto iCopy = *this;
 		++(*this);
-		return Copy;
+		return iCopy;
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
@@ -824,21 +824,21 @@ namespace NMib::NContainer
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
 	constexpr TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse> TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::operator -- (int) noexcept
 	{
-		auto Copy = *this;
+		auto iCopy = *this;
 		--(*this);
-		return Copy;
+		return iCopy;
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
-	constexpr bool TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::operator == (TCPackedMapKeyValueIterator const &_Other) const noexcept
+	constexpr bool TCPackedMapKeyValueIterator<t_CMap, t_bConst, t_bReverse>::operator == (TCPackedMapKeyValueIterator const &_iOther) const noexcept
 	{
-		if (mp_pMap != _Other.mp_pMap)
+		if (mp_pMap != _iOther.mp_pMap)
 			return false;
 
-		if (!mp_bValid || !_Other.mp_bValid)
-			return mp_bValid == _Other.mp_bValid;
+		if (!mp_bValid || !_iOther.mp_bValid)
+			return mp_bValid == _iOther.mp_bValid;
 
-		return mp_iCurrent == _Other.mp_iCurrent;
+		return mp_iCurrent == _iOther.mp_iCurrent;
 	}
 
 	template <typename t_CMap, bool t_bConst, bool t_bReverse>
@@ -920,11 +920,11 @@ namespace NMib::NContainer
 			return CIterator();
 
 		umint Rank = fsp_ComputeRank(mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
-		CIterator Iter(this, f_GetLen());
-		Iter.mp_iSegment = FindResult.m_iSegment;
-		Iter.mp_iLocalPos = FindResult.m_iLocalPos;
-		Iter.mp_iCurrent = Rank;
-		return Iter;
+		CIterator iResult(this, f_GetLen());
+		iResult.mp_iSegment = FindResult.m_iSegment;
+		iResult.mp_iLocalPos = FindResult.m_iLocalPos;
+		iResult.mp_iCurrent = Rank;
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
@@ -936,11 +936,11 @@ namespace NMib::NContainer
 			return CIteratorConst();
 
 		umint Rank = fsp_ComputeRank(mp_pData, FindResult.m_iSegment, FindResult.m_iLocalPos);
-		CIteratorConst Iter(this, f_GetLen());
-		Iter.mp_iSegment = FindResult.m_iSegment;
-		Iter.mp_iLocalPos = FindResult.m_iLocalPos;
-		Iter.mp_iCurrent = Rank;
-		return Iter;
+		CIteratorConst iResult(this, f_GetLen());
+		iResult.mp_iSegment = FindResult.m_iSegment;
+		iResult.mp_iLocalPos = FindResult.m_iLocalPos;
+		iResult.mp_iCurrent = Rank;
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
@@ -963,11 +963,11 @@ namespace NMib::NContainer
 		umint iLocalPos = iSlot - iFirst;
 
 		umint Rank = fsp_ComputeRank(pData, iSegment, iLocalPos);
-		CIterator Iter(this, f_GetLen());
-		Iter.mp_iSegment = iSegment;
-		Iter.mp_iLocalPos = iLocalPos;
-		Iter.mp_iCurrent = Rank;
-		return Iter;
+		CIterator iResult(this, f_GetLen());
+		iResult.mp_iSegment = iSegment;
+		iResult.mp_iLocalPos = iLocalPos;
+		iResult.mp_iCurrent = Rank;
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
@@ -989,11 +989,11 @@ namespace NMib::NContainer
 		umint iLocalPos = iSlot - iFirst;
 		umint Rank = fsp_ComputeRank(pData, iSegment, iLocalPos);
 
-		CIteratorConst Iter(this, f_GetLen());
-		Iter.mp_iSegment = iSegment;
-		Iter.mp_iLocalPos = iLocalPos;
-		Iter.mp_iCurrent = Rank;
-		return Iter;
+		CIteratorConst iResult(this, f_GetLen());
+		iResult.mp_iSegment = iSegment;
+		iResult.mp_iLocalPos = iLocalPos;
+		iResult.mp_iCurrent = Rank;
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
@@ -1015,11 +1015,11 @@ namespace NMib::NContainer
 		umint iLocalPos = iSlot - iFirst;
 
 		umint Rank = fsp_ComputeRank(pData, iSegment, iLocalPos);
-		CIterator Iter(this, f_GetLen());
-		Iter.mp_iSegment = iSegment;
-		Iter.mp_iLocalPos = iLocalPos;
-		Iter.mp_iCurrent = Rank;
-		return Iter;
+		CIterator iResult(this, f_GetLen());
+		iResult.mp_iSegment = iSegment;
+		iResult.mp_iLocalPos = iLocalPos;
+		iResult.mp_iCurrent = Rank;
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
@@ -1041,10 +1041,10 @@ namespace NMib::NContainer
 		umint iLocalPos = iSlot - iFirst;
 		umint Rank = fsp_ComputeRank(pData, iSegment, iLocalPos);
 
-		CIteratorConst Iter(this, f_GetLen());
-		Iter.mp_iSegment = iSegment;
-		Iter.mp_iLocalPos = iLocalPos;
-		Iter.mp_iCurrent = Rank;
-		return Iter;
+		CIteratorConst iResult(this, f_GetLen());
+		iResult.mp_iSegment = iSegment;
+		iResult.mp_iLocalPos = iLocalPos;
+		iResult.mp_iCurrent = Rank;
+		return iResult;
 	}
 }

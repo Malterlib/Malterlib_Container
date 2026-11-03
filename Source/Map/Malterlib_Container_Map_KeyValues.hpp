@@ -88,22 +88,22 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeys::f_GetIterator_SmallestGreaterThanEqual(tf_CKey &&_Key) -> CKeyIterator
 	{
-		CKeyIterator Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyIterator iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeys::f_GetIterator_LargestLessThanEqual(tf_CKey &&_Key) -> CKeyIterator
 	{
-		CKeyIterator Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyIterator iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
@@ -117,22 +117,22 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeys::f_GetIteratorBidirectional_SmallestGreaterThanEqual(tf_CKey &&_Key) -> CKeyIteratorBidirectional
 	{
-		CKeyIteratorBidirectional Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyIteratorBidirectional iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeys::f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key) -> CKeyIteratorBidirectional
 	{
-		CKeyIteratorBidirectional Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyIteratorBidirectional iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
@@ -170,22 +170,22 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeysConst::f_GetIterator_SmallestGreaterThanEqual(tf_CKey &&_Key) const -> CKeyIteratorConst
 	{
-		CKeyIteratorConst Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyIteratorConst iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeysConst::f_GetIterator_LargestLessThanEqual(tf_CKey &&_Key) const -> CKeyIteratorConst
 	{
-		CKeyIteratorConst Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyIteratorConst iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
@@ -199,22 +199,22 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeysConst::f_GetIteratorBidirectional_SmallestGreaterThanEqual(tf_CKey &&_Key) const -> CKeyIteratorBidirectionalConst
 	{
-		CKeyIteratorBidirectionalConst Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyIteratorBidirectionalConst iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CKeysConst::f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key) const -> CKeyIteratorBidirectionalConst
 	{
-		CKeyIteratorBidirectionalConst Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyIteratorBidirectionalConst iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
@@ -252,22 +252,22 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntries::f_GetIterator_SmallestGreaterThanEqual(tf_CKey &&_Key) -> CKeyValueIterator
 	{
-		CKeyValueIterator Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyValueIterator iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntries::f_GetIterator_LargestLessThanEqual(tf_CKey &&_Key) -> CKeyValueIterator
 	{
-		CKeyValueIterator Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyValueIterator iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
@@ -281,22 +281,22 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntries::f_GetIteratorBidirectional_SmallestGreaterThanEqual(tf_CKey &&_Key) -> CKeyValueIteratorBidirectional
 	{
-		CKeyValueIteratorBidirectional Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyValueIteratorBidirectional iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntries::f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key) -> CKeyValueIteratorBidirectional
 	{
-		CKeyValueIteratorBidirectional Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyValueIteratorBidirectional iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
@@ -334,22 +334,22 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntriesConst::f_GetIterator_SmallestGreaterThanEqual(tf_CKey &&_Key) const -> CKeyValueIteratorConst
 	{
-		CKeyValueIteratorConst Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyValueIteratorConst iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntriesConst::f_GetIterator_LargestLessThanEqual(tf_CKey &&_Key) const -> CKeyValueIteratorConst
 	{
-		CKeyValueIteratorConst Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyValueIteratorConst iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
@@ -363,22 +363,22 @@ namespace NMib::NContainer
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntriesConst::f_GetIteratorBidirectional_SmallestGreaterThanEqual(tf_CKey &&_Key) const -> CKeyValueIteratorBidirectionalConst
 	{
-		CKeyValueIteratorBidirectionalConst Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyValueIteratorBidirectionalConst iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindSmallestGreaterThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	template <typename tf_CKey>
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::CEntriesConst::f_GetIteratorBidirectional_LargestLessThanEqual(tf_CKey &&_Key) const -> CKeyValueIteratorBidirectionalConst
 	{
-		CKeyValueIteratorBidirectionalConst Iterator;
-		Iterator.mp_pMap = &mp_Map;
-		Iterator.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
-		Iterator.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
-		return Iterator;
+		CKeyValueIteratorBidirectionalConst iResult;
+		iResult.mp_pMap = &mp_Map;
+		iResult.mp_Iter.f_InitForSearch(mp_Map.mp_Tree);
+		iResult.mp_Iter.f_FindLargestLessThanEqualForward(fg_Forward<tf_CKey>(_Key), mp_Map.mp_Compare);
+		return iResult;
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>

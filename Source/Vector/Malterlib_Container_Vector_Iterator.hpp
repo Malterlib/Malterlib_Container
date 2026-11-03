@@ -25,16 +25,16 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CIteratorData>
-	TCVectorIterator<t_CIteratorData>::TCVectorIterator(t_CIteratorData *_Begin, t_CIteratorData *_End)
-		: mp_pBegin(_Begin)
-		, mp_pEnd(_End)
+	TCVectorIterator<t_CIteratorData>::TCVectorIterator(t_CIteratorData *_pBegin, t_CIteratorData *_pEnd)
+		: mp_pBegin(_pBegin)
+		, mp_pEnd(_pEnd)
 	{
 	}
 
 	template <typename t_CIteratorData>
-	TCVectorIterator<t_CIteratorData>::TCVectorIterator(TCVectorIterator const &_ToCopy)
-		: mp_pBegin(_ToCopy.mp_pBegin)
-		, mp_pEnd(_ToCopy.mp_pEnd)
+	TCVectorIterator<t_CIteratorData>::TCVectorIterator(TCVectorIterator const &_iToCopy)
+		: mp_pBegin(_iToCopy.mp_pBegin)
+		, mp_pEnd(_iToCopy.mp_pEnd)
 	{
 	}
 
@@ -45,17 +45,17 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CIteratorData>
-	inline_small auto TCVectorIterator<t_CIteratorData>::operator = (TCVectorIterator const &_ToCopy) -> TCVectorIterator &
+	inline_small auto TCVectorIterator<t_CIteratorData>::operator = (TCVectorIterator const &_iToCopy) -> TCVectorIterator &
 	{
-		mp_pBegin = _ToCopy.mp_pBegin;
-		mp_pEnd = _ToCopy.mp_pEnd;
+		mp_pBegin = _iToCopy.mp_pBegin;
+		mp_pEnd = _iToCopy.mp_pEnd;
 		return *this;
 	}
 
 	template <typename t_CIteratorData>
-	inline_small bool TCVectorIterator<t_CIteratorData>::operator == (TCVectorIterator const &_Other) const noexcept
+	inline_small bool TCVectorIterator<t_CIteratorData>::operator == (TCVectorIterator const &_iOther) const noexcept
 	{
-		return (mp_pBegin == _Other.mp_pBegin) && (mp_pEnd == _Other.mp_pEnd);
+		return (mp_pBegin == _iOther.mp_pBegin) && (mp_pEnd == _iOther.mp_pEnd);
 	}
 
 	template <typename t_CIteratorData>

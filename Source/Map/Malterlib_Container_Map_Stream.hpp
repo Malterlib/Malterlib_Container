@@ -9,15 +9,15 @@ namespace NMib::NContainer
 	template <typename tf_CStream>
 	void TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Feed(tf_CStream &_Stream) const
 	{
-		CIteratorConst Iter = f_GetIterator();
-		umint nItems = Iter.f_GetLen();
+		CIteratorConst iEntry = f_GetIterator();
+		umint nItems = iEntry.f_GetLen();
 
 		fg_FeedLenToStream(_Stream, nItems);
 
-		while (Iter)
+		while (iEntry)
 		{
-			_Stream.f_Feed(*Iter.mp_Iter);
-			++Iter;
+			_Stream.f_Feed(*iEntry.mp_Iter);
+			++iEntry;
 		};
 	}
 

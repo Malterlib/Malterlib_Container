@@ -237,15 +237,15 @@ namespace NMib::NContainer
 		// _fInsert is called with a functor: _fInsert([](auto &&_Key, auto &&_Value) { ... })
 		// The caller invokes the functor exactly _Count times with key-value pairs
 		// The map must not be accessed from within the populate functor.
-		template <typename tf_CPopulate>
-		constexpr void f_BulkLoad(umint _Count, tf_CPopulate &&_fPopulate);
+		template <typename tf_FPopulate>
+		constexpr void f_BulkLoad(umint _Count, tf_FPopulate &&_fPopulate);
 
 		// Bulk insert (expects sorted unique keys, may be non-empty)
 		// Same interface as f_BulkLoad: _fPopulate receives an insert functor
 		// The map must not be accessed from within the populate functor.
 		// Same exception-safety guarantee as f_Insert().
-		template <typename tf_CPopulate>
-		constexpr void f_BulkInsert(umint _Count, tf_CPopulate &&_fPopulate);
+		template <typename tf_FPopulate>
+		constexpr void f_BulkInsert(umint _Count, tf_FPopulate &&_fPopulate);
 
 		// Find operations
 		template <typename tf_CKey>

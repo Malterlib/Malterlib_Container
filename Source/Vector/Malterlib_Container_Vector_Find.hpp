@@ -36,8 +36,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CCompare, typename tf_CFind>
-	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearch(tf_CCompare &&_fCompare, tf_CFind const &_ToFind, aint _nMax) const
+	template <typename tf_FCompare, typename tf_CFind>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearch(tf_FCompare &&_fCompare, tf_CFind const &_ToFind, aint _nMax) const
 	{
 		umint Len = f_GetLen();
 		if (_nMax >= 0)
@@ -68,8 +68,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CCompare, typename tf_CFind>
-	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearchLowerBound(tf_CCompare &&_fCompare, tf_CFind const &_ToFind) const
+	template <typename tf_FCompare, typename tf_CFind>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearchLowerBound(tf_FCompare &&_fCompare, tf_CFind const &_ToFind) const
 	{
 		umint Low = 0;
 		umint High = f_GetLen();
@@ -98,8 +98,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CCompare, typename tf_CFind>
-	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearchUpperBound(tf_CCompare &&_fCompare, tf_CFind const &_ToFind) const
+	template <typename tf_FCompare, typename tf_CFind>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_BinarySearchUpperBound(tf_FCompare &&_fCompare, tf_CFind const &_ToFind) const
 	{
 		umint Low = 0;
 		umint High = f_GetLen();

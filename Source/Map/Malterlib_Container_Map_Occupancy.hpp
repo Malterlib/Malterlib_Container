@@ -26,8 +26,8 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
 	umint TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_GetLen() const
 	{
-		CIteratorConst Iter = *this;
-		return Iter.f_GetLen();
+		CIteratorConst iEntry = *this;
+		return iEntry.f_GetLen();
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>

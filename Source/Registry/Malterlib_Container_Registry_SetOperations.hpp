@@ -137,9 +137,9 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Add(TCRegistry const &_ToAdd, bool _SetRootValue)
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Add(TCRegistry const &_ToAdd, bool _bSetRootValue)
 	{
-		if (_SetRootValue)
+		if (_bSetRootValue)
 			f_SetThisValue(_ToAdd.f_GetThisValue());
 		fp_Add(&_ToAdd);
 	}

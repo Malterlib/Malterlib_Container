@@ -27,10 +27,10 @@ namespace NMib::NContainer
 		using CMapPointer = TCConditional<t_bConst, t_CMap const *, t_CMap *>;
 
 		constexpr TCPackedMapIterator() noexcept;
-		constexpr TCPackedMapIterator(TCPackedMapIterator const &_ToCopy) noexcept;
+		constexpr TCPackedMapIterator(TCPackedMapIterator const &_iToCopy) noexcept;
 		constexpr TCPackedMapIterator(CMapPointer _Map, umint _nElements) noexcept;
 
-		constexpr TCPackedMapIterator &operator = (TCPackedMapIterator const &_ToCopy) noexcept;
+		constexpr TCPackedMapIterator &operator = (TCPackedMapIterator const &_iToCopy) noexcept;
 
 		constexpr inline_small umint f_GetLen() const noexcept;
 		constexpr inline_small TCPackedMapIterator f_GetIterator() const noexcept;
@@ -42,7 +42,7 @@ namespace NMib::NContainer
 		constexpr inline_small TCPackedMapIterator operator ++ (int) noexcept;
 		constexpr inline_small TCPackedMapIterator &operator -- () noexcept;
 		constexpr inline_small TCPackedMapIterator operator -- (int) noexcept;
-		constexpr inline_small bool operator == (TCPackedMapIterator const &_Other) const noexcept;
+		constexpr inline_small bool operator == (TCPackedMapIterator const &_iOther) const noexcept;
 
 	protected:
 		template <typename, typename, typename, typename, CPackedMapOptions>
@@ -70,10 +70,10 @@ namespace NMib::NContainer
 		using CMapPointer = TCConditional<t_bConst, t_CMap const *, t_CMap *>;
 
 		constexpr TCPackedMapKeyIterator() noexcept;
-		constexpr TCPackedMapKeyIterator(TCPackedMapKeyIterator const &_ToCopy) noexcept;
+		constexpr TCPackedMapKeyIterator(TCPackedMapKeyIterator const &_iToCopy) noexcept;
 		constexpr TCPackedMapKeyIterator(CMapPointer _Map, umint _nElements) noexcept;
 
-		constexpr TCPackedMapKeyIterator &operator = (TCPackedMapKeyIterator const &_ToCopy) noexcept;
+		constexpr TCPackedMapKeyIterator &operator = (TCPackedMapKeyIterator const &_iToCopy) noexcept;
 
 		constexpr inline_small umint f_GetLen() const noexcept;
 		constexpr inline_small TCPackedMapKeyIterator f_GetIterator() const noexcept;
@@ -85,7 +85,7 @@ namespace NMib::NContainer
 		constexpr inline_small TCPackedMapKeyIterator operator ++ (int) noexcept;
 		constexpr inline_small TCPackedMapKeyIterator &operator -- () noexcept;
 		constexpr inline_small TCPackedMapKeyIterator operator -- (int) noexcept;
-		constexpr inline_small bool operator == (TCPackedMapKeyIterator const &_Other) const noexcept;
+		constexpr inline_small bool operator == (TCPackedMapKeyIterator const &_iOther) const noexcept;
 
 	protected:
 		template <typename, typename, typename, typename, CPackedMapOptions>
@@ -113,10 +113,10 @@ namespace NMib::NContainer
 		using CMapPointer = TCConditional<t_bConst, t_CMap const *, t_CMap *>;
 
 		constexpr TCPackedMapKeyValueIterator() noexcept;
-		constexpr TCPackedMapKeyValueIterator(TCPackedMapKeyValueIterator const &_ToCopy) noexcept;
+		constexpr TCPackedMapKeyValueIterator(TCPackedMapKeyValueIterator const &_iToCopy) noexcept;
 		constexpr TCPackedMapKeyValueIterator(CMapPointer _Map, umint _nElements) noexcept;
 
-		constexpr TCPackedMapKeyValueIterator &operator = (TCPackedMapKeyValueIterator const &_ToCopy) noexcept;
+		constexpr TCPackedMapKeyValueIterator &operator = (TCPackedMapKeyValueIterator const &_iToCopy) noexcept;
 
 		constexpr inline_small umint f_GetLen() const noexcept;
 		constexpr inline_small TCPackedMapKeyValueIterator f_GetIterator() const noexcept;
@@ -127,7 +127,7 @@ namespace NMib::NContainer
 		constexpr inline_small TCPackedMapKeyValueIterator operator ++ (int) noexcept;
 		constexpr inline_small TCPackedMapKeyValueIterator &operator -- () noexcept;
 		constexpr inline_small TCPackedMapKeyValueIterator operator -- (int) noexcept;
-		constexpr inline_small bool operator == (TCPackedMapKeyValueIterator const &_Other) const noexcept;
+		constexpr inline_small bool operator == (TCPackedMapKeyValueIterator const &_iOther) const noexcept;
 
 	protected:
 		template <typename, typename, typename, typename, CPackedMapOptions>

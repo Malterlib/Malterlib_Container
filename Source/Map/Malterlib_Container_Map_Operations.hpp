@@ -486,11 +486,11 @@ namespace NMib::NContainer
 	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator -= (TCMap const &_Other) -> TCMap &
 	{
 		DMibSafeCheck(this != &_Other, "Must not remove same object from itself");
-		CIteratorConst Iter = _Other.f_GetIterator();
-		while (Iter)
+		CIteratorConst iEntry = _Other.f_GetIterator();
+		while (iEntry)
 		{
-			f_Remove(Iter.f_GetKey());
-			++Iter;
+			f_Remove(iEntry.f_GetKey());
+			++iEntry;
 		}
 
 		return *this;

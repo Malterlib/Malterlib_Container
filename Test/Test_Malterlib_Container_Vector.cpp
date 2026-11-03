@@ -125,16 +125,16 @@ namespace
 				DMibTest(DMibExpr(List.f_GetLen() == 10));
 				{
 					bool bCorrectOrder = true;
-					TCVector<int32>::CIterator Iter = List.f_GetIterator();
-					for (int32 iItem = 0; iItem < nItems; ++iItem, ++Iter)
-						bCorrectOrder = bCorrectOrder && *Iter == iItem;
+					TCVector<int32>::CIterator iIter = List.f_GetIterator();
+					for (int32 iItem = 0; iItem < nItems; ++iItem, ++iIter)
+						bCorrectOrder = bCorrectOrder && *iIter == iItem;
 					DMibTest(DMibExpr(bCorrectOrder));
 				}
 				{
 					bool bCorrectOrder2 = true;
-					TCVector<int32>::CIteratorConst Iter = NMib::fg_Const(List).f_GetIterator();
-					for (int32 iItem = 0; iItem < nItems; ++iItem, ++Iter)
-						bCorrectOrder2 = bCorrectOrder2 && *Iter == iItem;
+					TCVector<int32>::CIteratorConst iIter = NMib::fg_Const(List).f_GetIterator();
+					for (int32 iItem = 0; iItem < nItems; ++iItem, ++iIter)
+						bCorrectOrder2 = bCorrectOrder2 && *iIter == iItem;
 					DMibTest(DMibExpr(bCorrectOrder2));
 				}
 
@@ -202,27 +202,27 @@ namespace
 				// Insert After Tests
 				{
 					List.f_InsertAfter(0) = 77;
-					auto Iter = List.f_GetIterator();
-					++Iter;
-					DMibTest(DMibExpr(*Iter) == DMibExpr(77));
+					auto iIter = List.f_GetIterator();
+					++iIter;
+					DMibTest(DMibExpr(*iIter) == DMibExpr(77));
 				}
 				{
-					auto Iter = List.f_GetIterator();
-					List.f_InsertAfter(Iter) = 88;
-					++Iter;
-					DMibTest(DMibExpr(*Iter) == DMibExpr(88));
+					auto iIter = List.f_GetIterator();
+					List.f_InsertAfter(iIter) = 88;
+					++iIter;
+					DMibTest(DMibExpr(*iIter) == DMibExpr(88));
 				}
 				{
-					auto Iter = List.f_GetIterator();
-					List.f_InsertAfter(Iter, 99);
-					++Iter;
-					DMibTest(DMibExpr(*Iter) == DMibExpr(99));
+					auto iIter = List.f_GetIterator();
+					List.f_InsertAfter(iIter, 99);
+					++iIter;
+					DMibTest(DMibExpr(*iIter) == DMibExpr(99));
 				}
 				{
 					List.f_InsertAfter(0, 111);
-					auto Iter = List.f_GetIterator();
-					++Iter;
-					DMibTest(DMibExpr(*Iter) == DMibExpr(111));
+					auto iIter = List.f_GetIterator();
+					++iIter;
+					DMibTest(DMibExpr(*iIter) == DMibExpr(111));
 				}
 				{
 					List.f_InsertAfter(10, 444);
@@ -236,25 +236,25 @@ namespace
 				// InsertBefore Tests
 				{
 					List.f_InsertBefore(0) = 112;
-					auto Iter = List.f_GetIterator();
-					DMibTest(DMibExpr(*Iter) == DMibExpr(112));
+					auto iIter = List.f_GetIterator();
+					DMibTest(DMibExpr(*iIter) == DMibExpr(112));
 				}
 				{
-					auto Iter = List.f_GetIterator();
-					List.f_InsertBefore(Iter) = 113;
-					Iter = List.f_GetIterator();
-					DMibTest(DMibExpr(*Iter) == DMibExpr(113));
+					auto iIter = List.f_GetIterator();
+					List.f_InsertBefore(iIter) = 113;
+					iIter = List.f_GetIterator();
+					DMibTest(DMibExpr(*iIter) == DMibExpr(113));
 				}
 				{
-					auto Iter = List.f_GetIterator();
-					List.f_InsertBefore(Iter, 114);
-					Iter = List.f_GetIterator();
-					DMibTest(DMibExpr(*Iter) == DMibExpr(114));
+					auto iIter = List.f_GetIterator();
+					List.f_InsertBefore(iIter, 114);
+					iIter = List.f_GetIterator();
+					DMibTest(DMibExpr(*iIter) == DMibExpr(114));
 				}
 				{
 					List.f_InsertBefore(0, 115);
-					auto Iter = List.f_GetIterator();
-					DMibTest(DMibExpr(*Iter) == DMibExpr(115));
+					auto iIter = List.f_GetIterator();
+					DMibTest(DMibExpr(*iIter) == DMibExpr(115));
 				}
 				{
 					List.f_InsertBefore(10, 555);

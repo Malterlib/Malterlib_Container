@@ -9,8 +9,8 @@ namespace NMib::NContainer
 	// The map must not be accessed from within the populate functor (internal invariants are
 	// temporarily violated during population: counts, indexes, and calibrator state are incomplete).
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	template <typename tf_CPopulate>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_BulkLoad(umint _Count, tf_CPopulate &&_fPopulate)
+	template <typename tf_FPopulate>
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_BulkLoad(umint _Count, tf_FPopulate &&_fPopulate)
 	{
 		// Reset existing data
 		f_Clear();
@@ -186,15 +186,15 @@ namespace NMib::NContainer
 	// The map must not be accessed from within the populate functor (internal invariants are
 	// temporarily violated during population: counts, indexes, and calibrator state are incomplete).
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	template <typename tf_CPopulate>
-	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_BulkInsert(umint _Count, tf_CPopulate &&_fPopulate)
+	template <typename tf_FPopulate>
+	constexpr void TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::f_BulkInsert(umint _Count, tf_FPopulate &&_fPopulate)
 	{
 		if (_Count == 0)
 			return;
 
 		if (!mp_pData || f_IsEmpty())
 		{
-			f_BulkLoad(_Count, fg_Forward<tf_CPopulate>(_fPopulate));
+			f_BulkLoad(_Count, fg_Forward<tf_FPopulate>(_fPopulate));
 			return;
 		}
 

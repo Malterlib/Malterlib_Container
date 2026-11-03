@@ -565,8 +565,8 @@ namespace NMib::NContainer
 			return *this;
 		}
 
-		template <typename tf_CCompare>
-		void f_Sort(tf_CCompare &&_fCompare)
+		template <typename tf_FCompare>
+		void f_Sort(tf_FCompare &&_fCompare)
 		{
 			mp_Data.m_List.f_Sort
 				(
@@ -646,16 +646,16 @@ namespace NMib::NContainer
 			return pData->mp_Object;
 		}
 
-		t_CData &f_InsertAfter(t_CData *_ToInsert, CIterator const &_InsertAfter)
+		t_CData &f_InsertAfter(t_CData *_pToInsert, CIterator const &_InsertAfter)
 		{
-			CMember *pData = fsp_MemberFromData(*_ToInsert);
+			CMember *pData = fsp_MemberFromData(*_pToInsert);
 			mp_Data.m_List.f_InsertAfter(pData, fsp_MemberFromData(*_InsertAfter));
 			return pData->mp_Object;
 		}
 
-		t_CData &f_InsertAfter(t_CData const *_ToInsert, CIterator const &_InsertAfter)
+		t_CData &f_InsertAfter(t_CData const *_pToInsert, CIterator const &_InsertAfter)
 		{
-			CMember *pData = fsp_MemberFromData(*_ToInsert);
+			CMember *pData = fsp_MemberFromData(*_pToInsert);
 			mp_Data.m_List.f_InsertAfter(pData, fsp_MemberFromData(*_InsertAfter));
 			return pData->mp_Object;
 		}
@@ -702,18 +702,18 @@ namespace NMib::NContainer
 			return pData->mp_Object;
 		}
 
-		t_CData &f_InsertAfter(t_CData *_ToInsert, t_CData const &_InsertAfter)
+		t_CData &f_InsertAfter(t_CData *_pToInsert, t_CData const &_InsertAfter)
 		{
 			CMember *pMember = fsp_MemberFromData(_InsertAfter);
-			CMember *pData = fsp_MemberFromData(*_ToInsert);
+			CMember *pData = fsp_MemberFromData(*_pToInsert);
 			mp_Data.m_List.f_InsertAfter(pData, pMember);
 			return pData->mp_Object;
 		}
 
-		t_CData &f_InsertAfter(t_CData const *_ToInsert, t_CData const &_InsertAfter)
+		t_CData &f_InsertAfter(t_CData const *_pToInsert, t_CData const &_InsertAfter)
 		{
 			CMember *pMember = fsp_MemberFromData(_InsertAfter);
-			CMember *pData = fsp_MemberFromData(*_ToInsert);
+			CMember *pData = fsp_MemberFromData(*_pToInsert);
 			mp_Data.m_List.f_InsertAfter(pData, pMember);
 			return pData->mp_Object;
 		}
@@ -757,16 +757,16 @@ namespace NMib::NContainer
 			return pData->mp_Object;
 		}
 
-		t_CData &f_InsertBefore(t_CData *_ToInsert, CIterator const &_InsertBefore)
+		t_CData &f_InsertBefore(t_CData *_pToInsert, CIterator const &_InsertBefore)
 		{
-			CMember *pData = fsp_MemberFromData(*_ToInsert);
+			CMember *pData = fsp_MemberFromData(*_pToInsert);
 			mp_Data.m_List.f_InsertBefore(pData, fsp_MemberFromData(*_InsertBefore));
 			return pData->mp_Object;
 		}
 
-		t_CData &f_InsertBefore(t_CData const *_ToInsert, CIterator const &_InsertBefore)
+		t_CData &f_InsertBefore(t_CData const *_pToInsert, CIterator const &_InsertBefore)
 		{
-			CMember *pData = fsp_MemberFromData(*_ToInsert);
+			CMember *pData = fsp_MemberFromData(*_pToInsert);
 			mp_Data.m_List.f_InsertBefore(pData, fsp_MemberFromData(*_InsertBefore));
 			return pData->mp_Object;
 		}
@@ -813,18 +813,18 @@ namespace NMib::NContainer
 			return pData->mp_Object;
 		}
 
-		t_CData &f_InsertBefore(t_CData *_ToInsert, t_CData const &_InsertBefore)
+		t_CData &f_InsertBefore(t_CData *_pToInsert, t_CData const &_InsertBefore)
 		{
 			CMember *pMember = fsp_MemberFromData(_InsertBefore);
-			CMember *pData = fsp_MemberFromData(*_ToInsert);
+			CMember *pData = fsp_MemberFromData(*_pToInsert);
 			mp_Data.m_List.f_InsertBefore(pData, pMember);
 			return pData->mp_Object;
 		}
 
-		t_CData &f_InsertBefore(t_CData const *_ToInsert, t_CData const &_InsertBefore)
+		t_CData &f_InsertBefore(t_CData const *_pToInsert, t_CData const &_InsertBefore)
 		{
 			CMember *pMember = fsp_MemberFromData(_InsertBefore);
-			CMember *pData = fsp_MemberFromData(*_ToInsert);
+			CMember *pData = fsp_MemberFromData(*_pToInsert);
 			mp_Data.m_List.f_InsertBefore(pData, pMember);
 			return pData->mp_Object;
 		}

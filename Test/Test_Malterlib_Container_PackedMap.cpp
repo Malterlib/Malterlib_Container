@@ -693,9 +693,9 @@ namespace
 		DMibExpect(Map.f_GetLen(), ==, _nCount);
 
 		umint iExpected = 0;
-		for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+		for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 		{
-			DMibExpect(*Iter, ==, (int32)iExpected)(ETestFlag_Aggregated);
+			DMibExpect(*iIter, ==, (int32)iExpected)(ETestFlag_Aggregated);
 			++iExpected;
 		}
 		DMibExpect(iExpected, ==, _nCount);
@@ -732,10 +732,10 @@ namespace
 
 		// Verify sorted order and uniqueness
 		int32 nPrev = -1;
-		for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+		for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 		{
-			DMibExpect(*Iter, >, nPrev)(ETestFlag_Aggregated);
-			nPrev = *Iter;
+			DMibExpect(*iIter, >, nPrev)(ETestFlag_Aggregated);
+			nPrev = *iIter;
 		}
 	}
 
@@ -765,10 +765,10 @@ namespace
 	void fg_ExpectIntKeyOrder(tf_CMap const &_Map, int32 const *_pExpected, umint _nExpected)
 	{
 		umint iExpected = 0;
-		for (auto Iter = _Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+		for (auto iIter = _Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 		{
 			DMibExpect(iExpected, <, _nExpected)(ETestFlag_Aggregated);
-			DMibExpect(*Iter, ==, _pExpected[iExpected])(ETestFlag_Aggregated);
+			DMibExpect(*iIter, ==, _pExpected[iExpected])(ETestFlag_Aggregated);
 			++iExpected;
 		}
 
@@ -1077,17 +1077,17 @@ namespace
 					DMibExpect(*Map.f_FindSmallestGreaterThanEqual(CIntKeyProbe{.m_Value = 25}), ==, 300);
 					DMibExpect(*Map.f_FindLargestLessThanEqual(CIntKeyProbe{.m_Value = 25}), ==, 200);
 
-					auto IterExact = Map.f_GetIterator(CIntKeyProbe{.m_Value = 20});
-					DMibAssertTrue(IterExact);
-					DMibExpect(*IterExact, ==, 200);
+					auto iExact = Map.f_GetIterator(CIntKeyProbe{.m_Value = 20});
+					DMibAssertTrue(iExact);
+					DMibExpect(*iExact, ==, 200);
 
-					auto IterGE = Map.f_GetIterator_SmallestGreaterThanEqual(CIntKeyProbe{.m_Value = 25});
-					DMibAssertTrue(IterGE);
-					DMibExpect(*IterGE, ==, 300);
+					auto iGreaterEqual = Map.f_GetIterator_SmallestGreaterThanEqual(CIntKeyProbe{.m_Value = 25});
+					DMibAssertTrue(iGreaterEqual);
+					DMibExpect(*iGreaterEqual, ==, 300);
 
-					auto IterLE = Map.f_GetIterator_LargestLessThanEqual(CIntKeyProbe{.m_Value = 25});
-					DMibAssertTrue(IterLE);
-					DMibExpect(*IterLE, ==, 200);
+					auto iLessEqual = Map.f_GetIterator_LargestLessThanEqual(CIntKeyProbe{.m_Value = 25});
+					DMibAssertTrue(iLessEqual);
+					DMibExpect(*iLessEqual, ==, 200);
 
 					DMibExpectTrue(Map.f_Remove(CIntKeyProbe{.m_Value = 20}));
 					DMibExpectFalse(Map.f_FindEqual(20));
@@ -1150,9 +1150,9 @@ namespace
 						Map.f_Insert(CMoveOnlyKey(iTest), iTest);
 
 					int32 iExpected = 0;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(Iter->m_Value, ==, iExpected)(ETestFlag_Aggregated);
+						DMibExpect(iIter->m_Value, ==, iExpected)(ETestFlag_Aggregated);
 						++iExpected;
 					}
 					DMibExpect(iExpected, ==, 200);
@@ -1560,8 +1560,8 @@ namespace
 
 					// Iterate in sorted order
 					TCVector<int32> Keys;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
-						Keys.f_InsertLast(*Iter);
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
+						Keys.f_InsertLast(*iIter);
 
 					DMibExpect(Keys.f_GetLen(), ==, 5);
 					DMibExpect(Keys[0], ==, 1);
@@ -1582,8 +1582,8 @@ namespace
 
 					// Iterate in reverse sorted order
 					TCVector<int32> Keys;
-					for (auto Iter = Map.f_Keys().f_GetIteratorReverse(); Iter; ++Iter)
-						Keys.f_InsertLast(*Iter);
+					for (auto iIter = Map.f_Keys().f_GetIteratorReverse(); iIter; ++iIter)
+						Keys.f_InsertLast(*iIter);
 
 					DMibExpect(Keys.f_GetLen(), ==, 5);
 					DMibExpect(Keys[0], ==, 9);
@@ -1601,9 +1601,9 @@ namespace
 					Map["Gamma"] = 3;
 
 					umint nSum = 0;
-					for (auto Iter = Map.f_Entries().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Entries().f_GetIterator(); iIter; ++iIter)
 					{
-						auto Ref = *Iter;
+						auto Ref = *iIter;
 						nSum += Ref.f_Value();
 					}
 
@@ -1939,10 +1939,10 @@ namespace
 
 					static constexpr uint32 c_Expected[] = {0u, TCLimitsInt<uint32>::mc_Max};
 					umint iExpected = 0;
-					for (auto Iter = Destination.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Destination.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
 						DMibExpect(iExpected, <, 2)(ETestFlag_Aggregated);
-						DMibExpect(*Iter, ==, c_Expected[iExpected])(ETestFlag_Aggregated);
+						DMibExpect(*iIter, ==, c_Expected[iExpected])(ETestFlag_Aggregated);
 						++iExpected;
 					}
 					DMibExpect(iExpected, ==, 2);
@@ -1965,10 +1965,10 @@ namespace
 
 					static constexpr uint32 c_Expected[] = {TCLimitsInt<uint32>::mc_Max, 1u, 0u};
 					umint iExpected = 0;
-					for (auto Iter = Destination.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Destination.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
 						DMibExpect(iExpected, <, 3)(ETestFlag_Aggregated);
-						DMibExpect(*Iter, ==, c_Expected[iExpected])(ETestFlag_Aggregated);
+						DMibExpect(*iIter, ==, c_Expected[iExpected])(ETestFlag_Aggregated);
 						++iExpected;
 					}
 					DMibExpect(iExpected, ==, 3);
@@ -1991,10 +1991,10 @@ namespace
 
 					static constexpr uint32 c_Expected[] = {TCLimitsInt<uint32>::mc_Max, 1u, 0u};
 					umint iExpected = 0;
-					for (auto Iter = Destination.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Destination.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
 						DMibExpect(iExpected, <, 3)(ETestFlag_Aggregated);
-						DMibExpect(*Iter, ==, c_Expected[iExpected])(ETestFlag_Aggregated);
+						DMibExpect(*iIter, ==, c_Expected[iExpected])(ETestFlag_Aggregated);
 						++iExpected;
 					}
 					DMibExpect(iExpected, ==, 3);
@@ -2284,9 +2284,9 @@ namespace
 
 					// Verify all elements are present and sorted
 					umint iExpected = 0;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, ==, (int32)iExpected)(ETestFlag_Aggregated);
+						DMibExpect(*iIter, ==, (int32)iExpected)(ETestFlag_Aggregated);
 						++iExpected;
 					}
 					DMibExpect(iExpected, ==, nCount);
@@ -2303,9 +2303,9 @@ namespace
 
 					// Verify sorted order
 					int32 iExpected = 0;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, ==, iExpected)(ETestFlag_Aggregated);
+						DMibExpect(*iIter, ==, iExpected)(ETestFlag_Aggregated);
 						++iExpected;
 					}
 				};
@@ -2356,8 +2356,8 @@ namespace
 					Map["Mango"] = 3;
 
 					TCVector<CStr> Keys;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
-						Keys.f_InsertLast(*Iter);
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
+						Keys.f_InsertLast(*iIter);
 
 					DMibExpect(Keys[0], ==, CStr("Apple"));
 					DMibExpect(Keys[1], ==, CStr("Mango"));
@@ -2377,9 +2377,9 @@ namespace
 
 					// Verify sorted order
 					int32 iExpected = 0;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, ==, iExpected)(ETestFlag_Aggregated);
+						DMibExpect(*iIter, ==, iExpected)(ETestFlag_Aggregated);
 						++iExpected;
 					}
 				};
@@ -2416,10 +2416,10 @@ namespace
 
 					// Verify sorted order is maintained
 					int32 nPrev = 0;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, nPrev)(ETestFlag_Aggregated);
-						nPrev = *Iter;
+						DMibExpect(*iIter, >, nPrev)(ETestFlag_Aggregated);
+						nPrev = *iIter;
 					}
 				};
 				DMibTestCategory("SkewedWorkloadRight")
@@ -2465,10 +2465,10 @@ namespace
 
 					// Verify sorted order
 					int32 nPrev = -1000000; // Sufficiently small for test data range
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, nPrev)(ETestFlag_Aggregated);
-						nPrev = *Iter;
+						DMibExpect(*iIter, >, nPrev)(ETestFlag_Aggregated);
+						nPrev = *iIter;
 					}
 				};
 				DMibTestCategory("ComplexityBoundRandom")
@@ -2742,10 +2742,10 @@ namespace
 
 					// Verify sorted order
 					int32 nPrev = -1;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, nPrev)(ETestFlag_Aggregated);
-						nPrev = *Iter;
+						DMibExpect(*iIter, >, nPrev)(ETestFlag_Aggregated);
+						nPrev = *iIter;
 					}
 				};
 				DMibTestCategory("ScanOrientedProfile")
@@ -2763,10 +2763,10 @@ namespace
 
 					// Verify sorted order
 					int32 nPrev = -1;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, nPrev)(ETestFlag_Aggregated);
-						nPrev = *Iter;
+						DMibExpect(*iIter, >, nPrev)(ETestFlag_Aggregated);
+						nPrev = *iIter;
 					}
 				};
 			};
@@ -2795,10 +2795,10 @@ namespace
 
 					// Verify sorted order is maintained
 					int32 nPrev = -1;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, nPrev)(ETestFlag_Aggregated);
-						nPrev = *Iter;
+						DMibExpect(*iIter, >, nPrev)(ETestFlag_Aggregated);
+						nPrev = *iIter;
 					}
 				};
 				DMibTestCategory("ScanOrientedNoLowerBound")
@@ -2821,10 +2821,10 @@ namespace
 
 					// Verify sorted order
 					int32 nPrev = -1;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, nPrev)(ETestFlag_Aggregated);
-						nPrev = *Iter;
+						DMibExpect(*iIter, >, nPrev)(ETestFlag_Aggregated);
+						nPrev = *iIter;
 					}
 				};
 			};
@@ -2855,10 +2855,10 @@ namespace
 					// Verify all elements present and sorted
 					DMibExpect(Map.f_GetLen(), ==, 300);
 					int32 nPrev = -1;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, nPrev)(ETestFlag_Aggregated);
-						nPrev = *Iter;
+						DMibExpect(*iIter, >, nPrev)(ETestFlag_Aggregated);
+						nPrev = *iIter;
 					}
 				};
 				DMibTestCategory("DirectionalDrift")
@@ -2931,10 +2931,10 @@ namespace
 
 					// Verify all elements present and sorted
 					int32 nPrev = -1;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, nPrev)(ETestFlag_Aggregated);
-						nPrev = *Iter;
+						DMibExpect(*iIter, >, nPrev)(ETestFlag_Aggregated);
+						nPrev = *iIter;
 					}
 				};
 				DMibTestCategory("DensityBoundsAllLevels")
@@ -2992,10 +2992,10 @@ namespace
 
 					// Verify all elements present and sorted
 					int32 nPrev = -1;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, nPrev)(ETestFlag_Aggregated);
-						nPrev = *Iter;
+						DMibExpect(*iIter, >, nPrev)(ETestFlag_Aggregated);
+						nPrev = *iIter;
 					}
 				};
 				DMibTestCategory("MixedOperationsStress")
@@ -3033,10 +3033,10 @@ namespace
 
 					// Verify sorted order
 					int32 nPrev = -1;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, nPrev)(ETestFlag_Aggregated);
-						nPrev = *Iter;
+						DMibExpect(*iIter, >, nPrev)(ETestFlag_Aggregated);
+						nPrev = *iIter;
 					}
 				};
 				DMibTestCategory("SmallSegmentAdaptive")
@@ -3126,10 +3126,10 @@ namespace
 
 					// Verify sorted iteration
 					int32 nPrev = -1;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, nPrev)(ETestFlag_Aggregated);
-						nPrev = *Iter;
+						DMibExpect(*iIter, >, nPrev)(ETestFlag_Aggregated);
+						nPrev = *iIter;
 					}
 				};
 				DMibTestCategory("Validate")
@@ -3581,59 +3581,59 @@ namespace
 
 					{
 						DMibTestPath("Values");
-						auto Iter = Map.f_GetIterator();
-						auto Found = Map.f_GetIterator(30);
+						auto iIter = Map.f_GetIterator();
+						auto iFound = Map.f_GetIterator(30);
 						{
 							DMibTestPath("InitialMismatch");
-							DMibExpectFalse(Iter == Found);
+							DMibExpectFalse(iIter == iFound);
 						}
-						++Iter;
+						++iIter;
 						{
 							DMibTestPath("SecondMismatch");
-							DMibExpectFalse(Iter == Found);
+							DMibExpectFalse(iIter == iFound);
 						}
-						++Iter;
+						++iIter;
 						{
 							DMibTestPath("Aligned");
-							DMibExpectTrue(Iter == Found);
+							DMibExpectTrue(iIter == iFound);
 						}
 					}
 					{
 						DMibTestPath("Keys");
-						auto Iter = Map.f_Keys().f_GetIterator();
-						auto Found = Map.f_Keys().f_GetIterator(30);
+						auto iIter = Map.f_Keys().f_GetIterator();
+						auto iFound = Map.f_Keys().f_GetIterator(30);
 						{
 							DMibTestPath("InitialMismatch");
-							DMibExpectFalse(Iter == Found);
+							DMibExpectFalse(iIter == iFound);
 						}
-						++Iter;
+						++iIter;
 						{
 							DMibTestPath("SecondMismatch");
-							DMibExpectFalse(Iter == Found);
+							DMibExpectFalse(iIter == iFound);
 						}
-						++Iter;
+						++iIter;
 						{
 							DMibTestPath("Aligned");
-							DMibExpectTrue(Iter == Found);
+							DMibExpectTrue(iIter == iFound);
 						}
 					}
 					{
 						DMibTestPath("Entries");
-						auto Iter = Map.f_Entries().f_GetIterator();
-						auto Found = Map.f_Entries().f_GetIterator(30);
+						auto iIter = Map.f_Entries().f_GetIterator();
+						auto iFound = Map.f_Entries().f_GetIterator(30);
 						{
 							DMibTestPath("InitialMismatch");
-							DMibExpectFalse(Iter == Found);
+							DMibExpectFalse(iIter == iFound);
 						}
-						++Iter;
+						++iIter;
 						{
 							DMibTestPath("SecondMismatch");
-							DMibExpectFalse(Iter == Found);
+							DMibExpectFalse(iIter == iFound);
 						}
-						++Iter;
+						++iIter;
 						{
 							DMibTestPath("Aligned");
-							DMibExpectTrue(Iter == Found);
+							DMibExpectTrue(iIter == iFound);
 						}
 					}
 				};
@@ -3648,80 +3648,80 @@ namespace
 
 					{
 						DMibTestPath("Values");
-						auto Iter = Map.f_GetIterator(30);
+						auto iIter = Map.f_GetIterator(30);
 						{
 							DMibTestPath("Start");
-							DMibExpect(*Iter, ==, 300);
-							DMibExpect(Iter.f_GetLen(), ==, 2);
+							DMibExpect(*iIter, ==, 300);
+							DMibExpect(iIter.f_GetLen(), ==, 2);
 						}
-						--Iter;
+						--iIter;
 						{
 							DMibTestPath("PrevOne");
-							DMibExpect(*Iter, ==, 200);
-							DMibExpect(Iter.f_GetLen(), ==, 3);
+							DMibExpect(*iIter, ==, 200);
+							DMibExpect(iIter.f_GetLen(), ==, 3);
 						}
-						--Iter;
+						--iIter;
 						{
 							DMibTestPath("PrevTwo");
-							DMibExpect(*Iter, ==, 100);
-							DMibExpect(Iter.f_GetLen(), ==, 4);
+							DMibExpect(*iIter, ==, 100);
+							DMibExpect(iIter.f_GetLen(), ==, 4);
 						}
-						--Iter;
+						--iIter;
 						{
 							DMibTestPath("ClampAtBegin");
-							DMibExpect(*Iter, ==, 100);
+							DMibExpect(*iIter, ==, 100);
 						}
 					}
 					{
 						DMibTestPath("Keys");
-						auto Iter = Map.f_Keys().f_GetIterator(30);
+						auto iIter = Map.f_Keys().f_GetIterator(30);
 						{
 							DMibTestPath("Start");
-							DMibExpect(*Iter, ==, 30);
+							DMibExpect(*iIter, ==, 30);
 						}
-						--Iter;
+						--iIter;
 						{
 							DMibTestPath("PrevOne");
-							DMibExpect(*Iter, ==, 20);
+							DMibExpect(*iIter, ==, 20);
 						}
-						--Iter;
+						--iIter;
 						{
 							DMibTestPath("PrevTwo");
-							DMibExpect(*Iter, ==, 10);
+							DMibExpect(*iIter, ==, 10);
 						}
-						--Iter;
+						--iIter;
 						{
 							DMibTestPath("ClampAtBegin");
-							DMibExpect(*Iter, ==, 10);
+							DMibExpect(*iIter, ==, 10);
 						}
 					}
 					{
 						DMibTestPath("Entries");
-						auto Iter = Map.f_Entries().f_GetIterator(30);
+						auto iIter = Map.f_Entries().f_GetIterator(30);
 						{
 							DMibTestPath("Start");
-							auto Ref = *Iter;
+							auto Ref = *iIter;
 							DMibExpect(Ref.f_Key(), ==, 30);
 							DMibExpect(Ref.f_Value(), ==, 300);
 						}
-						--Iter;
+						--iIter;
 						{
 							DMibTestPath("PrevOne");
-							auto Ref = *Iter;
+							auto Ref = *iIter;
 							DMibExpect(Ref.f_Key(), ==, 20);
 							DMibExpect(Ref.f_Value(), ==, 200);
 						}
-						--Iter;
+						--iIter;
 						{
 							DMibTestPath("PrevTwo");
-							auto Ref = *Iter;
+							auto Ref = *iIter;
 							DMibExpect(Ref.f_Key(), ==, 10);
 							DMibExpect(Ref.f_Value(), ==, 100);
 						}
-						--Iter;
+						--iIter;
 						{
 							DMibTestPath("ClampAtBegin");
-							auto Ref = *Iter;
+							auto Ref = *iIter;
 							DMibExpect(Ref.f_Key(), ==, 10);
 							DMibExpect(Ref.f_Value(), ==, 100);
 						}
@@ -3740,15 +3740,15 @@ namespace
 
 					{
 						DMibTestPath("SmallestGreaterThanEqual");
-						TCPackedMap<int32, int32>::CIteratorConst Iter = ConstMap.f_GetIterator_SmallestGreaterThanEqual(15);
-						DMibExpectTrue((bool)Iter);
-						DMibExpect(*Iter, ==, 200);
+						TCPackedMap<int32, int32>::CIteratorConst iIter = ConstMap.f_GetIterator_SmallestGreaterThanEqual(15);
+						DMibExpectTrue((bool)iIter);
+						DMibExpect(*iIter, ==, 200);
 					}
 					{
 						DMibTestPath("LargestLessThanEqual");
-						TCPackedMap<int32, int32>::CIteratorConst Iter = ConstMap.f_GetIterator_LargestLessThanEqual(25);
-						DMibExpectTrue((bool)Iter);
-						DMibExpect(*Iter, ==, 200);
+						TCPackedMap<int32, int32>::CIteratorConst iIter = ConstMap.f_GetIterator_LargestLessThanEqual(25);
+						DMibExpectTrue((bool)iIter);
+						DMibExpect(*iIter, ==, 200);
 					}
 				};
 				DMibTestCategory("SparseBoundLookupsSkipEmptySegments")
@@ -3835,15 +3835,15 @@ namespace
 					}
 					{
 						DMibTestPath("IteratorSmallestGreaterThanEqual");
-						auto Iter = Map.f_GetIterator_SmallestGreaterThanEqual(ProbeKey);
-						DMibExpectTrue((bool)Iter);
-						DMibExpect(*Iter, ==, ExpectedGreaterValue);
+						auto iIter = Map.f_GetIterator_SmallestGreaterThanEqual(ProbeKey);
+						DMibExpectTrue((bool)iIter);
+						DMibExpect(*iIter, ==, ExpectedGreaterValue);
 					}
 					{
 						DMibTestPath("IteratorLargestLessThanEqual");
-						auto Iter = Map.f_GetIterator_LargestLessThanEqual(ProbeKey);
-						DMibExpectTrue((bool)Iter);
-						DMibExpect(*Iter, ==, ExpectedLessValue);
+						auto iIter = Map.f_GetIterator_LargestLessThanEqual(ProbeKey);
+						DMibExpectTrue((bool)iIter);
+						DMibExpect(*iIter, ==, ExpectedLessValue);
 					}
 
 					fg_ExpectPackedMapValid(Map, "SparseBoundLookupsSkipEmptySegments");
@@ -3910,9 +3910,9 @@ namespace
 					}
 					{
 						DMibTestPath("Iterator");
-						auto Iter = Map.f_Entries().f_GetIterator(LookupKey);
-						DMibExpectTrue((bool)Iter);
-						auto Ref = *Iter;
+						auto iIter = Map.f_Entries().f_GetIterator(LookupKey);
+						DMibExpectTrue((bool)iIter);
+						auto Ref = *iIter;
 						DMibExpect(Ref.f_Key(), ==, LookupKey);
 						DMibExpect(Ref.f_Value(), ==, LookupValue);
 					}
@@ -3950,10 +3950,10 @@ namespace
 					DMibExpect(*Map.f_FindEqual(Plan.m_RightInsertKey), ==, Plan.m_RightInsertKey * 100);
 
 					int32 PrevKey = -1;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, PrevKey)(ETestFlag_Aggregated);
-						PrevKey = *Iter;
+						DMibExpect(*iIter, >, PrevKey)(ETestFlag_Aggregated);
+						PrevKey = *iIter;
 					}
 
 					fg_ExpectPackedMapValid(Map, "BulkInsert projected window");
@@ -4523,10 +4523,10 @@ namespace
 
 					// Verify all elements present and sorted
 					int32 Prev = -1;
-					for (auto Iter = Map.f_Keys().f_GetIterator(); Iter; ++Iter)
+					for (auto iIter = Map.f_Keys().f_GetIterator(); iIter; ++iIter)
 					{
-						DMibExpect(*Iter, >, Prev)(ETestFlag_Aggregated);
-						Prev = *Iter;
+						DMibExpect(*iIter, >, Prev)(ETestFlag_Aggregated);
+						Prev = *iIter;
 					}
 				}
 

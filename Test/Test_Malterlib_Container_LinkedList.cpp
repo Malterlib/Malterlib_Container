@@ -346,16 +346,16 @@ namespace
 			DMibTest(DMibExpr(List.f_GetLen()) == DMibExpr(10u));
 			{
 				bool bCorrectOrder = true;
-				NMib::NContainer::TCLinkedList<int32>::CIterator Iter = List;
-				for (int32 iItem = 0; iItem < nItems; ++iItem, ++Iter)
-					bCorrectOrder = bCorrectOrder && *Iter == iItem;
+				NMib::NContainer::TCLinkedList<int32>::CIterator iIter = List;
+				for (int32 iItem = 0; iItem < nItems; ++iItem, ++iIter)
+					bCorrectOrder = bCorrectOrder && *iIter == iItem;
 				DMibTest(DMibExpr(bCorrectOrder));
 			}
 			{
 				bool bCorrectOrder = true;
-				NMib::NContainer::TCLinkedList<int32>::CIteratorConst Iter = List;
-				for (int32 iItem = 0; iItem < nItems; ++iItem, ++Iter)
-					bCorrectOrder = bCorrectOrder && *Iter == iItem;
+				NMib::NContainer::TCLinkedList<int32>::CIteratorConst iIter = List;
+				for (int32 iItem = 0; iItem < nItems; ++iItem, ++iIter)
+					bCorrectOrder = bCorrectOrder && *iIter == iItem;
 				DMibTest(DMibExpr(bCorrectOrder) && DMibExpr(2));
 			}
 
@@ -423,51 +423,51 @@ namespace
 			// Insert After Tests
 			{
 				List.f_InsertAfter(List.f_GetFirst()) = 77;
-				auto Iter = List.f_GetIterator();
-				++Iter;
-				DMibTest(DMibExpr(*Iter) == DMibExpr(77));
+				auto iIter = List.f_GetIterator();
+				++iIter;
+				DMibTest(DMibExpr(*iIter) == DMibExpr(77));
 			}
 			{
-				auto Iter = List.f_GetIterator();
-				List.f_InsertAfter(Iter) = 88;
-				++Iter;
-				DMibTest(DMibExpr(*Iter) == DMibExpr(88));
+				auto iIter = List.f_GetIterator();
+				List.f_InsertAfter(iIter) = 88;
+				++iIter;
+				DMibTest(DMibExpr(*iIter) == DMibExpr(88));
 			}
 			{
-				auto Iter = List.f_GetIterator();
-				List.f_InsertAfter(99, Iter);
-				++Iter;
-				DMibTest(DMibExpr(*Iter) == DMibExpr(99));
+				auto iIter = List.f_GetIterator();
+				List.f_InsertAfter(99, iIter);
+				++iIter;
+				DMibTest(DMibExpr(*iIter) == DMibExpr(99));
 			}
 			{
 				List.f_InsertAfter(111, List.f_GetFirst());
-				auto Iter = List.f_GetIterator();
-				++Iter;
-				DMibTest(DMibExpr(*Iter) == DMibExpr(111));
+				auto iIter = List.f_GetIterator();
+				++iIter;
+				DMibTest(DMibExpr(*iIter) == DMibExpr(111));
 			}
 
 			// InsertBefore Tests
 			{
 				List.f_InsertBefore(List.f_GetFirst()) = 112;
-				auto Iter = List.f_GetIterator();
-				DMibTest(DMibExpr(*Iter) == DMibExpr(112));
+				auto iIter = List.f_GetIterator();
+				DMibTest(DMibExpr(*iIter) == DMibExpr(112));
 			}
 			{
-				auto Iter = List.f_GetIterator();
-				List.f_InsertBefore(Iter) = 113;
-				Iter = List.f_GetIterator();
-				DMibTest(DMibExpr(*Iter) == DMibExpr(113));
+				auto iIter = List.f_GetIterator();
+				List.f_InsertBefore(iIter) = 113;
+				iIter = List.f_GetIterator();
+				DMibTest(DMibExpr(*iIter) == DMibExpr(113));
 			}
 			{
-				auto Iter = List.f_GetIterator();
-				List.f_InsertBefore(114, Iter);
-				Iter = List.f_GetIterator();
-				DMibTest(DMibExpr(*Iter) == DMibExpr(114));
+				auto iIter = List.f_GetIterator();
+				List.f_InsertBefore(114, iIter);
+				iIter = List.f_GetIterator();
+				DMibTest(DMibExpr(*iIter) == DMibExpr(114));
 			}
 			{
 				List.f_InsertBefore(115, List.f_GetFirst());
-				auto Iter = List.f_GetIterator();
-				DMibTest(DMibExpr(*Iter) == DMibExpr(115));
+				auto iIter = List.f_GetIterator();
+				DMibTest(DMibExpr(*iIter) == DMibExpr(115));
 			}
 
 			List.f_Clear();
@@ -512,9 +512,9 @@ namespace
 				DMibTestCategory("Extract via reference")
 				{
 					TCLinkedList<int32> List = {1, 2, 3, 4, 5};
-					auto Iter = List.f_GetIterator();
-					++Iter; // Point to 2
-					int32 &Value = *Iter;
+					auto iIter = List.f_GetIterator();
+					++iIter; // Point to 2
+					int32 &Value = *iIter;
 
 					auto Handle = List.f_Extract(Value);
 					DMibExpect(*Handle, ==, 2);
@@ -525,12 +525,12 @@ namespace
 				DMibTestCategory("Iterator ExtractNode")
 				{
 					TCLinkedList<int32> List = {1, 2, 3, 4, 5};
-					auto Iter = List.f_GetIterator();
-					++Iter; // Point to 2
+					auto iIter = List.f_GetIterator();
+					++iIter; // Point to 2
 
-					auto Handle = Iter.f_ExtractNode();
+					auto Handle = iIter.f_ExtractNode();
 					DMibExpect(*Handle, ==, 2);
-					DMibExpect(*Iter, ==, 3); // Iterator advanced
+					DMibExpect(*iIter, ==, 3); // Iterator advanced
 					DMibExpect(List.f_GetLen(), ==, 4u);
 				};
 
@@ -540,9 +540,9 @@ namespace
 					TCLinkedList<int32> Source = {1, 2, 3};
 					TCLinkedList<int32> Dest;
 
-					auto Iter = Source.f_GetIterator();
-					++Iter; // Point to 2
-					auto Handle = Iter.f_ExtractNode();
+					auto iIter = Source.f_GetIterator();
+					++iIter; // Point to 2
+					auto Handle = iIter.f_ExtractNode();
 
 					Dest.f_Insert(fg_Move(Handle));
 					DMibExpect(Source.f_GetLen(), ==, 2u);
@@ -556,8 +556,8 @@ namespace
 					TCLinkedList<int32> Source = {1, 2, 3};
 					TCLinkedList<int32> Dest = {10, 20};
 
-					auto Iter = Source.f_GetIterator();
-					auto Handle = Iter.f_ExtractNode();
+					auto iIter = Source.f_GetIterator();
+					auto Handle = iIter.f_ExtractNode();
 
 					Dest.f_InsertFirst(fg_Move(Handle));
 					DMibExpect(Dest.f_GetFirst(), ==, 1);
@@ -570,22 +570,22 @@ namespace
 					TCLinkedList<int32> Source = {1, 2, 3};
 					TCLinkedList<int32> Dest = {10, 20, 30};
 
-					auto SrcIter = Source.f_GetIterator();
-					auto Handle = SrcIter.f_ExtractNode();
+					auto iSource = Source.f_GetIterator();
+					auto Handle = iSource.f_ExtractNode();
 
-					auto DestIter = Dest.f_GetIterator();
-					++DestIter; // Point to 20
+					auto iDest = Dest.f_GetIterator();
+					++iDest; // Point to 20
 
-					Dest.f_InsertAfter(fg_Move(Handle), DestIter);
+					Dest.f_InsertAfter(fg_Move(Handle), iDest);
 					// Order should be: 10, 20, 1, 30
-					auto CheckIter = Dest.f_GetIterator();
-					DMibExpect(*CheckIter, ==, 10);
-					++CheckIter;
-					DMibExpect(*CheckIter, ==, 20);
-					++CheckIter;
-					DMibExpect(*CheckIter, ==, 1);
-					++CheckIter;
-					DMibExpect(*CheckIter, ==, 30);
+					auto iCheck = Dest.f_GetIterator();
+					DMibExpect(*iCheck, ==, 10);
+					++iCheck;
+					DMibExpect(*iCheck, ==, 20);
+					++iCheck;
+					DMibExpect(*iCheck, ==, 1);
+					++iCheck;
+					DMibExpect(*iCheck, ==, 30);
 				};
 
 				// Test transfer all elements between lists
@@ -594,9 +594,9 @@ namespace
 					TCLinkedList<int32> Source = {1, 2, 3, 4, 5};
 					TCLinkedList<int32> Dest;
 
-					for (auto Iter = Source.f_GetIterator(); Iter;)
+					for (auto iIter = Source.f_GetIterator(); iIter;)
 					{
-						auto Handle = Iter.f_ExtractNode();
+						auto Handle = iIter.f_ExtractNode();
 						Dest.f_Insert(fg_Move(Handle));
 					}
 
@@ -604,9 +604,9 @@ namespace
 					DMibExpect(Dest.f_GetLen(), ==, 5u);
 
 					// Verify order is preserved
-					auto CheckIter = Dest.f_GetIterator();
-					for (int32 iItem = 1; iItem <= 5; ++iItem, ++CheckIter)
-						DMibExpect(*CheckIter, ==, iItem)(ETestFlag_Aggregated);
+					auto iCheck = Dest.f_GetIterator();
+					for (int32 iItem = 1; iItem <= 5; ++iItem, ++iCheck)
+						DMibExpect(*iCheck, ==, iItem)(ETestFlag_Aggregated);
 				};
 
 				// Test handle destructor properly cleans up
@@ -616,8 +616,8 @@ namespace
 
 					{
 						DMibTestPath("Inner");
-						auto Iter = List.f_GetIterator();
-						auto Handle = Iter.f_ExtractNode();
+						auto iIter = List.f_GetIterator();
+						auto Handle = iIter.f_ExtractNode();
 						DMibExpect(List.f_GetLen(), ==, 2u);
 						// Handle goes out of scope and should clean up
 					}
@@ -629,8 +629,8 @@ namespace
 				DMibTestCategory("Handle move semantics")
 				{
 					TCLinkedList<int32> List = {1, 2, 3};
-					auto Iter = List.f_GetIterator();
-					auto Handle1 = Iter.f_ExtractNode();
+					auto iIter = List.f_GetIterator();
+					auto Handle1 = iIter.f_ExtractNode();
 
 					// Move construct
 					TCLinkedList<int32>::CNodeHandle Handle2(fg_Move(Handle1));
@@ -654,10 +654,10 @@ namespace
 					List.f_Insert("World");
 					List.f_Insert("Test");
 
-					auto Iter = List.f_GetIterator();
-					++Iter; // Point to "World"
+					auto iIter = List.f_GetIterator();
+					++iIter; // Point to "World"
 
-					auto Handle = Iter.f_ExtractNode();
+					auto Handle = iIter.f_ExtractNode();
 					DMibExpect(*Handle, ==, CStr("World"));
 
 					TCLinkedList<CStr> Dest;

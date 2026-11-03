@@ -6,8 +6,8 @@
 namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CCompare>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Sort(tf_CCompare &&_fCompare)
+	template <typename tf_FCompare>
+	void TCVector<t_CData, t_CAllocator, t_COptions>::f_Sort(tf_FCompare &&_fCompare)
 	{
 		fp_QuickSort(f_GetArray(), 0, f_GetLen() - 1, _fCompare);
 	}
@@ -19,8 +19,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CCompare>
-	bool TCVector<t_CData, t_CAllocator, t_COptions>::f_IsSorted(tf_CCompare &&_fCompare) const
+	template <typename tf_FCompare>
+	bool TCVector<t_CData, t_CAllocator, t_COptions>::f_IsSorted(tf_FCompare &&_fCompare) const
 	{
 		aint Length = f_GetLen();
 		if (Length < 2)
@@ -43,8 +43,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CCompare>
-	bool TCVector<t_CData, t_CAllocator, t_COptions>::f_IsSortedNoDuplicates(tf_CCompare &&_fCompare) const
+	template <typename tf_FCompare>
+	bool TCVector<t_CData, t_CAllocator, t_COptions>::f_IsSortedNoDuplicates(tf_FCompare &&_fCompare) const
 	{
 		aint Length = f_GetLen();
 		if (Length < 2)
@@ -68,8 +68,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CCompare>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::f_UniqueIfSorted(tf_CCompare &&_fCompare)
+	template <typename tf_FCompare>
+	void TCVector<t_CData, t_CAllocator, t_COptions>::f_UniqueIfSorted(tf_FCompare &&_fCompare)
 	{
 		if (f_GetLen() <= 1)
 			return;
@@ -97,8 +97,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CCompare>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::fp_InsertSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare)
+	template <typename tf_FCompare>
+	void TCVector<t_CData, t_CAllocator, t_COptions>::fp_InsertSort(t_CData *_pArray, aint _Low, aint _High, tf_FCompare &&_fCompare)
 	{
 		t_CData Temp;
 		aint iUnsorted, iSorted;
@@ -115,8 +115,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CCompare>
-	aint TCVector<t_CData, t_CAllocator, t_COptions>::fp_Partition(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare)
+	template <typename tf_FCompare>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::fp_Partition(t_CData *_pArray, aint _Low, aint _High, tf_FCompare &&_fCompare)
 	{
 		t_CData Temp, Pivot;
 		aint iLeft, iRight, iPivot;
@@ -150,8 +150,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CCompare>
-	void TCVector<t_CData, t_CAllocator, t_COptions>::fp_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare)
+	template <typename tf_FCompare>
+	void TCVector<t_CData, t_CAllocator, t_COptions>::fp_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_FCompare &&_fCompare)
 	{
 		aint iPivot;
 

@@ -110,8 +110,8 @@ namespace NMib::NContainer
 		else
 			bValueIsEmpty = TCRegistry_CustomKeyValue<t_CKey, t_CData>::fs_ValueIsEmpty(_pReg->mp_Data, bForceEscaped || !bHasScope);
 
-		ch8 const *Space = " ";
-		ch8 const *NewLine = _pNewLine;
+		ch8 const *pSpace = " ";
+		ch8 const *pNewLine = _pNewLine;
 
 		t_CStr PreDataValue;
 		if constexpr (mc_bSupportWhiteSpace)
@@ -166,14 +166,14 @@ namespace NMib::NContainer
 				}
 				else
 				{
-					PreDataValue += Space;
-					_Stream += Space;
+					PreDataValue += pSpace;
+					_Stream += pSpace;
 				}
 			}
 			else
 			{
-				PreDataValue += Space;
-				_Stream += Space;
+				PreDataValue += pSpace;
+				_Stream += pSpace;
 			}
 
 			fsp_ReplaceWithWhitespace(PreDataValue);
@@ -190,10 +190,10 @@ namespace NMib::NContainer
 			if (!WhiteSpace.f_IsEmpty() || _pReg->mp_Key.f_GetParsed(ERegistryWhiteSpaceLocation_After))
 				_Stream += WhiteSpace;
 			else
-				_Stream += NewLine;
+				_Stream += pNewLine;
 		}
 		else
-			_Stream += NewLine;
+			_Stream += pNewLine;
 
 		if (bHasScope)
 		{
@@ -218,10 +218,10 @@ namespace NMib::NContainer
 				if (!WhiteSpace.f_IsEmpty() || _pReg->mp_Key.f_GetParsed(ERegistryWhiteSpaceLocation_AfterChildScopeStart))
 					_Stream += WhiteSpace;
 				else
-					_Stream += NewLine;
+					_Stream += pNewLine;
 			}
 			else
-				_Stream += NewLine;
+				_Stream += pNewLine;
 
 			auto Iter = _pReg->mp_Children.f_GetIterator();
 			while (Iter)
@@ -251,10 +251,10 @@ namespace NMib::NContainer
 				if (!WhiteSpace.f_IsEmpty() || _pReg->mp_Key.f_GetParsed(ERegistryWhiteSpaceLocation_AfterChildScopeEnd))
 					_Stream += WhiteSpace;
 				else
-					_Stream += NewLine;
+					_Stream += pNewLine;
 			}
 			else
-				_Stream += NewLine;
+				_Stream += pNewLine;
 		}
 	}
 

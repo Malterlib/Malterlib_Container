@@ -11,20 +11,20 @@ namespace NMib::NContainer
 		noexcept(noexcept(fg_GetType<t_CKey const &>() == fg_GetType<tf_CKey const &>()) && noexcept(fg_GetType<t_CValue const &>() == fg_GetType<tf_CValue const &>()))
 		-> bool
 	{
-		CIteratorConst Iter0 = *this;
-		auto Iter1 = _Other.f_GetIterator();
-		while (Iter0 && Iter1)
+		CIteratorConst iThis = *this;
+		auto iOther = _Other.f_GetIterator();
+		while (iThis && iOther)
 		{
-			if (!(Iter0.f_GetKey() == Iter1.f_GetKey()))
+			if (!(iThis.f_GetKey() == iOther.f_GetKey()))
 				return false;
-			if (!(*Iter0 == *Iter1))
+			if (!(*iThis == *iOther))
 				return false;
 
-			++Iter0;
-			++Iter1;
+			++iThis;
+			++iOther;
 		}
 
-		if (!!Iter0 != !!Iter1)
+		if (!!iThis != !!iOther)
 			return false;
 
 		return true;
@@ -35,20 +35,20 @@ namespace NMib::NContainer
 		noexcept(noexcept(fg_GetType<t_CKey const &>() == fg_GetType<t_CKey const &>()) && noexcept(fg_GetType<t_CValue const &>() == fg_GetType<t_CValue const &>()))
 		-> bool
 	{
-		CIteratorConst Iter0 = *this;
-		CIteratorConst Iter1 = _Other;
-		while (Iter0 && Iter1)
+		CIteratorConst iThis = *this;
+		CIteratorConst iOther = _Other;
+		while (iThis && iOther)
 		{
-			if (!(Iter0.f_GetKey() == Iter1.f_GetKey()))
+			if (!(iThis.f_GetKey() == iOther.f_GetKey()))
 				return false;
-			if (!(*Iter0 == *Iter1))
+			if (!(*iThis == *iOther))
 				return false;
 
-			++Iter0;
-			++Iter1;
+			++iThis;
+			++iOther;
 		}
 
-		if (!!Iter0 != !!Iter1)
+		if (!!iThis != !!iOther)
 			return false;
 
 		return true;
@@ -66,23 +66,23 @@ namespace NMib::NContainer
 			>
 		;
 
-		CIteratorConst Iter0 = *this;
-		auto Iter1 = _Other.f_GetIterator();
-		while (Iter0 && Iter1)
+		CIteratorConst iThis = *this;
+		auto iOther = _Other.f_GetIterator();
+		while (iThis && iOther)
 		{
-			if (auto Result = Iter0.f_GetKey() <=> Iter1.f_GetKey(); Result != 0)
+			if (auto Result = iThis.f_GetKey() <=> iOther.f_GetKey(); Result != 0)
 				return COrdering(Result);
 
-			if (auto Result = *Iter0 <=> *Iter1; Result != 0)
+			if (auto Result = *iThis <=> *iOther; Result != 0)
 				return COrdering(Result);
 
-			++Iter0;
-			++Iter1;
+			++iThis;
+			++iOther;
 		}
 
-		if (!Iter0 && Iter1)
+		if (!iThis && iOther)
 			return COrdering::less;
-		else if (Iter0 && !Iter1)
+		else if (iThis && !iOther)
 			return COrdering::greater;
 
 		return COrdering::equivalent;
@@ -99,23 +99,23 @@ namespace NMib::NContainer
 			>
 		;
 
-		CIteratorConst Iter0 = *this;
-		CIteratorConst Iter1 = _Other;
-		while (Iter0 && Iter1)
+		CIteratorConst iThis = *this;
+		CIteratorConst iOther = _Other;
+		while (iThis && iOther)
 		{
-			if (auto Result = Iter0.f_GetKey() <=> Iter1.f_GetKey(); Result != 0)
+			if (auto Result = iThis.f_GetKey() <=> iOther.f_GetKey(); Result != 0)
 				return COrdering(Result);
 
-			if (auto Result = *Iter0 <=> *Iter1; Result != 0)
+			if (auto Result = *iThis <=> *iOther; Result != 0)
 				return COrdering(Result);
 
-			++Iter0;
-			++Iter1;
+			++iThis;
+			++iOther;
 		}
 
-		if (!Iter0 && Iter1)
+		if (!iThis && iOther)
 			return COrdering::less;
-		else if (Iter0 && !Iter1)
+		else if (iThis && !iOther)
 			return COrdering::greater;
 
 		return COrdering::equivalent;

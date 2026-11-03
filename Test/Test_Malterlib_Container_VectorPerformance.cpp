@@ -16,8 +16,8 @@ namespace NMib
 {
 	namespace NAlgorithm
 	{
-		template <typename tf_CIterator, typename tf_CCompare>
-		bool fg_IsReverseSorted(tf_CIterator _iFirst, tf_CIterator _iLast, tf_CCompare &&_fCompare)
+		template <typename tf_CIterator, typename tf_FCompare>
+		bool fg_IsReverseSorted(tf_CIterator _iFirst, tf_CIterator _iLast, tf_FCompare &&_fCompare)
 		{
 			if (_iFirst != _iLast)
 			{
@@ -36,8 +36,8 @@ namespace NMib
 			return fg_IsReverseSorted(_iFirst, _iLast, CSort_Default());
 		}
 
-		template <typename tf_CIterator, typename tf_CCompare>
-		bool fg_IsSorted(tf_CIterator _iFirst, tf_CIterator _iLast, tf_CCompare &&_fCompare)
+		template <typename tf_CIterator, typename tf_FCompare>
+		bool fg_IsSorted(tf_CIterator _iFirst, tf_CIterator _iLast, tf_FCompare &&_fCompare)
 		{
 			if (_iFirst != _iLast)
 			{
@@ -63,8 +63,8 @@ namespace NMib
 				fg_Swap(*_iFirst, *_iLast);
 		}
 
-		template <typename tf_CData, typename tf_CCompare>
-		void fg_InplaceMergeLists(tf_CData *_pBegin, tf_CData *_pMiddle, tf_CData *_pEnd, tf_CCompare &&_fCompare)
+		template <typename tf_CData, typename tf_FCompare>
+		void fg_InplaceMergeLists(tf_CData *_pBegin, tf_CData *_pMiddle, tf_CData *_pEnd, tf_FCompare &&_fCompare)
 		{
 			std::inplace_merge(_pBegin, _pMiddle, _pEnd, _fCompare);
 			/*
@@ -88,8 +88,8 @@ namespace NMib
 
 		constexpr aint gc_InsertSortTryMaxSwaps = 16;
 
-		template <typename tf_CData, typename tf_CType>
-		inline_always tf_CData *fg_InsertSortTryReverse(tf_CData *_pLow, tf_CData *_pHigh, tf_CType &&_fCompare)
+		template <typename tf_CData, typename tf_FCompare>
+		inline_always tf_CData *fg_InsertSortTryReverse(tf_CData *_pLow, tf_CData *_pHigh, tf_FCompare &&_fCompare)
 		{
 			//return _pHigh;
 			umint Swaps = 0;
@@ -127,8 +127,8 @@ namespace NMib
 			return pCurrent + 1;
 		}
 
-		template <typename tf_CType, typename tf_CData>
-		inline_always tf_CData *fg_InsertSortTry(tf_CData *_pLow, tf_CData *_pHigh, tf_CType &&_fCompare)
+		template <typename tf_FCompare, typename tf_CData>
+		inline_always tf_CData *fg_InsertSortTry(tf_CData *_pLow, tf_CData *_pHigh, tf_FCompare &&_fCompare)
 		{
 			//return _pLow;
 			umint Swaps = 0;
@@ -179,8 +179,8 @@ namespace NMib
 			return pCurrent + 1;
 		}
 
-		template <typename tf_CType, typename tf_CData>
-		inline_always void fg_InsertSort(tf_CData *_pLow, tf_CData *_pHigh, tf_CType &&_fCompare)
+		template <typename tf_FCompare, typename tf_CData>
+		inline_always void fg_InsertSort(tf_CData *_pLow, tf_CData *_pHigh, tf_FCompare &&_fCompare)
 		{
 			tf_CData *pCurrent = _pLow + 1;
 			for (; pCurrent < _pHigh; pCurrent++)
@@ -201,8 +201,8 @@ namespace NMib
 			}
 		}
 
-		template <typename tf_CParam0, typename tf_CParam1, typename tf_CParam2, typename tf_CCompare>
-		inline_always void fg_Sort3(tf_CParam0 &_First, tf_CParam1 &_Middle, tf_CParam2 &_Last, tf_CCompare &&_fCompare)
+		template <typename tf_CParam0, typename tf_CParam1, typename tf_CParam2, typename tf_FCompare>
+		inline_always void fg_Sort3(tf_CParam0 &_First, tf_CParam1 &_Middle, tf_CParam2 &_Last, tf_FCompare &&_fCompare)
 		{
 			if (COrdering_Partial(_fCompare(_Middle, _First)) < 0)
 			{

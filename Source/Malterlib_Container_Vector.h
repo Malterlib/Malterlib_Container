@@ -209,25 +209,25 @@ namespace NMib::NContainer
 		t_CData &f_InsertBefore(umint _Position);
 
 		template <typename tf_CIterator, typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector);
+		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_iPosition, TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector);
 		template <typename tf_CIterator, typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &_Vector);
+		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_iPosition, TCVector<tf_CData, tf_CAllocator, tf_COptions> &_Vector);
 		template <typename tf_CIterator, typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Vector);
+		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_iPosition, TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Vector);
 		template <typename tf_CIterator>
-		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, t_CData const *_pData, umint _Len = 1);
+		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_iPosition, t_CData const *_pData, umint _Len = 1);
 		template <typename tf_CIterator>
-		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, t_CData *_pData, umint _Len = 1);
+		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_iPosition, t_CData *_pData, umint _Len = 1);
 		template <typename tf_CIterator>
-		t_CData *f_InsertBeforeMove(TCVectorIterator<tf_CIterator> const &_Position, t_CData *_pData, umint _Len = 1);
+		t_CData *f_InsertBeforeMove(TCVectorIterator<tf_CIterator> const &_iPosition, t_CData *_pData, umint _Len = 1);
 		template <typename tf_CIterator>
-		t_CData &f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, t_CData const &_Data);
+		t_CData &f_InsertBefore(TCVectorIterator<tf_CIterator> const &_iPosition, t_CData const &_Data);
 		template <typename tf_CIterator>
-		t_CData &f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, t_CData &_Data);
+		t_CData &f_InsertBefore(TCVectorIterator<tf_CIterator> const &_iPosition, t_CData &_Data);
 		template <typename tf_CIterator>
-		t_CData &f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, t_CData &&_Data);
+		t_CData &f_InsertBefore(TCVectorIterator<tf_CIterator> const &_iPosition, t_CData &&_Data);
 		template <typename tf_CIterator>
-		t_CData &f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position);
+		t_CData &f_InsertBefore(TCVectorIterator<tf_CIterator> const &_iPosition);
 
 		// Insert after
 
@@ -246,25 +246,25 @@ namespace NMib::NContainer
 		t_CData &f_InsertAfter(umint _Position);
 
 		template <typename tf_CIterator, typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-		t_CData *f_InsertAfter(TCVectorIterator<tf_CIterator> const &_Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector);
+		t_CData *f_InsertAfter(TCVectorIterator<tf_CIterator> const &_iPosition, TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector);
 		template <typename tf_CIterator, typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-		t_CData *f_InsertAfter(TCVectorIterator<tf_CIterator> const &_Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &_Vector);
+		t_CData *f_InsertAfter(TCVectorIterator<tf_CIterator> const &_iPosition, TCVector<tf_CData, tf_CAllocator, tf_COptions> &_Vector);
 		template <typename tf_CIterator, typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-		t_CData *f_InsertAfter(TCVectorIterator<tf_CIterator> const &_Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Vector);
+		t_CData *f_InsertAfter(TCVectorIterator<tf_CIterator> const &_iPosition, TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Vector);
 		template <typename tf_CIterator>
-		t_CData *f_InsertAfter(TCVectorIterator<tf_CIterator> const &_Position, t_CData const *_pData, umint _Len = 1);
+		t_CData *f_InsertAfter(TCVectorIterator<tf_CIterator> const &_iPosition, t_CData const *_pData, umint _Len = 1);
 		template <typename tf_CIterator>
-		t_CData *f_InsertAfter(TCVectorIterator<tf_CIterator> const &_Position, t_CData *_pData, umint _Len = 1);
+		t_CData *f_InsertAfter(TCVectorIterator<tf_CIterator> const &_iPosition, t_CData *_pData, umint _Len = 1);
 		template <typename tf_CIterator>
-		t_CData *f_InsertAfterMove(TCVectorIterator<tf_CIterator> const &_Position, t_CData *_pData, umint _Len = 1);
+		t_CData *f_InsertAfterMove(TCVectorIterator<tf_CIterator> const &_iPosition, t_CData *_pData, umint _Len = 1);
 		template <typename tf_CIterator>
-		t_CData &f_InsertAfter(TCVectorIterator<tf_CIterator> const &_Position, t_CData const &_Data);
+		t_CData &f_InsertAfter(TCVectorIterator<tf_CIterator> const &_iPosition, t_CData const &_Data);
 		template <typename tf_CIterator>
-		t_CData &f_InsertAfter(TCVectorIterator<tf_CIterator> const &_Position, t_CData &_Data);
+		t_CData &f_InsertAfter(TCVectorIterator<tf_CIterator> const &_iPosition, t_CData &_Data);
 		template <typename tf_CIterator>
-		t_CData &f_InsertAfter(TCVectorIterator<tf_CIterator> const &_Position, t_CData &&_Data);
+		t_CData &f_InsertAfter(TCVectorIterator<tf_CIterator> const &_iPosition, t_CData &&_Data);
 		template <typename tf_CIterator>
-		t_CData &f_InsertAfter(TCVectorIterator<tf_CIterator> const &_Position);
+		t_CData &f_InsertAfter(TCVectorIterator<tf_CIterator> const &_iPosition);
 
 		// Other
 
@@ -296,34 +296,34 @@ namespace NMib::NContainer
 		void f_DeleteAllDeleter();
 		void f_DeleteAllDeleter();
 
-		template <typename tf_CCompare>
-		void f_Sort(tf_CCompare &&_fCompare);
+		template <typename tf_FCompare>
+		void f_Sort(tf_FCompare &&_fCompare);
 		void f_Sort();
-		template <typename tf_CCompare>
-		bool f_IsSorted(tf_CCompare &&_fCompare) const;
+		template <typename tf_FCompare>
+		bool f_IsSorted(tf_FCompare &&_fCompare) const;
 		bool f_IsAdjacentUnique() const;
-		template <typename tf_CCompare>
-		bool f_IsSortedNoDuplicates(tf_CCompare &&_fCompare) const;
+		template <typename tf_FCompare>
+		bool f_IsSortedNoDuplicates(tf_FCompare &&_fCompare) const;
 		bool f_IsSortedNoDuplicates() const;
 
-		template <typename tf_CCompare>
-		void f_UniqueIfSorted(tf_CCompare &&_fCompare);
+		template <typename tf_FCompare>
+		void f_UniqueIfSorted(tf_FCompare &&_fCompare);
 		void f_UniqueIfSorted();
 
 		template <typename tf_CType>
 		aint f_Contains(tf_CType const &_Data) const;
 		template <typename tf_FUnaryPredicate>
 		aint f_ContainsIf(tf_FUnaryPredicate &&_fPredicate) const;
-		template <typename tf_CCompare, typename tf_CFind>
-		aint f_BinarySearch(tf_CCompare &&_fCompare, tf_CFind const &_ToFind, aint _nMax = -1) const;
+		template <typename tf_FCompare, typename tf_CFind>
+		aint f_BinarySearch(tf_FCompare &&_fCompare, tf_CFind const &_ToFind, aint _nMax = -1) const;
 		template <typename tf_CFind>
 		aint f_BinarySearch(tf_CFind const &_ToFind) const;
-		template <typename tf_CCompare, typename tf_CFind>
-		aint f_BinarySearchLowerBound(tf_CCompare &&_fCompare, tf_CFind const &_ToFind) const;
+		template <typename tf_FCompare, typename tf_CFind>
+		aint f_BinarySearchLowerBound(tf_FCompare &&_fCompare, tf_CFind const &_ToFind) const;
 		template <typename tf_CFind>
 		aint f_BinarySearchLowerBound(tf_CFind const &_ToFind) const;
-		template <typename tf_CCompare, typename tf_CFind>
-		aint f_BinarySearchUpperBound(tf_CCompare &&_fCompare, tf_CFind const &_ToFind) const;
+		template <typename tf_FCompare, typename tf_CFind>
+		aint f_BinarySearchUpperBound(tf_FCompare &&_fCompare, tf_CFind const &_ToFind) const;
 		template <typename tf_CFind>
 		aint f_BinarySearchUpperBound(tf_CFind const &_ToFind) const;
 
@@ -426,12 +426,12 @@ namespace NMib::NContainer
 		static inline_small bool fsp_NeedReallocGrow(umint _NeededSize, CVectorData const *_pExtraData);
 		static inline_small bool fsp_CanGrow(umint _NeededSize, CVectorData const *_pExtraData);
 
-		template <typename tf_CCompare>
-		void fp_InsertSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare);
-		template <typename tf_CCompare>
-		aint fp_Partition(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare);
-		template <typename tf_CCompare>
-		void fp_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_CCompare &&_fCompare);
+		template <typename tf_FCompare>
+		void fp_InsertSort(t_CData *_pArray, aint _Low, aint _High, tf_FCompare &&_fCompare);
+		template <typename tf_FCompare>
+		aint fp_Partition(t_CData *_pArray, aint _Low, aint _High, tf_FCompare &&_fCompare);
+		template <typename tf_FCompare>
+		void fp_QuickSort(t_CData *_pArray, aint _Low, aint _High, tf_FCompare &&_fCompare);
 
 		t_CData *fp_MakeRoomBegin(umint _Len);
 		void fp_MakeRoomBeginUndo(umint _Len);
@@ -446,9 +446,9 @@ namespace NMib::NContainer
 		void fp_Copy(TCVector const &_Source);
 
 		template <typename tf_CIteratorData>
-		umint fp_GetIteratorPos(TCVectorIterator<tf_CIteratorData> const &_Iter) const
+		umint fp_GetIteratorPos(TCVectorIterator<tf_CIteratorData> const &_iIter) const
 		{
-			return _Iter - f_GetArray();
+			return _iIter - f_GetArray();
 		}
 
 		inline_never t_CData &fp_Insert();

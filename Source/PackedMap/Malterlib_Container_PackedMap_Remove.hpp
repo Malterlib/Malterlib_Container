@@ -35,11 +35,11 @@ namespace NMib::NContainer
 
 		// Find which segment and position this value belongs to
 #ifdef DMibContractConfigure_RequireEnabled
-		umint pValuesAddress = (umint)pValues;
+		umint ValuesAddress = (umint)pValues;
 		umint ValueAddress = (umint)_pValue;
-		umint iByteOffset = ValueAddress - pValuesAddress;
+		umint iByteOffset = ValueAddress - ValuesAddress;
 		umint ValuesByteSize = umint(pData->m_Capacity) * sizeof(t_CValue);
-		bool bAddressInRange = ValueAddress >= pValuesAddress && iByteOffset < ValuesByteSize;
+		bool bAddressInRange = ValueAddress >= ValuesAddress && iByteOffset < ValuesByteSize;
 		bool bOnValueBoundary = bAddressInRange && iByteOffset % sizeof(t_CValue) == 0;
 
 		DMibRequire(bAddressInRange && bOnValueBoundary);
