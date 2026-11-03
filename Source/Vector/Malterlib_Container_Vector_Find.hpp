@@ -6,8 +6,8 @@
 namespace NMib::NContainer
 {
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename t_CType2>
-	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_Contains(t_CType2 const &_Data) const
+	template <typename tf_CType>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_Contains(tf_CType const &_Data) const
 	{
 		aint Len = f_GetLen();
 		t_CData const *pArray = f_GetArray();

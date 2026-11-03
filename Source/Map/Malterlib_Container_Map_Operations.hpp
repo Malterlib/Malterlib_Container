@@ -6,10 +6,10 @@
 namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Xor(this t_CThis &&_This, TCMap const &_Right) -> TCMap
+	template <typename tf_CThis>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Xor(this tf_CThis &&_This, TCMap const &_Right) -> TCMap
 	{
-		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 		{
 			if (_Right.f_IsEmpty())
 				return fg_Move(_This);
@@ -89,10 +89,10 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Xor(this t_CThis &&_This, TCMap &&_Right) -> TCMap
+	template <typename tf_CThis>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Xor(this tf_CThis &&_This, TCMap &&_Right) -> TCMap
 	{
-		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 		{
 			if (_Right.f_IsEmpty())
 				return fg_Move(_This);
@@ -155,24 +155,24 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator ^ (this t_CThis &&_This, TCMap const &_Right) -> TCMap
+	template <typename tf_CThis>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator ^ (this tf_CThis &&_This, TCMap const &_Right) -> TCMap
 	{
-		return fg_Forward<t_CThis>(_This).f_Xor(_Right);
+		return fg_Forward<tf_CThis>(_This).f_Xor(_Right);
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator ^ (this t_CThis &&_This, TCMap &&_Right) -> TCMap
+	template <typename tf_CThis>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator ^ (this tf_CThis &&_This, TCMap &&_Right) -> TCMap
 	{
-		return fg_Forward<t_CThis>(_This).f_Xor(fg_Move(_Right));
+		return fg_Forward<tf_CThis>(_This).f_Xor(fg_Move(_Right));
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Difference(this t_CThis &&_This, TCMap const &_Right) -> TCMap
+	template <typename tf_CThis>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Difference(this tf_CThis &&_This, TCMap const &_Right) -> TCMap
 	{
-		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 		{
 			TCMap Return = fg_Move(_This);
 			Return -= _Right;
@@ -209,19 +209,19 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator - (this t_CThis &&_This, TCMap const &_Right) -> TCMap
+	template <typename tf_CThis>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::operator - (this tf_CThis &&_This, TCMap const &_Right) -> TCMap
 	{
-		return fg_Forward<t_CThis>(_This).f_Difference(_Right);
+		return fg_Forward<tf_CThis>(_This).f_Difference(_Right);
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <EMapOperationPolicy t_Policy, typename t_CThis>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Or(this t_CThis &&_This, TCMap const &_Right) -> TCMap
+	template <EMapOperationPolicy tf_Policy, typename tf_CThis>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Or(this tf_CThis &&_This, TCMap const &_Right) -> TCMap
 	{
-		if constexpr (t_Policy == EMapOperationPolicy::mc_Fastest)
+		if constexpr (tf_Policy == EMapOperationPolicy::mc_Fastest)
 		{
-			if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+			if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 			{
 				TCMap Return(_Right);
 				Return += fg_Move(_This);
@@ -234,9 +234,9 @@ namespace NMib::NContainer
 				return Return;
 			}
 		}
-		else if constexpr (t_Policy == EMapOperationPolicy::mc_PreferLeft)
+		else if constexpr (tf_Policy == EMapOperationPolicy::mc_PreferLeft)
 		{
-			if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+			if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 			{
 				TCMap Return(fg_Move(_This));
 				Return += _Right;
@@ -252,7 +252,7 @@ namespace NMib::NContainer
 		else
 		{
 			TCMap Return(_Right);
-			if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+			if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 				Return += fg_Move(_This);
 			else
 				Return += _This;
@@ -261,12 +261,12 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <EMapOperationPolicy t_Policy, typename t_CThis>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Or(this t_CThis &&_This, TCMap &&_Right) -> TCMap
+	template <EMapOperationPolicy tf_Policy, typename tf_CThis>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_Or(this tf_CThis &&_This, TCMap &&_Right) -> TCMap
 	{
-		if constexpr (t_Policy == EMapOperationPolicy::mc_Fastest)
+		if constexpr (tf_Policy == EMapOperationPolicy::mc_Fastest)
 		{
-			if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+			if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 			{
 				TCMap Return(fg_Move(_Right));
 				Return += fg_Move(_This);
@@ -279,9 +279,9 @@ namespace NMib::NContainer
 				return Return;
 			}
 		}
-		else if constexpr (t_Policy == EMapOperationPolicy::mc_PreferLeft)
+		else if constexpr (tf_Policy == EMapOperationPolicy::mc_PreferLeft)
 		{
-			if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+			if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 			{
 				TCMap Return(fg_Move(_This));
 				Return += fg_Move(_Right);
@@ -297,7 +297,7 @@ namespace NMib::NContainer
 		else
 		{
 			TCMap Return(fg_Move(_Right));
-			if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+			if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 				Return += fg_Move(_This);
 			else
 				Return += _This;
@@ -306,14 +306,14 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <EMapOperationPolicy t_Policy, typename t_CThis>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_And(this t_CThis &&_This, TCMap const &_Right) -> TCMap
+	template <EMapOperationPolicy tf_Policy, typename tf_CThis>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_And(this tf_CThis &&_This, TCMap const &_Right) -> TCMap
 	{
 		TCMap Return;
 
-		static constexpr bool c_bPreferLeft = (t_Policy == EMapOperationPolicy::mc_PreferLeft) || (t_Policy == EMapOperationPolicy::mc_Fastest);
+		static constexpr bool c_bPreferLeft = (tf_Policy == EMapOperationPolicy::mc_PreferLeft) || (tf_Policy == EMapOperationPolicy::mc_Fastest);
 
-		if constexpr (c_bPreferLeft && NTraits::cIsRValueReference<t_CThis &&>)
+		if constexpr (c_bPreferLeft && NTraits::cIsRValueReference<tf_CThis &&>)
 		{
 			auto iLeft = fg_Move(_This).f_Entries().f_GetIteratorBidirectionalDestructive();
 			auto iRight = _Right.f_Entries().f_GetIterator();
@@ -377,14 +377,14 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator>
-	template <EMapOperationPolicy t_Policy, typename t_CThis>
-	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_And(this t_CThis &&_This, TCMap &&_Right) -> TCMap
+	template <EMapOperationPolicy tf_Policy, typename tf_CThis>
+	auto TCMap<t_CKey, t_CValue, t_CCompare, t_CAllocator>::f_And(this tf_CThis &&_This, TCMap &&_Right) -> TCMap
 	{
 		TCMap Return;
 
-		if constexpr (t_Policy == EMapOperationPolicy::mc_PreferLeft)
+		if constexpr (tf_Policy == EMapOperationPolicy::mc_PreferLeft)
 		{
-			if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+			if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 			{
 				auto iLeft = fg_Move(_This).f_Entries().f_GetIteratorBidirectionalDestructive();
 				auto iRight = _Right.f_Entries().f_GetIterator();
@@ -424,7 +424,7 @@ namespace NMib::NContainer
 				}
 			}
 		}
-		else if constexpr (t_Policy == EMapOperationPolicy::mc_PreferRight)
+		else if constexpr (tf_Policy == EMapOperationPolicy::mc_PreferRight)
 		{
 			auto iLeft = _This.f_Entries().f_GetIterator();
 			auto iRight = fg_Move(_Right).f_Entries().f_GetIteratorBidirectionalDestructive();

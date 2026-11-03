@@ -1070,9 +1070,9 @@ namespace NMib::NContainer
 			// Sort by start element position
 			_OutIntervals.f_Sort
 				(
-					[](CMarkedInterval const &_a, CMarkedInterval const &_b)
+					[](CMarkedInterval const &_Left, CMarkedInterval const &_Right)
 					{
-						return _a.m_iStartElem <=> _b.m_iStartElem;
+						return _Left.m_iStartElem <=> _Right.m_iStartElem;
 					}
 				)
 			;

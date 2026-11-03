@@ -288,8 +288,8 @@ namespace NMib::NContainer
 		t_CStr f_GenerateStr(ch8 const *_pNewLine = DMibNewLine) const;
 		t_CStr f_GenerateStrLax(ch8 const *_pNewLine = DMibNewLine) const;
 
-		template <typename t_CTransform>
-		void f_Transform(t_CTransform const &_fTransformer);
+		template <typename tf_CTransform>
+		void f_Transform(tf_CTransform const &_fTransformer);
 		template <typename tf_CFunctor>
 		void f_TransformFunc(tf_CFunctor const &_fTransformer);
 		template <typename tf_CFunctor>

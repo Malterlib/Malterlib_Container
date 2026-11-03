@@ -51,14 +51,14 @@ namespace NMib::NContainer::NPrivate
 
 		aint f_FindUpperBound(umint _StartBit) const;
 
-		template <typename t_CFunctor>
-		void f_EnumFreeBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
-		template <typename t_CFunctor>
-		void f_EnumFreeBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
-		template <typename t_CFunctor>
-		void f_EnumSetBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
-		template <typename t_CFunctor>
-		void f_EnumSetBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+		template <typename tf_CFunctor>
+		void f_EnumFreeBits(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+		template <typename tf_CFunctor>
+		void f_EnumFreeBitRanges(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+		template <typename tf_CFunctor>
+		void f_EnumSetBits(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+		template <typename tf_CFunctor>
+		void f_EnumSetBitRanges(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 
 		template <bool tf_bValue>
 		void f_SetBit(umint _Level, umint _Bit);
@@ -75,15 +75,15 @@ namespace NMib::NContainer::NPrivate
 		bool f_IsFullySet(umint _Level) const;
 		bool f_IsFullyFree(umint _Level) const;
 
-		template <typename t_CFunctor>
-		void f_EnumFreeBits(umint _Level, t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
-		template <typename t_CFunctor>
-		void f_EnumFreeBitRanges(umint _Level, t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+		template <typename tf_CFunctor>
+		void f_EnumFreeBits(umint _Level, tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+		template <typename tf_CFunctor>
+		void f_EnumFreeBitRanges(umint _Level, tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 
-		template <typename t_CFunctor>
-		void f_EnumSetBits(umint _Level, t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
-		template <typename t_CFunctor>
-		void f_EnumSetBitRanges(umint _Level, t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+		template <typename tf_CFunctor>
+		void f_EnumSetBits(umint _Level, tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+		template <typename tf_CFunctor>
+		void f_EnumSetBitRanges(umint _Level, tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 
 	protected:
 		bool fp_IsFullyFree() const;

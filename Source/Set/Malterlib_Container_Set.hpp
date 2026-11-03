@@ -119,10 +119,10 @@ namespace NMib::NContainer
 #endif
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Or(this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Or(this tf_CThis &&_This, TCSet const &_Right) -> TCSet
 	{
-		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 		{
 			TCSet Return(_Right);
 			Return += fg_Move(_This);
@@ -137,10 +137,10 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Or(this t_CThis &&_This, TCSet &&_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Or(this tf_CThis &&_This, TCSet &&_Right) -> TCSet
 	{
-		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 		{
 			TCSet Return(fg_Move(_Right));
 			Return += fg_Move(_This);
@@ -155,26 +155,26 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator | (this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator | (this tf_CThis &&_This, TCSet const &_Right) -> TCSet
 	{
-		return fg_Forward<t_CThis>(_This).f_Or(_Right);
+		return fg_Forward<tf_CThis>(_This).f_Or(_Right);
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator | (this t_CThis &&_This, TCSet &&_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator | (this tf_CThis &&_This, TCSet &&_Right) -> TCSet
 	{
-		return fg_Forward<t_CThis>(_This).f_Or(fg_Move(_Right));
+		return fg_Forward<tf_CThis>(_This).f_Or(fg_Move(_Right));
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_And(this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_And(this tf_CThis &&_This, TCSet const &_Right) -> TCSet
 	{
 		TCSet Return;
 
-		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 		{
 			auto iLeft = fg_Move(_This).f_GetIteratorBidirectionalDestructive();
 			auto iRight = _Right.f_GetIterator();
@@ -218,8 +218,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_And(this t_CThis &&_This, TCSet &&_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_And(this tf_CThis &&_This, TCSet &&_Right) -> TCSet
 	{
 		TCSet Return;
 		auto iLeft = _This.f_GetIterator();
@@ -243,26 +243,26 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator & (this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator & (this tf_CThis &&_This, TCSet const &_Right) -> TCSet
 	{
-		return fg_Forward<t_CThis>(_This).f_And(_Right);
+		return fg_Forward<tf_CThis>(_This).f_And(_Right);
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator & (this t_CThis &&_This, TCSet &&_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator & (this tf_CThis &&_This, TCSet &&_Right) -> TCSet
 	{
-		return fg_Forward<t_CThis>(_This).f_And(fg_Move(_Right));
+		return fg_Forward<tf_CThis>(_This).f_And(fg_Move(_Right));
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Xor(this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Xor(this tf_CThis &&_This, TCSet const &_Right) -> TCSet
 	{
 		TCSet Return;
 
-		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 		{
 			if (_Right.f_IsEmpty())
 				return fg_Move(_This);
@@ -336,10 +336,10 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Xor(this t_CThis &&_This, TCSet &&_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Xor(this tf_CThis &&_This, TCSet &&_Right) -> TCSet
 	{
-		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 		{
 			if (_Right.f_IsEmpty())
 				return fg_Move(_This);
@@ -402,24 +402,24 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator ^ (this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator ^ (this tf_CThis &&_This, TCSet const &_Right) -> TCSet
 	{
-		return fg_Forward<t_CThis>(_This).f_Xor(_Right);
+		return fg_Forward<tf_CThis>(_This).f_Xor(_Right);
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator ^ (this t_CThis &&_This, TCSet &&_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator ^ (this tf_CThis &&_This, TCSet &&_Right) -> TCSet
 	{
-		return fg_Forward<t_CThis>(_This).f_Xor(fg_Move(_Right));
+		return fg_Forward<tf_CThis>(_This).f_Xor(fg_Move(_Right));
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Difference(this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::f_Difference(this tf_CThis &&_This, TCSet const &_Right) -> TCSet
 	{
-		if constexpr (NTraits::cIsRValueReference<t_CThis &&>)
+		if constexpr (NTraits::cIsRValueReference<tf_CThis &&>)
 		{
 			TCSet Return = fg_Move(_This);
 			Return -= _Right;
@@ -456,37 +456,37 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CCompare, typename t_CAllocator>
-	template <typename t_CThis>
-	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator - (this t_CThis &&_This, TCSet const &_Right) -> TCSet
+	template <typename tf_CThis>
+	auto TCSet<t_CKey, t_CCompare, t_CAllocator>::operator - (this tf_CThis &&_This, TCSet const &_Right) -> TCSet
 	{
-		return fg_Forward<t_CThis>(_This).f_Difference(_Right);
+		return fg_Forward<tf_CThis>(_This).f_Difference(_Right);
 	}
 
-	template <typename tf_CReturn, typename ...tf_CParams>
+	template <typename tf_CReturn, typename ...tfp_CParams>
 	void fg_CreateSetHelper(TCSet<tf_CReturn> &_Return)
 	{
 	}
 
-	template <typename tf_CReturn, typename tf_CFirst, typename ...tf_CParams>
-	void fg_CreateSetHelper(TCSet<tf_CReturn> &_Return, tf_CFirst &&_First, tf_CParams && ...p_Params)
+	template <typename tf_CReturn, typename tf_CFirst, typename ...tfp_CParams>
+	void fg_CreateSetHelper(TCSet<tf_CReturn> &_Return, tf_CFirst &&_First, tfp_CParams && ...p_Params)
 	{
 		_Return[fg_Forward<tf_CFirst>(_First)];
-		fg_CreateSetHelper<tf_CReturn>(_Return, fg_Forward<tf_CParams>(p_Params)...);
+		fg_CreateSetHelper<tf_CReturn>(_Return, fg_Forward<tfp_CParams>(p_Params)...);
 	}
 
-	template <typename tf_CFirst, typename ...tf_CParams>
-	TCSet<NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>> fg_CreateSet(tf_CFirst &&_First, tf_CParams && ...p_Params)
+	template <typename tf_CFirst, typename ...tfp_CParams>
+	TCSet<NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>> fg_CreateSet(tf_CFirst &&_First, tfp_CParams && ...p_Params)
 	{
 		TCSet<NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>> Return;
-		fg_CreateSetHelper<NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>>(Return, fg_Forward<tf_CFirst>(_First), fg_Forward<tf_CParams>(p_Params)...);
+		fg_CreateSetHelper<NTraits::TCRemoveReferenceAndQualifiers<tf_CFirst>>(Return, fg_Forward<tf_CFirst>(_First), fg_Forward<tfp_CParams>(p_Params)...);
 		return Return;
 	}
 
-	template <typename tf_CReturn, typename ...tf_CParams>
-	TCSet<tf_CReturn> fg_CreateSet(tf_CParams && ...p_Params)
+	template <typename tf_CReturn, typename ...tfp_CParams>
+	TCSet<tf_CReturn> fg_CreateSet(tfp_CParams && ...p_Params)
 	{
 		TCSet<tf_CReturn> Return;
-		fg_CreateSetHelper<tf_CReturn>(Return, fg_Forward<tf_CParams>(p_Params)...);
+		fg_CreateSetHelper<tf_CReturn>(Return, fg_Forward<tfp_CParams>(p_Params)...);
 		return Return;
 	}
 

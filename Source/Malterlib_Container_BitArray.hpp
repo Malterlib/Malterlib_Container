@@ -557,8 +557,8 @@ namespace NMib::NContainer
 	}
 
 	template <umint t_nBits>
-	template <typename t_CFunctor>
-	void TCBitArray<t_nBits>::f_EnumFreeBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	void TCBitArray<t_nBits>::f_EnumFreeBits(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
 	{
 		DMibFastCheck(_StartBit < _EndBit);
 		DMibFastCheck(_EndBit <= t_nBits);
@@ -595,8 +595,8 @@ namespace NMib::NContainer
 	}
 
 	template <umint t_nBits>
-	template <typename t_CFunctor>
-	void TCBitArray<t_nBits>::f_EnumSetBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	void TCBitArray<t_nBits>::f_EnumSetBits(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
 	{
 		DMibFastCheck(_StartBit < _EndBit);
 		DMibFastCheck(_EndBit <= t_nBits);
@@ -635,8 +635,8 @@ namespace NMib::NContainer
 	}
 
 	template <umint t_nBits>
-	template <typename t_CFunctor>
-	void TCBitArray<t_nBits>::f_EnumFreeBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	void TCBitArray<t_nBits>::f_EnumFreeBitRanges(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
 	{
 		DMibFastCheck(_StartBit < _EndBit);
 		DMibFastCheck(_EndBit <= t_nBits);
@@ -730,8 +730,8 @@ namespace NMib::NContainer
 	}
 
 	template <umint t_nBits>
-	template <typename t_CFunctor>
-	void TCBitArray<t_nBits>::f_EnumSetBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	void TCBitArray<t_nBits>::f_EnumSetBitRanges(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
 	{
 		DMibFastCheck(_StartBit < _EndBit);
 		DMibFastCheck(_EndBit <= t_nBits);

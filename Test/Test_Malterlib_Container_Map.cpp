@@ -1238,7 +1238,7 @@ namespace
 
 				auto fInitSet = []
 					<umint tf_ExpectedSize = sizeof(void *) * 2>
-					(auto &_Set, TCCompileTimeConstant<umint, tf_ExpectedSize> _x = TCCompileTimeConstant<umint, sizeof(void *) * 2>())
+					(auto &_Set, TCCompileTimeConstant<umint, tf_ExpectedSize> _ExpectedSize = TCCompileTimeConstant<umint, sizeof(void *) * 2>())
 					{
 						// static_assert(sizeof(_Set) == tf_ExpectedSize);
 
@@ -1248,7 +1248,7 @@ namespace
 				;
 				auto fInitMap = []
 					<umint tf_ExpectedSize = sizeof(void *) * 2>
-					(auto &_Map, TCCompileTimeConstant<umint, tf_ExpectedSize> _x = TCCompileTimeConstant<umint, sizeof(void *) * 2>())
+					(auto &_Map, TCCompileTimeConstant<umint, tf_ExpectedSize> _ExpectedSize = TCCompileTimeConstant<umint, sizeof(void *) * 2>())
 					{
 						static_assert(sizeof(_Map) == tf_ExpectedSize);
 

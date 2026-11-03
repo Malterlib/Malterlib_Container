@@ -5,10 +5,10 @@
 
 namespace NMib::NContainer::NPrivate
 {
-	template <typename t_CData>
-	static void fg_ConstructArray(t_CData *_pDest, umint _Len, umint &o_Len)
+	template <typename tf_CData>
+	static void fg_ConstructArray(tf_CData *_pDest, umint _Len, umint &o_Len)
 	{
-		if constexpr (NTraits::cIsTrivialllyDefaultConstructible<t_CData>)
+		if constexpr (NTraits::cIsTrivialllyDefaultConstructible<tf_CData>)
 		{
 			o_Len += _Len;
 			return;
@@ -17,7 +17,7 @@ namespace NMib::NContainer::NPrivate
 		{
 			for (umint i = 0; i < _Len; ++i)
 			{
-				new((void *)(_pDest + i)) t_CData();
+				new((void *)(_pDest + i)) tf_CData();
 				++o_Len;
 			}
 		}
@@ -25,13 +25,13 @@ namespace NMib::NContainer::NPrivate
 
 	//////
 
-	template <typename t_CData>
-	static void fg_DestroyArray(t_CData *_pDest, umint _Len, umint &o_Len)
+	template <typename tf_CData>
+	static void fg_DestroyArray(tf_CData *_pDest, umint _Len, umint &o_Len)
 	{
 		DMibFastCheck(_Len != 0);
 		DMibFastCheck(_pDest);
 
-		if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
+		if constexpr (NTraits::cIsTriviallyDestructible<tf_CData>)
 		{
 			o_Len -= _Len;
 			return;
@@ -49,7 +49,7 @@ namespace NMib::NContainer::NPrivate
 			// Destroy all cells
 			auto pEnd = _pDest - 1;
 			for (auto pDest = _pDest + (_Len - 1); pDest != pEnd; --pDest, --o_Len)
-				pDest->~t_CData();
+				pDest->~tf_CData();
 #endif
 
 #if DMibEnableSafeCheck > 0
@@ -60,13 +60,13 @@ namespace NMib::NContainer::NPrivate
 
 	//////
 
-	template <typename t_CData>
-	static void fg_MoveArray(t_CData *_pDest, t_CData *_pSrc, umint _Len)
+	template <typename tf_CData>
+	static void fg_MoveArray(tf_CData *_pDest, tf_CData *_pSrc, umint _Len)
 	{
-		if constexpr (NTraits::cIsTriviallyMoveConstructible<t_CData>)
+		if constexpr (NTraits::cIsTriviallyMoveConstructible<tf_CData>)
 		{
 			if (_Len)
-				NMemory::fg_MemCopy((void *)_pDest, _pSrc, _Len * sizeof(t_CData));
+				NMemory::fg_MemCopy((void *)_pDest, _pSrc, _Len * sizeof(tf_CData));
 		}
 		else
 		{
@@ -79,7 +79,7 @@ namespace NMib::NContainer::NPrivate
 #endif
 
 			for (umint i = 0; i < _Len; ++i)
-				new((void *)(_pDest + i)) t_CData(fg_Move(_pSrc[i]));
+				new((void *)(_pDest + i)) tf_CData(fg_Move(_pSrc[i]));
 
 #if DMibEnableSafeCheck > 0
 			Cleanup.f_Clear();
@@ -87,8 +87,8 @@ namespace NMib::NContainer::NPrivate
 		}
 	}
 
-	template <typename t_CData0, typename t_CData1>
-	static void fg_MoveArray(t_CData0 *_pDest, t_CData1 *_pSrc, umint _Len)
+	template <typename tf_CData0, typename tf_CData1>
+	static void fg_MoveArray(tf_CData0 *_pDest, tf_CData1 *_pSrc, umint _Len)
 	{
 #if DMibEnableSafeCheck > 0
 		auto Cleanup = g_OnScopeExit / [&]
@@ -99,7 +99,7 @@ namespace NMib::NContainer::NPrivate
 #endif
 
 		for (umint i = 0; i < _Len; ++i)
-			new((void *)(_pDest + i)) t_CData0(fg_Move(_pSrc[i]));
+			new((void *)(_pDest + i)) tf_CData0(fg_Move(_pSrc[i]));
 
 #if DMibEnableSafeCheck > 0
 		Cleanup.f_Clear();
@@ -108,45 +108,45 @@ namespace NMib::NContainer::NPrivate
 
 	//////
 
-	template <typename t_CData>
-	static void fg_CopyArray(t_CData *_pDest, t_CData const *_pSrc, umint _Len, umint &o_Len)
+	template <typename tf_CData>
+	static void fg_CopyArray(tf_CData *_pDest, tf_CData const *_pSrc, umint _Len, umint &o_Len)
 	{
-		if constexpr (NTraits::cIsTriviallyCopyConstructible<t_CData>)
+		if constexpr (NTraits::cIsTriviallyCopyConstructible<tf_CData>)
 		{
 			if (_Len)
-				NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(t_CData));
+				NMemory::fg_MemCopy(_pDest, _pSrc, _Len * sizeof(tf_CData));
 			o_Len += _Len;
 		}
-		else if constexpr (NTraits::cIsNothrowConstructibleWith<t_CData, t_CData const &>)
+		else if constexpr (NTraits::cIsNothrowConstructibleWith<tf_CData, tf_CData const &>)
 		{
 			for (umint i = 0; i < _Len; ++i)
-				new((void *)(_pDest + i)) t_CData(_pSrc[i]);
+				new((void *)(_pDest + i)) tf_CData(_pSrc[i]);
 			o_Len += _Len;
 		}
 		else
 		{
 			for (umint i = 0; i < _Len; ++i)
 			{
-				new((void *)(_pDest + i)) t_CData(_pSrc[i]);
+				new((void *)(_pDest + i)) tf_CData(_pSrc[i]);
 				++o_Len;
 			}
 		}
 	}
 
-	template <typename t_CData0, typename t_CData1>
-	static void fg_CopyArray(t_CData0 *_pDest, t_CData1 const *_pSrc, umint _Len, umint &o_Len)
+	template <typename tf_CData0, typename tf_CData1>
+	static void fg_CopyArray(tf_CData0 *_pDest, tf_CData1 const *_pSrc, umint _Len, umint &o_Len)
 	{
-		if constexpr (NTraits::cIsNothrowConstructibleWith<t_CData0, t_CData1 const &>)
+		if constexpr (NTraits::cIsNothrowConstructibleWith<tf_CData0, tf_CData1 const &>)
 		{
 			for (umint i = 0; i < _Len; ++i)
-				new((void *)(_pDest + i)) t_CData0(_pSrc[i]);
+				new((void *)(_pDest + i)) tf_CData0(_pSrc[i]);
 			o_Len += _Len;
 		}
 		else
 		{
 			for (umint i = 0; i < _Len; ++i)
 			{
-				new((void *)(_pDest + i)) t_CData0(_pSrc[i]);
+				new((void *)(_pDest + i)) tf_CData0(_pSrc[i]);
 				++o_Len;
 			}
 		}
@@ -154,8 +154,8 @@ namespace NMib::NContainer::NPrivate
 
 	//////
 
-	template <typename t_CData>
-	static void fg_MoveDestroyOverlappingArrayReverse(t_CData *_pDest, t_CData *_pSrc, umint _Len)
+	template <typename tf_CData>
+	static void fg_MoveDestroyOverlappingArrayReverse(tf_CData *_pDest, tf_CData *_pSrc, umint _Len)
 	{
 #if DMibEnableSafeCheck > 0
 		auto Cleanup = g_OnScopeExit / [&]
@@ -164,30 +164,30 @@ namespace NMib::NContainer::NPrivate
 			}
 		;
 #endif
-		if constexpr (NTraits::cIsTriviallyMoveConstructible<t_CData>)
+		if constexpr (NTraits::cIsTriviallyMoveConstructible<tf_CData>)
 		{
-			if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
-				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
+			if constexpr (NTraits::cIsTriviallyDestructible<tf_CData>)
+				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(tf_CData));
 			else
 			{
-				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
+				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(tf_CData));
 				for (smint i = smint(_Len) - 1; i >= 0; --i)
-					_pSrc[i].~t_CData();
+					_pSrc[i].~tf_CData();
 			}
 		}
 		else
 		{
-			if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
+			if constexpr (NTraits::cIsTriviallyDestructible<tf_CData>)
 			{
 				for (smint i = smint(_Len) - 1; i >= 0; --i)
-					new((void *)(_pDest + i)) t_CData(fg_Move(_pSrc[i]));
+					new((void *)(_pDest + i)) tf_CData(fg_Move(_pSrc[i]));
 			}
 			else
 			{
 				for (smint i = smint(_Len) - 1; i >= 0; --i)
 				{
-					new((void *)(_pDest + i)) t_CData(fg_Move(_pSrc[i]));
-					_pSrc[i].~t_CData();
+					new((void *)(_pDest + i)) tf_CData(fg_Move(_pSrc[i]));
+					_pSrc[i].~tf_CData();
 				}
 			}
 		}
@@ -199,8 +199,8 @@ namespace NMib::NContainer::NPrivate
 
 	//////
 
-	template <typename t_CData>
-	static void fg_MoveDestroyOverlappingArray(t_CData *_pDest, t_CData *_pSrc, umint _Len)
+	template <typename tf_CData>
+	static void fg_MoveDestroyOverlappingArray(tf_CData *_pDest, tf_CData *_pSrc, umint _Len)
 	{
 #if DMibEnableSafeCheck > 0
 		auto Cleanup = g_OnScopeExit / [&]
@@ -209,30 +209,30 @@ namespace NMib::NContainer::NPrivate
 			}
 		;
 #endif
-		if constexpr (NTraits::cIsTriviallyMoveConstructible<t_CData>)
+		if constexpr (NTraits::cIsTriviallyMoveConstructible<tf_CData>)
 		{
-			if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
-				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
+			if constexpr (NTraits::cIsTriviallyDestructible<tf_CData>)
+				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(tf_CData));
 			else
 			{
-				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(t_CData));
+				NMemory::fg_MemMove(_pDest, _pSrc, _Len * sizeof(tf_CData));
 				for (umint i = 0; i < _Len; ++i)
-					_pSrc[i].~t_CData();
+					_pSrc[i].~tf_CData();
 			}
 		}
 		else
 		{
-			if constexpr (NTraits::cIsTriviallyDestructible<t_CData>)
+			if constexpr (NTraits::cIsTriviallyDestructible<tf_CData>)
 			{
 				for (umint i = 0; i < _Len; ++i)
-					new((void *)(_pDest + i)) t_CData(fg_Move(_pSrc[i]));
+					new((void *)(_pDest + i)) tf_CData(fg_Move(_pSrc[i]));
 			}
 			else
 			{
 				for (umint i = 0; i < _Len; ++i)
 				{
-					new((void *)(_pDest + i)) t_CData(fg_Move(_pSrc[i]));
-					_pSrc[i].~t_CData();
+					new((void *)(_pDest + i)) tf_CData(fg_Move(_pSrc[i]));
+					_pSrc[i].~tf_CData();
 				}
 			}
 		}

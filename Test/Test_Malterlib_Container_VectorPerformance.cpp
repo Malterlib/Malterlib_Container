@@ -88,21 +88,21 @@ namespace NMib
 
 		constexpr aint gc_InsertSortTryMaxSwaps = 16;
 
-		template <typename t_CData, typename tf_CType>
-		inline_always t_CData *fg_InsertSortTryReverse(t_CData *_pLow, t_CData *_pHigh, tf_CType &&_fCompare)
+		template <typename tf_CData, typename tf_CType>
+		inline_always tf_CData *fg_InsertSortTryReverse(tf_CData *_pLow, tf_CData *_pHigh, tf_CType &&_fCompare)
 		{
 			//return _pHigh;
 			umint Swaps = 0;
-			t_CData *pI = _pHigh - 2;
+			tf_CData *pI = _pHigh - 2;
 			for (; pI >= _pLow; pI--)
 			{
-				t_CData *pJ = pI + 1;
+				tf_CData *pJ = pI + 1;
 
 				if (COrdering_Partial(_fCompare(*pI, *pJ)) < 0)
 				{
 					if (Swaps >= umint(_pHigh - pI))
 						break; // Brake if we are above n*2
-					t_CData Temp(fg_Move(*pI));
+					tf_CData Temp(fg_Move(*pI));
 					pJ[-1] = fg_Move(*pJ);
 					pJ++;
 					umint SwapsBefore = Swaps;
@@ -127,21 +127,21 @@ namespace NMib
 			return pI + 1;
 		}
 
-		template <typename tf_CType, typename t_CData>
-		inline_always t_CData *fg_InsertSortTry(t_CData *_pLow, t_CData *_pHigh, tf_CType &&_fCompare)
+		template <typename tf_CType, typename tf_CData>
+		inline_always tf_CData *fg_InsertSortTry(tf_CData *_pLow, tf_CData *_pHigh, tf_CType &&_fCompare)
 		{
 			//return _pLow;
 			umint Swaps = 0;
-			t_CData *pL = _pLow;
-			t_CData *pEnd = _pHigh - 1;
+			tf_CData *pL = _pLow;
+			tf_CData *pEnd = _pHigh - 1;
 
-			auto fl_Swap = [&](t_CData *pL) -> bool
+			auto fl_Swap = [&](tf_CData *_pLeft) -> bool
 				{
-					if (Swaps >= umint(pL - _pLow) + gc_InsertSortTryMaxSwaps)
+					if (Swaps >= umint(_pLeft - _pLow) + gc_InsertSortTryMaxSwaps)
 						return true;
-					t_CData *pJ = pL;
+					tf_CData *pJ = _pLeft;
 
-					t_CData Temp(fg_Move(pL[1]));
+					tf_CData Temp(fg_Move(_pLeft[1]));
 					pJ[1] = fg_Move(*pJ);
 					pJ--;
 
@@ -154,7 +154,7 @@ namespace NMib
 						++Swaps;
 						if (Swaps - SwapsBefore >= gc_InsertSortTryMaxSwaps)
 						{
-							for (; pJ <= pL; ++pJ)
+							for (; pJ <= _pLeft; ++pJ)
 								*pJ = fg_Move(pJ[1]);
 							*pJ = fg_Move(Temp);
 							return true;
@@ -179,17 +179,17 @@ namespace NMib
 			return pL + 1;
 		}
 
-		template <typename tf_CType, typename t_CData>
-		inline_always void fg_InsertSort(t_CData *_pLow, t_CData *_pHigh, tf_CType &&_fCompare)
+		template <typename tf_CType, typename tf_CData>
+		inline_always void fg_InsertSort(tf_CData *_pLow, tf_CData *_pHigh, tf_CType &&_fCompare)
 		{
-			t_CData *pI = _pLow + 1;
+			tf_CData *pI = _pLow + 1;
 			for (; pI < _pHigh; pI++)
 			{
-				t_CData *pJ = pI - 1;
+				tf_CData *pJ = pI - 1;
 
 				if (COrdering_Partial(_fCompare(*pI, *pJ)) < 0)
 				{
-					t_CData Temp(fg_Move(*pI));
+					tf_CData Temp(fg_Move(*pI));
 					pJ[1] = fg_Move(*pJ);
 					pJ--;
 
@@ -202,41 +202,41 @@ namespace NMib
 		}
 
 		template <typename tf_CParam0, typename tf_CParam1, typename tf_CParam2, typename tf_CCompare>
-		inline_always void fg_Sort3(tf_CParam0 &_0, tf_CParam1 &_1, tf_CParam2 &_2, tf_CCompare &&_fCompare)
+		inline_always void fg_Sort3(tf_CParam0 &_First, tf_CParam1 &_Middle, tf_CParam2 &_Last, tf_CCompare &&_fCompare)
 		{
-			if (COrdering_Partial(_fCompare(_1, _0)) < 0)
+			if (COrdering_Partial(_fCompare(_Middle, _First)) < 0)
 			{
-				auto Temp = fg_Move(_0);
-				if (COrdering_Partial(_fCompare(_1, _2)) < 0)
+				auto Temp = fg_Move(_First);
+				if (COrdering_Partial(_fCompare(_Middle, _Last)) < 0)
 				{
-					_0 = fg_Move(_1);
-					if (COrdering_Partial(_fCompare(_2, Temp)) < 0)
+					_First = fg_Move(_Middle);
+					if (COrdering_Partial(_fCompare(_Last, Temp)) < 0)
 					{
-						_1 = fg_Move(_2);
-						_2 = fg_Move(Temp);
+						_Middle = fg_Move(_Last);
+						_Last = fg_Move(Temp);
 					}
 					else
-						_1 = fg_Move(Temp);
+						_Middle = fg_Move(Temp);
 				}
 				else
 				{
-					_0 = fg_Move(_2);
-					_2 = fg_Move(Temp);
+					_First = fg_Move(_Last);
+					_Last = fg_Move(Temp);
 				}
 			}
 			else
 			{
-				if (COrdering_Partial(_fCompare(_2, _1)) < 0)
+				if (COrdering_Partial(_fCompare(_Last, _Middle)) < 0)
 				{
-					if (COrdering_Partial(_fCompare(_2, _0)) < 0)
+					if (COrdering_Partial(_fCompare(_Last, _First)) < 0)
 					{
-						auto Temp = fg_Move(_0);
-						_0 = fg_Move(_2);
-						_2 = fg_Move(_1);
-						_1 = fg_Move(Temp);
+						auto Temp = fg_Move(_First);
+						_First = fg_Move(_Last);
+						_Last = fg_Move(_Middle);
+						_Middle = fg_Move(Temp);
 					}
 					else
-						NMib::fg_Swap(_1, _2);
+						NMib::fg_Swap(_Middle, _Last);
 				}
 			}
 		}
@@ -290,13 +290,13 @@ namespace NMib
 			}
 
 			template <typename tf_CIterator, typename tf_CCompare>
-			inline_always static void fg_TI7SiftDownMiddle(tf_CIterator _Iterator, umint _i, umint _n, tf_CCompare &&_Comp)
+			inline_always static void fg_TI7SiftDownMiddle(tf_CIterator _Iterator, umint _iStart, umint _iLast, tf_CCompare &&_Comp)
 			{
-				umint p = _i;
+				umint p = _iStart;
 				umint c = p * 2;
 				auto temp = _Iterator[p];
 
-				while (_n - p > p)
+				while (_iLast - p > p)
 				{
 					if (COrdering_Partial(_Comp(*(_Iterator + c), *(_Iterator + c + 1))) < 0)
 						++c;
@@ -309,7 +309,7 @@ namespace NMib
 					else
 						break;
 				}
-				if ((_n == c) && COrdering_Partial(_Comp(temp, *(_Iterator + c))) < 0)
+				if ((_iLast == c) && COrdering_Partial(_Comp(temp, *(_Iterator + c))) < 0)
 				{
 					_Iterator[p] = _Iterator[c];
 					p = c;
@@ -554,8 +554,8 @@ namespace NMib
 					{
 					}
 
-					CThing(int32 _V)
-						: m_Val(_V)
+					CThing(int32 _Value)
+						: m_Val(_Value)
 					{
 					}
 
@@ -697,9 +697,9 @@ namespace NMib
 
 							lVec.f_Sort
 								(
-									[](CThing const &_A, CThing const &_B)
+									[](CThing const &_Left, CThing const &_Right)
 									{
-										return _A.m_Val <=> _B.m_Val;
+										return _Left.m_Val <=> _Right.m_Val;
 									}
 								)
 							;

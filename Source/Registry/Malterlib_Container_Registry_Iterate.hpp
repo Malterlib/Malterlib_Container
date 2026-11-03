@@ -7,8 +7,8 @@ namespace NMib::NContainer
 {
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	template <typename t_CTransform>
-	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Transform(t_CTransform const &_fTransformer)
+	template <typename tf_CTransform>
+	void TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_Transform(tf_CTransform const &_fTransformer)
 	{
 		NContainer::TCVector<TCRegistry *> Children;
 		{

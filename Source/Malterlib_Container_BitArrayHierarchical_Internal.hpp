@@ -189,37 +189,43 @@ namespace NMib::NContainer::NPrivate
 	}
 
 	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal, bool t_bLast>
-	template <typename t_CFunctor>
-	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_EnumFreeBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_EnumFreeBits(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
 	{
-		return m_Bits.f_EnumFreeBits(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+		return m_Bits.f_EnumFreeBits(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal, bool t_bLast>
-	template <typename t_CFunctor>
+	template <typename tf_CFunctor>
 	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_EnumFreeBitRanges
 		(
-			t_CFunctor &&_Functor
+			tf_CFunctor &&_Functor
 			, umint _StartBit
 			, umint _EndBit
 		)
 		const
 	{
-		return m_Bits.f_EnumFreeBitRanges(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+		return m_Bits.f_EnumFreeBitRanges(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal, bool t_bLast>
-	template <typename t_CFunctor>
-	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_EnumSetBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_EnumSetBitRanges
+		(
+			tf_CFunctor &&_Functor
+			, umint _StartBit
+			, umint _EndBit
+		)
+		const
 	{
-		return m_Bits.f_EnumSetBitRanges(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+		return m_Bits.f_EnumSetBitRanges(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal, bool t_bLast>
-	template <typename t_CFunctor>
-	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_EnumSetBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	inline_small void TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal, t_bLast>::f_EnumSetBits(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
 	{
-		return m_Bits.f_EnumSetBits(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+		return m_Bits.f_EnumSetBits(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	///

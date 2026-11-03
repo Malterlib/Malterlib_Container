@@ -235,20 +235,20 @@ namespace NMib::NContainer
 			return mp_Pages.f_Insert(fg_Move(pNewPage)).f_Get();
 	}
 
-	bool CPagedByteVector::f_FindFront(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos) const
+	bool CPagedByteVector::f_FindFront(uint8 const *_pMatch, umint _nMatchBytes, umint &o_iPos) const
 	{
 		umint Pos = 0;
 
 		if (f_FindFrontEx(_pMatch, _nMatchBytes, Pos) == EMatchResult_Full)
 		{
-			_oPos = Pos;
+			o_iPos = Pos;
 			return true;
 		}
 		else
 			return false;
 	}
 
-	CPagedByteVector::EMatchResult CPagedByteVector::f_FindFrontEx(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos) const
+	CPagedByteVector::EMatchResult CPagedByteVector::f_FindFrontEx(uint8 const *_pMatch, umint _nMatchBytes, umint &o_iPos) const
 	{
 		bool bFound = false;
 		bool bDoesNotMatch = false;
@@ -311,12 +311,12 @@ namespace NMib::NContainer
 
 		if (bFound)
 		{
-			_oPos = iFoundPos;
+			o_iPos = iFoundPos;
 			return EMatchResult_Full;
 		}
 		else if (!bDoesNotMatch)
 		{
-			_oPos = iFoundPos;
+			o_iPos = iFoundPos;
 			return EMatchResult_Partial;
 		}
 		else

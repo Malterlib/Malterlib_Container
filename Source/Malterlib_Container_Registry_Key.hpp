@@ -86,8 +86,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CStr>
-	template <typename t_CIterator, typename tf_CStr>
-	void TCRegistryKeyStr<t_CKey, t_CStr>::fs_FindIterator(t_CIterator &_Iterator, tf_CStr const &_ToFind)
+	template <typename tf_CIterator, typename tf_CStr>
+	void TCRegistryKeyStr<t_CKey, t_CStr>::fs_FindIterator(tf_CIterator &_Iterator, tf_CStr const &_ToFind)
 	{
 		_Iterator.f_FindEqualForward(_ToFind);
 	}
@@ -204,8 +204,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CStr>
-	template <typename t_CIterator, typename tf_CStr>
-	void TCRegistryKeyStrMulti<t_CKey, t_CStr>::fs_FindIterator(t_CIterator &_Iterator, tf_CStr const &_ToFind)
+	template <typename tf_CIterator, typename tf_CStr>
+	void TCRegistryKeyStrMulti<t_CKey, t_CStr>::fs_FindIterator(tf_CIterator &_Iterator, tf_CStr const &_ToFind)
 	{
 		_Iterator.f_FindSmallestGreaterThanEqualForward(_ToFind);
 		if (_Iterator && _Iterator->mp_Key.m_Name != _ToFind)
@@ -441,8 +441,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>
-	template <typename t_CIterator, typename tf_CStr>
-	void TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::fs_FindIterator(t_CIterator &_Iterator, tf_CStr const &_ToFind)
+	template <typename tf_CIterator, typename tf_CStr>
+	void TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::fs_FindIterator(tf_CIterator &_Iterator, tf_CStr const &_ToFind)
 	{
 		_Iterator.f_FindSmallestGreaterThanEqualForward(_ToFind);
 		if (_Iterator && _Iterator->mp_Key.m_Name != _ToFind)

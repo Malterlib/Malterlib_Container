@@ -210,43 +210,49 @@ namespace NMib::NContainer::NPrivate
 	}
 
 	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels, bool t_bLast>
-	template <typename t_CFunctor>
-	void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_EnumFreeBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_EnumFreeBits
+		(
+			tf_CFunctor &&_Functor
+			, umint _StartBit
+			, umint _EndBit
+		)
+		const
 	{
-		return m_Bits.f_EnumFreeBits(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+		return m_Bits.f_EnumFreeBits(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels, bool t_bLast>
-	template <typename t_CFunctor>
+	template <typename tf_CFunctor>
 	void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_EnumFreeBitRanges
 		(
-			t_CFunctor &&_Functor
+			tf_CFunctor &&_Functor
 			, umint _StartBit
 			, umint _EndBit
 		)
 		const
 	{
-		return m_Bits.f_EnumFreeBitRanges(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+		return m_Bits.f_EnumFreeBitRanges(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels, bool t_bLast>
-	template <typename t_CFunctor>
+	template <typename tf_CFunctor>
 	void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_EnumSetBitRanges
 		(
-			t_CFunctor &&_Functor
+			tf_CFunctor &&_Functor
 			, umint _StartBit
 			, umint _EndBit
 		)
 		const
 	{
-		return m_Bits.f_EnumSetBitRanges(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+		return m_Bits.f_EnumSetBitRanges(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels, bool t_bLast>
-	template <typename t_CFunctor>
-	void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_EnumSetBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_EnumSetBits(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
 	{
-		return m_Bits.f_EnumSetBits(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+		return m_Bits.f_EnumSetBits(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels, bool t_bLast>
@@ -393,71 +399,71 @@ namespace NMib::NContainer::NPrivate
 	}
 
 	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels, bool t_bLast>
-	template <typename t_CFunctor>
+	template <typename tf_CFunctor>
 	inline_always void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_EnumFreeBits
 		(
 			umint _Level
-			, t_CFunctor &&_Functor
+			, tf_CFunctor &&_Functor
 			, umint _StartBit
 			, umint _EndBit
 		)
 		const
 	{
 		if (_Level == t_nLevel)
-			m_Bits.f_EnumFreeBits(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+			m_Bits.f_EnumFreeBits(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 		else
-			CSuper::f_EnumFreeBits(_Level, fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+			CSuper::f_EnumFreeBits(_Level, fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels, bool t_bLast>
-	template <typename t_CFunctor>
+	template <typename tf_CFunctor>
 	inline_always void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_EnumFreeBitRanges
 		(
 			umint _Level
-			, t_CFunctor &&_Functor
+			, tf_CFunctor &&_Functor
 			, umint _StartBit
 			, umint _EndBit
 		)
 		const
 	{
 		if (_Level == t_nLevel)
-			m_Bits.f_EnumFreeBitRanges(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+			m_Bits.f_EnumFreeBitRanges(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 		else
-			CSuper::f_EnumFreeBitRanges(_Level, fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+			CSuper::f_EnumFreeBitRanges(_Level, fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels, bool t_bLast>
-	template <typename t_CFunctor>
+	template <typename tf_CFunctor>
 	inline_always void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_EnumSetBitRanges
 		(
 			umint _Level
-			, t_CFunctor &&_Functor
+			, tf_CFunctor &&_Functor
 			, umint _StartBit
 			, umint _EndBit
 		)
 		const
 	{
 		if (_Level == t_nLevel)
-			m_Bits.f_EnumSetBitRanges(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+			m_Bits.f_EnumSetBitRanges(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 		else
-			CSuper::f_EnumSetBitRanges(_Level, fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+			CSuper::f_EnumSetBitRanges(_Level, fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels, bool t_bLast>
-	template <typename t_CFunctor>
+	template <typename tf_CFunctor>
 	inline_always void TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, t_bLast>::f_EnumSetBits
 		(
 			umint _Level
-			, t_CFunctor &&_Functor
+			, tf_CFunctor &&_Functor
 			, umint _StartBit
 			, umint _EndBit
 		)
 		const
 	{
 		if (_Level == t_nLevel)
-			m_Bits.f_EnumSetBits(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+			m_Bits.f_EnumSetBits(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 		else
-			CSuper::f_EnumSetBits(_Level, fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+			CSuper::f_EnumSetBits(_Level, fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	///

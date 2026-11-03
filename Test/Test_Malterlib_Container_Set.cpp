@@ -733,10 +733,10 @@ namespace
 					}
 					();
 
-					auto fRunMapTests = [&]<EMapOperationPolicy t_Policy>
+					auto fRunMapTests = [&]<EMapOperationPolicy tf_Policy>
 						{
 							CStr PolicySuffix;
-							switch (t_Policy)
+							switch (tf_Policy)
 							{
 							case EMapOperationPolicy::mc_Fastest: PolicySuffix = "Fastest"; break;
 							case EMapOperationPolicy::mc_PreferLeft: PolicySuffix = "PLeft"; break;
@@ -756,7 +756,7 @@ namespace
 									[&]() inline_never
 									{
 										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-										Result = fg_Move(Left).f_Or<t_Policy>(fg_Move(Right));
+										Result = fg_Move(Left).f_Or<tf_Policy>(fg_Move(Right));
 										Left.f_Clear();
 										Right.f_Clear();
 									}
@@ -780,7 +780,7 @@ namespace
 									[&]() inline_never
 									{
 										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-										Result = fg_Move(Left).f_Or<t_Policy>(Right);
+										Result = fg_Move(Left).f_Or<tf_Policy>(Right);
 										Left.f_Clear();
 										Right.f_Clear();
 									}
@@ -804,7 +804,7 @@ namespace
 									[&]() inline_never
 									{
 										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-										Result = Left.f_Or<t_Policy>(fg_Move(Right));
+										Result = Left.f_Or<tf_Policy>(fg_Move(Right));
 										Left.f_Clear();
 										Right.f_Clear();
 									}
@@ -828,7 +828,7 @@ namespace
 									[&]() inline_never
 									{
 										DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-										Result = LeftCopy.f_Or<t_Policy>(RightCopy);
+										Result = LeftCopy.f_Or<tf_Policy>(RightCopy);
 										LeftCopy.f_Clear();
 										RightCopy.f_Clear();
 									}
@@ -948,10 +948,10 @@ namespace
 					}
 					();
 
-					auto fRunMapTests = [&]<EMapOperationPolicy t_Policy>
+					auto fRunMapTests = [&]<EMapOperationPolicy tf_Policy>
 						{
 							CStr PolicySuffix;
-							switch (t_Policy)
+							switch (tf_Policy)
 							{
 							case EMapOperationPolicy::mc_Fastest: PolicySuffix = "Fastest"; break;
 							case EMapOperationPolicy::mc_PreferLeft: PolicySuffix = "PLeft"; break;
@@ -971,7 +971,7 @@ namespace
 									[&]() inline_never
 									{
 										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-										Result = fg_Move(Left).f_And<t_Policy>(fg_Move(Right));
+										Result = fg_Move(Left).f_And<tf_Policy>(fg_Move(Right));
 										Left.f_Clear();
 										Right.f_Clear();
 									}
@@ -995,7 +995,7 @@ namespace
 									[&]() inline_never
 									{
 										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-										Result = fg_Move(Left).f_And<t_Policy>(Right);
+										Result = fg_Move(Left).f_And<tf_Policy>(Right);
 										Left.f_Clear();
 										Right.f_Clear();
 									}
@@ -1019,7 +1019,7 @@ namespace
 									[&]() inline_never
 									{
 										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-										Result = Left.f_And<t_Policy>(fg_Move(Right));
+										Result = Left.f_And<tf_Policy>(fg_Move(Right));
 										Left.f_Clear();
 										Right.f_Clear();
 									}
@@ -1043,7 +1043,7 @@ namespace
 									[&]() inline_never
 									{
 										DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-										Result = LeftCopy.f_And<t_Policy>(RightCopy);
+										Result = LeftCopy.f_And<tf_Policy>(RightCopy);
 										LeftCopy.f_Clear();
 										RightCopy.f_Clear();
 									}

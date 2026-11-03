@@ -44,7 +44,7 @@ namespace NMib::NContainer
 		TCVector(umint _nItems);
 
 		template <typename ...tfp_CParams>
-		TCVector(CAllocatorConstructTag const &, tfp_CParams && ...p_Params);
+		TCVector(CAllocatorConstructTag const &_Tag, tfp_CParams && ...p_Params);
 
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 		TCVector(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Source);
@@ -87,8 +87,8 @@ namespace NMib::NContainer
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 		auto operator <=> (TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const noexcept(noexcept(fg_GetType<t_CData const &>() <=> fg_GetType<tf_CData const &>()));
 
-		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions, typename t_CFunctor>
-		aint f_Compare(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other, t_CFunctor &&_Functor) const;
+		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions, typename tf_CFunctor>
+		aint f_Compare(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other, tf_CFunctor &&_Functor) const;
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
 		aint f_Compare(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other) const;
 		template <typename tf_CData, typename tf_CAllocator, typename tf_COptions>
@@ -208,26 +208,26 @@ namespace NMib::NContainer
 		t_CData &f_InsertBefore(umint _Position, t_CData &&_Data);
 		t_CData &f_InsertBefore(umint _Position);
 
-		template <typename t_CIterator, typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-		t_CData *f_InsertBefore(TCVectorIterator<t_CIterator> const &_Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector);
-		template <typename t_CIterator, typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-		t_CData *f_InsertBefore(TCVectorIterator<t_CIterator> const &_Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &_Vector);
-		template <typename t_CIterator, typename tf_CData, typename tf_CAllocator, typename tf_COptions>
-		t_CData *f_InsertBefore(TCVectorIterator<t_CIterator> const &_Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Vector);
-		template <typename t_CIterator>
-		t_CData *f_InsertBefore(TCVectorIterator<t_CIterator> const &_Position, t_CData const *_pData, umint _Len = 1);
-		template <typename t_CIterator>
-		t_CData *f_InsertBefore(TCVectorIterator<t_CIterator> const &_Position, t_CData *_pData, umint _Len = 1);
-		template <typename t_CIterator>
-		t_CData *f_InsertBeforeMove(TCVectorIterator<t_CIterator> const &_Position, t_CData *_pData, umint _Len = 1);
-		template <typename t_CIterator>
-		t_CData &f_InsertBefore(TCVectorIterator<t_CIterator> const &_Position, t_CData const &_Data);
-		template <typename t_CIterator>
-		t_CData &f_InsertBefore(TCVectorIterator<t_CIterator> const &_Position, t_CData &_Data);
-		template <typename t_CIterator>
-		t_CData &f_InsertBefore(TCVectorIterator<t_CIterator> const &_Position, t_CData &&_Data);
-		template <typename t_CIterator>
-		t_CData &f_InsertBefore(TCVectorIterator<t_CIterator> const &_Position);
+		template <typename tf_CIterator, typename tf_CData, typename tf_CAllocator, typename tf_COptions>
+		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Vector);
+		template <typename tf_CIterator, typename tf_CData, typename tf_CAllocator, typename tf_COptions>
+		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &_Vector);
+		template <typename tf_CIterator, typename tf_CData, typename tf_CAllocator, typename tf_COptions>
+		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, TCVector<tf_CData, tf_CAllocator, tf_COptions> &&_Vector);
+		template <typename tf_CIterator>
+		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, t_CData const *_pData, umint _Len = 1);
+		template <typename tf_CIterator>
+		t_CData *f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, t_CData *_pData, umint _Len = 1);
+		template <typename tf_CIterator>
+		t_CData *f_InsertBeforeMove(TCVectorIterator<tf_CIterator> const &_Position, t_CData *_pData, umint _Len = 1);
+		template <typename tf_CIterator>
+		t_CData &f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, t_CData const &_Data);
+		template <typename tf_CIterator>
+		t_CData &f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, t_CData &_Data);
+		template <typename tf_CIterator>
+		t_CData &f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position, t_CData &&_Data);
+		template <typename tf_CIterator>
+		t_CData &f_InsertBefore(TCVectorIterator<tf_CIterator> const &_Position);
 
 		// Insert after
 
@@ -314,8 +314,8 @@ namespace NMib::NContainer
 		aint f_Contains(tf_CType const &_Data) const;
 		template <typename tf_FUnaryPredicate>
 		aint f_ContainsIf(tf_FUnaryPredicate &&_fPredicate) const;
-		template <typename tf_CCompare, typename t_CFind>
-		aint f_BinarySearch(tf_CCompare &&_fCompare, t_CFind const &_ToFind, aint _nMax = -1) const;
+		template <typename tf_CCompare, typename tf_CFind>
+		aint f_BinarySearch(tf_CCompare &&_fCompare, tf_CFind const &_ToFind, aint _nMax = -1) const;
 		template <typename tf_CFind>
 		aint f_BinarySearch(tf_CFind const &_ToFind) const;
 		template <typename tf_CCompare, typename tf_CFind>
@@ -470,10 +470,10 @@ namespace NMib::NContainer
 	template <typename t_CData, typename t_CAllocator = NMib::NMemory::CAllocator_Heap, typename t_COptions = TCVectorOptions<16, false>>
 	using TCGrowingVector = TCVector<t_CData, t_CAllocator, t_COptions>;
 
-	template <typename tf_CFirst, typename ...tf_CParams>
-	auto fg_CreateVector(tf_CFirst &&_First, tf_CParams && ...p_Params);
-	template <typename tf_CReturn, typename ...tf_CParams>
-	auto fg_CreateVector(tf_CParams && ...p_Params);
+	template <typename tf_CFirst, typename ...tfp_CParams>
+	auto fg_CreateVector(tf_CFirst &&_First, tfp_CParams && ...p_Params);
+	template <typename tf_CReturn, typename ...tfp_CParams>
+	auto fg_CreateVector(tfp_CParams && ...p_Params);
 
 	template <typename tf_CContainer>
 	auto fg_VectorFromContainer(tf_CContainer &&_Container);
@@ -485,20 +485,20 @@ namespace NMib::NContainer
 		using TCVector<uint8>::TCVector;
 		using TCVector<uint8>::operator =;
 
-		CByteVector(CSecureByteVector &&) = delete;
-		CByteVector(CSecureByteVector const &) = delete;
-		CByteVector &operator = (CSecureByteVector &&) = delete;
-		CByteVector &operator = (CSecureByteVector const &) = delete;
+		CByteVector(CSecureByteVector &&_Other) = delete;
+		CByteVector(CSecureByteVector const &_Other) = delete;
+		CByteVector &operator = (CSecureByteVector &&_Other) = delete;
+		CByteVector &operator = (CSecureByteVector const &_Other) = delete;
 
-		CByteVector(TCVector<uint8> &&) = delete;
-		CByteVector(TCVector<uint8> const &) = delete;
-		CByteVector &operator = (TCVector<uint8> &&) = delete;
-		CByteVector &operator = (TCVector<uint8> const &) = delete;
+		CByteVector(TCVector<uint8> &&_Other) = delete;
+		CByteVector(TCVector<uint8> const &_Other) = delete;
+		CByteVector &operator = (TCVector<uint8> &&_Other) = delete;
+		CByteVector &operator = (TCVector<uint8> const &_Other) = delete;
 
-		CByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> &&) = delete;
-		CByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> const &) = delete;
-		CByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> &&) = delete;
-		CByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> const &) = delete;
+		CByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> &&_Other) = delete;
+		CByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> const &_Other) = delete;
+		CByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> &&_Other) = delete;
+		CByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> const &_Other) = delete;
 
 		CSecureByteVector f_ToSecure() const; // Accept the risk of this
 		CByteVector const &f_ToInsecure() const &;
@@ -515,20 +515,20 @@ namespace NMib::NContainer
 		using TCVector<uint8, NMemory::CAllocator_HeapSecure>::TCVector;
 		using TCVector<uint8, NMemory::CAllocator_HeapSecure>::operator =;
 
-		CSecureByteVector(CByteVector &&) = delete;
-		CSecureByteVector(CByteVector const &) = delete;
-		CSecureByteVector &operator = (CByteVector &&) = delete;
-		CSecureByteVector &operator = (CByteVector const &) = delete;
+		CSecureByteVector(CByteVector &&_Other) = delete;
+		CSecureByteVector(CByteVector const &_Other) = delete;
+		CSecureByteVector &operator = (CByteVector &&_Other) = delete;
+		CSecureByteVector &operator = (CByteVector const &_Other) = delete;
 
-		CSecureByteVector(TCVector<uint8> &&) = delete;
-		CSecureByteVector(TCVector<uint8> const &) = delete;
-		CSecureByteVector &operator = (TCVector<uint8> &&) = delete;
-		CSecureByteVector &operator = (TCVector<uint8> const &) = delete;
+		CSecureByteVector(TCVector<uint8> &&_Other) = delete;
+		CSecureByteVector(TCVector<uint8> const &_Other) = delete;
+		CSecureByteVector &operator = (TCVector<uint8> &&_Other) = delete;
+		CSecureByteVector &operator = (TCVector<uint8> const &_Other) = delete;
 
-		CSecureByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> &&) = delete;
-		CSecureByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> const &) = delete;
-		CSecureByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> &&) = delete;
-		CSecureByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> const &) = delete;
+		CSecureByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> &&_Other) = delete;
+		CSecureByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> const &_Other) = delete;
+		CSecureByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> &&_Other) = delete;
+		CSecureByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> const &_Other) = delete;
 
 		CByteVector f_ToInsecure() const; // Accept the risk of this
 		CSecureByteVector const &f_ToSecure() const &;

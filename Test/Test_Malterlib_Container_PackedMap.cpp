@@ -117,11 +117,11 @@ namespace
 		{
 		}
 
-		CMoveOnlyKey(CMoveOnlyKey const &) = delete;
-		CMoveOnlyKey &operator = (CMoveOnlyKey const &) = delete;
+		CMoveOnlyKey(CMoveOnlyKey const &_Other) = delete;
+		CMoveOnlyKey &operator = (CMoveOnlyKey const &_Other) = delete;
 
-		CMoveOnlyKey(CMoveOnlyKey &&) = default;
-		CMoveOnlyKey &operator = (CMoveOnlyKey &&) = default;
+		CMoveOnlyKey(CMoveOnlyKey &&_Other) = default;
+		CMoveOnlyKey &operator = (CMoveOnlyKey &&_Other) = default;
 
 		auto operator <=> (CMoveOnlyKey const &_Other) const noexcept = default;
 	};
@@ -136,10 +136,10 @@ namespace
 		{
 		}
 
-		CNonDefaultKey(CNonDefaultKey const &) noexcept = default;
-		auto operator = (CNonDefaultKey const &) noexcept -> CNonDefaultKey & = default;
-		CNonDefaultKey(CNonDefaultKey &&) noexcept = default;
-		auto operator = (CNonDefaultKey &&) noexcept -> CNonDefaultKey & = default;
+		CNonDefaultKey(CNonDefaultKey const &_Other) noexcept = default;
+		auto operator = (CNonDefaultKey const &_Other) noexcept -> CNonDefaultKey & = default;
+		CNonDefaultKey(CNonDefaultKey &&_Other) noexcept = default;
+		auto operator = (CNonDefaultKey &&_Other) noexcept -> CNonDefaultKey & = default;
 
 		auto operator <=> (CNonDefaultKey const &_Other) const noexcept = default;
 	};
@@ -147,13 +147,13 @@ namespace
 	struct CThrowingMoveCompare
 	{
 		CThrowingMoveCompare() = default;
-		CThrowingMoveCompare(CThrowingMoveCompare const &) = default;
-		CThrowingMoveCompare(CThrowingMoveCompare &&) noexcept(false)
+		CThrowingMoveCompare(CThrowingMoveCompare const &_Other) = default;
+		CThrowingMoveCompare(CThrowingMoveCompare &&_Other) noexcept(false)
 		{
 		}
 
-		auto operator = (CThrowingMoveCompare const &) -> CThrowingMoveCompare & = default;
-		auto operator = (CThrowingMoveCompare &&) noexcept(false) -> CThrowingMoveCompare & = default;
+		auto operator = (CThrowingMoveCompare const &_Other) -> CThrowingMoveCompare & = default;
+		auto operator = (CThrowingMoveCompare &&_Other) noexcept(false) -> CThrowingMoveCompare & = default;
 
 		auto operator () (int32 _Left, int32 _Right) const noexcept
 		{
@@ -173,15 +173,15 @@ namespace
 		}
 
 		CConfigurableThrowingMoveCompare() = default;
-		CConfigurableThrowingMoveCompare(CConfigurableThrowingMoveCompare const &) = default;
-		CConfigurableThrowingMoveCompare(CConfigurableThrowingMoveCompare &&)
+		CConfigurableThrowingMoveCompare(CConfigurableThrowingMoveCompare const &_Other) = default;
+		CConfigurableThrowingMoveCompare(CConfigurableThrowingMoveCompare &&_Other)
 		{
 			if (ms_bThrowOnMoveConstruct)
 				DMibError("ThrowCompareMoveCtor");
 		}
 
-		auto operator = (CConfigurableThrowingMoveCompare const &) -> CConfigurableThrowingMoveCompare & = default;
-		auto operator = (CConfigurableThrowingMoveCompare &&) -> CConfigurableThrowingMoveCompare &
+		auto operator = (CConfigurableThrowingMoveCompare const &_Other) -> CConfigurableThrowingMoveCompare & = default;
+		auto operator = (CConfigurableThrowingMoveCompare &&_Other) -> CConfigurableThrowingMoveCompare &
 		{
 			if (ms_bThrowOnMoveAssign)
 				DMibError("ThrowCompareMoveAssign");
@@ -199,13 +199,13 @@ namespace
 	struct CThrowingMoveAllocator
 	{
 		CThrowingMoveAllocator() = default;
-		CThrowingMoveAllocator(CThrowingMoveAllocator const &) = default;
-		CThrowingMoveAllocator(CThrowingMoveAllocator &&) noexcept(false)
+		CThrowingMoveAllocator(CThrowingMoveAllocator const &_Other) = default;
+		CThrowingMoveAllocator(CThrowingMoveAllocator &&_Other) noexcept(false)
 		{
 		}
 
-		auto operator = (CThrowingMoveAllocator const &) -> CThrowingMoveAllocator & = default;
-		auto operator = (CThrowingMoveAllocator &&) noexcept(false) -> CThrowingMoveAllocator & = default;
+		auto operator = (CThrowingMoveAllocator const &_Other) -> CThrowingMoveAllocator & = default;
+		auto operator = (CThrowingMoveAllocator &&_Other) noexcept(false) -> CThrowingMoveAllocator & = default;
 	};
 
 	struct CThrowingComparisonKey
@@ -321,12 +321,12 @@ namespace
 			ms_nFrees = 0;
 		}
 
-		constexpr bool operator == (CFailingAllocator const &) const noexcept
+		constexpr bool operator == (CFailingAllocator const &_Other) const noexcept
 		{
 			return true;
 		}
 
-		constexpr auto operator <=> (CFailingAllocator const &) const noexcept
+		constexpr auto operator <=> (CFailingAllocator const &_Other) const noexcept
 		{
 			return COrdering_Strong::equal;
 		}
@@ -490,8 +490,8 @@ namespace
 			++ms_nAlive;
 		}
 
-		CNothrowMoveTracked &operator = (CNothrowMoveTracked const &) noexcept = default;
-		CNothrowMoveTracked &operator = (CNothrowMoveTracked &&) noexcept = default;
+		CNothrowMoveTracked &operator = (CNothrowMoveTracked const &_Other) noexcept = default;
+		CNothrowMoveTracked &operator = (CNothrowMoveTracked &&_Other) noexcept = default;
 
 		bool operator == (CNothrowMoveTracked const &_Other) const noexcept = default;
 		auto operator <=> (CNothrowMoveTracked const &_Other) const noexcept = default;
@@ -634,14 +634,14 @@ namespace
 		{
 		}
 
-		CDetectMovedFromFreeAllocator(CDetectMovedFromFreeAllocator const &) = default;
+		CDetectMovedFromFreeAllocator(CDetectMovedFromFreeAllocator const &_Other) = default;
 
 		CDetectMovedFromFreeAllocator(CDetectMovedFromFreeAllocator &&_Other) noexcept
 			: m_pState(fg_Exchange(_Other.m_pState, nullptr))
 		{
 		}
 
-		auto operator = (CDetectMovedFromFreeAllocator const &) -> CDetectMovedFromFreeAllocator & = default;
+		auto operator = (CDetectMovedFromFreeAllocator const &_Other) -> CDetectMovedFromFreeAllocator & = default;
 
 		auto operator = (CDetectMovedFromFreeAllocator &&_Other) noexcept -> CDetectMovedFromFreeAllocator &
 		{
@@ -683,10 +683,10 @@ namespace
 		CDetectMovedFromFreeAllocatorState *m_pState = nullptr;
 	};
 
-	template <typename t_CMap>
+	template <typename tf_CMap>
 	void fg_RunInsertAndVerify(umint _nCount)
 	{
-		t_CMap Map;
+		tf_CMap Map;
 		for (umint iTest = 0; iTest < _nCount; ++iTest)
 			Map.f_Insert((int32)iTest, (int32)(iTest * 10));
 
@@ -701,10 +701,10 @@ namespace
 		DMibExpect(iExpected, ==, _nCount);
 	}
 
-	template <typename t_CMap>
+	template <typename tf_CMap>
 	umint fg_RunInsertStats(umint _nCount)
 	{
-		t_CMap Map;
+		tf_CMap Map;
 		Map.f_ResetStats();
 
 		for (umint iTest = 0; iTest < _nCount; ++iTest)
@@ -713,10 +713,10 @@ namespace
 		return Map.f_GetStats().m_nElementMoves;
 	}
 
-	template <typename t_CMap>
+	template <typename tf_CMap>
 	void fg_RunRandomStress(umint _nCount)
 	{
-		t_CMap Map;
+		tf_CMap Map;
 
 		CSecureRandom Random;
 		Random.f_InsecureDeterministicReseed(0x12345678u);
@@ -753,16 +753,16 @@ namespace
 		using t_CMap::fsp_GetSegmentFirstSlot;
 	};
 
-	template <typename t_CMap>
-	void fg_ExpectPackedMapValid(t_CMap const &_Map, ch8 const *_pLabel)
+	template <typename tf_CMap>
+	void fg_ExpectPackedMapValid(tf_CMap const &_Map, ch8 const *_pLabel)
 	{
 		NStr::CStr ValidateError;
 		if (!_Map.f_Debug_Validate(&ValidateError))
 			DMibError(NStr::CStr::CFormat("{} validation failed: {}") << _pLabel << ValidateError);
 	}
 
-	template <typename t_CMap>
-	void fg_ExpectIntKeyOrder(t_CMap const &_Map, int32 const *_pExpected, umint _nExpected)
+	template <typename tf_CMap>
+	void fg_ExpectIntKeyOrder(tf_CMap const &_Map, int32 const *_pExpected, umint _nExpected)
 	{
 		umint iExpected = 0;
 		for (auto Iter = _Map.f_Keys().f_GetIterator(); Iter; ++Iter)
@@ -775,15 +775,15 @@ namespace
 		DMibExpect(iExpected, ==, _nExpected);
 	}
 
-	template <typename t_CMap>
-	auto fg_FindIntGapInsertKeyInSegment(t_CMap const &_Map, umint _iSegment, int32 &o_Key) -> bool
+	template <typename tf_CMap>
+	auto fg_FindIntGapInsertKeyInSegment(tf_CMap const &_Map, umint _iSegment, int32 &o_Key) -> bool
 	{
 		auto *pData = _Map.mp_pData;
 		umint Count = pData->m_pSegmentMeta[_iSegment].m_Count;
 		if (Count < 2)
 			return false;
 
-		umint iFirst = t_CMap::fsp_GetSegmentFirstSlot(_iSegment, Count);
+		umint iFirst = tf_CMap::fsp_GetSegmentFirstSlot(_iSegment, Count);
 		for (umint iLocal = 0; iLocal + 1 < Count; ++iLocal)
 		{
 			int32 LeftKey = pData->m_pKeys[iFirst + iLocal];
@@ -806,8 +806,8 @@ namespace
 		bool m_bFound = false;
 	};
 
-	template <typename t_CMap>
-	auto fg_FindProjectedBulkInsertPlan(t_CMap &_Map) -> CProjectedBulkInsertPlan
+	template <typename tf_CMap>
+	auto fg_FindProjectedBulkInsertPlan(tf_CMap &_Map) -> CProjectedBulkInsertPlan
 	{
 		for (umint nInitial = 16; nInitial <= 23; ++nInitial)
 		{
@@ -827,13 +827,13 @@ namespace
 			if (!pData || pData->m_nSegments < 2)
 				continue;
 
-			if (pfp64(pData->m_nElements + 2) > t_CMap::mc_RootUpperBound * pfp64(pData->m_Capacity))
+			if (pfp64(pData->m_nElements + 2) > tf_CMap::mc_RootUpperBound * pfp64(pData->m_Capacity))
 				continue;
 
 			umint nLevels = _Map.fp_CalibratorLevelCount(pData->m_nSegments);
 			umint nMinTwoSegment = 0;
 			umint nMaxTwoSegment = 0;
-			_Map.fp_GetLevelElementBounds(1, nLevels, 2 * t_CMap::mcp_SegmentSize, nMinTwoSegment, nMaxTwoSegment);
+			_Map.fp_GetLevelElementBounds(1, nLevels, 2 * tf_CMap::mcp_SegmentSize, nMinTwoSegment, nMaxTwoSegment);
 
 			for (umint iSegment = 0; iSegment + 1 < pData->m_nSegments; ++iSegment)
 			{
@@ -842,7 +842,7 @@ namespace
 
 				if (LeftCount < 2 || RightCount < 2)
 					continue;
-				if ((LeftCount + 1 > t_CMap::mcp_SegmentSize) || (RightCount + 1 > t_CMap::mcp_SegmentSize))
+				if ((LeftCount + 1 > tf_CMap::mcp_SegmentSize) || (RightCount + 1 > tf_CMap::mcp_SegmentSize))
 					continue;
 				if ((LeftCount + RightCount + 2) <= nMaxTwoSegment)
 					continue;
@@ -879,8 +879,8 @@ namespace
 
 //#define DMibContainerPackedMapDebugStats
 
-	template <typename t_CStats>
-	umint fg_PrintPackedMapStats(char const *_pLabel, t_CStats const &_Stats)
+	template <typename tf_CStats>
+	umint fg_PrintPackedMapStats(char const *_pLabel, tf_CStats const &_Stats)
 	{
 		umint nMoves = _Stats.m_nElementMoves;
 #ifdef DMibContainerPackedMapDebugStats
@@ -4036,8 +4036,8 @@ namespace
 				++ms_nAlive;
 			}
 
-			explicit CThrowingValue(int32 _v)
-				: m_Value(_v)
+			explicit CThrowingValue(int32 _Value)
+				: m_Value(_Value)
 			{
 				m_Magic = 0xABCD1234;
 				++ms_nAlive;
@@ -4050,8 +4050,8 @@ namespace
 				--ms_nAlive;
 			}
 
-			CThrowingValue(CThrowingValue const &_o)
-				: m_Value(_o.m_Value)
+			CThrowingValue(CThrowingValue const &_Other)
+				: m_Value(_Other.m_Value)
 			{
 				if (ms_nThrowAfter >= 0 && ++ms_nConstructions >= ms_nThrowAfter)
 					DMibError("ThrowCopy");
@@ -4059,8 +4059,8 @@ namespace
 				++ms_nAlive;
 			}
 
-			CThrowingValue(CThrowingValue &&_o)
-				: m_Value(_o.m_Value)
+			CThrowingValue(CThrowingValue &&_Other)
+				: m_Value(_Other.m_Value)
 			{
 				if (ms_nThrowAfter >= 0 && ++ms_nConstructions >= ms_nThrowAfter)
 					DMibError("ThrowMove");
@@ -4068,19 +4068,19 @@ namespace
 				++ms_nAlive;
 			}
 
-			CThrowingValue &operator = (CThrowingValue const &) = default;
-			CThrowingValue &operator = (CThrowingValue &&) = default;
+			CThrowingValue &operator = (CThrowingValue const &_Other) = default;
+			CThrowingValue &operator = (CThrowingValue &&_Other) = default;
 
 			bool operator == (CThrowingValue const &_Other) const noexcept = default;
 			auto operator <=> (CThrowingValue const &_Other) const noexcept = default;
 		};
 
-		template <typename t_CMap>
+		template <typename tf_CMap>
 		auto f_FindThrowAfterCompletedBulkLoadSegment(umint _nCount) -> umint
 		{
 			CThrowingValue::fs_Reset();
 
-			TCPackedMapTestAccess<t_CMap> Map;
+			TCPackedMapTestAccess<tf_CMap> Map;
 			Map.f_BulkLoad
 				(
 					_nCount
@@ -4135,8 +4135,8 @@ namespace
 				++ms_nAlive;
 			}
 
-			explicit CNothrowMoveCopyThrow(int32 _v) noexcept
-				: m_Value(_v)
+			explicit CNothrowMoveCopyThrow(int32 _Value) noexcept
+				: m_Value(_Value)
 			{
 				m_Magic = 0xABCD1234;
 				++ms_nAlive;
@@ -4149,8 +4149,8 @@ namespace
 				--ms_nAlive;
 			}
 
-			CNothrowMoveCopyThrow(CNothrowMoveCopyThrow const &_o)
-				: m_Value(_o.m_Value)
+			CNothrowMoveCopyThrow(CNothrowMoveCopyThrow const &_Other)
+				: m_Value(_Other.m_Value)
 			{
 				if (ms_nThrowAfter >= 0 && ++ms_nConstructions >= ms_nThrowAfter)
 					DMibError("ThrowCopy");
@@ -4158,15 +4158,15 @@ namespace
 				++ms_nAlive;
 			}
 
-			CNothrowMoveCopyThrow(CNothrowMoveCopyThrow &&_o) noexcept
-				: m_Value(_o.m_Value)
+			CNothrowMoveCopyThrow(CNothrowMoveCopyThrow &&_Other) noexcept
+				: m_Value(_Other.m_Value)
 			{
 				m_Magic = 0xABCD1234;
 				++ms_nAlive;
 			}
 
-			CNothrowMoveCopyThrow &operator = (CNothrowMoveCopyThrow const &) = default;
-			CNothrowMoveCopyThrow &operator = (CNothrowMoveCopyThrow &&) = default;
+			CNothrowMoveCopyThrow &operator = (CNothrowMoveCopyThrow const &_Other) = default;
+			CNothrowMoveCopyThrow &operator = (CNothrowMoveCopyThrow &&_Other) = default;
 
 			bool operator == (CNothrowMoveCopyThrow const &_Other) const noexcept = default;
 			auto operator <=> (CNothrowMoveCopyThrow const &_Other) const noexcept = default;
@@ -4194,8 +4194,8 @@ namespace
 				++ms_nAlive;
 			}
 
-			explicit CThrowMoveNothrowCopy(int32 _v) noexcept
-				: m_Value(_v)
+			explicit CThrowMoveNothrowCopy(int32 _Value) noexcept
+				: m_Value(_Value)
 			{
 				m_Magic = 0xABCD1234;
 				++ms_nAlive;
@@ -4208,15 +4208,15 @@ namespace
 				--ms_nAlive;
 			}
 
-			CThrowMoveNothrowCopy(CThrowMoveNothrowCopy const &_o) noexcept
-				: m_Value(_o.m_Value)
+			CThrowMoveNothrowCopy(CThrowMoveNothrowCopy const &_Other) noexcept
+				: m_Value(_Other.m_Value)
 			{
 				m_Magic = 0xABCD1234;
 				++ms_nAlive;
 			}
 
-			CThrowMoveNothrowCopy(CThrowMoveNothrowCopy &&_o)
-				: m_Value(_o.m_Value)
+			CThrowMoveNothrowCopy(CThrowMoveNothrowCopy &&_Other)
+				: m_Value(_Other.m_Value)
 			{
 				if (ms_nThrowAfter >= 0 && ++ms_nConstructions >= ms_nThrowAfter)
 					DMibError("ThrowMove");
@@ -4224,17 +4224,17 @@ namespace
 				++ms_nAlive;
 			}
 
-			CThrowMoveNothrowCopy &operator = (CThrowMoveNothrowCopy const &) = default;
-			CThrowMoveNothrowCopy &operator = (CThrowMoveNothrowCopy &&) = default;
+			CThrowMoveNothrowCopy &operator = (CThrowMoveNothrowCopy const &_Other) = default;
+			CThrowMoveNothrowCopy &operator = (CThrowMoveNothrowCopy &&_Other) = default;
 
 			bool operator == (CThrowMoveNothrowCopy const &_Other) const noexcept = default;
 			auto operator <=> (CThrowMoveNothrowCopy const &_Other) const noexcept = default;
 		};
 
-		template <bool t_bAdaptive>
+		template <bool tf_bAdaptive>
 		void f_ExceptionSafety()
 		{
-			using CThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
+			using CThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
 
 			// Verify our throwing type is indeed throwing-move
 			static_assert(!TCPackedMapConstantsAccess<CThrowMap>::mc_bNothrowElementMove);
@@ -4311,7 +4311,7 @@ namespace
 			};
 			DMibTestCategory("ResizeSweep")
 			{
-				using CSmallCapMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
+				using CSmallCapMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}>;
 				auto fResizeAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
@@ -4393,8 +4393,8 @@ namespace
 			DMibTestCategory("TemplatedCopyConstructorBulkLoadFailure")
 			{
 				constexpr umint c_nCount = 10;
-				using CSourceMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
-				using CDestinationMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
+				using CSourceMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}>;
+				using CDestinationMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
 
 				umint nThrowAfter = f_FindThrowAfterCompletedBulkLoadSegment<CDestinationMap>(c_nCount);
 
@@ -4428,8 +4428,8 @@ namespace
 			DMibTestCategory("TemplatedCopyConstructorBulkLoadFailureFreesAllocation")
 			{
 				constexpr umint c_nCount = 10;
-				using CSourceMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
-				using CDestinationMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
+				using CSourceMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}>;
+				using CDestinationMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
 
 				CFailingAllocator::fs_Reset();
 				CThrowingValue::fs_Reset();
@@ -4466,8 +4466,8 @@ namespace
 			DMibTestCategory("TemplatedCopyConstructorInsertFailureFreesAllocation")
 			{
 				constexpr umint c_nCount = 10;
-				using CSourceMap = TCPackedMap<int32, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
-				using CDestinationMap = TCPackedMap<int64, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
+				using CSourceMap = TCPackedMap<int32, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
+				using CDestinationMap = TCPackedMap<int64, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
 
 				CFailingAllocator::fs_Reset();
 				CThrowingValue::fs_Reset();
@@ -4607,7 +4607,7 @@ namespace
 			DMibTestCategory("LinearInsertSweep")
 			{
 				// Insert sequentially to exercise adaptive paths over multiple resizes
-				using CSmallThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
+				using CSmallThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}>;
 				auto fLinearAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
@@ -4630,7 +4630,7 @@ namespace
 			DMibTestCategory("RandomInsertSweep")
 			{
 				// Insert in scrambled order to exercise non-adaptive rebalance paths over multiple resizes
-				using CSmallThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
+				using CSmallThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}>;
 				auto fRandomAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
@@ -4657,7 +4657,7 @@ namespace
 			DMibTestCategory("LinearRemoveShrinkSweep")
 			{
 				// Insert many elements, then remove sequentially to trigger shrinks via adaptive path
-				using CSmallThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
+				using CSmallThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}>;
 				auto fLinearRemoveAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
@@ -4682,7 +4682,7 @@ namespace
 			DMibTestCategory("RandomRemoveShrinkSweep")
 			{
 				// Insert many elements, then remove in scrambled order to trigger non-adaptive rebalance paths
-				using CSmallThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
+				using CSmallThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}>;
 				auto fRandomRemoveAttempt = [&](umint _nThrowAfter)
 					{
 						CThrowingValue::fs_Reset(_nThrowAfter);
@@ -4712,7 +4712,7 @@ namespace
 			{
 				CThrowingValue::fs_Reset();
 				{
-					using CSmallCapMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
+					using CSmallCapMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}>;
 
 					CSmallCapMap Map;
 
@@ -4733,7 +4733,7 @@ namespace
 				// Test exception safety when move is nothrow but copy throws.
 				// This exercises the c_bNothrowInsert path where mcp_bNothrowElementMove is true
 				// but the actual construction (copy) can throw.
-				using CNMMap = TCPackedMap<CNothrowMoveCopyThrow, CNothrowMoveCopyThrow, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
+				using CNMMap = TCPackedMap<CNothrowMoveCopyThrow, CNothrowMoveCopyThrow, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
 
 				// Verify move IS nothrow for this map type
 				static_assert(TCPackedMapConstantsAccess<CNMMap>::mc_bNothrowElementMove);
@@ -4773,7 +4773,7 @@ namespace
 							, CNothrowMoveCopyThrow
 							, CSort_Default
 							, CAllocator_Heap
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					static_assert(TCPackedMapConstantsAccess<CSmallNMMap>::mc_bNothrowElementMove);
@@ -4831,7 +4831,7 @@ namespace
 							, CNothrowMoveCopyThrow
 							, CSort_Default
 							, CAllocator_Heap
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					auto fLinearAttempt = [&](umint _nThrowAfter)
@@ -4864,7 +4864,7 @@ namespace
 							, CNothrowMoveCopyThrow
 							, CSort_Default
 							, CAllocator_Heap
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					auto fRandomAttempt = [&](umint _nThrowAfter)
@@ -4896,7 +4896,7 @@ namespace
 				// Test exception safety when move throws but copy is nothrow.
 				// mcp_bNothrowElementMove is false (internal ops use throwing move),
 				// but insert via const ref uses nothrow copy so c_bNothrowInsert is true.
-				using CTMMap = TCPackedMap<CThrowMoveNothrowCopy, CThrowMoveNothrowCopy, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
+				using CTMMap = TCPackedMap<CThrowMoveNothrowCopy, CThrowMoveNothrowCopy, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
 
 				// Verify move is NOT nothrow
 				static_assert(!TCPackedMapConstantsAccess<CTMMap>::mc_bNothrowElementMove);
@@ -4953,7 +4953,7 @@ namespace
 							, CThrowMoveNothrowCopy
 							, CSort_Default
 							, CAllocator_Heap
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					static_assert(!TCPackedMapConstantsAccess<CSmallTMMap>::mc_bNothrowElementMove);
@@ -4988,7 +4988,7 @@ namespace
 							, CThrowMoveNothrowCopy
 							, CSort_Default
 							, CAllocator_Heap
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					auto fLinearAttempt = [&](umint _nThrowAfter)
@@ -5022,7 +5022,7 @@ namespace
 							, CThrowMoveNothrowCopy
 							, CSort_Default
 							, CAllocator_Heap
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					auto fRandomAttempt = [&](umint _nThrowAfter)
@@ -5054,7 +5054,7 @@ namespace
 			{
 				DMibTestCategory("SameTypeMoveConstructorPreservesSourceOnCompareMoveThrow")
 				{
-					using CMoveMap = TCPackedMap<int32, int32, CConfigurableThrowingMoveCompare, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
+					using CMoveMap = TCPackedMap<int32, int32, CConfigurableThrowingMoveCompare, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
 
 					CConfigurableThrowingMoveCompare::fs_Reset();
 					CMoveMap Source;
@@ -5086,7 +5086,7 @@ namespace
 				};
 				DMibTestCategory("SameTypeMoveAssignmentPreservesSourceOnCompareMoveThrow")
 				{
-					using CMoveMap = TCPackedMap<int32, int32, CConfigurableThrowingMoveCompare, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
+					using CMoveMap = TCPackedMap<int32, int32, CConfigurableThrowingMoveCompare, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
 
 					CConfigurableThrowingMoveCompare::fs_Reset();
 					CMoveMap Source;
@@ -5111,8 +5111,8 @@ namespace
 				};
 				DMibTestCategory("TemplatedMoveConstructorBulkLoadAllocFailureClearsSource")
 				{
-					using CSourceMap = TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
-					using CDestinationMap = TCPackedMap<int32, int32, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
+					using CSourceMap = TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
+					using CDestinationMap = TCPackedMap<int32, int32, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
 
 					CSourceMap Source;
 					for (int32 i = 0; i < 6; ++i)
@@ -5138,8 +5138,8 @@ namespace
 				DMibTestCategory("TemplatedMoveConstructorInsertFailureClearsSourceAndFreesAllocation")
 				{
 					constexpr umint c_nCount = 10;
-					using CSourceMap = TCPackedMap<int32, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
-					using CDestinationMap = TCPackedMap<int64, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
+					using CSourceMap = TCPackedMap<int32, CThrowingValue, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
+					using CDestinationMap = TCPackedMap<int64, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
 
 					CThrowingValue::fs_Reset();
 					CSourceMap Source;
@@ -5170,8 +5170,8 @@ namespace
 				};
 				DMibTestCategory("TemplatedMoveAssignmentBulkLoadAllocFailureClearsSource")
 				{
-					using CSourceMap = TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
-					using CDestinationMap = TCPackedMap<int32, int32, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = t_bAdaptive}>;
+					using CSourceMap = TCPackedMap<int32, int32, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
+					using CDestinationMap = TCPackedMap<int32, int32, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 8, .m_bAdaptive = tf_bAdaptive}>;
 
 					CSourceMap Source;
 					for (int32 i = 0; i < 6; ++i)
@@ -5233,7 +5233,7 @@ namespace
 							, CNothrowMoveTracked
 							, CSort_Default
 							, CFailingAllocator
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
@@ -5270,7 +5270,7 @@ namespace
 							, CNothrowMoveTracked
 							, CSort_Default
 							, CFailingAllocator
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
@@ -5312,7 +5312,7 @@ namespace
 							, CNothrowMoveTracked
 							, CSort_Default
 							, CFailingAllocator
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
@@ -5340,7 +5340,7 @@ namespace
 				DMibTestCategory("ResizeAllocSweepWithThrowingValue")
 				{
 					// Combine failing allocator with throwing values to verify no element leaks
-					using CFailThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
+					using CFailThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}>;
 
 					auto fResizeAttempt = [&](umint _nAllocAfterFail)
 						{
@@ -5372,7 +5372,7 @@ namespace
 							, CNothrowMoveTracked
 							, CSort_Default
 							, CFailingAllocator
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
@@ -5413,7 +5413,7 @@ namespace
 				DMibTestCategory("BulkInsertAllocSweepWithThrowingValue")
 				{
 					// Combine failing allocator with throwing values to verify no element leaks
-					using CFailThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
+					using CFailThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}>;
 
 					auto fBulkInsertAttempt = [&](umint _nAllocAfterFail)
 						{
@@ -5456,7 +5456,7 @@ namespace
 							, CNothrowMoveTracked
 							, CSort_Default
 							, CFailingAllocator
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
@@ -5495,7 +5495,7 @@ namespace
 				DMibTestCategory("BulkInsertAllocSweepTriggersResizeWithThrowingValue")
 				{
 					// Resize inside f_BulkInsert with throwing values to check for element leaks
-					using CFailThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>;
+					using CFailThrowMap = TCPackedMap<CThrowingValue, CThrowingValue, CSort_Default, CFailingAllocator, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}>;
 
 					auto fBulkInsertResizeAttempt = [&](umint _nAllocAfterFail)
 						{
@@ -5536,7 +5536,7 @@ namespace
 							, CNothrowMoveTracked
 							, CSort_Default
 							, CFailingAllocator
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
@@ -5588,7 +5588,7 @@ namespace
 							, CNothrowMoveTracked
 							, CSort_Default
 							, CFailingAllocator
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
@@ -5626,7 +5626,7 @@ namespace
 							, CNothrowMoveTracked
 							, CSort_Default
 							, CFailingAllocator
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
@@ -5664,7 +5664,7 @@ namespace
 							, CNothrowMoveTracked
 							, CSort_Default
 							, CFailingAllocator
-							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}
+							, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}
 						>
 					;
 					static_assert(TCPackedMapConstantsAccess<CFailMap>::mc_bNothrowElementMove);
@@ -5709,7 +5709,7 @@ namespace
 					// concentrated in two widely-separated groups to ensure separate windows.
 					using CMap = TCPackedMapTestAccess
 						<
-							TCPackedMap<CThrowMoveNothrowCopy, CThrowMoveNothrowCopy, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = t_bAdaptive}>
+							TCPackedMap<CThrowMoveNothrowCopy, CThrowMoveNothrowCopy, CSort_Default, CAllocator_Heap, CPackedMapOptions{.m_SegmentSize = 4, .m_bAdaptive = tf_bAdaptive}>
 						>
 					;
 					static_assert(!TCPackedMapConstantsAccess<CMap>::mc_bNothrowElementMove);

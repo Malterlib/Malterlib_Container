@@ -191,16 +191,16 @@ namespace NMib::NContainer
 		constexpr ~TCPackedMap();
 
 		template <typename ...tfp_CParams>
-		constexpr TCPackedMap(CAllocatorConstructTag const &, tfp_CParams && ...p_Params);
+		constexpr TCPackedMap(CAllocatorConstructTag const &_Tag, tfp_CParams && ...p_Params);
 
 		template <typename ...tfp_CParams>
-		constexpr TCPackedMap(CCompareConstructTag const &, tfp_CParams && ...p_Params);
+		constexpr TCPackedMap(CCompareConstructTag const &_Tag, tfp_CParams && ...p_Params);
 
 		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams>
 		constexpr TCPackedMap
 			(
-				CAllocatorConstructTag &&
-				, CCompareConstructTag &&
+				CAllocatorConstructTag &&_AllocatorTag
+				, CCompareConstructTag &&_CompareTag
 				, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
 				, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
 			)
@@ -610,13 +610,13 @@ namespace NMib::NContainer
 			uint16 m_nLevels;                              // Number of levels
 		};
 
-		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, umint ...tp_IndicesAllocator, umint ...tp_IndicesCompare>
+		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, umint ...tfp_IndicesAllocator, umint ...tfp_IndicesCompare>
 		constexpr TCPackedMap
 			(
-				NMeta::TCIndices<tp_IndicesAllocator...> const &_IndexSequenceAllocator
-				, NMeta::TCIndices<tp_IndicesCompare...> const &_IndexSequuenceCompare
-				, CAllocatorConstructTag &&
-				, CCompareConstructTag &&
+				NMeta::TCIndices<tfp_IndicesAllocator...> const &_IndexSequenceAllocator
+				, NMeta::TCIndices<tfp_IndicesCompare...> const &_IndexSequuenceCompare
+				, CAllocatorConstructTag &&_AllocatorTag
+				, CCompareConstructTag &&_CompareTag
 				, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
 				, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
 			)

@@ -18,10 +18,10 @@ namespace NMib::NContainer
 		inline CPagedByteVector(umint _PageSize = 1024);
 		~CPagedByteVector();
 
-		CPagedByteVector(CPagedByteVector &&) = delete;
-		CPagedByteVector(CPagedByteVector const &) = delete;
-		CPagedByteVector &operator = (CPagedByteVector &&) = delete;
-		CPagedByteVector &operator = (CPagedByteVector const &) = delete;
+		CPagedByteVector(CPagedByteVector &&_Other) = delete;
+		CPagedByteVector(CPagedByteVector const &_Other) = delete;
+		CPagedByteVector &operator = (CPagedByteVector &&_Other) = delete;
+		CPagedByteVector &operator = (CPagedByteVector const &_Other) = delete;
 
 		inline bool f_IsEmpty() const;
 		inline umint f_GetLen() const;
@@ -67,29 +67,29 @@ namespace NMib::NContainer
 		template <typename tf_FReader>
 		inline bool f_ReadBack(umint _nBytes, tf_FReader &&_fReader) const;
 
-		bool f_FindFront(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos) const;
+		bool f_FindFront(uint8 const *_pMatch, umint _nMatchBytes, umint &o_iPos) const;
 
 		// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes, umint _nTotalBytes)
 		template <typename tf_FReader>
-		inline bool f_ReadFrontUntil(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos, tf_FReader &&_fReader) const;
+		inline bool f_ReadFrontUntil(uint8 const *_pMatch, umint _nMatchBytes, umint &o_iPos, tf_FReader &&_fReader) const;
 
 		// Searches from the front for _pMatch.
-		// If a full match is found EMatchResult_Full is returned and _oPos is set to the offset of
+		// If a full match is found EMatchResult_Full is returned and o_iPos is set to the offset of
 		// the start of _pMatch in the buffer.
-		// If the buffer ends with a prefix of _pMatch EMatchResult_Partial is returned and _oPos is set
+		// If the buffer ends with a prefix of _pMatch EMatchResult_Partial is returned and o_iPos is set
 		// to the offset of the start of the potential match.
 		// 	NOTE: This doesn't mean that a match will definitely occur at this pos in the future!
 		// 	just that it could.
 		// If the buffer does not contain either a full match of _pMatch or end with a partial match
-		// then EMatchResult_None is returned and _oPos is unchanged.
-		EMatchResult f_FindFrontEx(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos) const;
+		// then EMatchResult_None is returned and o_iPos is unchanged.
+		EMatchResult f_FindFrontEx(uint8 const *_pMatch, umint _nMatchBytes, umint &o_iPos) const;
 
 		// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes, umint _nTotalBytes)
 		// Reads bytes (fed to _fReader) until either a full match of _pMatch is found or the buffer ends
 		// with a partial match for _pMatch, or (differing from f_ReadFrontUntil above) the buffer ends.
 		// Return value works the same as for f_FindFrontEx
 		template <typename tf_FReader>
-		inline EMatchResult f_ReadFrontUntilEx(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos, tf_FReader &&_fReader) const;
+		inline EMatchResult f_ReadFrontUntilEx(uint8 const *_pMatch, umint _nMatchBytes, umint &o_iPos, tf_FReader &&_fReader) const;
 
 		EMatchResult f_StartsWithEx(uint8 const *_pMatch, umint _nMatchBytes);
 
@@ -116,7 +116,7 @@ namespace NMib::NContainer
 
 		uint8 *fp_InsertPage(bool _bFront);
 		void fp_InsertWhenEmpty(uint8 const *_pPtr, umint _nBytes);
-		inline void fp_GetPageInfo(umint _iPage, umint &_oPageSize, umint &_oPageStart);
+		inline void fp_GetPageInfo(umint _iPage, umint &o_PageSize, umint &o_iPageStart);
 
 		NContainer::TCVector<NStorage::TCUniquePointer<uint8, CPageAllocator>> mp_Pages;
 		umint mp_PageSize;
@@ -158,8 +158,8 @@ namespace NMib::NContainer
 		CPagedByteVector &m_Buffer;
 
 	private:
-		TCBinaryStreamPagedByteVector(TCBinaryStreamPagedByteVector const &) = delete;
-		TCBinaryStreamPagedByteVector &operator = (TCBinaryStreamPagedByteVector const &) = delete;
+		TCBinaryStreamPagedByteVector(TCBinaryStreamPagedByteVector const &_Other) = delete;
+		TCBinaryStreamPagedByteVector &operator = (TCBinaryStreamPagedByteVector const &_Other) = delete;
 	};
 
 	// Read-only stream that walks a CPagedByteVector in place. Caches the current page pointer
@@ -214,8 +214,8 @@ namespace NMib::NContainer
 		umint m_iCurrentPage = 0;
 
 	private:
-		TCBinaryStreamPagedByteVectorPtr(TCBinaryStreamPagedByteVectorPtr const &) = delete;
-		TCBinaryStreamPagedByteVectorPtr &operator = (TCBinaryStreamPagedByteVectorPtr const &) = delete;
+		TCBinaryStreamPagedByteVectorPtr(TCBinaryStreamPagedByteVectorPtr const &_Other) = delete;
+		TCBinaryStreamPagedByteVectorPtr &operator = (TCBinaryStreamPagedByteVectorPtr const &_Other) = delete;
 	};
 }
 

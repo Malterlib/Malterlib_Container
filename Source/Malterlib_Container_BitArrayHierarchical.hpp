@@ -110,30 +110,30 @@ namespace NMib::NContainer
 	}
 
 	template <umint t_nBits>
-	template <typename t_CFunctor>
-	void TCBitArrayHierarchical<t_nBits>::f_EnumFreeBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	void TCBitArrayHierarchical<t_nBits>::f_EnumFreeBits(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
 	{
-		m_Bits.f_EnumFreeBits(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+		m_Bits.f_EnumFreeBits(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBits>
-	template <typename t_CFunctor>
-	void TCBitArrayHierarchical<t_nBits>::f_EnumFreeBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	void TCBitArrayHierarchical<t_nBits>::f_EnumFreeBitRanges(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
 	{
-		m_Bits.f_EnumFreeBitRanges(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+		m_Bits.f_EnumFreeBitRanges(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBits>
-	template <typename t_CFunctor>
-	void TCBitArrayHierarchical<t_nBits>::f_EnumSetBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	void TCBitArrayHierarchical<t_nBits>::f_EnumSetBitRanges(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
 	{
-		m_Bits.f_EnumSetBitRanges(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+		m_Bits.f_EnumSetBitRanges(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 
 	template <umint t_nBits>
-	template <typename t_CFunctor>
-	void TCBitArrayHierarchical<t_nBits>::f_EnumSetBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
+	template <typename tf_CFunctor>
+	void TCBitArrayHierarchical<t_nBits>::f_EnumSetBits(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const
 	{
-		m_Bits.f_EnumSetBits(fg_Forward<t_CFunctor>(_Functor), _StartBit, _EndBit);
+		m_Bits.f_EnumSetBits(fg_Forward<tf_CFunctor>(_Functor), _StartBit, _EndBit);
 	}
 }

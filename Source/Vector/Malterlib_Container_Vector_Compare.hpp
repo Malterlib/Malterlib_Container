@@ -59,8 +59,8 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CData, typename t_CAllocator, typename t_COptions>
-	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions, typename t_CFunctor>
-	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_Compare(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other, t_CFunctor &&_Functor) const
+	template <typename tf_CData, typename tf_CAllocator, typename tf_COptions, typename tf_CFunctor>
+	aint TCVector<t_CData, t_CAllocator, t_COptions>::f_Compare(TCVector<tf_CData, tf_CAllocator, tf_COptions> const &_Other, tf_CFunctor &&_Functor) const
 	{
 		umint Len0 = f_GetLen();
 		umint Len1 = _Other.f_GetLen();

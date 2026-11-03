@@ -253,16 +253,16 @@ namespace NMib::NContainer
 		TCMap(std::initializer_list<NStorage::TCTuple<t_CKey, t_CValue>> const &_Values);
 
 		template <typename ...tfp_CParams>
-		TCMap(CAllocatorConstructTag const &, tfp_CParams && ...p_Params);
+		TCMap(CAllocatorConstructTag const &_Tag, tfp_CParams && ...p_Params);
 
 		template <typename ...tfp_CParams>
-		TCMap(CCompareConstructTag const &, tfp_CParams && ...p_Params);
+		TCMap(CCompareConstructTag const &_Tag, tfp_CParams && ...p_Params);
 
 		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams>
 		TCMap
 			(
-				CAllocatorConstructTag &&
-				, CCompareConstructTag &&
+				CAllocatorConstructTag &&_AllocatorTag
+				, CCompareConstructTag &&_CompareTag
 				, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
 				, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
 			)
@@ -354,29 +354,29 @@ namespace NMib::NContainer
 		TCMap &operator += (TCMap &&_Other);
 		TCMap &operator -= (TCMap const &_Other);
 
-		template <typename t_CThis>
-		TCMap f_Xor(this t_CThis &&_This, TCMap const &_Right);
-		template <typename t_CThis>
-		TCMap f_Xor(this t_CThis &&_This, TCMap &&_Right);
-		template <typename t_CThis>
-		TCMap operator ^ (this t_CThis &&_This, TCMap const &_Right);
-		template <typename t_CThis>
-		TCMap operator ^ (this t_CThis &&_This, TCMap &&_Right);
+		template <typename tf_CThis>
+		TCMap f_Xor(this tf_CThis &&_This, TCMap const &_Right);
+		template <typename tf_CThis>
+		TCMap f_Xor(this tf_CThis &&_This, TCMap &&_Right);
+		template <typename tf_CThis>
+		TCMap operator ^ (this tf_CThis &&_This, TCMap const &_Right);
+		template <typename tf_CThis>
+		TCMap operator ^ (this tf_CThis &&_This, TCMap &&_Right);
 
-		template <typename t_CThis>
-		TCMap f_Difference(this t_CThis &&_This, TCMap const &_Right);
-		template <typename t_CThis>
-		TCMap operator - (this t_CThis &&_This, TCMap const &_Right);
+		template <typename tf_CThis>
+		TCMap f_Difference(this tf_CThis &&_This, TCMap const &_Right);
+		template <typename tf_CThis>
+		TCMap operator - (this tf_CThis &&_This, TCMap const &_Right);
 
-		template <EMapOperationPolicy t_Policy, typename t_CThis>
-		TCMap f_Or(this t_CThis &&_This, TCMap const &_Right);
-		template <EMapOperationPolicy t_Policy, typename t_CThis>
-		TCMap f_Or(this t_CThis &&_This, TCMap &&_Right);
+		template <EMapOperationPolicy tf_Policy, typename tf_CThis>
+		TCMap f_Or(this tf_CThis &&_This, TCMap const &_Right);
+		template <EMapOperationPolicy tf_Policy, typename tf_CThis>
+		TCMap f_Or(this tf_CThis &&_This, TCMap &&_Right);
 
-		template <EMapOperationPolicy t_Policy, typename t_CThis>
-		TCMap f_And(this t_CThis &&_This, TCMap const &_Right);
-		template <EMapOperationPolicy t_Policy, typename t_CThis>
-		TCMap f_And(this t_CThis &&_This, TCMap &&_Right);
+		template <EMapOperationPolicy tf_Policy, typename tf_CThis>
+		TCMap f_And(this tf_CThis &&_This, TCMap const &_Right);
+		template <EMapOperationPolicy tf_Policy, typename tf_CThis>
+		TCMap f_And(this tf_CThis &&_This, TCMap &&_Right);
 
 		void f_Remove(CUserData *_pData)
 			requires (!NTraits::cIsReference<t_CValue>) //This function is not supported when mapping reference types
@@ -492,13 +492,13 @@ namespace NMib::NContainer
 		template <typename tf_CSource>
 		inline_always void fp_MoveAddAll(tf_CSource &&_Other);
 
-		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, umint ...tp_IndicesAllocator, umint ...tp_IndicesCompare>
+		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, umint ...tfp_IndicesAllocator, umint ...tfp_IndicesCompare>
 		TCMap
 			(
-				NMeta::TCIndices<tp_IndicesAllocator...> const &_IndexSequenceAllocator
-				, NMeta::TCIndices<tp_IndicesCompare...> const &_IndexSequuenceCompare
-				, CAllocatorConstructTag &&
-				, CCompareConstructTag &&
+				NMeta::TCIndices<tfp_IndicesAllocator...> const &_IndexSequenceAllocator
+				, NMeta::TCIndices<tfp_IndicesCompare...> const &_IndexSequuenceCompare
+				, CAllocatorConstructTag &&_AllocatorTag
+				, CCompareConstructTag &&_CompareTag
 				, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
 				, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
 			)

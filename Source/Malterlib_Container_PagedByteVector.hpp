@@ -126,7 +126,7 @@ namespace NMib::NContainer
 
 	// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes, umint _nTotalBytes)
 	template <typename tf_FReader>
-	bool CPagedByteVector::f_ReadFrontUntil(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos, tf_FReader &&_fReader) const
+	bool CPagedByteVector::f_ReadFrontUntil(uint8 const *_pMatch, umint _nMatchBytes, umint &o_iPos, tf_FReader &&_fReader) const
 	{
 		umint iEnd;
 
@@ -142,31 +142,31 @@ namespace NMib::NContainer
 				)
 			;
 
-			_oPos = iEnd;
+			o_iPos = iEnd;
 			return true;
 		}
 		else
 			return false;
 	}
 
-	void CPagedByteVector::fp_GetPageInfo(umint _iPage, umint &_oPageSize, umint &_oPageStart)
+	void CPagedByteVector::fp_GetPageInfo(umint _iPage, umint &o_PageSize, umint &o_iPageStart)
 	{
-		_oPageSize = mp_PageSize;
-		_oPageStart = 0;
+		o_PageSize = mp_PageSize;
+		o_iPageStart = 0;
 
 		if (_iPage == 0)
 		{
-			_oPageSize -= mp_iFirstPageStart;
-			_oPageStart = mp_iFirstPageStart;
+			o_PageSize -= mp_iFirstPageStart;
+			o_iPageStart = mp_iFirstPageStart;
 		}
 
 		if (_iPage == mp_Pages.f_GetLen())
-			_oPageSize -= (mp_PageSize - mp_iLastPageEnd);
+			o_PageSize -= (mp_PageSize - mp_iLastPageEnd);
 	}
 
 	// tf_FReader is of the format: void (umint _iStart, uint8 const *_pPtr, umint _nBytes, umint _nTotalBytes)
 	template <typename tf_FReader>
-	CPagedByteVector::EMatchResult CPagedByteVector::f_ReadFrontUntilEx(uint8 const *_pMatch, umint _nMatchBytes, umint &_oPos, tf_FReader &&_fReader) const
+	CPagedByteVector::EMatchResult CPagedByteVector::f_ReadFrontUntilEx(uint8 const *_pMatch, umint _nMatchBytes, umint &o_iPos, tf_FReader &&_fReader) const
 	{
 		umint iEnd = f_GetLen();
 		EMatchResult Result = f_FindFrontEx(_pMatch, _nMatchBytes, iEnd);
@@ -184,7 +184,7 @@ namespace NMib::NContainer
 			)
 		;
 
-		_oPos = iEnd;
+		o_iPos = iEnd;
 		return Result;
 	}
 

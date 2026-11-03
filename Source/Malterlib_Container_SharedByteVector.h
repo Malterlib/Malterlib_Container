@@ -23,7 +23,7 @@ namespace NMib::NContainer
 		CSharedByteVector(NStorage::TCSharedPointer<CIOByteVector const> const &_pVector, umint _Offset, umint _nBytes);
 		CSharedByteVector(CSharedByteVector const &_Other, umint _Offset, umint _nBytes);
 
-		CSharedByteVector(CSharedByteVector const &) = default;
+		CSharedByteVector(CSharedByteVector const &_Other) = default;
 		CSharedByteVector &operator = (CSharedByteVector const &_Other);
 
 		CSharedByteVector(CSharedByteVector &&_Other);

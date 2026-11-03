@@ -82,19 +82,19 @@ namespace
 			mutable bool m_bCopiedFrom = false;
 		};
 
-		static TCVector<int32> fs_Vector(int32 _0, int32 _1, int32 _2, int32 _3, int32 _4, int32 _5, int32 _6, int32 _7, int32 _8, int32 _9)
+		static TCVector<int32> fs_Vector(int32 _Value0, int32 _Value1, int32 _Value2, int32 _Value3, int32 _Value4, int32 _Value5, int32 _Value6, int32 _Value7, int32 _Value8, int32 _Value9)
 		{
 			TCVector<int32> Ret;
-			Ret.f_Insert(_0);
-			Ret.f_Insert(_1);
-			Ret.f_Insert(_2);
-			Ret.f_Insert(_3);
-			Ret.f_Insert(_4);
-			Ret.f_Insert(_5);
-			Ret.f_Insert(_6);
-			Ret.f_Insert(_7);
-			Ret.f_Insert(_8);
-			Ret.f_Insert(_9);
+			Ret.f_Insert(_Value0);
+			Ret.f_Insert(_Value1);
+			Ret.f_Insert(_Value2);
+			Ret.f_Insert(_Value3);
+			Ret.f_Insert(_Value4);
+			Ret.f_Insert(_Value5);
+			Ret.f_Insert(_Value6);
+			Ret.f_Insert(_Value7);
+			Ret.f_Insert(_Value8);
+			Ret.f_Insert(_Value9);
 			return Ret;
 		}
 

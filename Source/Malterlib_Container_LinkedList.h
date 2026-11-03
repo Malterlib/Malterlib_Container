@@ -52,7 +52,7 @@ namespace NMib::NContainer
 		}
 
 		template <typename tf_CType, typename ...tfp_CParams, umint ...tfp_Indidies>
-		TCLinkedListMember(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams, NMeta::TCIndices<tfp_Indidies...> const &)
+		TCLinkedListMember(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams, NMeta::TCIndices<tfp_Indidies...> const &_Indices)
 			: m_Object(fg_Forward<tfp_CParams>(fg_Get<tfp_Indidies>(_CreateParams.m_Params))...)
 		{
 		}
@@ -115,8 +115,8 @@ namespace NMib::NContainer
 			return *this;
 		}
 
-		TCLinkedListNodeHandle(TCLinkedListNodeHandle const &) = delete;
-		TCLinkedListNodeHandle &operator = (TCLinkedListNodeHandle const &) = delete;
+		TCLinkedListNodeHandle(TCLinkedListNodeHandle const &_Other) = delete;
+		TCLinkedListNodeHandle &operator = (TCLinkedListNodeHandle const &_Other) = delete;
 
 		[[nodiscard]] bool f_IsEmpty() const noexcept
 		{
@@ -235,7 +235,7 @@ namespace NMib::NContainer
 			{
 			}
 
-			CLocalData &operator = (CLocalData &&) = default;
+			CLocalData &operator = (CLocalData &&_Other) = default;
 		};
 
 		CLocalData m_Data;

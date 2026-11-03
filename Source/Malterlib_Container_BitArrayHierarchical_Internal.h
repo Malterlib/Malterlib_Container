@@ -46,16 +46,16 @@ namespace NMib::NContainer::NPrivate
 		aint f_FindFreeBitReverseAndSet();
 
 		aint f_FindUpperBound(umint _StartBit) const;
-		template <typename t_CFunctor>
-		void f_EnumFreeBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
-		template <typename t_CFunctor>
-		void f_EnumFreeBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+		template <typename tf_CFunctor>
+		void f_EnumFreeBits(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+		template <typename tf_CFunctor>
+		void f_EnumFreeBitRanges(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 
-		template <typename t_CFunctor>
-		void f_EnumSetBitRanges(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+		template <typename tf_CFunctor>
+		void f_EnumSetBitRanges(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 
-		template <typename t_CFunctor>
-		void f_EnumSetBits(t_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+		template <typename tf_CFunctor>
+		void f_EnumSetBits(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 	};
 
 	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal>

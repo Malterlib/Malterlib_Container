@@ -203,7 +203,7 @@ namespace NMib::NContainer
 	// Allocator construction
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	template <typename ...tfp_CParams>
-	constexpr TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::TCPackedMap(CAllocatorConstructTag const &, tfp_CParams && ...p_Params)
+	constexpr TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::TCPackedMap(CAllocatorConstructTag const &_Tag, tfp_CParams && ...p_Params)
 		: mp_Allocator(fg_Forward<tfp_CParams>(p_Params)...)
 	{
 	}
@@ -211,7 +211,7 @@ namespace NMib::NContainer
 	// Compare construction
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
 	template <typename ...tfp_CParams>
-	constexpr TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::TCPackedMap(CCompareConstructTag const &, tfp_CParams && ...p_Params)
+	constexpr TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::TCPackedMap(CCompareConstructTag const &_Tag, tfp_CParams && ...p_Params)
 		: mp_Compare(fg_Forward<tfp_CParams>(p_Params)...)
 	{
 	}
@@ -220,7 +220,7 @@ namespace NMib::NContainer
 	template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams>
 	constexpr TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::TCPackedMap
 		(
-			CAllocatorConstructTag &&_AlloctatorTag
+			CAllocatorConstructTag &&_AllocatorTag
 			, CCompareConstructTag &&_CompareTag
 			, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
 			, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
@@ -229,7 +229,7 @@ namespace NMib::NContainer
 		(
 			NMeta::TCConsecutiveIndices<sizeof...(tfp_CAllocatorParams)>()
 			, NMeta::TCConsecutiveIndices<sizeof...(tfp_CCompareParams)>()
-			, fg_Move(_AlloctatorTag)
+			, fg_Move(_AllocatorTag)
 			, fg_Move(_CompareTag)
 			, fg_Move(_ConstructAllocator)
 			, fg_Move(_ConstructCompare)
@@ -238,18 +238,18 @@ namespace NMib::NContainer
 	}
 
 	template <typename t_CKey, typename t_CValue, typename t_CCompare, typename t_CAllocator, CPackedMapOptions t_Options>
-	template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, umint ...tp_IndicesAllocator, umint ...tp_IndicesCompare>
+	template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, umint ...tfp_IndicesAllocator, umint ...tfp_IndicesCompare>
 	constexpr TCPackedMap<t_CKey, t_CValue, t_CCompare, t_CAllocator, t_Options>::TCPackedMap
 		(
-			NMeta::TCIndices<tp_IndicesAllocator...> const &_IndexSequenceAllocator
-			, NMeta::TCIndices<tp_IndicesCompare...> const &_IndexSequuenceCompare
-			, CAllocatorConstructTag &&
-			, CCompareConstructTag &&
+			NMeta::TCIndices<tfp_IndicesAllocator...> const &_IndexSequenceAllocator
+			, NMeta::TCIndices<tfp_IndicesCompare...> const &_IndexSequuenceCompare
+			, CAllocatorConstructTag &&_AllocatorTag
+			, CCompareConstructTag &&_CompareTag
 			, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
 			, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
 		)
-		: mp_Allocator(fg_Forward<tfp_CAllocatorParams>(fg_Get<tp_IndicesAllocator>(_ConstructAllocator.m_Params))...)
-		, mp_Compare(fg_Forward<tfp_CCompareParams>(fg_Get<tp_IndicesCompare>(_ConstructCompare.m_Params))...)
+		: mp_Allocator(fg_Forward<tfp_CAllocatorParams>(fg_Get<tfp_IndicesAllocator>(_ConstructAllocator.m_Params))...)
+		, mp_Compare(fg_Forward<tfp_CCompareParams>(fg_Get<tfp_IndicesCompare>(_ConstructCompare.m_Params))...)
 	{
 	}
 

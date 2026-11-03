@@ -40,8 +40,8 @@ namespace NMib::NContainer
 		template <typename tf_CRegistry, typename tf_CStr>
 		static tf_CRegistry *fs_FindEqual(tf_CRegistry const &_This, tf_CStr const &_ToFind);
 
-		template <typename t_CIterator, typename tf_CStr>
-		static void fs_FindIterator(t_CIterator &_Iterator, tf_CStr const &_ToFind);
+		template <typename tf_CIterator, typename tf_CStr>
+		static void fs_FindIterator(tf_CIterator &_Iterator, tf_CStr const &_ToFind);
 
 	private:
 		// Don't allow copy construction
@@ -96,8 +96,8 @@ namespace NMib::NContainer
 		template <typename tf_CRegistry, typename tf_CKey>
 		static tf_CRegistry *fs_FindEqual(tf_CRegistry const &_This, tf_CKey const &_ToFind);
 
-		template <typename t_CIterator, typename tf_CKey>
-		static void fs_FindIterator(t_CIterator &_Iterator, tf_CKey const &_ToFind);
+		template <typename tf_CIterator, typename tf_CKey>
+		static void fs_FindIterator(tf_CIterator &_Iterator, tf_CKey const &_ToFind);
 
 	private:
 		TCRegistryKeyStrMulti(TCRegistryKeyStrMulti const &_Other) = delete;
@@ -167,8 +167,8 @@ namespace NMib::NContainer
 		template <typename tf_CRegistry, typename tf_CStr>
 		static tf_CRegistry *fs_FindEqual(tf_CRegistry const &_This, tf_CStr const &_ToFind);
 
-		template <typename t_CIterator, typename tf_CStr>
-		static void fs_FindIterator(t_CIterator &_Iterator, tf_CStr const &_ToFind);
+		template <typename tf_CIterator, typename tf_CStr>
+		static void fs_FindIterator(tf_CIterator &_Iterator, tf_CStr const &_ToFind);
 
 	private:
 		TCRegistryKeyStrPreserve(TCRegistryKeyStrPreserve const &_Other) = delete;

@@ -152,8 +152,8 @@ namespace NMib::NContainer
 			f_MakeRegion(_Start, _End, CVoidFunctor());
 		}
 
-		template <class t_CTransform>
-		void f_MakeRegion(t_CKey const &_Start, t_CKey const &_End, t_CTransform const &_Transform)
+		template <class tf_CTransform>
+		void f_MakeRegion(t_CKey const &_Start, t_CKey const &_End, tf_CTransform const &_Transform)
 		{
 			t_CKey Search = _Start;
 			--Search;

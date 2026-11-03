@@ -322,8 +322,8 @@ namespace NMib::NMisc
 			}
 
 		public: // Test cases
-			CMapTester(bool random)
-				: m_bRandom(random)
+			CMapTester(bool _bRandom)
+				: m_bRandom(_bRandom)
 			{
 			}
 

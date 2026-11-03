@@ -264,7 +264,7 @@ namespace
 
 					auto EvenIndices = Vector.f_Filter
 						(
-							[](CStr const &, umint _Index)
+							[](CStr const &_Value, umint _Index)
 							{
 								return _Index % 2 == 0;
 							}

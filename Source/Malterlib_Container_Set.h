@@ -19,16 +19,16 @@ namespace NMib::NContainer
 		TCSet(std::initializer_list<t_CKey> const &_Values);
 
 		template <typename ...tfp_CParams>
-		TCSet(CAllocatorConstructTag const &, tfp_CParams && ...p_Params);
+		TCSet(CAllocatorConstructTag const &_Tag, tfp_CParams && ...p_Params);
 
 		template <typename ...tfp_CParams>
-		TCSet(CCompareConstructTag const &, tfp_CParams && ...p_Params);
+		TCSet(CCompareConstructTag const &_Tag, tfp_CParams && ...p_Params);
 
 		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams>
 		TCSet
 			(
-				CAllocatorConstructTag &&
-				, CCompareConstructTag &&
+				CAllocatorConstructTag &&_AllocatorTag
+				, CCompareConstructTag &&_CompareTag
 				, TCConstruct<void, tfp_CAllocatorParams...> &&_ConstructAllocator
 				, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
 			)
@@ -73,37 +73,37 @@ namespace NMib::NContainer
 		;
 #endif
 
-		template <typename t_CThis>
-		TCSet f_Or(this t_CThis &&_This, TCSet const &_Right);
-		template <typename t_CThis>
-		TCSet f_Or(this t_CThis &&_This, TCSet &&_Right);
-		template <typename t_CThis>
-		TCSet operator | (this t_CThis &&_This, TCSet const &_Right);
-		template <typename t_CThis>
-		TCSet operator | (this t_CThis &&_This, TCSet &&_Right);
+		template <typename tf_CThis>
+		TCSet f_Or(this tf_CThis &&_This, TCSet const &_Right);
+		template <typename tf_CThis>
+		TCSet f_Or(this tf_CThis &&_This, TCSet &&_Right);
+		template <typename tf_CThis>
+		TCSet operator | (this tf_CThis &&_This, TCSet const &_Right);
+		template <typename tf_CThis>
+		TCSet operator | (this tf_CThis &&_This, TCSet &&_Right);
 
-		template <typename t_CThis>
-		TCSet f_And(this t_CThis &&_This, TCSet const &_Right);
-		template <typename t_CThis>
-		TCSet f_And(this t_CThis &&_This, TCSet &&_Right);
-		template <typename t_CThis>
-		TCSet operator & (this t_CThis &&_This, TCSet const &_Right);
-		template <typename t_CThis>
-		TCSet operator & (this t_CThis &&_This, TCSet &&_Right);
+		template <typename tf_CThis>
+		TCSet f_And(this tf_CThis &&_This, TCSet const &_Right);
+		template <typename tf_CThis>
+		TCSet f_And(this tf_CThis &&_This, TCSet &&_Right);
+		template <typename tf_CThis>
+		TCSet operator & (this tf_CThis &&_This, TCSet const &_Right);
+		template <typename tf_CThis>
+		TCSet operator & (this tf_CThis &&_This, TCSet &&_Right);
 
-		template <typename t_CThis>
-		TCSet f_Xor(this t_CThis &&_This, TCSet const &_Right);
-		template <typename t_CThis>
-		TCSet f_Xor(this t_CThis &&_This, TCSet &&_Right);
-		template <typename t_CThis>
-		TCSet operator ^ (this t_CThis &&_This, TCSet const &_Right);
-		template <typename t_CThis>
-		TCSet operator ^ (this t_CThis &&_This, TCSet &&_Right);
+		template <typename tf_CThis>
+		TCSet f_Xor(this tf_CThis &&_This, TCSet const &_Right);
+		template <typename tf_CThis>
+		TCSet f_Xor(this tf_CThis &&_This, TCSet &&_Right);
+		template <typename tf_CThis>
+		TCSet operator ^ (this tf_CThis &&_This, TCSet const &_Right);
+		template <typename tf_CThis>
+		TCSet operator ^ (this tf_CThis &&_This, TCSet &&_Right);
 
-		template <typename t_CThis>
-		TCSet f_Difference(this t_CThis &&_This, TCSet const &_Right);
-		template <typename t_CThis>
-		TCSet operator - (this t_CThis &&_This, TCSet const &_Right);
+		template <typename tf_CThis>
+		TCSet f_Difference(this tf_CThis &&_This, TCSet const &_Right);
+		template <typename tf_CThis>
+		TCSet operator - (this tf_CThis &&_This, TCSet const &_Right);
 
 		using CIteratorDestructive = typename CMap::CKeyIteratorDestructive;
 		using CIteratorReverseDestructive = typename CMap::CKeyIteratorReverseDestructive;
@@ -119,8 +119,8 @@ namespace NMib::NContainer
 		void f_Format(tf_CFormatInto &o_FormatInto, tf_CFormatOptions const &_Options) const;
 	};
 
-	template <typename tf_CReturn, typename ...tf_CParams>
-	TCSet<tf_CReturn> fg_CreateSet(tf_CParams && ...p_Params);
+	template <typename tf_CReturn, typename ...tfp_CParams>
+	TCSet<tf_CReturn> fg_CreateSet(tfp_CParams && ...p_Params);
 
 	template <typename tf_CContainer>
 	auto fg_SetFromContainer(tf_CContainer &&_Container);

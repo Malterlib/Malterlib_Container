@@ -43,15 +43,15 @@ namespace NMib::NContainer
 		bool f_IsFullySet() const;
 		bool f_IsFullyFree() const;
 
-		template <typename t_CFunctor>
-		void f_EnumFreeBits(t_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
-		template <typename t_CFunctor>
-		void f_EnumFreeBitRanges(t_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
+		template <typename tf_CFunctor>
+		void f_EnumFreeBits(tf_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
+		template <typename tf_CFunctor>
+		void f_EnumFreeBitRanges(tf_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
 
-		template <typename t_CFunctor>
-		void f_EnumSetBits(t_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
-		template <typename t_CFunctor>
-		void f_EnumSetBitRanges(t_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
+		template <typename tf_CFunctor>
+		void f_EnumSetBits(tf_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
+		template <typename tf_CFunctor>
+		void f_EnumSetBitRanges(tf_CFunctor &&_Functor, umint _StartBit = 0, umint _EndBit = t_nBits) const;
 
 	private:
 		static constexpr aint mc_BitsPerEntry = sizeof(CEntryType) * 8;
