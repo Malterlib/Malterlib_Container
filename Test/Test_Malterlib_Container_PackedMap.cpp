@@ -337,8 +337,7 @@ namespace
 				DMibError("AllocFail");
 		}
 
-		// NOLINTBEGIN(malterlib-function-naming): the allocator interface, static in stateless allocators and not in the others
-		only_parameters_aliased malloc_like static auto f_AllocAligned
+		DMibNamedAsMemberFunction only_parameters_aliased malloc_like static auto f_AllocAligned
 			(
 				umint _Size
 				, umint _Alignment
@@ -351,7 +350,7 @@ namespace
 			return CAllocator_Heap::f_AllocAligned(_Size, _Alignment, _AllocFlags, _NumaNode);
 		}
 
-		only_parameters_aliased malloc_like static auto f_AllocAlignedWithSize
+		DMibNamedAsMemberFunction only_parameters_aliased malloc_like static auto f_AllocAlignedWithSize
 			(
 				umint &_Size
 				, umint _Alignment
@@ -364,55 +363,65 @@ namespace
 			return CAllocator_Heap::f_AllocAlignedWithSize(_Size, _Alignment, _AllocFlags, _NumaNode);
 		}
 
-		only_parameters_aliased malloc_like static void *f_Alloc(umint _Size, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
+		DMibNamedAsMemberFunction only_parameters_aliased malloc_like static void *f_Alloc
+			(
+				umint _Size
+				, EAllocationFlag _AllocFlags = EAllocationFlag_None
+				, ENumaNode _NumaNode = ENumaNode_Default
+			)
 		{
 			fs_CheckAlloc();
 			return CAllocator_Heap::f_Alloc(_Size, _AllocFlags, _NumaNode);
 		}
 
-		only_parameters_aliased malloc_like static void *f_AllocWithSize(umint &_Size, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
+		DMibNamedAsMemberFunction only_parameters_aliased malloc_like static void *f_AllocWithSize
+			(
+				umint &_Size
+				, EAllocationFlag _AllocFlags = EAllocationFlag_None
+				, ENumaNode _NumaNode = ENumaNode_Default
+			)
 		{
 			fs_CheckAlloc();
 			return CAllocator_Heap::f_AllocWithSize(_Size, _AllocFlags, _NumaNode);
 		}
 
-		only_parameters_aliased static void f_Free(void *_pBlock, umint _Size)
+		DMibNamedAsMemberFunction only_parameters_aliased static void f_Free(void *_pBlock, umint _Size)
 		{
 			++ms_nFrees;
 			CAllocator_Heap::f_Free(_pBlock, _Size);
 		}
 
-		only_parameters_aliased static void f_FreeNoSize(void *_pBlock)
+		DMibNamedAsMemberFunction only_parameters_aliased static void f_FreeNoSize(void *_pBlock)
 		{
 			CAllocator_Heap::f_FreeNoSize(_pBlock);
 		}
 
-		static bool f_DeterministicSize()
+		DMibNamedAsMemberFunction static bool f_DeterministicSize()
 		{
 			return CAllocator_Heap::f_DeterministicSize();
 		}
 
-		only_parameters_aliased static umint f_Size(void *_pBlock)
+		DMibNamedAsMemberFunction only_parameters_aliased static umint f_Size(void *_pBlock)
 		{
 			return CAllocator_Heap::f_Size(_pBlock);
 		}
 
-		only_parameters_aliased static umint f_TrySize(void *_pBlock)
+		DMibNamedAsMemberFunction only_parameters_aliased static umint f_TrySize(void *_pBlock)
 		{
 			return CAllocator_Heap::f_TrySize(_pBlock);
 		}
 
-		static umint f_SizePadded(umint _Size)
+		DMibNamedAsMemberFunction static umint f_SizePadded(umint _Size)
 		{
 			return CAllocator_Heap::f_SizePadded(_Size);
 		}
 
-		static bool f_IsStatic(void const *_pBlock)
+		DMibNamedAsMemberFunction static bool f_IsStatic(void const *_pBlock)
 		{
 			return CAllocator_Heap::f_IsStatic(_pBlock);
 		}
 
-		only_parameters_aliased malloc_like static auto f_Realloc
+		DMibNamedAsMemberFunction only_parameters_aliased malloc_like static auto f_Realloc
 			(
 				void *_pMem
 				, umint &_Size
@@ -426,17 +435,22 @@ namespace
 			return CAllocator_Heap::f_Realloc(_pMem, _Size, _OldSize, _AllocFlags, _NumaNode);
 		}
 
-		only_parameters_aliased static void *f_Resize(void *_pMem, umint &_Size, umint _OldSize, EAllocationFlag _AllocFlags = EAllocationFlag_None, ENumaNode _NumaNode = ENumaNode_Default)
+		DMibNamedAsMemberFunction only_parameters_aliased static void *f_Resize
+			(
+				void *_pMem
+				, umint &_Size
+				, umint _OldSize
+				, EAllocationFlag _AllocFlags = EAllocationFlag_None
+				, ENumaNode _NumaNode = ENumaNode_Default
+			)
 		{
 			return CAllocator_Heap::f_Resize(_pMem, _Size, _OldSize, _AllocFlags, _NumaNode);
 		}
 
-		static bool f_OnlyOneAlloc()
+		DMibNamedAsMemberFunction static bool f_OnlyOneAlloc()
 		{
 			return CAllocator_Heap::f_OnlyOneAlloc();
 		}
-
-		// NOLINTEND(malterlib-function-naming)
 	};
 
 	static_assert(cIsEmpty<CFailingAllocator>);
