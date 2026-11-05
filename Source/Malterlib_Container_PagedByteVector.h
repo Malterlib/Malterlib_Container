@@ -110,9 +110,7 @@ namespace NMib::NContainer
 		{
 			static constexpr bool mc_bIsDefault = false;
 
-			// NOLINTBEGIN(malterlib-function-naming): the allocator interface, static in stateless allocators and not in the others
-			only_parameters_aliased static void f_Free(void *_pBlock, umint _Size);
-			// NOLINTEND(malterlib-function-naming)
+			DMibNamedAsMemberFunction only_parameters_aliased static void f_Free(void *_pBlock, umint _Size);
 		};
 
 		uint8 *fp_InsertPage(bool _bFront);
