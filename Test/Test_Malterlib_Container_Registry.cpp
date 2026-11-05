@@ -446,6 +446,63 @@ namespace
 					CStr RegistryStrGenerated3 = Registry.f_GenerateStr();
 					DMibTest(DMibExpr(RegistryStrResult) == DMibExpr(RegistryStrGenerated3))(ETestFlag_NoValues);
 				};
+				// The value's location is kept apart from the key's, also through copies and moves
+				DMibTestSuite("Locations")
+				{
+					CRegistryPreserveAllFull Registry;
+					Registry.f_ParseStr("Root\n{\n\tKey    Value\n}\n", "Locations.ir");
+
+					auto *pKey = Registry.f_GetChild("Root/Key");
+					DMibAssertTrue(pKey);
+
+					auto fExpectLocations = [](CRegistryPreserveAllFull const &_Key)
+						{
+							auto &KeyLocation = _Key.f_GetLocation();
+							auto &ValueLocation = _Key.f_GetValueLocation();
+							DMibExpect(KeyLocation.m_File, ==, "Locations.ir");
+							DMibExpect(ValueLocation.m_File, ==, "Locations.ir");
+							DMibExpect(KeyLocation.m_Line, ==, 3);
+							DMibExpect(ValueLocation.m_Line, ==, 3);
+							DMibExpect(ValueLocation.m_Column - KeyLocation.m_Column, ==, 7);
+							DMibExpect(_Key.f_GetValueOrKeyLocation().m_Column, ==, ValueLocation.m_Column);
+						}
+					;
+
+					{
+						DMibTestPath("Parsed");
+						fExpectLocations(*pKey);
+					}
+
+					CRegistryPreserveAllFull Copy = Registry;
+					{
+						DMibTestPath("Copied");
+						auto *pCopied = Copy.f_GetChild("Root/Key");
+						DMibAssertTrue(pCopied);
+						fExpectLocations(*pCopied);
+					}
+
+					{
+						DMibTestPath("Moved");
+						CRegistryPreserveAllFull Moved = fg_Move(Copy);
+						auto *pMoved = Moved.f_GetChild("Root/Key");
+						DMibAssertTrue(pMoved);
+						fExpectLocations(*pMoved);
+					}
+
+					{
+						// A child moves with its parent's children, while the key itself goes through f_Copy and f_Move.
+						CRegistryPreserveAllFull KeyCopy = *pKey;
+						{
+							DMibTestPath("KeyCopied");
+							fExpectLocations(KeyCopy);
+						}
+						CRegistryPreserveAllFull KeyMoved = fg_Move(KeyCopy);
+						{
+							DMibTestPath("KeyMoved");
+							fExpectLocations(KeyMoved);
+						}
+					}
+				};
 				DMibTestSuite("Corner cases")
 				{
 					CRegistryPreserveWhitespace Registry;

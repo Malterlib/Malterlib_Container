@@ -225,6 +225,7 @@ namespace NMib::NContainer
 		mp_bForceEscapedKey = _Other.mp_bForceEscapedKey;
 		mp_bForceEscapedValue = _Other.mp_bForceEscapedValue;
 		mp_Location = fg_Move(_Other.mp_Location);
+		mp_ValueLocation = fg_Move(_Other.mp_ValueLocation);
 		for (umint iLocation = 0; iLocation < ERegistryWhiteSpaceLocation_Max; ++iLocation)
 			mp_WhiteSpace[iLocation] = fg_Move(_Other.mp_WhiteSpace[iLocation]);
 	}
@@ -272,6 +273,7 @@ namespace NMib::NContainer
 	{
 		mp_Name = _Src.mp_Name;
 		mp_Location = _Src.mp_Location;
+		mp_ValueLocation = _Src.mp_ValueLocation;
 		mp_Parsed = _Src.mp_Parsed;
 		mp_bForceEscapedKey = _Src.mp_bForceEscapedKey;
 		mp_bForceEscapedValue = _Src.mp_bForceEscapedValue;
@@ -410,7 +412,7 @@ namespace NMib::NContainer
 			_Stream >> mp_ValueLocation.m_Column;
 			_Stream >> mp_ValueLocation.m_Character;
 
-			uint8 Flags;
+			uint32 Flags;
 			_Stream >> Flags;
 			mp_bForceEscapedKey = Flags & 1u;
 			mp_bForceEscapedValue = (Flags >> 1u) & 1u;
@@ -458,7 +460,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>
 	void TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::f_SetValueLocation(CValueLocation const &_Location)
 	{
-		mp_Location = _Location;
+		mp_ValueLocation = _Location;
 	}
 
 	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>
@@ -470,7 +472,7 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>
 	auto TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>::f_GetValueLocation() const -> CValueLocation const &
 	{
-		return mp_Location;
+		return mp_ValueLocation;
 	}
 
 	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>

@@ -70,6 +70,19 @@ namespace NMib::NContainer
 		return mp_Key.f_GetValueLocation();
 	}
 
+	// Where a diagnostic about the entry points: the value's location when the entry has one, and the key's otherwise.
+	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
+		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
+	template <bool tf_bSupportLocation>
+	auto TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_GetValueOrKeyLocation() const -> TCEnableIf<tf_bSupportLocation, NStr::TCParseLocation<t_CStr, true>> const &
+	{
+		auto &ValueLocation = mp_Key.f_GetValueLocation();
+		if (ValueLocation.m_File.f_IsEmpty() && !ValueLocation.m_Line)
+			return mp_Key.f_GetLocation();
+
+		return ValueLocation;
+	}
+
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
 	template <bool tf_bSupportWhiteSpace>

@@ -320,6 +320,8 @@ namespace NMib::NContainer
 		auto f_GetValueLocation() const -> TCEnableIf<tf_bSupportLocation, NStr::TCParseLocation<t_CStr, true>> const &;
 		template <bool tf_bSupportLocation = mc_bSupportLocation && (t_Flags & ERegistryFlag_FullLocation) != 0>
 		auto f_SetValueLocation(NStr::TCParseLocation<t_CStr, true> const &_Location) -> TCEnableIf<tf_bSupportLocation>;
+		template <bool tf_bSupportLocation = mc_bSupportLocation && (t_Flags & ERegistryFlag_FullLocation) != 0>
+		auto f_GetValueOrKeyLocation() const -> TCEnableIf<tf_bSupportLocation, NStr::TCParseLocation<t_CStr, true>> const &;
 
 		template <bool tf_bSupportWhiteSpace = mc_bSupportWhiteSpace>
 		auto f_GetForceEscapedKey() const -> TCEnableIf<tf_bSupportWhiteSpace, bool>;
