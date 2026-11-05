@@ -16,14 +16,7 @@ namespace NMib::NContainer::NPrivate
 	>
 	struct TCBitArrayPowerTwoInternalArray : public TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>
 	{
-		static constexpr bool mc_bIsFirstLevel = t_nBitsInternal == t_nBits;
-		static constexpr bool mc_bIsLastLevelCalc = false;
-		static constexpr bool mc_bIsLastLevel = TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>::mc_bIsLastLevelCalc;
-		static constexpr aint mc_nSuperBits = t_nBitsInternal / 2;
-
 		using CSuper = TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>;
-
-		t_TCBitArray<t_nBitsInternal> m_Bits;
 
 		constexpr TCBitArrayPowerTwoInternalArray(bool _bInitValues);
 
@@ -85,6 +78,13 @@ namespace NMib::NContainer::NPrivate
 		template <typename tf_CFunctor>
 		void f_EnumSetBitRanges(umint _Level, tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
 
+		static constexpr bool mc_bIsFirstLevel = t_nBitsInternal == t_nBits;
+		static constexpr bool mc_bIsLastLevelCalc = false;
+		static constexpr bool mc_bIsLastLevel = TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal / 2, t_nLevel + 1, t_TCBitArray, t_nMaxLevels>::mc_bIsLastLevelCalc;
+		static constexpr aint mc_nSuperBits = t_nBitsInternal / 2;
+
+		t_TCBitArray<t_nBitsInternal> m_Bits;
+
 	protected:
 		bool fp_IsFullyFree() const;
 	};
@@ -92,9 +92,6 @@ namespace NMib::NContainer::NPrivate
 	template <umint t_nBits, umint t_nBitsInternal, umint t_nLevel, template <umint t_nBits2> class t_TCBitArray, umint t_nMaxLevels>
 	struct TCBitArrayPowerTwoInternalArray<t_nBits, t_nBitsInternal, t_nLevel, t_TCBitArray, t_nMaxLevels, true>
 	{
-		static constexpr umint mc_nLevels = t_nLevel;
-		static constexpr bool mc_bIsLastLevelCalc = true;
-
 		TCBitArrayPowerTwoInternalArray(bool _bInitValues);
 		void f_Clear();
 		template <typename tf_CStream>
@@ -123,6 +120,9 @@ namespace NMib::NContainer::NPrivate
 		aint f_FindFreeBitReverse(umint _Level) const;
 		aint f_FindFreeBitReverseAndSet(umint _Level);
 		aint f_FindUpperBoundAtLevel(umint _Level, umint _StartBit) const;
+
+		static constexpr umint mc_nLevels = t_nLevel;
+		static constexpr bool mc_bIsLastLevelCalc = true;
 
 	protected:
 		bool fp_IsFullyFree() const;

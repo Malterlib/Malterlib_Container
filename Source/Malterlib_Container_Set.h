@@ -13,6 +13,11 @@ namespace NMib::NContainer
 	{
 		using CMap = TCMap<t_CKey, CMapSet, t_CCompare, t_CAllocator>;
 
+		using CIteratorDestructive = typename CMap::CKeyIteratorDestructive;
+		using CIteratorReverseDestructive = typename CMap::CKeyIteratorReverseDestructive;
+		using CIteratorBidirectionalDestructive = typename CMap::CKeyIteratorBidirectionalDestructive;
+		using CIteratorBidirectionalReverseDestructive = typename CMap::CKeyIteratorBidirectionalReverseDestructive;
+
 		TCSet();
 		TCSet(TCSet &&_Other);
 		TCSet(TCSet const &_Other);
@@ -104,11 +109,6 @@ namespace NMib::NContainer
 		TCSet f_Difference(this tf_CThis &&_This, TCSet const &_Right);
 		template <typename tf_CThis>
 		TCSet operator - (this tf_CThis &&_This, TCSet const &_Right);
-
-		using CIteratorDestructive = typename CMap::CKeyIteratorDestructive;
-		using CIteratorReverseDestructive = typename CMap::CKeyIteratorReverseDestructive;
-		using CIteratorBidirectionalDestructive = typename CMap::CKeyIteratorBidirectionalDestructive;
-		using CIteratorBidirectionalReverseDestructive = typename CMap::CKeyIteratorBidirectionalReverseDestructive;
 
 		CIteratorDestructive f_GetIteratorDestructive() &&;
 		CIteratorReverseDestructive f_GetIteratorReverseDestructive() &&;

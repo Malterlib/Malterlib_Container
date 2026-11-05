@@ -24,27 +24,25 @@ namespace NMib::NContainer
 	{
 		using CData = t_CData;
 
+		~TCLinkedListMember();
+
 	private:
-		t_CData mp_Object;
+		template <typename t_CData2, typename t_CAllocator2> friend struct TCLinkedList;
+		template <typename t_CNode2, typename t_CAllocator2> friend struct TCLinkedListNodeHandle;
 
 		TCLinkedListMember();
 		TCLinkedListMember(t_CData &_Data);
 		TCLinkedListMember(t_CData &&_Data);
 		TCLinkedListMember(t_CData const &_Data);
 
-		inline_always static umint fsp_GetOffset();
-
 		template <typename tf_CType, typename ...tfp_CParams, umint ...tfp_Indidies>
 		TCLinkedListMember(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams, NMeta::TCIndices<tfp_Indidies...> const &_Indices);
 		template <typename tf_CType, typename ...tfp_CParams>
 		TCLinkedListMember(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams);
 
-	public:
-		~TCLinkedListMember();
+		inline_always static umint fsp_GetOffset();
 
-	private:
-		template <typename t_CData2, typename t_CAllocator2> friend struct TCLinkedList;
-		template <typename t_CNode2, typename t_CAllocator2> friend struct TCLinkedListNodeHandle;
+		t_CData mp_Object;
 	};
 
 	template <typename t_CNode, typename t_CAllocator>
@@ -62,10 +60,10 @@ namespace NMib::NContainer
 
 		TCLinkedListNodeHandle() = default;
 		TCLinkedListNodeHandle(TCLinkedListNodeHandle &&_Other) noexcept;
-		~TCLinkedListNodeHandle();
-		TCLinkedListNodeHandle &operator = (TCLinkedListNodeHandle &&_Other) noexcept;
-
 		TCLinkedListNodeHandle(TCLinkedListNodeHandle const &_Other) = delete;
+		~TCLinkedListNodeHandle();
+
+		TCLinkedListNodeHandle &operator = (TCLinkedListNodeHandle &&_Other) noexcept;
 		TCLinkedListNodeHandle &operator = (TCLinkedListNodeHandle const &_Other) = delete;
 
 		[[nodiscard]] bool f_IsEmpty() const noexcept;
@@ -80,8 +78,9 @@ namespace NMib::NContainer
 	private:
 		template <typename t_CData2, typename t_CAllocator2> friend struct TCLinkedList;
 
-		t_CAllocator &fp_Allocator() const;
 		TCLinkedListNodeHandle(t_CNode *_pNode, t_CAllocator &_Allocator);
+
+		t_CAllocator &fp_Allocator() const;
 
 		t_CNode *mp_pNode = nullptr;
 		DMibNoUniqueAddress CAllocatorStore mp_Allocator;
@@ -111,7 +110,7 @@ namespace NMib::NContainer
 
 		using CInternalIterator = typename CList::CIterator;
 
-	public:
+	public: // NOLINT(malterlib-member-order): the public declarations use the private CMember, CAllocatorDisable and CInternalIterator
 		using CNodeHandle = TCLinkedListNodeHandle<CMember, t_CAllocator>;
 
 		struct CIterator
@@ -160,10 +159,6 @@ namespace NMib::NContainer
 		};
 
 		TCLinkedList();
-		~TCLinkedList();
-		void f_Clear();
-		TCLinkedList &operator = (TCLinkedList const &_Other);
-		TCLinkedList &operator = (TCLinkedList &&_Other);
 
 		template <typename ...tfp_CParams>
 		TCLinkedList(CAllocatorConstructTag const &_Allocator, tfp_CParams && ...p_Params);
@@ -171,6 +166,11 @@ namespace NMib::NContainer
 		TCLinkedList(TCLinkedList &&_Other);
 		TCLinkedList(std::initializer_list<t_CData> const &_Values);
 		TCLinkedList(TCLinkedList const &_Other);
+		~TCLinkedList();
+
+		void f_Clear();
+		TCLinkedList &operator = (TCLinkedList const &_Other);
+		TCLinkedList &operator = (TCLinkedList &&_Other);
 		TCLinkedList &operator += (TCLinkedList const &_Other);
 		TCLinkedList &f_Insert(TCLinkedList const &_Other);
 
@@ -305,16 +305,14 @@ namespace NMib::NContainer
 
 		struct CLocalData : public t_CAllocator
 		{
-			CList m_List;
-
 			CLocalData();
 			CLocalData(CLocalData &&_Other);
 			template <typename ...tfp_CParams>
 			CLocalData(CAllocatorConstructTag const &_Allocator, tfp_CParams && ...p_Params);
 			CLocalData &operator = (CLocalData &&_Other) = default;
-		};
 
-		CLocalData mp_Data;
+			CList m_List;
+		};
 
 		template <typename tf_CType, typename ...tfp_CParams>
 		CMember *fp_Create(TCConstruct<tf_CType, tfp_CParams...> &&_CreateParams)
@@ -330,6 +328,8 @@ namespace NMib::NContainer
 		inline_always static CMember *fsp_MemberFromData(t_CData const &_Data);
 
 		void fp_CopyFrom(TCLinkedList const &_Container);
+
+		CLocalData mp_Data;
 	};
 }
 

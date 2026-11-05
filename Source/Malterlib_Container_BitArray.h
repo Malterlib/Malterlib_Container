@@ -8,6 +8,22 @@ namespace NMib::NContainer
 	template <umint t_nBits>
 	struct TCBitArray
 	{
+	private:
+		template <bool t_bIsSmaller, typename t_CDummy = void>
+		struct TCSizeHelper
+		{
+			using CType = uaint;
+		};
+
+		template <typename t_CDummy>
+		struct TCSizeHelper<true, t_CDummy>
+		{
+			using CType = NTraits::TCUnsigned<NTraits::TCIntFromSizeLarger<(t_nBits + 7) / 8, true>>;
+		};
+
+	public: // NOLINT(malterlib-member-order): the public CEntryType uses TCSizeHelper
+		using CEntryType = typename TCSizeHelper<(t_nBits < sizeof(uaint) * 8)>::CType;
+
 		constexpr TCBitArray(bool _bInitValues = true);
 
 		void f_Clear();
@@ -61,22 +77,6 @@ namespace NMib::NContainer
 		aint f_FindUpperBound(umint _StartBit) const;
 
 	private:
-		template <bool t_bIsSmaller, typename t_CDummy = void>
-		struct TCSizeHelper
-		{
-			using CType = uaint;
-		};
-
-		template <typename t_CDummy>
-		struct TCSizeHelper<true, t_CDummy>
-		{
-			using CType = NTraits::TCUnsigned<NTraits::TCIntFromSizeLarger<(t_nBits + 7) / 8, true>>;
-		};
-
-	public:
-		using CEntryType = typename TCSizeHelper<(t_nBits < sizeof(uaint) * 8)>::CType;
-
-	private:
 		aint fp_FindFreeBit(umint &_iEntry) const;
 		aint fp_FindFreeBit(umint _StartBitApproximately, umint &_iEntry) const;
 
@@ -91,14 +91,11 @@ namespace NMib::NContainer
 
 		static constexpr aint mcp_NumBitsPerEntry = sizeof(CEntryType) * 8;
 		static constexpr aint mcp_NumEntries = (t_nBits + mcp_NumBitsPerEntry - 1) / mcp_NumBitsPerEntry;
-
-	private:
-		CEntryType mp_Entries[mcp_NumEntries];
-
-	private:
 		static constexpr CEntryType mcp_FullySet = TCLimitsInt<CEntryType>::mc_Max;
 		static constexpr CEntryType mcp_FullySetLast = ((CEntryType(1) << (t_nBits - (t_nBits / (mcp_NumBitsPerEntry)) * (mcp_NumBitsPerEntry))) - 1);
 		static constexpr CEntryType mcp_FullyUnset = 0;
+
+		CEntryType mp_Entries[mcp_NumEntries];
 	};
 }
 

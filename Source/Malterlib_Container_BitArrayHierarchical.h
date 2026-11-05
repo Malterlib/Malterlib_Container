@@ -14,7 +14,6 @@ namespace NMib::NContainer
 	{
 		using CEntryType = typename TCBitArray<t_nBits>::CEntryType;
 
-	public:
 		constexpr TCBitArrayHierarchical(bool _bInitValues = true);
 		void f_Clear();
 

@@ -19,7 +19,6 @@ namespace NMib::NContainer
 	{
 		using CSuper = TCMap<t_CKey, t_CValue, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, t_CValue>, t_GrowSize, t_CAllocator, t_CPoolType, t_CLockType>>;
 
-	public:
 		TCMapWithPool();
 		TCMapWithPool(TCMapWithPool &&_Other);
 		TCMapWithPool(TCMapWithPool const &_Other);

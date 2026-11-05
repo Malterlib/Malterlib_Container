@@ -388,15 +388,6 @@ namespace NMib::NContainer
 		static_assert(t_Options.m_DetectorQueueSize > 0, "PackedMap mc_DetectorQueueSize must be greater than 0");
 		static_assert(t_Options.m_MaxCapacityBits < sizeof(umint) * 8, "PackedMap mc_MaxCapacityBits must be smaller than the number of bits in umint");
 
-		static constexpr uint16 mcp_MaxCalibratorLevels = t_Options.m_MaxCapacityBits; // Supports up to 2^mc_MaxCapacityBits segments
-
-		struct CReciprocalTable
-		{
-			constexpr CReciprocalTable() noexcept;
-
-			umint m_Values[mcp_MaxCalibratorLevels] = {};
-		};
-
 		// Marked interval in element positions (global positions within the window)
 		// Per paper: either a 2-element interval (kbwd/kfwd hotspot) or whole segment range
 		struct CMarkedInterval
@@ -406,28 +397,15 @@ namespace NMib::NContainer
 			smint m_SignedScore; // +1 insert-heavy, -1 delete-heavy
 		};
 
+		// NOLINTNEXTLINE(malterlib-member-order): CReciprocalTable and CCalibratorLayout use it
+		static constexpr uint16 mcp_MaxCalibratorLevels = t_Options.m_MaxCapacityBits; // Supports up to 2^mc_MaxCapacityBits segments
+
+		// NOLINTNEXTLINE(malterlib-member-order): CSegmentMeta_Adaptive uses it
 		static constexpr umint mcp_DetectorQueueSize = t_Options.m_DetectorQueueSize; // Number of timestamps per segment (ring buffer Q)
-		static constexpr uint16 mcp_RunLengthCap = 1000;                              // Saturation cap for backward/forward run-length counters
-		static constexpr uint16 mcp_NetBalanceCap = 1000;                             // Saturation cap for sc counter
-		static constexpr uint16 mcp_RunLengthHotnessThreshold = 8;                    // θSC threshold for run-length counters
 
-		// Fixed-point density representation: density = ScaledValue / mcp_DensityScale
-		// All runtime density math uses integer arithmetic with this scale factor.
-		static constexpr umint mcp_DensityScaleBits = fg_Min(umint(20), umint(sizeof(void *) * 8) / 2 - 1);
-		static constexpr umint mcp_DensityScale = umint(1) << mcp_DensityScaleBits;
-		// Truncate (floor) scaled constants so they are always <= the exact float value.
-		// This ensures fsp_ScaledMulCeil for lower bounds and fsp_ScaledMulFloor for upper
-		// bounds produce element counts identical to the original floating-point code.
-		static constexpr umint mcp_LeafLowerBoundScaled = (umint)(mc_LeafLowerBound * mcp_DensityScale);
-		static constexpr umint mcp_RootLowerBoundScaled = (umint)(mc_RootLowerBound * mcp_DensityScale);
-		static constexpr umint mcp_LeafUpperBoundScaled = (umint)(mc_LeafUpperBound * mcp_DensityScale);
-		static constexpr umint mcp_RootUpperBoundScaled = (umint)(mc_RootUpperBound * mcp_DensityScale);
-		static constexpr umint mcp_ResizeThresholdScaled = (umint)(mc_ResizeThreshold * mcp_DensityScale);
-
-		static constexpr bool mcp_bUseReciprocalDivide = false; // sizeof(void *) >= 8; // Not safe for 32 bit
 		// Use fixed-point density math when max capacity exceeds pfp64 precision (53-bit mantissa).
 		// Max capacity ≈ 2^mc_MaxCapacityBits / mc_RootUpperBound; safe for float when < 2^52.
-		static constexpr bool mcp_bUseFixedPoint = [] -> bool
+		static constexpr bool mcp_bUseFixedPoint = [] -> bool // NOLINT(malterlib-member-order): CLevelDensityBounds uses it
 			{
 				if (t_Options.m_MaxCapacityBits >= 63)
 					return true;
@@ -436,57 +414,34 @@ namespace NMib::NContainer
 			()
 		;
 
-		// Density bound monotonicity: lower bounds increase toward root, upper bounds decrease.
-		// This guarantees the interpolation deltas have known signs, enabling branchless unsigned arithmetic.
-		static_assert(mc_LeafLowerBound >= 0.0, "Leaf lower bound must be >= 0.0");
-		static_assert(mc_RootLowerBound >= 0.0, "Root lower bound must be >= 0.0");
-		static_assert(mc_LeafUpperBound >= 0.0, "Leaf upper bound must be >= 0.0");
-		static_assert(mc_RootUpperBound > 0.0, "Root upper bound must be > 0.0");
-		static_assert(mc_RootUpperBound <= 1.0, "Root upper bound must be <= 1.0");
-		static_assert(mc_ResizeThreshold >= 0.0, "Resize threshold must be >= 0.0");
-		static_assert(mc_ResizeThreshold <= 1.0, "Resize threshold must be <= 1.0");
-		static_assert(mc_RootLowerBound >= mc_LeafLowerBound, "Lower bound must increase from leaf to root");
-		static_assert(mc_LeafUpperBound >= mc_RootUpperBound, "Upper bound must decrease from leaf to root");
-		static_assert(mc_LeafUpperBound >= mc_LeafLowerBound, "Upper bound must be >= lower bound at leaf");
-		static_assert(mc_RootUpperBound >= mc_RootLowerBound, "Upper bound must be >= lower bound at root");
-		static_assert(mc_LeafUpperBound <= 1.0, "Leaf upper bound must be <= 1.0");
-		static_assert(mcp_RootUpperBoundScaled > 0, "Root upper bound must remain positive after fixed-point scaling");
-
-		// Precomputed unsigned deltas for interpolation (signs are known at compile time)
-		static constexpr umint mcp_LowerBoundDeltaScaled = mcp_RootLowerBoundScaled - mcp_LeafLowerBoundScaled; // >= 0
-		static constexpr umint mcp_UpperBoundDeltaScaled = mcp_LeafUpperBoundScaled - mcp_RootUpperBoundScaled; // >= 0
-
-		static constexpr uint16 mcp_Fanout = 8;                                                                      // Branching factor (cache line friendly)
-		static constexpr uint16 mcp_FanoutBits = gc_HighestBitSet<mcp_Fanout>;                                       // log2(fanout)
+		// NOLINTNEXTLINE(malterlib-member-order): mcp_MaxLevels uses it
+		static constexpr uint16 mcp_Fanout = 8; // Branching factor (cache line friendly)
+		// NOLINTNEXTLINE(malterlib-member-order): mcp_MaxLevels uses it
+		static constexpr uint16 mcp_FanoutBits = gc_HighestBitSet<mcp_Fanout>; // log2(fanout)
+		// NOLINTNEXTLINE(malterlib-member-order): CIndexLayout uses it
 		static constexpr uint16 mcp_MaxLevels = (t_Options.m_MaxCapacityBits + mcp_FanoutBits - 1) / mcp_FanoutBits; // Maximum index depth (supports up to fanout^MaxLevels segments)
 
-		// Reciprocal table for divide-free threshold interpolation.
-		// Replaces division by Divisor in [1, mcp_MaxCalibratorLevels) with
-		// multiply+shift: floor(|x| / d) == (|x| * R[d]) >> S.
-		// The shift is sized so that the intermediate |x| * R[d] fits in signed umint.
-		// Max dividend: mcp_DensityScale * (mcp_MaxCalibratorLevels - 1).
-		// Exact when max dividend <= 2^mcp_ReciprocalShift.
-		static constexpr umint mcp_ReciprocalShift = (umint)sizeof(umint) * 8 - 2 - mcp_DensityScaleBits - gc_HighestBitSet<mcp_MaxCalibratorLevels>;
-
-		static constexpr CReciprocalTable mcp_ReciprocalTable = {};
-
+		// NOLINTNEXTLINE(malterlib-member-order): CIndexEntry and CIndexValidStorage use it
 		static constexpr bool mcp_bIndexStoresKeys = NTraits::cIsNothrowCopyConstructible<t_CKey> && NTraits::cIsNothrowCopyAssignable<t_CKey>;
 
-		// Exception safety: noexcept traits for specialization
-		static constexpr bool mcp_bNothrowElementMove = NTraits::cIsNothrowMoveConstructible<t_CKey> && NTraits::cIsNothrowMoveConstructible<t_CValue>;
-		static constexpr bool mcp_bNothrowElementCopy = NTraits::cIsNothrowCopyConstructible<t_CKey> && NTraits::cIsNothrowCopyConstructible<t_CValue>;
-
 		// Segment metadata - per-segment count and detector state
-		static constexpr bool mcp_bDetectorStoresKeys
+		static constexpr bool mcp_bDetectorStoresKeys // NOLINT(malterlib-member-order): CDetectorKeysStorage uses it
 			= t_Options.m_bAdaptive && t_Options.m_bDetectorStoresKeys && NTraits::cIsNothrowCopyConstructible<t_CKey> && NTraits::cIsNothrowCopyAssignable<t_CKey>
 		;
+
+		// Static allocator sizing for rebalance temporaries (covers up to ~64 segments without heap)
+		static constexpr umint mcp_nMarkedIntervalStaticSize = 64 * sizeof(CMarkedInterval); // NOLINT(malterlib-member-order): CMarkedIntervalAllocator uses it
+
+		struct CReciprocalTable
+		{
+			constexpr CReciprocalTable() noexcept;
+
+			umint m_Values[mcp_MaxCalibratorLevels] = {};
+		};
 
 		// Scratch buffers may reuse the map allocator only when it is stateless and default-constructible.
 		// Stateful allocators can require constructor arguments or impose allocation constraints.
 		using CScratchAllocator = TCConditional<NTraits::cIsEmpty<t_CAllocator> && NTraits::cIsConstructibleWith<t_CAllocator>, t_CAllocator, NMemory::CAllocator_Heap>;
-
-		// Static allocator sizing for rebalance temporaries (covers up to ~64 segments without heap)
-		static constexpr umint mcp_nMarkedIntervalStaticSize = 64 * sizeof(CMarkedInterval);
 
 		using CMarkedIntervalAllocator = NMemory::TCAllocator_Static<mcp_nMarkedIntervalStaticSize, 16, CScratchAllocator>;
 		using CMarkedIntervalVector = TCVector<CMarkedInterval, CMarkedIntervalAllocator>;
@@ -788,6 +743,59 @@ namespace NMib::NContainer
 
 		// Density-bounded recursive distribution of elements across segments
 		constexpr void fp_DistributeElements(umint *_pTargets, umint _iStart, umint _iEnd, umint _nElements, umint _iLocalLevel, umint _iWindowLevel, umint _nGlobalLevels) const noexcept;
+
+		static constexpr uint16 mcp_RunLengthCap = 1000;           // Saturation cap for backward/forward run-length counters
+		static constexpr uint16 mcp_NetBalanceCap = 1000;          // Saturation cap for sc counter
+		static constexpr uint16 mcp_RunLengthHotnessThreshold = 8; // θSC threshold for run-length counters
+
+		// Fixed-point density representation: density = ScaledValue / mcp_DensityScale
+		// All runtime density math uses integer arithmetic with this scale factor.
+		static constexpr umint mcp_DensityScaleBits = fg_Min(umint(20), umint(sizeof(void *) * 8) / 2 - 1);
+		static constexpr umint mcp_DensityScale = umint(1) << mcp_DensityScaleBits;
+		// Truncate (floor) scaled constants so they are always <= the exact float value.
+		// This ensures fsp_ScaledMulCeil for lower bounds and fsp_ScaledMulFloor for upper
+		// bounds produce element counts identical to the original floating-point code.
+		static constexpr umint mcp_LeafLowerBoundScaled = (umint)(mc_LeafLowerBound * mcp_DensityScale);
+		static constexpr umint mcp_RootLowerBoundScaled = (umint)(mc_RootLowerBound * mcp_DensityScale);
+		static constexpr umint mcp_LeafUpperBoundScaled = (umint)(mc_LeafUpperBound * mcp_DensityScale);
+		static constexpr umint mcp_RootUpperBoundScaled = (umint)(mc_RootUpperBound * mcp_DensityScale);
+		static constexpr umint mcp_ResizeThresholdScaled = (umint)(mc_ResizeThreshold * mcp_DensityScale);
+
+		static constexpr bool mcp_bUseReciprocalDivide = false; // sizeof(void *) >= 8; // Not safe for 32 bit
+
+		// Density bound monotonicity: lower bounds increase toward root, upper bounds decrease.
+		// This guarantees the interpolation deltas have known signs, enabling branchless unsigned arithmetic.
+		static_assert(mc_LeafLowerBound >= 0.0, "Leaf lower bound must be >= 0.0");
+		static_assert(mc_RootLowerBound >= 0.0, "Root lower bound must be >= 0.0");
+		static_assert(mc_LeafUpperBound >= 0.0, "Leaf upper bound must be >= 0.0");
+		static_assert(mc_RootUpperBound > 0.0, "Root upper bound must be > 0.0");
+		static_assert(mc_RootUpperBound <= 1.0, "Root upper bound must be <= 1.0");
+		static_assert(mc_ResizeThreshold >= 0.0, "Resize threshold must be >= 0.0");
+		static_assert(mc_ResizeThreshold <= 1.0, "Resize threshold must be <= 1.0");
+		static_assert(mc_RootLowerBound >= mc_LeafLowerBound, "Lower bound must increase from leaf to root");
+		static_assert(mc_LeafUpperBound >= mc_RootUpperBound, "Upper bound must decrease from leaf to root");
+		static_assert(mc_LeafUpperBound >= mc_LeafLowerBound, "Upper bound must be >= lower bound at leaf");
+		static_assert(mc_RootUpperBound >= mc_RootLowerBound, "Upper bound must be >= lower bound at root");
+		static_assert(mc_LeafUpperBound <= 1.0, "Leaf upper bound must be <= 1.0");
+		static_assert(mcp_RootUpperBoundScaled > 0, "Root upper bound must remain positive after fixed-point scaling");
+
+		// Precomputed unsigned deltas for interpolation (signs are known at compile time)
+		static constexpr umint mcp_LowerBoundDeltaScaled = mcp_RootLowerBoundScaled - mcp_LeafLowerBoundScaled; // >= 0
+		static constexpr umint mcp_UpperBoundDeltaScaled = mcp_LeafUpperBoundScaled - mcp_RootUpperBoundScaled; // >= 0
+
+		// Reciprocal table for divide-free threshold interpolation.
+		// Replaces division by Divisor in [1, mcp_MaxCalibratorLevels) with
+		// multiply+shift: floor(|x| / d) == (|x| * R[d]) >> S.
+		// The shift is sized so that the intermediate |x| * R[d] fits in signed umint.
+		// Max dividend: mcp_DensityScale * (mcp_MaxCalibratorLevels - 1).
+		// Exact when max dividend <= 2^mcp_ReciprocalShift.
+		static constexpr umint mcp_ReciprocalShift = (umint)sizeof(umint) * 8 - 2 - mcp_DensityScaleBits - gc_HighestBitSet<mcp_MaxCalibratorLevels>;
+
+		static constexpr CReciprocalTable mcp_ReciprocalTable = {};
+
+		// Exception safety: noexcept traits for specialization
+		static constexpr bool mcp_bNothrowElementMove = NTraits::cIsNothrowMoveConstructible<t_CKey> && NTraits::cIsNothrowMoveConstructible<t_CValue>;
+		static constexpr bool mcp_bNothrowElementCopy = NTraits::cIsNothrowCopyConstructible<t_CKey> && NTraits::cIsNothrowCopyConstructible<t_CValue>;
 
 		static constexpr umint mcp_SegmentSize = [] -> umint
 			{

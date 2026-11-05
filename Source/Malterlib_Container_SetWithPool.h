@@ -18,7 +18,6 @@ namespace NMib::NContainer
 	{
 		using CSuper = TCSet<t_CKey, t_CCompare, NMemory::TCPoolAllocator<TCMapNode<t_CKey, CMapSet>, t_GrowSize, t_CAllocator, t_CPoolType, t_CLockType>>;
 
-	public:
 		TCSetWithPool();
 		TCSetWithPool(TCSetWithPool &&_Other);
 		TCSetWithPool(TCSetWithPool const &_Other);

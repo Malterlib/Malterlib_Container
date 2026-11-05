@@ -65,14 +65,14 @@ namespace NMib::NContainer
 		constexpr inline_small t_CValue &&f_Value() && noexcept;
 		constexpr inline_small t_CValue const &f_Value() const & noexcept;
 
-		static constexpr bool mc_bHasValue = true;
-
 		template <umint tf_iValue>
 		constexpr decltype(auto) get() const & noexcept;
 		template <umint tf_iValue>
 		constexpr decltype(auto) get() & noexcept;
 		template <umint tf_iValue>
 		constexpr decltype(auto) get() && noexcept;
+
+		static constexpr bool mc_bHasValue = true;
 
 	private:
 		template <typename t_CNode2, typename t_CKey2>
@@ -170,8 +170,6 @@ namespace NMib::NContainer
 		t_CAllocator &f_GetAllocator() const;
 
 	private:
-		t_CAllocator &fp_Allocator() const;
-
 		template <typename t_CKey2, typename t_CValue2, typename t_CCompare2, typename t_CAllocator2>
 		friend struct TCMap;
 
@@ -179,6 +177,8 @@ namespace NMib::NContainer
 		friend struct NPrivate::TCMapIterator;
 
 		TCMapNodeHandle(t_CNode *_pNode, t_CAllocator &_Allocator);
+
+		t_CAllocator &fp_Allocator() const;
 
 		t_CNode *mp_pNode = nullptr;
 		DMibNoUniqueAddress CAllocatorStore mp_Allocator;

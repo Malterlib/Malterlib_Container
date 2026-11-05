@@ -16,7 +16,6 @@ namespace NMib::NContainer::NPrivate
 		using CNodePublic = typename t_CMap::CNode;
 		using CNodeDestructive = typename t_CMap::CNodeDestructive;
 		using CKey = typename t_CMap::CKey;
-		using CValue = typename CNodePublic::CValue;
 		using CNodeHandle = typename t_CMap::CNodeHandle;
 
 		using CUserData = TCConditional
@@ -31,12 +30,10 @@ namespace NMib::NContainer::NPrivate
 				>
 			>
 		;
-		using CAVLTree = typename t_CMap::CAVLTree;
 		using CMapQualified = NTraits::TCSetConst<t_CMap, !!(t_Flags & EMapIteratorFlags_Const)>;
 		using CUserDataQualified = TCConditional<!!(t_Flags & EMapIteratorFlags_Const) && !(t_Flags & EMapIteratorFlags_Destructive), NTraits::TCAddConst<CUserData>, CUserData>;
-		using CNodeCompare = typename t_CMap::CNodeCompare;
 
-	public:
+	public: // NOLINT(malterlib-member-order): the public declarations use the private CKey, CNodeHandle, CMapQualified and CUserDataQualified
 		TCMapIterator()
 			requires (!(t_Flags & EMapIteratorFlags_Destructive))
 		;
@@ -57,9 +54,6 @@ namespace NMib::NContainer::NPrivate
 		TCMapIterator(TCMapIterator const &_iOther)
 			requires (!(t_Flags & EMapIteratorFlags_Destructive))
 		= default;
-		TCMapIterator &operator = (TCMapIterator const &_iOther)
-			requires (!(t_Flags & EMapIteratorFlags_Destructive))
-		= default;
 
 		TCMapIterator(TCMapIterator &&_iOther)
 			requires (!!(t_Flags & EMapIteratorFlags_Destructive))
@@ -68,6 +62,12 @@ namespace NMib::NContainer::NPrivate
 		TCMapIterator(TCMapIterator const &_iOther)
 			requires (!!(t_Flags & EMapIteratorFlags_Destructive))
 		= delete;
+
+		~TCMapIterator();
+
+		TCMapIterator &operator = (TCMapIterator const &_iOther)
+			requires (!(t_Flags & EMapIteratorFlags_Destructive))
+		= default;
 		TCMapIterator &operator = (TCMapIterator const &_iOther)
 			requires (!!(t_Flags & EMapIteratorFlags_Destructive))
 		= delete;
@@ -75,8 +75,6 @@ namespace NMib::NContainer::NPrivate
 		TCMapIterator &operator = (TCMapIterator &&_iOther)
 			requires (!!(t_Flags & EMapIteratorFlags_Destructive))
 		;
-
-		~TCMapIterator();
 
 		TCMapIterator f_GetIterator() const
 			requires (!(t_Flags & EMapIteratorFlags_Destructive))
@@ -116,6 +114,10 @@ namespace NMib::NContainer::NPrivate
 		;
 
 	private:
+		using CValue = typename CNodePublic::CValue;
+		using CAVLTree = typename t_CMap::CAVLTree;
+		using CNodeCompare = typename t_CMap::CNodeCompare;
+
 		typename CAVLTree::CIterator mp_Iter;
 		CMapQualified *mp_pMap;
 	};

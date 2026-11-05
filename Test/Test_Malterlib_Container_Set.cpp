@@ -13,581 +13,583 @@ namespace
 
 	struct CSet_Tests : public NMib::NTest::CTest
 	{
-		void f_DoTests()
+		void f_DoTests();
+	};
+
+	void CSet_Tests::f_DoTests()
+	{
+		DMibTestSuite("SetOperations")
 		{
-			DMibTestSuite("SetOperations")
+			DMibTestCategory("Union")
 			{
-				DMibTestCategory("Union")
+				DMibTestCategory("BothEmpty")
 				{
-					DMibTestCategory("BothEmpty")
-					{
-						TCSet<int> Left;
-						TCSet<int> Right;
-						DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					DMibTestCategory("LeftEmpty")
-					{
-						TCSet<int> Left;
-						TCSet<int> Right{1, 2, 3};
-						DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Right));
-					};
-					DMibTestCategory("RightEmpty")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right;
-						DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Left));
-					};
-					DMibTestCategory("Disjoint")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{4, 5, 6};
-						TCSet<int> Expected{1, 2, 3, 4, 5, 6};
-						DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("Overlapping")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{2, 3, 4};
-						TCSet<int> Expected{1, 2, 3, 4};
-						DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("Identical")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{1, 2, 3};
-						TCSet<int> Expected{1, 2, 3};
-						DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("LeftSubset")
-					{
-						TCSet<int> Left{2, 3};
-						TCSet<int> Right{1, 2, 3, 4};
-						DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Right));
-					};
-					DMibTestCategory("RightSubset")
-					{
-						TCSet<int> Left{1, 2, 3, 4};
-						TCSet<int> Right{2, 3};
-						DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Left));
-					};
+					TCSet<int> Left;
+					TCSet<int> Right;
+					DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(TCSet<int>()));
 				};
-
-				DMibTestCategory("Intersection")
+				DMibTestCategory("LeftEmpty")
 				{
-					DMibTestCategory("BothEmpty")
-					{
-						TCSet<int> Left;
-						TCSet<int> Right;
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					DMibTestCategory("LeftEmpty")
-					{
-						TCSet<int> Left;
-						TCSet<int> Right{1, 2, 3};
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					DMibTestCategory("RightEmpty")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right;
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					DMibTestCategory("Disjoint")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{4, 5, 6};
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					DMibTestCategory("Overlapping")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{2, 3, 4};
-						TCSet<int> Expected{2, 3};
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("Identical")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{1, 2, 3};
-						TCSet<int> Expected{1, 2, 3};
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("LeftSubset")
-					{
-						TCSet<int> Left{2, 3};
-						TCSet<int> Right{1, 2, 3, 4};
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Left));
-					};
-					DMibTestCategory("RightSubset")
-					{
-						TCSet<int> Left{1, 2, 3, 4};
-						TCSet<int> Right{2, 3};
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Right));
-					};
-					// Edge case: left exhausted before right (original bug trigger)
-					DMibTestCategory("LeftExhaustedFirst")
-					{
-						TCSet<int> Left{1, 2};
-						TCSet<int> Right{3, 4, 5};
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					// Edge case: right exhausted before left (original bug trigger)
-					DMibTestCategory("RightExhaustedFirst")
-					{
-						TCSet<int> Left{3, 4, 5};
-						TCSet<int> Right{1, 2};
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					// Edge case that triggered the original crash
-					DMibTestCategory("RightExhaustedAfterMatch")
-					{
-						TCSet<int> Left{1, 3, 5};
-						TCSet<int> Right{2, 3};
-						TCSet<int> Expected{3};
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Expected));
-					};
+					TCSet<int> Left;
+					TCSet<int> Right{1, 2, 3};
+					DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Right));
 				};
-
-				DMibTestCategory("SymmetricDifference")
+				DMibTestCategory("RightEmpty")
 				{
-					DMibTestCategory("BothEmpty")
-					{
-						TCSet<int> Left;
-						TCSet<int> Right;
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					DMibTestCategory("LeftEmpty")
-					{
-						TCSet<int> Left;
-						TCSet<int> Right{1, 2, 3};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Right));
-					};
-					DMibTestCategory("RightEmpty")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right;
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Left));
-					};
-					DMibTestCategory("Disjoint")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{4, 5, 6};
-						TCSet<int> Expected{1, 2, 3, 4, 5, 6};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("Overlapping")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{2, 3, 4};
-						TCSet<int> Expected{1, 4};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("Identical")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{1, 2, 3};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					DMibTestCategory("LeftSubset")
-					{
-						TCSet<int> Left{2, 3};
-						TCSet<int> Right{1, 2, 3, 4};
-						TCSet<int> Expected{1, 4};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("RightSubset")
-					{
-						TCSet<int> Left{1, 2, 3, 4};
-						TCSet<int> Right{2, 3};
-						TCSet<int> Expected{1, 4};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					// Edge case: left exhausted before right
-					DMibTestCategory("LeftExhaustedFirst")
-					{
-						TCSet<int> Left{1, 2};
-						TCSet<int> Right{3, 4, 5};
-						TCSet<int> Expected{1, 2, 3, 4, 5};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					// Edge case: right exhausted before left
-					DMibTestCategory("RightExhaustedFirst")
-					{
-						TCSet<int> Left{3, 4, 5};
-						TCSet<int> Right{1, 2};
-						TCSet<int> Expected{1, 2, 3, 4, 5};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					// Edge case that would trigger crash with original bug
-					DMibTestCategory("RightExhaustedAfterMatch")
-					{
-						TCSet<int> Left{1, 3, 5};
-						TCSet<int> Right{2, 3};
-						TCSet<int> Expected{1, 2, 5};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
-					};
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right;
+					DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Left));
 				};
-
-				DMibTestCategory("Difference")
+				DMibTestCategory("Disjoint")
 				{
-					DMibTestCategory("BothEmpty")
-					{
-						TCSet<int> Left;
-						TCSet<int> Right;
-						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					DMibTestCategory("LeftEmpty")
-					{
-						TCSet<int> Left;
-						TCSet<int> Right{1, 2, 3};
-						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					DMibTestCategory("RightEmpty")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right;
-						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Left));
-					};
-					DMibTestCategory("Disjoint")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{4, 5, 6};
-						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Left));
-					};
-					DMibTestCategory("Overlapping")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{2, 3, 4};
-						TCSet<int> Expected{1};
-						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("Identical")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{1, 2, 3};
-						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					DMibTestCategory("LeftSubset")
-					{
-						TCSet<int> Left{2, 3};
-						TCSet<int> Right{1, 2, 3, 4};
-						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(TCSet<int>()));
-					};
-					DMibTestCategory("RightSubset")
-					{
-						TCSet<int> Left{1, 2, 3, 4};
-						TCSet<int> Right{2, 3};
-						TCSet<int> Expected{1, 4};
-						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Expected));
-					};
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{4, 5, 6};
+					TCSet<int> Expected{1, 2, 3, 4, 5, 6};
+					DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Expected));
 				};
-
-				DMibTestCategory("CompoundAssignment")
+				DMibTestCategory("Overlapping")
 				{
-					DMibTestCategory("UnionAssign")
-					{
-						TCSet<int> Left{1, 2, 3};
-						TCSet<int> Right{3, 4, 5};
-						Left += Right;
-						TCSet<int> Expected{1, 2, 3, 4, 5};
-						DMibTest(DMibExpr(Left) == DMibExpr(Expected));
-					};
-					DMibTestCategory("DifferenceAssign")
-					{
-						TCSet<int> Left{1, 2, 3, 4};
-						TCSet<int> Right{2, 3};
-						Left -= Right;
-						TCSet<int> Expected{1, 4};
-						DMibTest(DMibExpr(Left) == DMibExpr(Expected));
-					};
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{2, 3, 4};
+					TCSet<int> Expected{1, 2, 3, 4};
+					DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Expected));
 				};
-
-				DMibTestCategory("WithStrings")
+				DMibTestCategory("Identical")
 				{
-					DMibTestCategory("Intersection")
-					{
-						TCSet<CStr> Left{"a", "b", "c"};
-						TCSet<CStr> Right{"b", "c", "d"};
-						TCSet<CStr> Expected{"b", "c"};
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("IntersectionRightExhausted")
-					{
-						// This is the pattern that triggered the original crash
-						TCSet<CStr> Left{"a-tag", "b-tag", "c-tag"};
-						TCSet<CStr> Right{"b-tag", "c-tag"};
-						TCSet<CStr> Expected{"b-tag", "c-tag"};
-						DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("SymmetricDifference")
-					{
-						TCSet<CStr> Left{"a", "b", "c"};
-						TCSet<CStr> Right{"b", "c", "d"};
-						TCSet<CStr> Expected{"a", "d"};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
-					};
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{1, 2, 3};
+					TCSet<int> Expected{1, 2, 3};
+					DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Expected));
 				};
-
-				DMibTestCategory("MoveSemantics")
+				DMibTestCategory("LeftSubset")
 				{
-					DMibTestCategory("UnionMoveLeft")
-					{
-						TCSet<CStr> Left{"a", "b", "c"};
-						TCSet<CStr> Right{"c", "d", "e"};
-						TCSet<CStr> Expected{"a", "b", "c", "d", "e"};
-						auto Result = fg_Move(Left) | Right;
-						DMibExpect(Result, ==, Expected);
-						DMibExpectTrue(Left.f_IsEmpty());
-					};
-					DMibTestCategory("UnionMoveRight")
-					{
-						TCSet<CStr> Left{"a", "b", "c"};
-						TCSet<CStr> Right{"c", "d", "e"};
-						TCSet<CStr> Expected{"a", "b", "c", "d", "e"};
-						auto Result = Left | fg_Move(Right);
-						DMibExpect(Result, ==, Expected);
-						DMibExpectTrue(Right.f_IsEmpty());
-					};
-					DMibTestCategory("UnionMoveBoth")
-					{
-						TCSet<CStr> Left{"a", "b", "c"};
-						TCSet<CStr> Right{"c", "d", "e"};
-						TCSet<CStr> Expected{"a", "b", "c", "d", "e"};
-						auto Result = fg_Move(Left) | fg_Move(Right);
-						DMibExpect(Result, ==, Expected);
-						DMibExpectTrue(Left.f_IsEmpty());
-						DMibExpectTrue(Right.f_IsEmpty());
-					};
-					DMibTestCategory("IntersectionMoveLeft")
-					{
-						TCSet<CStr> Left{"a", "b", "c"};
-						TCSet<CStr> Right{"b", "c", "d"};
-						TCSet<CStr> Expected{"b", "c"};
-						auto Result = fg_Move(Left) & Right;
-						DMibExpect(Result, ==, Expected);
-						DMibExpectTrue(Left.f_IsEmpty());
-					};
-					DMibTestCategory("IntersectionMoveRight")
-					{
-						TCSet<CStr> Left{"a", "b", "c"};
-						TCSet<CStr> Right{"b", "c", "d"};
-						TCSet<CStr> Expected{"b", "c"};
-						auto Result = Left & fg_Move(Right);
-						DMibExpect(Result, ==, Expected);
-						DMibExpectTrue(Right.f_IsEmpty());
-					};
-					DMibTestCategory("IntersectionMoveBoth")
-					{
-						TCSet<CStr> Left{"a", "b", "c"};
-						TCSet<CStr> Right{"b", "c", "d"};
-						TCSet<CStr> Expected{"b", "c"};
-						auto Result = fg_Move(Left) & fg_Move(Right);
-						DMibExpect(Result, ==, Expected);
-						DMibExpectFalse(Left.f_IsEmpty()); // We always use the right side when intersecting
-						DMibExpectTrue(Right.f_IsEmpty());
-					};
-					DMibTestCategory("XorMoveLeft")
-					{
-						TCSet<CStr> Left{"a", "b", "c"};
-						TCSet<CStr> Right{"b", "c", "d"};
-						TCSet<CStr> Expected{"a", "d"};
-						auto Result = fg_Move(Left) ^ Right;
-						DMibExpect(Result, ==, Expected);
-						DMibExpectTrue(Left.f_IsEmpty());
-					};
-					DMibTestCategory("XorMoveRight")
-					{
-						TCSet<CStr> Left{"a", "b", "c"};
-						TCSet<CStr> Right{"b", "c", "d"};
-						TCSet<CStr> Expected{"a", "d"};
-						auto Result = Left ^ fg_Move(Right);
-						DMibExpect(Result, ==, Expected);
-						DMibExpectTrue(Right.f_IsEmpty());
-					};
-					DMibTestCategory("XorMoveBoth")
-					{
-						TCSet<CStr> Left{"a", "b", "c"};
-						TCSet<CStr> Right{"b", "c", "d"};
-						TCSet<CStr> Expected{"a", "d"};
-						auto Result = fg_Move(Left) ^ fg_Move(Right);
-						DMibExpect(Result, ==, Expected);
-						DMibExpectTrue(Left.f_IsEmpty());
-						DMibExpectTrue(Right.f_IsEmpty());
-					};
-					DMibTestCategory("DifferenceMoveLeft")
-					{
-						TCSet<CStr> Left{"a", "b", "c", "d"};
-						TCSet<CStr> Right{"b", "c"};
-						TCSet<CStr> Expected{"a", "d"};
-						auto Result = fg_Move(Left) - Right;
-						DMibExpect(Result, ==, Expected);
-						DMibExpectTrue(Left.f_IsEmpty());
-					};
-					DMibTestCategory("DifferenceLvalueLeft")
-					{
-						// Difference with lvalue left should not modify left
-						TCSet<CStr> Left{"a", "b", "c", "d"};
-						TCSet<CStr> Right{"b", "c"};
-						TCSet<CStr> Expected{"a", "d"};
-						auto Result = Left - Right;
-						DMibExpect(Result, ==, Expected);
-						DMibExpect(Left.f_GetLen(), ==, 4); // Left unchanged
-					};
-					DMibTestCategory("DestructiveIterator")
-					{
-						TCSet<CStr> Source{"a", "b", "c"};
-						TCVector<CStr> Collected;
-						for (auto iIter = fg_Move(Source).f_GetIteratorDestructive(); iIter; ++iIter)
-							Collected.f_InsertLast(fg_Move(*iIter));
-						DMibExpectTrue(Source.f_IsEmpty());
-						DMibExpect(Collected.f_GetLen(), ==, 3);
-					};
+					TCSet<int> Left{2, 3};
+					TCSet<int> Right{1, 2, 3, 4};
+					DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Right));
 				};
-				DMibTestCategory("NormalCompare")
+				DMibTestCategory("RightSubset")
 				{
-					DMibTestCategory("Xor")
-					{
-						TCSet<int> Left = {1, 2, 3};
-						TCSet<int> Right = {2, 4};
-
-						TCSet<int> Expected = {1, 3, 4};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("XorMove")
-					{
-						TCSet<int> Left = {1, 2, 3};
-						TCSet<int> Right = {2, 4};
-
-						TCSet<int> Expected = {1, 3, 4};
-						DMibTest((DMibExpr(fg_Move(Left)) ^ DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
-					};
-					DMibTestCategory("XorMoveLeft")
-					{
-						TCSet<int> Left = {1, 2, 3};
-						TCSet<int> Right = {2, 4};
-
-						TCSet<int> Expected = {1, 3, 4};
-						DMibTest((DMibExpr(fg_Move(Left)) ^ DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("XorMoveRight")
-					{
-						TCSet<int> Left = {1, 2, 3};
-						TCSet<int> Right = {2, 4};
-
-						TCSet<int> Expected = {1, 3, 4};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
-					};
-					DMibTestCategory("Difference")
-					{
-						TCSet<int> Left = {1, 2, 3};
-						TCSet<int> Right = {2, 4};
-
-						TCSet<int> Expected = {1, 3};
-						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("DifferenceMove")
-					{
-						TCSet<int> Left = {1, 2, 3};
-						TCSet<int> Right = {2, 4};
-
-						TCSet<int> Expected = {1, 3};
-						DMibTest((DMibExpr(fg_Move(Left)) - DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
-					};
-					DMibTestCategory("DifferenceMoveLeft")
-					{
-						TCSet<int> Left = {1, 2, 3};
-						TCSet<int> Right = {2, 4};
-
-						TCSet<int> Expected = {1, 3};
-						DMibTest((DMibExpr(fg_Move(Left)) - DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("DifferenceMoveRight")
-					{
-						TCSet<int> Left = {1, 2, 3};
-						TCSet<int> Right = {2, 4};
-
-						TCSet<int> Expected = {1, 3};
-						DMibTest((DMibExpr(Left) - DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
-					};
-				};
-				DMibTestCategory("CustomCompare")
-				{
-					struct CCompareReverse
-					{
-						auto operator () (int const &_Left, int const &_Right) const
-						{
-							return _Right <=> _Left;
-						}
-					};
-
-					DMibTestCategory("Xor")
-					{
-						TCSet<int, CCompareReverse> Left = {1, 2, 3};
-						TCSet<int, CCompareReverse> Right = {2, 4};
-
-						TCSet<int, CCompareReverse> Expected = {1, 3, 4};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("XorMove")
-					{
-						TCSet<int, CCompareReverse> Left = {1, 2, 3};
-						TCSet<int, CCompareReverse> Right = {2, 4};
-
-						TCSet<int, CCompareReverse> Expected = {1, 3, 4};
-						DMibTest((DMibExpr(fg_Move(Left)) ^ DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
-					};
-					DMibTestCategory("XorMoveLeft")
-					{
-						TCSet<int, CCompareReverse> Left = {1, 2, 3};
-						TCSet<int, CCompareReverse> Right = {2, 4};
-
-						TCSet<int, CCompareReverse> Expected = {1, 3, 4};
-						DMibTest((DMibExpr(fg_Move(Left)) ^ DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("XorMoveRight")
-					{
-						TCSet<int, CCompareReverse> Left = {1, 2, 3};
-						TCSet<int, CCompareReverse> Right = {2, 4};
-
-						TCSet<int, CCompareReverse> Expected = {1, 3, 4};
-						DMibTest((DMibExpr(Left) ^ DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
-					};
-					DMibTestCategory("Difference")
-					{
-						TCSet<int, CCompareReverse> Left = {1, 2, 3};
-						TCSet<int, CCompareReverse> Right = {2, 4};
-
-						TCSet<int, CCompareReverse> Expected = {1, 3};
-						DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("DifferenceMove")
-					{
-						TCSet<int, CCompareReverse> Left = {1, 2, 3};
-						TCSet<int, CCompareReverse> Right = {2, 4};
-
-						TCSet<int, CCompareReverse> Expected = {1, 3};
-						DMibTest((DMibExpr(fg_Move(Left)) - DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
-					};
-					DMibTestCategory("DifferenceMoveLeft")
-					{
-						TCSet<int, CCompareReverse> Left = {1, 2, 3};
-						TCSet<int, CCompareReverse> Right = {2, 4};
-
-						TCSet<int, CCompareReverse> Expected = {1, 3};
-						DMibTest((DMibExpr(fg_Move(Left)) - DMibExpr(Right)) == DMibExpr(Expected));
-					};
-					DMibTestCategory("DifferenceMoveRight")
-					{
-						TCSet<int, CCompareReverse> Left = {1, 2, 3};
-						TCSet<int, CCompareReverse> Right = {2, 4};
-
-						TCSet<int, CCompareReverse> Expected = {1, 3};
-						DMibTest((DMibExpr(Left) - DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
-					};
+					TCSet<int> Left{1, 2, 3, 4};
+					TCSet<int> Right{2, 3};
+					DMibTest((DMibExpr(Left) | DMibExpr(Right)) == DMibExpr(Left));
 				};
 			};
-		}
-	};
+
+			DMibTestCategory("Intersection")
+			{
+				DMibTestCategory("BothEmpty")
+				{
+					TCSet<int> Left;
+					TCSet<int> Right;
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(TCSet<int>()));
+				};
+				DMibTestCategory("LeftEmpty")
+				{
+					TCSet<int> Left;
+					TCSet<int> Right{1, 2, 3};
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(TCSet<int>()));
+				};
+				DMibTestCategory("RightEmpty")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right;
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(TCSet<int>()));
+				};
+				DMibTestCategory("Disjoint")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{4, 5, 6};
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(TCSet<int>()));
+				};
+				DMibTestCategory("Overlapping")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{2, 3, 4};
+					TCSet<int> Expected{2, 3};
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("Identical")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{1, 2, 3};
+					TCSet<int> Expected{1, 2, 3};
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("LeftSubset")
+				{
+					TCSet<int> Left{2, 3};
+					TCSet<int> Right{1, 2, 3, 4};
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Left));
+				};
+				DMibTestCategory("RightSubset")
+				{
+					TCSet<int> Left{1, 2, 3, 4};
+					TCSet<int> Right{2, 3};
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Right));
+				};
+				// Edge case: left exhausted before right (original bug trigger)
+				DMibTestCategory("LeftExhaustedFirst")
+				{
+					TCSet<int> Left{1, 2};
+					TCSet<int> Right{3, 4, 5};
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(TCSet<int>()));
+				};
+				// Edge case: right exhausted before left (original bug trigger)
+				DMibTestCategory("RightExhaustedFirst")
+				{
+					TCSet<int> Left{3, 4, 5};
+					TCSet<int> Right{1, 2};
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(TCSet<int>()));
+				};
+				// Edge case that triggered the original crash
+				DMibTestCategory("RightExhaustedAfterMatch")
+				{
+					TCSet<int> Left{1, 3, 5};
+					TCSet<int> Right{2, 3};
+					TCSet<int> Expected{3};
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Expected));
+				};
+			};
+
+			DMibTestCategory("SymmetricDifference")
+			{
+				DMibTestCategory("BothEmpty")
+				{
+					TCSet<int> Left;
+					TCSet<int> Right;
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(TCSet<int>()));
+				};
+				DMibTestCategory("LeftEmpty")
+				{
+					TCSet<int> Left;
+					TCSet<int> Right{1, 2, 3};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Right));
+				};
+				DMibTestCategory("RightEmpty")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right;
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Left));
+				};
+				DMibTestCategory("Disjoint")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{4, 5, 6};
+					TCSet<int> Expected{1, 2, 3, 4, 5, 6};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("Overlapping")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{2, 3, 4};
+					TCSet<int> Expected{1, 4};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("Identical")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{1, 2, 3};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(TCSet<int>()));
+				};
+				DMibTestCategory("LeftSubset")
+				{
+					TCSet<int> Left{2, 3};
+					TCSet<int> Right{1, 2, 3, 4};
+					TCSet<int> Expected{1, 4};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("RightSubset")
+				{
+					TCSet<int> Left{1, 2, 3, 4};
+					TCSet<int> Right{2, 3};
+					TCSet<int> Expected{1, 4};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				// Edge case: left exhausted before right
+				DMibTestCategory("LeftExhaustedFirst")
+				{
+					TCSet<int> Left{1, 2};
+					TCSet<int> Right{3, 4, 5};
+					TCSet<int> Expected{1, 2, 3, 4, 5};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				// Edge case: right exhausted before left
+				DMibTestCategory("RightExhaustedFirst")
+				{
+					TCSet<int> Left{3, 4, 5};
+					TCSet<int> Right{1, 2};
+					TCSet<int> Expected{1, 2, 3, 4, 5};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				// Edge case that would trigger crash with original bug
+				DMibTestCategory("RightExhaustedAfterMatch")
+				{
+					TCSet<int> Left{1, 3, 5};
+					TCSet<int> Right{2, 3};
+					TCSet<int> Expected{1, 2, 5};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
+				};
+			};
+
+			DMibTestCategory("Difference")
+			{
+				DMibTestCategory("BothEmpty")
+				{
+					TCSet<int> Left;
+					TCSet<int> Right;
+					DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(TCSet<int>()));
+				};
+				DMibTestCategory("LeftEmpty")
+				{
+					TCSet<int> Left;
+					TCSet<int> Right{1, 2, 3};
+					DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(TCSet<int>()));
+				};
+				DMibTestCategory("RightEmpty")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right;
+					DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Left));
+				};
+				DMibTestCategory("Disjoint")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{4, 5, 6};
+					DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Left));
+				};
+				DMibTestCategory("Overlapping")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{2, 3, 4};
+					TCSet<int> Expected{1};
+					DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("Identical")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{1, 2, 3};
+					DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(TCSet<int>()));
+				};
+				DMibTestCategory("LeftSubset")
+				{
+					TCSet<int> Left{2, 3};
+					TCSet<int> Right{1, 2, 3, 4};
+					DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(TCSet<int>()));
+				};
+				DMibTestCategory("RightSubset")
+				{
+					TCSet<int> Left{1, 2, 3, 4};
+					TCSet<int> Right{2, 3};
+					TCSet<int> Expected{1, 4};
+					DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Expected));
+				};
+			};
+
+			DMibTestCategory("CompoundAssignment")
+			{
+				DMibTestCategory("UnionAssign")
+				{
+					TCSet<int> Left{1, 2, 3};
+					TCSet<int> Right{3, 4, 5};
+					Left += Right;
+					TCSet<int> Expected{1, 2, 3, 4, 5};
+					DMibTest(DMibExpr(Left) == DMibExpr(Expected));
+				};
+				DMibTestCategory("DifferenceAssign")
+				{
+					TCSet<int> Left{1, 2, 3, 4};
+					TCSet<int> Right{2, 3};
+					Left -= Right;
+					TCSet<int> Expected{1, 4};
+					DMibTest(DMibExpr(Left) == DMibExpr(Expected));
+				};
+			};
+
+			DMibTestCategory("WithStrings")
+			{
+				DMibTestCategory("Intersection")
+				{
+					TCSet<CStr> Left{"a", "b", "c"};
+					TCSet<CStr> Right{"b", "c", "d"};
+					TCSet<CStr> Expected{"b", "c"};
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("IntersectionRightExhausted")
+				{
+					// This is the pattern that triggered the original crash
+					TCSet<CStr> Left{"a-tag", "b-tag", "c-tag"};
+					TCSet<CStr> Right{"b-tag", "c-tag"};
+					TCSet<CStr> Expected{"b-tag", "c-tag"};
+					DMibTest((DMibExpr(Left) & DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("SymmetricDifference")
+				{
+					TCSet<CStr> Left{"a", "b", "c"};
+					TCSet<CStr> Right{"b", "c", "d"};
+					TCSet<CStr> Expected{"a", "d"};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
+				};
+			};
+
+			DMibTestCategory("MoveSemantics")
+			{
+				DMibTestCategory("UnionMoveLeft")
+				{
+					TCSet<CStr> Left{"a", "b", "c"};
+					TCSet<CStr> Right{"c", "d", "e"};
+					TCSet<CStr> Expected{"a", "b", "c", "d", "e"};
+					auto Result = fg_Move(Left) | Right;
+					DMibExpect(Result, ==, Expected);
+					DMibExpectTrue(Left.f_IsEmpty());
+				};
+				DMibTestCategory("UnionMoveRight")
+				{
+					TCSet<CStr> Left{"a", "b", "c"};
+					TCSet<CStr> Right{"c", "d", "e"};
+					TCSet<CStr> Expected{"a", "b", "c", "d", "e"};
+					auto Result = Left | fg_Move(Right);
+					DMibExpect(Result, ==, Expected);
+					DMibExpectTrue(Right.f_IsEmpty());
+				};
+				DMibTestCategory("UnionMoveBoth")
+				{
+					TCSet<CStr> Left{"a", "b", "c"};
+					TCSet<CStr> Right{"c", "d", "e"};
+					TCSet<CStr> Expected{"a", "b", "c", "d", "e"};
+					auto Result = fg_Move(Left) | fg_Move(Right);
+					DMibExpect(Result, ==, Expected);
+					DMibExpectTrue(Left.f_IsEmpty());
+					DMibExpectTrue(Right.f_IsEmpty());
+				};
+				DMibTestCategory("IntersectionMoveLeft")
+				{
+					TCSet<CStr> Left{"a", "b", "c"};
+					TCSet<CStr> Right{"b", "c", "d"};
+					TCSet<CStr> Expected{"b", "c"};
+					auto Result = fg_Move(Left) & Right;
+					DMibExpect(Result, ==, Expected);
+					DMibExpectTrue(Left.f_IsEmpty());
+				};
+				DMibTestCategory("IntersectionMoveRight")
+				{
+					TCSet<CStr> Left{"a", "b", "c"};
+					TCSet<CStr> Right{"b", "c", "d"};
+					TCSet<CStr> Expected{"b", "c"};
+					auto Result = Left & fg_Move(Right);
+					DMibExpect(Result, ==, Expected);
+					DMibExpectTrue(Right.f_IsEmpty());
+				};
+				DMibTestCategory("IntersectionMoveBoth")
+				{
+					TCSet<CStr> Left{"a", "b", "c"};
+					TCSet<CStr> Right{"b", "c", "d"};
+					TCSet<CStr> Expected{"b", "c"};
+					auto Result = fg_Move(Left) & fg_Move(Right);
+					DMibExpect(Result, ==, Expected);
+					DMibExpectFalse(Left.f_IsEmpty()); // We always use the right side when intersecting
+					DMibExpectTrue(Right.f_IsEmpty());
+				};
+				DMibTestCategory("XorMoveLeft")
+				{
+					TCSet<CStr> Left{"a", "b", "c"};
+					TCSet<CStr> Right{"b", "c", "d"};
+					TCSet<CStr> Expected{"a", "d"};
+					auto Result = fg_Move(Left) ^ Right;
+					DMibExpect(Result, ==, Expected);
+					DMibExpectTrue(Left.f_IsEmpty());
+				};
+				DMibTestCategory("XorMoveRight")
+				{
+					TCSet<CStr> Left{"a", "b", "c"};
+					TCSet<CStr> Right{"b", "c", "d"};
+					TCSet<CStr> Expected{"a", "d"};
+					auto Result = Left ^ fg_Move(Right);
+					DMibExpect(Result, ==, Expected);
+					DMibExpectTrue(Right.f_IsEmpty());
+				};
+				DMibTestCategory("XorMoveBoth")
+				{
+					TCSet<CStr> Left{"a", "b", "c"};
+					TCSet<CStr> Right{"b", "c", "d"};
+					TCSet<CStr> Expected{"a", "d"};
+					auto Result = fg_Move(Left) ^ fg_Move(Right);
+					DMibExpect(Result, ==, Expected);
+					DMibExpectTrue(Left.f_IsEmpty());
+					DMibExpectTrue(Right.f_IsEmpty());
+				};
+				DMibTestCategory("DifferenceMoveLeft")
+				{
+					TCSet<CStr> Left{"a", "b", "c", "d"};
+					TCSet<CStr> Right{"b", "c"};
+					TCSet<CStr> Expected{"a", "d"};
+					auto Result = fg_Move(Left) - Right;
+					DMibExpect(Result, ==, Expected);
+					DMibExpectTrue(Left.f_IsEmpty());
+				};
+				DMibTestCategory("DifferenceLvalueLeft")
+				{
+					// Difference with lvalue left should not modify left
+					TCSet<CStr> Left{"a", "b", "c", "d"};
+					TCSet<CStr> Right{"b", "c"};
+					TCSet<CStr> Expected{"a", "d"};
+					auto Result = Left - Right;
+					DMibExpect(Result, ==, Expected);
+					DMibExpect(Left.f_GetLen(), ==, 4); // Left unchanged
+				};
+				DMibTestCategory("DestructiveIterator")
+				{
+					TCSet<CStr> Source{"a", "b", "c"};
+					TCVector<CStr> Collected;
+					for (auto iIter = fg_Move(Source).f_GetIteratorDestructive(); iIter; ++iIter)
+						Collected.f_InsertLast(fg_Move(*iIter));
+					DMibExpectTrue(Source.f_IsEmpty());
+					DMibExpect(Collected.f_GetLen(), ==, 3);
+				};
+			};
+			DMibTestCategory("NormalCompare")
+			{
+				DMibTestCategory("Xor")
+				{
+					TCSet<int> Left = {1, 2, 3};
+					TCSet<int> Right = {2, 4};
+
+					TCSet<int> Expected = {1, 3, 4};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("XorMove")
+				{
+					TCSet<int> Left = {1, 2, 3};
+					TCSet<int> Right = {2, 4};
+
+					TCSet<int> Expected = {1, 3, 4};
+					DMibTest((DMibExpr(fg_Move(Left)) ^ DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+				};
+				DMibTestCategory("XorMoveLeft")
+				{
+					TCSet<int> Left = {1, 2, 3};
+					TCSet<int> Right = {2, 4};
+
+					TCSet<int> Expected = {1, 3, 4};
+					DMibTest((DMibExpr(fg_Move(Left)) ^ DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("XorMoveRight")
+				{
+					TCSet<int> Left = {1, 2, 3};
+					TCSet<int> Right = {2, 4};
+
+					TCSet<int> Expected = {1, 3, 4};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+				};
+				DMibTestCategory("Difference")
+				{
+					TCSet<int> Left = {1, 2, 3};
+					TCSet<int> Right = {2, 4};
+
+					TCSet<int> Expected = {1, 3};
+					DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("DifferenceMove")
+				{
+					TCSet<int> Left = {1, 2, 3};
+					TCSet<int> Right = {2, 4};
+
+					TCSet<int> Expected = {1, 3};
+					DMibTest((DMibExpr(fg_Move(Left)) - DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+				};
+				DMibTestCategory("DifferenceMoveLeft")
+				{
+					TCSet<int> Left = {1, 2, 3};
+					TCSet<int> Right = {2, 4};
+
+					TCSet<int> Expected = {1, 3};
+					DMibTest((DMibExpr(fg_Move(Left)) - DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("DifferenceMoveRight")
+				{
+					TCSet<int> Left = {1, 2, 3};
+					TCSet<int> Right = {2, 4};
+
+					TCSet<int> Expected = {1, 3};
+					DMibTest((DMibExpr(Left) - DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+				};
+			};
+			DMibTestCategory("CustomCompare")
+			{
+				struct CCompareReverse
+				{
+					auto operator () (int const &_Left, int const &_Right) const
+					{
+						return _Right <=> _Left;
+					}
+				};
+
+				DMibTestCategory("Xor")
+				{
+					TCSet<int, CCompareReverse> Left = {1, 2, 3};
+					TCSet<int, CCompareReverse> Right = {2, 4};
+
+					TCSet<int, CCompareReverse> Expected = {1, 3, 4};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("XorMove")
+				{
+					TCSet<int, CCompareReverse> Left = {1, 2, 3};
+					TCSet<int, CCompareReverse> Right = {2, 4};
+
+					TCSet<int, CCompareReverse> Expected = {1, 3, 4};
+					DMibTest((DMibExpr(fg_Move(Left)) ^ DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+				};
+				DMibTestCategory("XorMoveLeft")
+				{
+					TCSet<int, CCompareReverse> Left = {1, 2, 3};
+					TCSet<int, CCompareReverse> Right = {2, 4};
+
+					TCSet<int, CCompareReverse> Expected = {1, 3, 4};
+					DMibTest((DMibExpr(fg_Move(Left)) ^ DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("XorMoveRight")
+				{
+					TCSet<int, CCompareReverse> Left = {1, 2, 3};
+					TCSet<int, CCompareReverse> Right = {2, 4};
+
+					TCSet<int, CCompareReverse> Expected = {1, 3, 4};
+					DMibTest((DMibExpr(Left) ^ DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+				};
+				DMibTestCategory("Difference")
+				{
+					TCSet<int, CCompareReverse> Left = {1, 2, 3};
+					TCSet<int, CCompareReverse> Right = {2, 4};
+
+					TCSet<int, CCompareReverse> Expected = {1, 3};
+					DMibTest((DMibExpr(Left) - DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("DifferenceMove")
+				{
+					TCSet<int, CCompareReverse> Left = {1, 2, 3};
+					TCSet<int, CCompareReverse> Right = {2, 4};
+
+					TCSet<int, CCompareReverse> Expected = {1, 3};
+					DMibTest((DMibExpr(fg_Move(Left)) - DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+				};
+				DMibTestCategory("DifferenceMoveLeft")
+				{
+					TCSet<int, CCompareReverse> Left = {1, 2, 3};
+					TCSet<int, CCompareReverse> Right = {2, 4};
+
+					TCSet<int, CCompareReverse> Expected = {1, 3};
+					DMibTest((DMibExpr(fg_Move(Left)) - DMibExpr(Right)) == DMibExpr(Expected));
+				};
+				DMibTestCategory("DifferenceMoveRight")
+				{
+					TCSet<int, CCompareReverse> Left = {1, 2, 3};
+					TCSet<int, CCompareReverse> Right = {2, 4};
+
+					TCSet<int, CCompareReverse> Expected = {1, 3};
+					DMibTest((DMibExpr(Left) - DMibExpr(fg_Move(Right))) == DMibExpr(Expected));
+				};
+			};
+		};
+	}
 
 	DMibTestRegister(CSet_Tests, Malterlib::Container);
 
@@ -595,874 +597,882 @@ namespace
 	{
 		using CTestVector = TCVector<umint>;
 
-		static CTestVector fs_CreateVector(umint _Value)
-		{
-			CTestVector Result;
-			Result.f_SetLen(1); // Force allocation
-			Result[0] = _Value;
-			return Result;
-		}
+		static CTestVector fs_CreateVector(umint _Value);
 
 		template <typename tf_CSet = TCSet<CTestVector>>
-		tf_CSet f_CreateSet(umint _Start, umint _Count)
-		{
-			tf_CSet Result;
-			for (umint iItem = 0; iItem < _Count; ++iItem)
-				Result[fs_CreateVector(_Start + iItem)];
-			return Result;
-		}
+		tf_CSet f_CreateSet(umint _Start, umint _Count);
+
+		void f_DoTests();
 
 	private:
-		void fp_GarbageCollect()
-		{
-			auto Checkout = fg_GetSys()->f_MemoryManager_Checkout();
-			Checkout.f_CheckMessages();
-			Checkout.f_GarbageCollectLocalArena(false); // Garbage collect memory
-		}
-
-	public:
-		void f_DoTests()
-		{
-			DMibTestSuite(NTest::CTestCategory("MoveSemantics") << NTest::CTestGroup("Performance"))
-			{
-#if defined(DMibDebug) || defined(DMibSanitizerEnabled)
-				static constexpr umint c_nNumElements = 10000;
-				static constexpr umint c_nNumIterations = 5;
-#else
-				static constexpr umint c_nNumElements = 1000000;
-				static constexpr umint c_nNumIterations = 5;
-#endif
-				static constexpr pfp64 c_AllowedPerformance = 1.001;
-
-				DMibTestCategory("Union")
-				{
-					NTest::CTestPerformance PerfTest(c_AllowedPerformance);
-					[&] inline_never
-					{
-						DMibTestPath("Move");
-						NTest::CTestPerformanceMeasure MoveMeasure("Move");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<>(0, c_nNumElements);
-							auto Right = f_CreateSet<>(c_nNumElements, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = fg_Move(Left) | fg_Move(Right);
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MoveLeft");
-						NTest::CTestPerformanceMeasure MoveMeasure("MoveLeft");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<>(0, c_nNumElements);
-							auto Right = f_CreateSet<>(c_nNumElements, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = fg_Move(Left) | Right;
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MoveRight");
-						NTest::CTestPerformanceMeasure MoveMeasure("MoveRight");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<>(0, c_nNumElements);
-							auto Right = f_CreateSet<>(c_nNumElements, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = Left | fg_Move(Right);
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("Copy");
-						NTest::CTestPerformanceMeasure CopyMeasure("Copy");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto LeftCopy = f_CreateSet<>(0, c_nNumElements);
-							auto RightCopy = f_CreateSet<>(c_nNumElements, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-								Result = LeftCopy | RightCopy;
-								LeftCopy.f_Clear();
-								RightCopy.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_AddReference(CopyMeasure);
-					}
-					();
-
-					auto fRunMapTests = [&]<EMapOperationPolicy tf_Policy>
-						{
-							CStr PolicySuffix;
-							switch (tf_Policy)
-							{
-							case EMapOperationPolicy::mc_Fastest: PolicySuffix = "Fastest"; break;
-							case EMapOperationPolicy::mc_PreferLeft: PolicySuffix = "PLeft"; break;
-							case EMapOperationPolicy::mc_PreferRight: PolicySuffix = "PRight"; break;
-							}
-
-							[&] inline_never
-							{
-								DMibTestPath("MapMove" + PolicySuffix);
-								NTest::CTestPerformanceMeasure MoveMeasure("MapMove" + PolicySuffix);
-								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-								{
-									fp_GarbageCollect();
-									auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-									auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements, c_nNumElements);
-									TCMap<CTestVector, CMapSet> Result;
-									[&]() inline_never
-									{
-										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-										Result = fg_Move(Left).f_Or<tf_Policy>(fg_Move(Right));
-										Left.f_Clear();
-										Right.f_Clear();
-									}
-									();
-									DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
-								}
-								PerfTest.f_Add(MoveMeasure);
-							}
-							();
-
-							[&] inline_never
-							{
-								DMibTestPath("MapMoveLeft" + PolicySuffix);
-								NTest::CTestPerformanceMeasure MoveMeasure("MapMoveLeft" + PolicySuffix);
-								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-								{
-									fp_GarbageCollect();
-									auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-									auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements, c_nNumElements);
-									TCMap<CTestVector, CMapSet> Result;
-									[&]() inline_never
-									{
-										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-										Result = fg_Move(Left).f_Or<tf_Policy>(Right);
-										Left.f_Clear();
-										Right.f_Clear();
-									}
-									();
-									DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
-								}
-								PerfTest.f_Add(MoveMeasure);
-							}
-							();
-
-							[&] inline_never
-							{
-								DMibTestPath("MapMoveRight" + PolicySuffix);
-								NTest::CTestPerformanceMeasure MoveMeasure("MapMoveRight" + PolicySuffix);
-								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-								{
-									fp_GarbageCollect();
-									auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-									auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements, c_nNumElements);
-									TCMap<CTestVector, CMapSet> Result;
-									[&]() inline_never
-									{
-										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-										Result = Left.f_Or<tf_Policy>(fg_Move(Right));
-										Left.f_Clear();
-										Right.f_Clear();
-									}
-									();
-									DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
-								}
-								PerfTest.f_Add(MoveMeasure);
-							}
-							();
-
-							[&] inline_never
-							{
-								DMibTestPath("MapCopy" + PolicySuffix);
-								NTest::CTestPerformanceMeasure CopyMeasure("MapCopy" + PolicySuffix);
-								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-								{
-									fp_GarbageCollect();
-									auto LeftCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-									auto RightCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements, c_nNumElements);
-									TCMap<CTestVector, CMapSet> Result;
-									[&]() inline_never
-									{
-										DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-										Result = LeftCopy.f_Or<tf_Policy>(RightCopy);
-										LeftCopy.f_Clear();
-										RightCopy.f_Clear();
-									}
-									();
-									DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
-								}
-								PerfTest.f_AddReference(CopyMeasure);
-							}
-							();
-						}
-					;
-
-					fRunMapTests.operator ()<EMapOperationPolicy::mc_Fastest>();
-					fRunMapTests.operator ()<EMapOperationPolicy::mc_PreferLeft>();
-					fRunMapTests.operator ()<EMapOperationPolicy::mc_PreferRight>();
-
-					DMibExpectTrue(PerfTest);
-				};
-
-				DMibTestCategory("Intersection")
-				{
-					NTest::CTestPerformance PerfTest(c_AllowedPerformance);
-
-					[&] inline_never
-					{
-						DMibTestPath("Move");
-						NTest::CTestPerformanceMeasure MoveMeasure("Move");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<>(0, c_nNumElements);
-							auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = fg_Move(Left) & fg_Move(Right);
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MoveLeft");
-						NTest::CTestPerformanceMeasure MoveMeasure("MoveLeft");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<>(0, c_nNumElements);
-							auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = fg_Move(Left) & Right;
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MoveRight");
-						NTest::CTestPerformanceMeasure MoveMeasure("MoveRight");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<>(0, c_nNumElements);
-							auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = Left & fg_Move(Right);
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("Copy");
-						NTest::CTestPerformanceMeasure CopyMeasure("Copy");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto LeftCopy = f_CreateSet<>(0, c_nNumElements);
-							auto RightCopy = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-								Result = LeftCopy & RightCopy;
-								LeftCopy.f_Clear();
-								RightCopy.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_AddReference(CopyMeasure);
-					}
-					();
-
-					auto fRunMapTests = [&]<EMapOperationPolicy tf_Policy>
-						{
-							CStr PolicySuffix;
-							switch (tf_Policy)
-							{
-							case EMapOperationPolicy::mc_Fastest: PolicySuffix = "Fastest"; break;
-							case EMapOperationPolicy::mc_PreferLeft: PolicySuffix = "PLeft"; break;
-							case EMapOperationPolicy::mc_PreferRight: PolicySuffix = "PRight"; break;
-							}
-
-							[&] inline_never
-							{
-								DMibTestPath("MapMove" + PolicySuffix);
-								NTest::CTestPerformanceMeasure MoveMeasure("MapMove" + PolicySuffix);
-								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-								{
-									fp_GarbageCollect();
-									auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-									auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
-									TCMap<CTestVector, CMapSet> Result;
-									[&]() inline_never
-									{
-										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-										Result = fg_Move(Left).f_And<tf_Policy>(fg_Move(Right));
-										Left.f_Clear();
-										Right.f_Clear();
-									}
-									();
-									DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-								}
-								PerfTest.f_Add(MoveMeasure);
-							}
-							();
-
-							[&] inline_never
-							{
-								DMibTestPath("MapMoveLeft" + PolicySuffix);
-								NTest::CTestPerformanceMeasure MoveMeasure("MapMoveLeft" + PolicySuffix);
-								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-								{
-									fp_GarbageCollect();
-									auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-									auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
-									TCMap<CTestVector, CMapSet> Result;
-									[&]() inline_never
-									{
-										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-										Result = fg_Move(Left).f_And<tf_Policy>(Right);
-										Left.f_Clear();
-										Right.f_Clear();
-									}
-									();
-									DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-								}
-								PerfTest.f_Add(MoveMeasure);
-							}
-							();
-
-							[&] inline_never
-							{
-								DMibTestPath("MapMoveRight" + PolicySuffix);
-								NTest::CTestPerformanceMeasure MoveMeasure("MapMoveRight" + PolicySuffix);
-								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-								{
-									fp_GarbageCollect();
-									auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-									auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
-									TCMap<CTestVector, CMapSet> Result;
-									[&]() inline_never
-									{
-										DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-										Result = Left.f_And<tf_Policy>(fg_Move(Right));
-										Left.f_Clear();
-										Right.f_Clear();
-									}
-									();
-									DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-								}
-								PerfTest.f_Add(MoveMeasure);
-							}
-							();
-
-							[&] inline_never
-							{
-								DMibTestPath("MapCopy" + PolicySuffix);
-								NTest::CTestPerformanceMeasure CopyMeasure("MapCopy" + PolicySuffix);
-								for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-								{
-									fp_GarbageCollect();
-									auto LeftCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-									auto RightCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
-									TCMap<CTestVector, CMapSet> Result;
-									[&]() inline_never
-									{
-										DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-										Result = LeftCopy.f_And<tf_Policy>(RightCopy);
-										LeftCopy.f_Clear();
-										RightCopy.f_Clear();
-									}
-									();
-									DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-								}
-								PerfTest.f_AddReference(CopyMeasure);
-							}
-							();
-						}
-					;
-
-					fRunMapTests.operator ()<EMapOperationPolicy::mc_Fastest>();
-					fRunMapTests.operator ()<EMapOperationPolicy::mc_PreferLeft>();
-					fRunMapTests.operator ()<EMapOperationPolicy::mc_PreferRight>();
-
-					DMibExpectTrue(PerfTest);
-				};
-
-				DMibTestCategory("Xor")
-				{
-					NTest::CTestPerformance PerfTest(c_AllowedPerformance);
-
-					[&] inline_never
-					{
-						DMibTestPath("Move");
-						NTest::CTestPerformanceMeasure MoveMeasure("Move");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<>(0, c_nNumElements);
-							auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = fg_Move(Left) ^ fg_Move(Right);
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MoveLeft");
-						NTest::CTestPerformanceMeasure MoveMeasure("MoveLeft");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<>(0, c_nNumElements);
-							auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = fg_Move(Left) ^ Right;
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MoveRight");
-						NTest::CTestPerformanceMeasure MoveMeasure("MoveRight");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<>(0, c_nNumElements);
-							auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = Left ^ fg_Move(Right);
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("Copy");
-						NTest::CTestPerformanceMeasure CopyMeasure("Copy");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto LeftCopy = f_CreateSet<>(0, c_nNumElements);
-							auto RightCopy = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-								Result = LeftCopy ^ RightCopy;
-								LeftCopy.f_Clear();
-								RightCopy.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_AddReference(CopyMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MapMove");
-						NTest::CTestPerformanceMeasure MoveMeasure("MapMove");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-							auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
-							TCMap<CTestVector, CMapSet> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = fg_Move(Left) ^ fg_Move(Right);
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MapMoveLeft");
-						NTest::CTestPerformanceMeasure MoveMeasure("MapMoveLeft");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-							auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
-							TCMap<CTestVector, CMapSet> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = fg_Move(Left) ^ Right;
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MapMoveRight");
-						NTest::CTestPerformanceMeasure MoveMeasure("MapMoveRight");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-							auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
-							TCMap<CTestVector, CMapSet> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = Left ^ fg_Move(Right);
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MapCopy");
-						NTest::CTestPerformanceMeasure CopyMeasure("MapCopy");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto LeftCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-							auto RightCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
-							TCMap<CTestVector, CMapSet> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-								Result = LeftCopy ^ RightCopy;
-								LeftCopy.f_Clear();
-								RightCopy.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_AddReference(CopyMeasure);
-					}
-					();
-
-					DMibExpectTrue(PerfTest);
-				};
-
-				DMibTestCategory("Difference")
-				{
-					NTest::CTestPerformance PerfTest(c_AllowedPerformance);
-
-					[&] inline_never
-					{
-						DMibTestPath("Move");
-						NTest::CTestPerformanceMeasure MoveMeasure("Move");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet(0, c_nNumElements);
-							auto Right = f_CreateSet(c_nNumElements / 2, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = fg_Move(Left) - fg_Move(Right);
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MoveLeft");
-						NTest::CTestPerformanceMeasure MoveMeasure("MoveLeft");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet(0, c_nNumElements);
-							auto Right = f_CreateSet(c_nNumElements / 2, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = fg_Move(Left) - Right;
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MoveRight");
-						NTest::CTestPerformanceMeasure MoveMeasure("MoveRight");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet(0, c_nNumElements);
-							auto Right = f_CreateSet(c_nNumElements / 2, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = Left - fg_Move(Right);
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("Copy");
-						NTest::CTestPerformanceMeasure CopyMeasure("Copy");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto LeftCopy = f_CreateSet(0, c_nNumElements);
-							auto RightCopy = f_CreateSet(c_nNumElements / 2, c_nNumElements);
-							TCSet<CTestVector> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-								Result = LeftCopy - RightCopy;
-								LeftCopy.f_Clear();
-								RightCopy.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_AddReference(CopyMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MapMove");
-						NTest::CTestPerformanceMeasure MoveMeasure("MapMove");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-							auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
-							TCMap<CTestVector, CMapSet> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = fg_Move(Left) - fg_Move(Right);
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MapMoveLeft");
-						NTest::CTestPerformanceMeasure MoveMeasure("MapMoveLeft");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-							auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
-							TCMap<CTestVector, CMapSet> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = fg_Move(Left) - Right;
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MapMoveRight");
-						NTest::CTestPerformanceMeasure MoveMeasure("MapMoveRight");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-							auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
-							TCMap<CTestVector, CMapSet> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
-								Result = Left - fg_Move(Right);
-								Left.f_Clear();
-								Right.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_Add(MoveMeasure);
-					}
-					();
-
-					[&] inline_never
-					{
-						DMibTestPath("MapCopy");
-						NTest::CTestPerformanceMeasure CopyMeasure("MapCopy");
-						for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
-						{
-							fp_GarbageCollect();
-							auto LeftCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
-							auto RightCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
-							TCMap<CTestVector, CMapSet> Result;
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
-								Result = LeftCopy - RightCopy;
-								LeftCopy.f_Clear();
-								RightCopy.f_Clear();
-							}
-							();
-							DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
-						}
-						PerfTest.f_AddReference(CopyMeasure);
-					}
-					();
-
-					DMibExpectTrue(PerfTest);
-				};
-			};
-		}
+		void fp_GarbageCollect();
 	};
+
+	CSetPerformance_Tests::CTestVector CSetPerformance_Tests::fs_CreateVector(umint _Value)
+	{
+		CTestVector Result;
+		Result.f_SetLen(1); // Force allocation
+		Result[0] = _Value;
+		return Result;
+	}
+
+	template <typename tf_CSet>
+	tf_CSet CSetPerformance_Tests::f_CreateSet(umint _Start, umint _Count)
+	{
+		tf_CSet Result;
+		for (umint iItem = 0; iItem < _Count; ++iItem)
+			Result[fs_CreateVector(_Start + iItem)];
+		return Result;
+	}
+
+	void CSetPerformance_Tests::f_DoTests()
+	{
+		DMibTestSuite(NTest::CTestCategory("MoveSemantics") << NTest::CTestGroup("Performance"))
+		{
+#if defined(DMibDebug) || defined(DMibSanitizerEnabled)
+			static constexpr umint c_nNumElements = 10000;
+			static constexpr umint c_nNumIterations = 5;
+#else
+			static constexpr umint c_nNumElements = 1000000;
+			static constexpr umint c_nNumIterations = 5;
+#endif
+			static constexpr pfp64 c_AllowedPerformance = 1.001;
+
+			DMibTestCategory("Union")
+			{
+				NTest::CTestPerformance PerfTest(c_AllowedPerformance);
+				[&] inline_never
+				{
+					DMibTestPath("Move");
+					NTest::CTestPerformanceMeasure MoveMeasure("Move");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<>(0, c_nNumElements);
+						auto Right = f_CreateSet<>(c_nNumElements, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = fg_Move(Left) | fg_Move(Right);
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MoveLeft");
+					NTest::CTestPerformanceMeasure MoveMeasure("MoveLeft");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<>(0, c_nNumElements);
+						auto Right = f_CreateSet<>(c_nNumElements, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = fg_Move(Left) | Right;
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MoveRight");
+					NTest::CTestPerformanceMeasure MoveMeasure("MoveRight");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<>(0, c_nNumElements);
+						auto Right = f_CreateSet<>(c_nNumElements, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = Left | fg_Move(Right);
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("Copy");
+					NTest::CTestPerformanceMeasure CopyMeasure("Copy");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto LeftCopy = f_CreateSet<>(0, c_nNumElements);
+						auto RightCopy = f_CreateSet<>(c_nNumElements, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+							Result = LeftCopy | RightCopy;
+							LeftCopy.f_Clear();
+							RightCopy.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_AddReference(CopyMeasure);
+				}
+				();
+
+				auto fRunMapTests = [&]<EMapOperationPolicy tf_Policy>
+					{
+						CStr PolicySuffix;
+						switch (tf_Policy)
+						{
+						case EMapOperationPolicy::mc_Fastest: PolicySuffix = "Fastest"; break;
+						case EMapOperationPolicy::mc_PreferLeft: PolicySuffix = "PLeft"; break;
+						case EMapOperationPolicy::mc_PreferRight: PolicySuffix = "PRight"; break;
+						}
+
+						[&] inline_never
+						{
+							DMibTestPath("MapMove" + PolicySuffix);
+							NTest::CTestPerformanceMeasure MoveMeasure("MapMove" + PolicySuffix);
+							for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+							{
+								fp_GarbageCollect();
+								auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+								auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements, c_nNumElements);
+								TCMap<CTestVector, CMapSet> Result;
+								[&]() inline_never
+								{
+									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+									Result = fg_Move(Left).f_Or<tf_Policy>(fg_Move(Right));
+									Left.f_Clear();
+									Right.f_Clear();
+								}
+								();
+								DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
+							}
+							PerfTest.f_Add(MoveMeasure);
+						}
+						();
+
+						[&] inline_never
+						{
+							DMibTestPath("MapMoveLeft" + PolicySuffix);
+							NTest::CTestPerformanceMeasure MoveMeasure("MapMoveLeft" + PolicySuffix);
+							for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+							{
+								fp_GarbageCollect();
+								auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+								auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements, c_nNumElements);
+								TCMap<CTestVector, CMapSet> Result;
+								[&]() inline_never
+								{
+									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+									Result = fg_Move(Left).f_Or<tf_Policy>(Right);
+									Left.f_Clear();
+									Right.f_Clear();
+								}
+								();
+								DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
+							}
+							PerfTest.f_Add(MoveMeasure);
+						}
+						();
+
+						[&] inline_never
+						{
+							DMibTestPath("MapMoveRight" + PolicySuffix);
+							NTest::CTestPerformanceMeasure MoveMeasure("MapMoveRight" + PolicySuffix);
+							for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+							{
+								fp_GarbageCollect();
+								auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+								auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements, c_nNumElements);
+								TCMap<CTestVector, CMapSet> Result;
+								[&]() inline_never
+								{
+									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+									Result = Left.f_Or<tf_Policy>(fg_Move(Right));
+									Left.f_Clear();
+									Right.f_Clear();
+								}
+								();
+								DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
+							}
+							PerfTest.f_Add(MoveMeasure);
+						}
+						();
+
+						[&] inline_never
+						{
+							DMibTestPath("MapCopy" + PolicySuffix);
+							NTest::CTestPerformanceMeasure CopyMeasure("MapCopy" + PolicySuffix);
+							for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+							{
+								fp_GarbageCollect();
+								auto LeftCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+								auto RightCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements, c_nNumElements);
+								TCMap<CTestVector, CMapSet> Result;
+								[&]() inline_never
+								{
+									DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+									Result = LeftCopy.f_Or<tf_Policy>(RightCopy);
+									LeftCopy.f_Clear();
+									RightCopy.f_Clear();
+								}
+								();
+								DMibExpect(Result.f_GetLen(), ==, c_nNumElements * 2)(ETestFlag_Aggregated);
+							}
+							PerfTest.f_AddReference(CopyMeasure);
+						}
+						();
+					}
+				;
+
+				fRunMapTests.operator ()<EMapOperationPolicy::mc_Fastest>();
+				fRunMapTests.operator ()<EMapOperationPolicy::mc_PreferLeft>();
+				fRunMapTests.operator ()<EMapOperationPolicy::mc_PreferRight>();
+
+				DMibExpectTrue(PerfTest);
+			};
+
+			DMibTestCategory("Intersection")
+			{
+				NTest::CTestPerformance PerfTest(c_AllowedPerformance);
+
+				[&] inline_never
+				{
+					DMibTestPath("Move");
+					NTest::CTestPerformanceMeasure MoveMeasure("Move");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<>(0, c_nNumElements);
+						auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = fg_Move(Left) & fg_Move(Right);
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MoveLeft");
+					NTest::CTestPerformanceMeasure MoveMeasure("MoveLeft");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<>(0, c_nNumElements);
+						auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = fg_Move(Left) & Right;
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MoveRight");
+					NTest::CTestPerformanceMeasure MoveMeasure("MoveRight");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<>(0, c_nNumElements);
+						auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = Left & fg_Move(Right);
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("Copy");
+					NTest::CTestPerformanceMeasure CopyMeasure("Copy");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto LeftCopy = f_CreateSet<>(0, c_nNumElements);
+						auto RightCopy = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+							Result = LeftCopy & RightCopy;
+							LeftCopy.f_Clear();
+							RightCopy.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_AddReference(CopyMeasure);
+				}
+				();
+
+				auto fRunMapTests = [&]<EMapOperationPolicy tf_Policy>
+					{
+						CStr PolicySuffix;
+						switch (tf_Policy)
+						{
+						case EMapOperationPolicy::mc_Fastest: PolicySuffix = "Fastest"; break;
+						case EMapOperationPolicy::mc_PreferLeft: PolicySuffix = "PLeft"; break;
+						case EMapOperationPolicy::mc_PreferRight: PolicySuffix = "PRight"; break;
+						}
+
+						[&] inline_never
+						{
+							DMibTestPath("MapMove" + PolicySuffix);
+							NTest::CTestPerformanceMeasure MoveMeasure("MapMove" + PolicySuffix);
+							for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+							{
+								fp_GarbageCollect();
+								auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+								auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
+								TCMap<CTestVector, CMapSet> Result;
+								[&]() inline_never
+								{
+									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+									Result = fg_Move(Left).f_And<tf_Policy>(fg_Move(Right));
+									Left.f_Clear();
+									Right.f_Clear();
+								}
+								();
+								DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+							}
+							PerfTest.f_Add(MoveMeasure);
+						}
+						();
+
+						[&] inline_never
+						{
+							DMibTestPath("MapMoveLeft" + PolicySuffix);
+							NTest::CTestPerformanceMeasure MoveMeasure("MapMoveLeft" + PolicySuffix);
+							for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+							{
+								fp_GarbageCollect();
+								auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+								auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
+								TCMap<CTestVector, CMapSet> Result;
+								[&]() inline_never
+								{
+									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+									Result = fg_Move(Left).f_And<tf_Policy>(Right);
+									Left.f_Clear();
+									Right.f_Clear();
+								}
+								();
+								DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+							}
+							PerfTest.f_Add(MoveMeasure);
+						}
+						();
+
+						[&] inline_never
+						{
+							DMibTestPath("MapMoveRight" + PolicySuffix);
+							NTest::CTestPerformanceMeasure MoveMeasure("MapMoveRight" + PolicySuffix);
+							for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+							{
+								fp_GarbageCollect();
+								auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+								auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
+								TCMap<CTestVector, CMapSet> Result;
+								[&]() inline_never
+								{
+									DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+									Result = Left.f_And<tf_Policy>(fg_Move(Right));
+									Left.f_Clear();
+									Right.f_Clear();
+								}
+								();
+								DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+							}
+							PerfTest.f_Add(MoveMeasure);
+						}
+						();
+
+						[&] inline_never
+						{
+							DMibTestPath("MapCopy" + PolicySuffix);
+							NTest::CTestPerformanceMeasure CopyMeasure("MapCopy" + PolicySuffix);
+							for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+							{
+								fp_GarbageCollect();
+								auto LeftCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+								auto RightCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
+								TCMap<CTestVector, CMapSet> Result;
+								[&]() inline_never
+								{
+									DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+									Result = LeftCopy.f_And<tf_Policy>(RightCopy);
+									LeftCopy.f_Clear();
+									RightCopy.f_Clear();
+								}
+								();
+								DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+							}
+							PerfTest.f_AddReference(CopyMeasure);
+						}
+						();
+					}
+				;
+
+				fRunMapTests.operator ()<EMapOperationPolicy::mc_Fastest>();
+				fRunMapTests.operator ()<EMapOperationPolicy::mc_PreferLeft>();
+				fRunMapTests.operator ()<EMapOperationPolicy::mc_PreferRight>();
+
+				DMibExpectTrue(PerfTest);
+			};
+
+			DMibTestCategory("Xor")
+			{
+				NTest::CTestPerformance PerfTest(c_AllowedPerformance);
+
+				[&] inline_never
+				{
+					DMibTestPath("Move");
+					NTest::CTestPerformanceMeasure MoveMeasure("Move");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<>(0, c_nNumElements);
+						auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = fg_Move(Left) ^ fg_Move(Right);
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MoveLeft");
+					NTest::CTestPerformanceMeasure MoveMeasure("MoveLeft");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<>(0, c_nNumElements);
+						auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = fg_Move(Left) ^ Right;
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MoveRight");
+					NTest::CTestPerformanceMeasure MoveMeasure("MoveRight");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<>(0, c_nNumElements);
+						auto Right = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = Left ^ fg_Move(Right);
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("Copy");
+					NTest::CTestPerformanceMeasure CopyMeasure("Copy");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto LeftCopy = f_CreateSet<>(0, c_nNumElements);
+						auto RightCopy = f_CreateSet<>(c_nNumElements / 2, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+							Result = LeftCopy ^ RightCopy;
+							LeftCopy.f_Clear();
+							RightCopy.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_AddReference(CopyMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MapMove");
+					NTest::CTestPerformanceMeasure MoveMeasure("MapMove");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+						auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
+						TCMap<CTestVector, CMapSet> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = fg_Move(Left) ^ fg_Move(Right);
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MapMoveLeft");
+					NTest::CTestPerformanceMeasure MoveMeasure("MapMoveLeft");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+						auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
+						TCMap<CTestVector, CMapSet> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = fg_Move(Left) ^ Right;
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MapMoveRight");
+					NTest::CTestPerformanceMeasure MoveMeasure("MapMoveRight");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+						auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
+						TCMap<CTestVector, CMapSet> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = Left ^ fg_Move(Right);
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MapCopy");
+					NTest::CTestPerformanceMeasure CopyMeasure("MapCopy");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto LeftCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+						auto RightCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
+						TCMap<CTestVector, CMapSet> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+							Result = LeftCopy ^ RightCopy;
+							LeftCopy.f_Clear();
+							RightCopy.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_AddReference(CopyMeasure);
+				}
+				();
+
+				DMibExpectTrue(PerfTest);
+			};
+
+			DMibTestCategory("Difference")
+			{
+				NTest::CTestPerformance PerfTest(c_AllowedPerformance);
+
+				[&] inline_never
+				{
+					DMibTestPath("Move");
+					NTest::CTestPerformanceMeasure MoveMeasure("Move");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet(0, c_nNumElements);
+						auto Right = f_CreateSet(c_nNumElements / 2, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = fg_Move(Left) - fg_Move(Right);
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MoveLeft");
+					NTest::CTestPerformanceMeasure MoveMeasure("MoveLeft");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet(0, c_nNumElements);
+						auto Right = f_CreateSet(c_nNumElements / 2, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = fg_Move(Left) - Right;
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MoveRight");
+					NTest::CTestPerformanceMeasure MoveMeasure("MoveRight");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet(0, c_nNumElements);
+						auto Right = f_CreateSet(c_nNumElements / 2, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = Left - fg_Move(Right);
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("Copy");
+					NTest::CTestPerformanceMeasure CopyMeasure("Copy");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto LeftCopy = f_CreateSet(0, c_nNumElements);
+						auto RightCopy = f_CreateSet(c_nNumElements / 2, c_nNumElements);
+						TCSet<CTestVector> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+							Result = LeftCopy - RightCopy;
+							LeftCopy.f_Clear();
+							RightCopy.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_AddReference(CopyMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MapMove");
+					NTest::CTestPerformanceMeasure MoveMeasure("MapMove");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+						auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
+						TCMap<CTestVector, CMapSet> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = fg_Move(Left) - fg_Move(Right);
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MapMoveLeft");
+					NTest::CTestPerformanceMeasure MoveMeasure("MapMoveLeft");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+						auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
+						TCMap<CTestVector, CMapSet> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = fg_Move(Left) - Right;
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MapMoveRight");
+					NTest::CTestPerformanceMeasure MoveMeasure("MapMoveRight");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto Left = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+						auto Right = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
+						TCMap<CTestVector, CMapSet> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(MoveMeasure, c_nNumElements * 2);
+							Result = Left - fg_Move(Right);
+							Left.f_Clear();
+							Right.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_Add(MoveMeasure);
+				}
+				();
+
+				[&] inline_never
+				{
+					DMibTestPath("MapCopy");
+					NTest::CTestPerformanceMeasure CopyMeasure("MapCopy");
+					for (umint iIter = 0; iIter < c_nNumIterations; ++iIter)
+					{
+						fp_GarbageCollect();
+						auto LeftCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(0, c_nNumElements);
+						auto RightCopy = f_CreateSet<TCMap<CTestVector, CMapSet>>(c_nNumElements / 2, c_nNumElements);
+						TCMap<CTestVector, CMapSet> Result;
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(CopyMeasure, c_nNumElements * 2);
+							Result = LeftCopy - RightCopy;
+							LeftCopy.f_Clear();
+							RightCopy.f_Clear();
+						}
+						();
+						DMibExpect(Result.f_GetLen(), ==, c_nNumElements / 2)(ETestFlag_Aggregated);
+					}
+					PerfTest.f_AddReference(CopyMeasure);
+				}
+				();
+
+				DMibExpectTrue(PerfTest);
+			};
+		};
+	}
+
+	void CSetPerformance_Tests::fp_GarbageCollect()
+	{
+		auto Checkout = fg_GetSys()->f_MemoryManager_Checkout();
+		Checkout.f_CheckMessages();
+		Checkout.f_GarbageCollectLocalArena(false); // Garbage collect memory
+	}
 
 	DMibTestRegister(CSetPerformance_Tests, Malterlib::Container);
 }

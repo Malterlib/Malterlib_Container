@@ -234,17 +234,9 @@ namespace NMib::NContainer
 		template <typename t_CMap2, EMapIteratorAccess t_Access2, EMapIteratorFlags t_Flags2>
 		friend struct NPrivate::TCMapIterator;
 
-		using CNodeCompare = TCConditional
-			<
-				NTraits::cIsSame<t_CCompare, NMib::CSort_Default>
-				, NPrivate::TCMapNodeCompare_Default<CNodeDestructive, t_CKey>
-				, NPrivate::TCMapNodeCompare_Custom<CNodeDestructive, t_CCompare>
-			>
-		;
-		using CUserData = NTraits::TCRemoveReference<typename NPrivate::TCMapUserData<t_CKey, t_CValue>::CType>;
-		using CAVLTree = NIntrusive::TCAVLTree<&CMapNodeBase::m_Link, void, NMemory::CAllocator_Base, CNodeDestructive>;
+		using CUserData =NTraits::TCRemoveReference<typename NPrivate::TCMapUserData<t_CKey, t_CValue>::CType>;
 
-	public:
+	public: // NOLINT(malterlib-member-order): the public declarations use the protected CUserData
 		constexpr ~TCMap();
 		constexpr TCMap() noexcept;
 
@@ -481,16 +473,14 @@ namespace NMib::NContainer
 		TCSet<t_CKey, t_CCompare, t_CAllocator> f_KeySet() const;
 
 	protected:
-		CNodeHandle fp_ExtractNoRebalance(CNodeDestructive *_pParent, CNodeDestructive *_pToRemove);
-
-		template <typename tf_CSource>
-		inline_always void fp_CopyAll(tf_CSource &&_Other);
-		template <typename tf_CSource>
-		inline_always void fp_MoveAll(tf_CSource &&_Other);
-		template <typename tf_CSource>
-		inline_always void fp_CopyAddAll(tf_CSource &&_Other);
-		template <typename tf_CSource>
-		inline_always void fp_MoveAddAll(tf_CSource &&_Other);
+		using CNodeCompare = TCConditional
+			<
+				NTraits::cIsSame<t_CCompare, NMib::CSort_Default>
+				, NPrivate::TCMapNodeCompare_Default<CNodeDestructive, t_CKey>
+				, NPrivate::TCMapNodeCompare_Custom<CNodeDestructive, t_CCompare>
+			>
+		;
+		using CAVLTree = NIntrusive::TCAVLTree<&CMapNodeBase::m_Link, void, NMemory::CAllocator_Base, CNodeDestructive>;
 
 		template <typename ...tfp_CAllocatorParams, typename ...tfp_CCompareParams, umint ...tfp_IndicesAllocator, umint ...tfp_IndicesCompare>
 		TCMap
@@ -503,6 +493,17 @@ namespace NMib::NContainer
 				, TCConstruct<void, tfp_CCompareParams...> &&_ConstructCompare
 			)
 		;
+
+		CNodeHandle fp_ExtractNoRebalance(CNodeDestructive *_pParent, CNodeDestructive *_pToRemove);
+
+		template <typename tf_CSource>
+		inline_always void fp_CopyAll(tf_CSource &&_Other);
+		template <typename tf_CSource>
+		inline_always void fp_MoveAll(tf_CSource &&_Other);
+		template <typename tf_CSource>
+		inline_always void fp_CopyAddAll(tf_CSource &&_Other);
+		template <typename tf_CSource>
+		inline_always void fp_MoveAddAll(tf_CSource &&_Other);
 
 		static constexpr bool mcp_bIsReference = NTraits::cIsReference<t_CValue>;
 

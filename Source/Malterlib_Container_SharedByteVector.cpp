@@ -9,36 +9,42 @@ namespace NMib::NContainer
 	{
 		struct CVectorOwner final : CVirtualDestroyBase
 		{
-			CVectorOwner(CIOByteVector &&_Vector)
-				: m_Vector(fg_Move(_Vector))
-			{
-			}
+			CVectorOwner(CIOByteVector &&_Vector);
 
 			CIOByteVector m_Vector;
 		};
 
+		CVectorOwner::CVectorOwner(CIOByteVector &&_Vector)
+			: m_Vector(fg_Move(_Vector))
+		{
+		}
+
 		struct CSharedVectorOwner final : CVirtualDestroyBase
 		{
-			CSharedVectorOwner(NStorage::TCSharedPointer<CIOByteVector const> &&_pVector)
-				: m_pVector(fg_Move(_pVector))
-			{
-			}
+			CSharedVectorOwner(NStorage::TCSharedPointer<CIOByteVector const> &&_pVector);
 
 			NStorage::TCSharedPointer<CIOByteVector const> m_pVector;
 		};
 
+		CSharedVectorOwner::CSharedVectorOwner(NStorage::TCSharedPointer<CIOByteVector const> &&_pVector)
+			: m_pVector(fg_Move(_pVector))
+		{
+		}
+
 		// Keeping the vector header out of the allocation avoids rounding a power-of-two payload up to the next size class.
 		struct CRawBytesOwner final : CVirtualDestroyBase
 		{
-			~CRawBytesOwner() override
-			{
-				if (m_pData)
-					NMemory::CDefaultAllocator::f_Free(m_pData, m_nBytes);
-			}
+			~CRawBytesOwner() override;
 
 			uint8 *m_pData = nullptr;
 			umint m_nBytes = 0;
 		};
+
+		CRawBytesOwner::~CRawBytesOwner()
+		{
+			if (m_pData)
+				NMemory::CDefaultAllocator::f_Free(m_pData, m_nBytes);
+		}
 	}
 
 	// o_pWritable may only be used to fill the allocation before the returned view is shared.

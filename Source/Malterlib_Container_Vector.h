@@ -32,6 +32,12 @@ namespace NMib::NContainer
 		using CIterator = TCVectorIterator<t_CData>;
 		using CIteratorConst = TCVectorIterator<t_CData const>;
 
+		struct CFormatOptions
+		{
+			bool m_bSingleLine = false;
+			bool m_bBrackets = true;
+		};
+
 		TCVector() noexcept;
 		~TCVector();
 
@@ -359,12 +365,6 @@ namespace NMib::NContainer
 		template <typename tf_CThis, typename tf_FReducer>
 		auto f_ReduceRight(this tf_CThis &&_This, tf_FReducer &&_fReducer);
 
-		struct CFormatOptions
-		{
-			bool m_bSingleLine = false;
-			bool m_bBrackets = true;
-		};
-
 		template <typename tf_COption>
 		bool f_FormatParseOption(CFormatOptions &_Options, tf_COption &_Option) const;
 		template <typename tf_CFormatInto, typename tf_CFormatOptions>
@@ -378,7 +378,7 @@ namespace NMib::NContainer
 		friend struct TCVector;
 
 #if defined(DCompiler_MSVC_Workaround)
-		static constexpr umint fsp_Alignment() // NOLINT(malterlib-header-declarations-only): used in the alignas of CVectorData below, which needs its definition
+		static constexpr umint fsp_Alignment() // NOLINT(malterlib-header-declarations-only, malterlib-member-order): used in the alignas of CVectorData below, which needs its definition
 		{
 			return fg_MaxConstexpr(alignof(t_CData), alignof(umint));
 		}
@@ -386,20 +386,20 @@ namespace NMib::NContainer
 		class alignas(fsp_Alignment()) CVectorData
 		{
 		public:
+			inline_small t_CData *f_GetData();
+
 			umint m_Length;
 			umint m_AllocSize;
-
-			inline_small t_CData *f_GetData();
 		};
 #else
-		static constexpr umint mcp_Alignment = fg_MaxConstexpr(alignof(t_CData), alignof(umint));
+		static constexpr umint mcp_Alignment = fg_MaxConstexpr(alignof(t_CData), alignof(umint)); // NOLINT(malterlib-member-order): used in the alignas of CVectorData below
 
 		struct alignas(mcp_Alignment) CVectorData
 		{
+			inline_small t_CData *f_GetData();
+
 			umint m_Length;
 			umint m_AllocSize;
-
-			inline_small t_CData *f_GetData();
 		};
 #endif
 
@@ -474,20 +474,20 @@ namespace NMib::NContainer
 	struct CByteVector : public TCVector<uint8>
 	{
 		using TCVector<uint8>::TCVector;
-		using TCVector<uint8>::operator =;
 
 		CByteVector(CSecureByteVector &&_Other) = delete;
 		CByteVector(CSecureByteVector const &_Other) = delete;
-		CByteVector &operator = (CSecureByteVector &&_Other) = delete;
-		CByteVector &operator = (CSecureByteVector const &_Other) = delete;
-
 		CByteVector(TCVector<uint8> &&_Other) = delete;
 		CByteVector(TCVector<uint8> const &_Other) = delete;
-		CByteVector &operator = (TCVector<uint8> &&_Other) = delete;
-		CByteVector &operator = (TCVector<uint8> const &_Other) = delete;
-
 		CByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> &&_Other) = delete;
 		CByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> const &_Other) = delete;
+
+		using TCVector<uint8>::operator =;
+
+		CByteVector &operator = (CSecureByteVector &&_Other) = delete;
+		CByteVector &operator = (CSecureByteVector const &_Other) = delete;
+		CByteVector &operator = (TCVector<uint8> &&_Other) = delete;
+		CByteVector &operator = (TCVector<uint8> const &_Other) = delete;
 		CByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> &&_Other) = delete;
 		CByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> const &_Other) = delete;
 
@@ -504,20 +504,20 @@ namespace NMib::NContainer
 	struct CSecureByteVector : public TCVector<uint8, NMemory::CAllocator_HeapSecure>
 	{
 		using TCVector<uint8, NMemory::CAllocator_HeapSecure>::TCVector;
-		using TCVector<uint8, NMemory::CAllocator_HeapSecure>::operator =;
 
 		CSecureByteVector(CByteVector &&_Other) = delete;
 		CSecureByteVector(CByteVector const &_Other) = delete;
-		CSecureByteVector &operator = (CByteVector &&_Other) = delete;
-		CSecureByteVector &operator = (CByteVector const &_Other) = delete;
-
 		CSecureByteVector(TCVector<uint8> &&_Other) = delete;
 		CSecureByteVector(TCVector<uint8> const &_Other) = delete;
-		CSecureByteVector &operator = (TCVector<uint8> &&_Other) = delete;
-		CSecureByteVector &operator = (TCVector<uint8> const &_Other) = delete;
-
 		CSecureByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> &&_Other) = delete;
 		CSecureByteVector(TCVector<uint8, NMemory::CAllocator_HeapSecure> const &_Other) = delete;
+
+		using TCVector<uint8, NMemory::CAllocator_HeapSecure>::operator =;
+
+		CSecureByteVector &operator = (CByteVector &&_Other) = delete;
+		CSecureByteVector &operator = (CByteVector const &_Other) = delete;
+		CSecureByteVector &operator = (TCVector<uint8> &&_Other) = delete;
+		CSecureByteVector &operator = (TCVector<uint8> const &_Other) = delete;
 		CSecureByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> &&_Other) = delete;
 		CSecureByteVector &operator = (TCVector<uint8, NMemory::CAllocator_HeapSecure> const &_Other) = delete;
 
