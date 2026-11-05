@@ -35,6 +35,38 @@ namespace NMib::NMisc
 
 		struct CPackedMapTester
 		{
+			struct CKeyValue
+			{
+				auto operator <=> (CKeyValue const &_Right) const noexcept = default;
+
+				umint m_Key = 0;
+				umint m_Value = 0;
+			};
+
+			CPackedMapTester(EPopulateMode _PopulateMode);
+
+			void f_Insert();
+
+			void f_Access();
+
+			void f_AccessSorted();
+
+			void f_Erase();
+
+			void f_Clear();
+
+			void f_Copy();
+
+			void f_AccessAfterCopy();
+
+			void f_AccessAfterCopySorted();
+
+			void f_Iterate();
+
+			EPopulateMode m_PopulateMode;
+			NContainer::TCVector<CKeyValue> m_Key_Data;
+			NContainer::TCVector<CKeyValue> m_Key_DataSorted;
+
 		private: // Measure
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
 			inline_never void fp_MeasureForAllKeysRandomSorted
@@ -45,25 +77,7 @@ namespace NMib::NMisc
 					, tf_FDestruct const &_fDestruct
 				)
 				const
-			{
-				auto pDataStart = m_Key_DataSorted.f_GetArray();
-				auto pDataEnd = pDataStart + gc_nItemsToTest;
-				auto fMeasure = [_fOperation, pDataStart, pDataEnd]() inline_never
-					{
-						for (auto *pData = pDataStart; pData != pDataEnd; ++pData)
-							_fOperation(pData->m_Key);
-					}
-				;
-				for (umint iTry = 0; iTry < gc_nTries; ++iTry)
-				{
-					_fInit();
-					{
-						DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
-						fMeasure();
-					}
-					_fDestruct();
-				}
-			}
+			;
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
 			inline_never void fp_MeasureForAllKeysSorted
@@ -74,12 +88,7 @@ namespace NMib::NMisc
 					, tf_FDestruct const &_fDestruct
 				)
 				const
-			{
-				if (fp_IsRandom())
-					fp_MeasureForAllKeysRandomSorted(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
-				else
-					fp_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
-			}
+			;
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
 			inline_never void fp_MeasureForAllKeysRandom
@@ -90,25 +99,7 @@ namespace NMib::NMisc
 					, tf_FDestruct const &_fDestruct
 				)
 				const
-			{
-				auto pDataStart = m_Key_Data.f_GetArray();
-				auto pDataEnd = pDataStart + gc_nItemsToTest;
-				auto fMeasure = [_fOperation, pDataStart, pDataEnd]() inline_never
-					{
-						for (auto *pData = pDataStart; pData != pDataEnd; ++pData)
-							_fOperation(pData->m_Key);
-					}
-				;
-				for (umint iTry = 0; iTry < gc_nTries; ++iTry)
-				{
-					_fInit();
-					{
-						DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
-						fMeasure();
-					}
-					_fDestruct();
-				}
-			}
+			;
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
 			inline_never void fp_MeasureForAllKeysLinear
@@ -119,23 +110,7 @@ namespace NMib::NMisc
 					, tf_FDestruct const &_fDestruct
 				)
 				const
-			{
-				auto fMeasure = [_fOperation]() inline_never
-					{
-						for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
-							_fOperation(iTest);
-					}
-				;
-				for (umint iTry = 0; iTry < gc_nTries; ++iTry)
-				{
-					_fInit();
-					{
-						DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
-						fMeasure();
-					}
-					_fDestruct();
-				}
-			}
+			;
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
 			inline_never void fp_MeasureForAllKeys
@@ -146,12 +121,7 @@ namespace NMib::NMisc
 					, tf_FDestruct const &_fDestruct
 				)
 				const
-			{
-				if (fp_IsRandom())
-					fp_MeasureForAllKeysRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
-				else
-					fp_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
-			}
+			;
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
 			inline_never void fp_MeasureForAllKeyValuesRandom
@@ -162,25 +132,7 @@ namespace NMib::NMisc
 					, tf_FDestruct const &_fDestruct
 				)
 				const
-			{
-				auto pDataStart = m_Key_Data.f_GetArray();
-				auto pDataEnd = pDataStart + gc_nItemsToTest;
-				auto fMeasure = [_fOperation, pDataStart, pDataEnd]() inline_never
-					{
-						for (auto *pData = pDataStart; pData != pDataEnd; ++pData)
-							_fOperation(pData->m_Key, pData->m_Value);
-					}
-				;
-				for (umint iTry = 0; iTry < gc_nTries; ++iTry)
-				{
-					_fInit();
-					{
-						DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
-						fMeasure();
-					}
-					_fDestruct();
-				}
-			}
+			;
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
 			inline_never void fp_MeasureForAllKeyValuesLinear
@@ -191,23 +143,7 @@ namespace NMib::NMisc
 					, tf_FDestruct const &_fDestruct
 				)
 				const
-			{
-				auto fMeasure = [_fOperation]() inline_never
-					{
-						for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
-							_fOperation(iTest, iTest);
-					}
-				;
-				for (umint iTry = 0; iTry < gc_nTries; ++iTry)
-				{
-					_fInit();
-					{
-						DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
-						fMeasure();
-					}
-					_fDestruct();
-				}
-			}
+			;
 
 			template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
 			inline_never void fp_MeasureForAllKeyValues
@@ -218,691 +154,877 @@ namespace NMib::NMisc
 					, tf_FDestruct const &_fDestruct
 				)
 				const
-			{
-				if (fp_IsRandom())
-					fp_MeasureForAllKeyValuesRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
-				else
-					fp_MeasureForAllKeyValuesLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
-			}
+			;
 
 		private: // Generate test data
 			template <typename tf_CMap>
-			tf_CMap fp_GetFilledMap() const
-			{
-				if (fp_IsRandom())
-				{
-					tf_CMap Map;
-					for (auto &Source : m_Key_Data)
-						Map[Source.m_Key] = Source.m_Value;
-					return Map;
-				}
-				else if (fp_IsBulkLoad())
-				{
-					tf_CMap Map;
-					Map.f_BulkLoad
-						(
-							gc_nItemsToTest
-							, [](auto &&_fInsert)
-							{
-								for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
-									_fInsert(iTest, iTest);
-							}
-						)
-					;
-					return Map;
-				}
-				else
-				{
-					tf_CMap Map;
-					for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
-						Map[iTest] = iTest;
-					return Map;
-				}
-			}
+			tf_CMap fp_GetFilledMap() const;
 
 			template <>
-			TCMap<umint, umint> fp_GetFilledMap<TCMap<umint, umint>>() const
+			TCMap<umint, umint> fp_GetFilledMap<TCMap<umint, umint>>() const;
+
+			bool fp_IsRandom() const;
+
+			bool fp_IsBulkLoad() const;
+
+			void fp_CheckInit();
+		};
+
+		CPackedMapTester::CPackedMapTester(EPopulateMode _PopulateMode)
+			: m_PopulateMode(_PopulateMode)
+		{
+		}
+
+		void CPackedMapTester::f_Insert()
+		{
+			DMibTestSuite("Insert")
 			{
-				if (fp_IsRandom())
+				auto Checkout = fg_GetSys()->f_MemoryManager_Checkout();
+				bool bDecommit = false;
+				fp_CheckInit();
+
+				CTestPerformance PerfTest(gc_AllowedPerformance);
+				CTestPerformanceMeasure PackedMapMeasure("PackedMap");
+
+				if (fp_IsBulkLoad())
 				{
-					TCMap<umint, umint> Map;
-					for (auto &Source : m_Key_Data)
-						Map[Source.m_Key] = Source.m_Value;
-					return Map;
-				}
-				else
-				{
-					TCMap<umint, umint> Map;
-					for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
-						Map[iTest] = iTest;
-					return Map;
-				}
-			}
-
-		private: // Operations
-			bool fp_IsRandom() const
-			{
-				return m_PopulateMode == EPopulateMode_Random;
-			}
-
-			bool fp_IsBulkLoad() const
-			{
-				return m_PopulateMode == EPopulateMode_LinearBulkLoad;
-			}
-
-			void fp_CheckInit()
-			{
-				if (!fp_IsRandom())
-					return;
-
-				if (m_Key_Data.f_IsEmpty())
-				{
-					m_Key_Data.f_Reserve(gc_nItemsToTest);
-					NCryptography::CSecureRandom RandomRng;
-					RandomRng.f_InsecureDeterministicReseed(constant_uint64(0xDEADBEEFDEADBEEF));
-
-					for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
-						m_Key_Data.f_Insert({RandomRng.f_GetValue<umint>(), RandomRng.f_GetValue<umint>()});
-
-					m_Key_DataSorted = m_Key_Data;
-					m_Key_DataSorted.f_Sort();
-				}
-			}
-
-		public: // Test cases
-			CPackedMapTester(EPopulateMode _PopulateMode)
-				: m_PopulateMode(_PopulateMode)
-			{
-			}
-
-			void f_Insert()
-			{
-				DMibTestSuite("Insert")
-				{
-					auto Checkout = fg_GetSys()->f_MemoryManager_Checkout();
-					bool bDecommit = false;
-					fp_CheckInit();
-
-					CTestPerformance PerfTest(gc_AllowedPerformance);
-					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
-
-					if (fp_IsBulkLoad())
+					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 					{
-						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 						{
+							TCPackedMap<umint, umint> PackedMap;
+							[&]() inline_never
 							{
-								TCPackedMap<umint, umint> PackedMap;
-								[&]() inline_never
-								{
-									DMibTestScopeMeasure(PackedMapMeasure, gc_nItemsToTest);
-									PackedMap.f_BulkLoad
-										(
-											gc_nItemsToTest
-											, [](auto &&_fInsert)
-											{
-												for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
-													_fInsert(iTest, iTest);
-											}
-										)
-									;
-								}
-								();
+								DMibTestScopeMeasure(PackedMapMeasure, gc_nItemsToTest);
+								PackedMap.f_BulkLoad
+									(
+										gc_nItemsToTest
+										, [](auto &&_fInsert)
+										{
+											for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
+												_fInsert(iTest, iTest);
+										}
+									)
+								;
 							}
-							Checkout.f_GarbageCollectLocalArena(bDecommit);
+							();
 						}
 						Checkout.f_GarbageCollectLocalArena(bDecommit);
 					}
-					else
-					{
-						TCPackedMap<umint, umint> PackedMap;
-						fp_MeasureForAllKeyValues
-							(
-								PackedMapMeasure
-								, [&](umint _Key, umint _Value) inline_always_lambda
-								{
-									PackedMap[_Key] = _Value;
-								}
-								, []
-								{
-								}
-								, [&]
-								{
-									PackedMap.f_Clear();
-									Checkout.f_GarbageCollectLocalArena(bDecommit);
-								}
-							)
-						;
-						Checkout.f_GarbageCollectLocalArena(bDecommit);
-					}
-					PerfTest.f_Add(PackedMapMeasure);
-
-					CTestPerformanceMeasure MapMeasure("Map");
-					TCMap<umint, umint> Map;
+					Checkout.f_GarbageCollectLocalArena(bDecommit);
+				}
+				else
+				{
+					TCPackedMap<umint, umint> PackedMap;
 					fp_MeasureForAllKeyValues
 						(
-							MapMeasure
+							PackedMapMeasure
 							, [&](umint _Key, umint _Value) inline_always_lambda
 							{
-								Map[_Key] = _Value;
+								PackedMap[_Key] = _Value;
 							}
 							, []
 							{
 							}
 							, [&]
 							{
-								Map.f_Clear();
+								PackedMap.f_Clear();
 								Checkout.f_GarbageCollectLocalArena(bDecommit);
 							}
 						)
 					;
 					Checkout.f_GarbageCollectLocalArena(bDecommit);
-					PerfTest.f_AddReference(MapMeasure);
-					DMibExpectTrue(PerfTest);
-				};
-			}
+				}
+				PerfTest.f_Add(PackedMapMeasure);
 
-			void f_Access()
-			{
-				DMibTestSuite("Access")
-				{
-					fp_CheckInit();
-					CTestPerformance PerfTest(gc_AllowedPerformance);
-					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
-
-					auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
-					umint FoundPackedMap = 0;
-					fp_MeasureForAllKeys
-						(
-							PackedMapMeasure
-							, [&](umint _Key) inline_always_lambda
-							{
-								if (PackedMap.f_FindEqual(_Key))
-									++FoundPackedMap;
-							}
-							, []
-							{
-							}
-							, []
-							{
-							}
-						)
-					;
-					PerfTest.f_Add(PackedMapMeasure);
-
-					CTestPerformanceMeasure MapMeasure("Map");
-					auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
-					umint FoundMap = 0;
-					fp_MeasureForAllKeys
-						(
-							MapMeasure
-							, [&](umint _Key) inline_always_lambda
-							{
-								if (Map.f_FindEqual(_Key))
-									++FoundMap;
-							}
-							, []
-							{
-							}
-							, []
-							{
-							}
-						)
-					;
-					PerfTest.f_AddReference(MapMeasure);
-					DMibExpect(FoundPackedMap, ==, gc_nItemsToTest * gc_nTries);
-					DMibExpect(FoundMap, ==, gc_nItemsToTest * gc_nTries);
-					DMibExpectTrue(PerfTest);
-				};
-			}
-
-			void f_AccessSorted()
-			{
-				DMibTestSuite("AccessSorted")
-				{
-					fp_CheckInit();
-					CTestPerformance PerfTest(gc_AllowedPerformance);
-					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
-
-					auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
-					umint FoundPackedMap = 0;
-					fp_MeasureForAllKeysSorted
-						(
-							PackedMapMeasure
-							, [&](umint _Key) inline_always_lambda
-							{
-								if (PackedMap.f_FindEqual(_Key))
-									++FoundPackedMap;
-							}
-							, []
-							{
-							}
-							, []
-							{
-							}
-						)
-					;
-					PerfTest.f_Add(PackedMapMeasure);
-
-					CTestPerformanceMeasure MapMeasure("Map");
-					auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
-					umint FoundMap = 0;
-					fp_MeasureForAllKeysSorted
-						(
-							MapMeasure
-							, [&](umint _Key) inline_always_lambda
-							{
-								if (Map.f_FindEqual(_Key))
-									++FoundMap;
-							}
-							, []
-							{
-							}
-							, []
-							{
-							}
-						)
-					;
-					PerfTest.f_AddReference(MapMeasure);
-					DMibExpect(FoundPackedMap, ==, gc_nItemsToTest * gc_nTries);
-					DMibExpect(FoundMap, ==, gc_nItemsToTest * gc_nTries);
-					DMibExpectTrue(PerfTest);
-				};
-			}
-
-			void f_Erase()
-			{
-				DMibTestSuite("Erase")
-				{
-					fp_CheckInit();
-					CTestPerformance PerfTest(gc_AllowedPerformance);
-					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
-
-					TCPackedMap<umint, umint> PackedMap;
-					fp_MeasureForAllKeys
-						(
-							PackedMapMeasure
-							, [&](umint _Key) inline_always_lambda
-							{
-								PackedMap.f_Remove(_Key);
-							}
-							, [&]
-							{
-								PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
-							}
-							, [&]
-							{
-								PackedMap.f_Clear();
-							}
-						)
-					;
-					PerfTest.f_Add(PackedMapMeasure);
-
-					CTestPerformanceMeasure MapMeasure("Map");
-					TCMap<umint, umint> Map;
-					fp_MeasureForAllKeys
-						(
-							MapMeasure
-							, [&](umint _Key) inline_always_lambda
-							{
-								Map.f_Remove(_Key);
-							}
-							, [&]
-							{
-								Map = fp_GetFilledMap<TCMap<umint, umint>>();
-							}
-							, [&]
-							{
-								Map.f_Clear();
-							}
-						)
-					;
-					PerfTest.f_AddReference(MapMeasure);
-					DMibExpectTrue(PerfTest);
-				};
-			}
-
-			void f_Clear()
-			{
-				DMibTestSuite("Clear")
-				{
-					fp_CheckInit();
-					CTestPerformance PerfTest(gc_AllowedPerformance);
-					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
-
-					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
-					{
-						auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
-						[&]() inline_never
+				CTestPerformanceMeasure MapMeasure("Map");
+				TCMap<umint, umint> Map;
+				fp_MeasureForAllKeyValues
+					(
+						MapMeasure
+						, [&](umint _Key, umint _Value) inline_always_lambda
 						{
-							DMibTestScopeMeasure(PackedMapMeasure, gc_nItemsToTest);
+							Map[_Key] = _Value;
+						}
+						, []
+						{
+						}
+						, [&]
+						{
+							Map.f_Clear();
+							Checkout.f_GarbageCollectLocalArena(bDecommit);
+						}
+					)
+				;
+				Checkout.f_GarbageCollectLocalArena(bDecommit);
+				PerfTest.f_AddReference(MapMeasure);
+				DMibExpectTrue(PerfTest);
+			};
+		}
+
+		void CPackedMapTester::f_Access()
+		{
+			DMibTestSuite("Access")
+			{
+				fp_CheckInit();
+				CTestPerformance PerfTest(gc_AllowedPerformance);
+				CTestPerformanceMeasure PackedMapMeasure("PackedMap");
+
+				auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
+				umint FoundPackedMap = 0;
+				fp_MeasureForAllKeys
+					(
+						PackedMapMeasure
+						, [&](umint _Key) inline_always_lambda
+						{
+							if (PackedMap.f_FindEqual(_Key))
+								++FoundPackedMap;
+						}
+						, []
+						{
+						}
+						, []
+						{
+						}
+					)
+				;
+				PerfTest.f_Add(PackedMapMeasure);
+
+				CTestPerformanceMeasure MapMeasure("Map");
+				auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
+				umint FoundMap = 0;
+				fp_MeasureForAllKeys
+					(
+						MapMeasure
+						, [&](umint _Key) inline_always_lambda
+						{
+							if (Map.f_FindEqual(_Key))
+								++FoundMap;
+						}
+						, []
+						{
+						}
+						, []
+						{
+						}
+					)
+				;
+				PerfTest.f_AddReference(MapMeasure);
+				DMibExpect(FoundPackedMap, ==, gc_nItemsToTest * gc_nTries);
+				DMibExpect(FoundMap, ==, gc_nItemsToTest * gc_nTries);
+				DMibExpectTrue(PerfTest);
+			};
+		}
+
+		void CPackedMapTester::f_AccessSorted()
+		{
+			DMibTestSuite("AccessSorted")
+			{
+				fp_CheckInit();
+				CTestPerformance PerfTest(gc_AllowedPerformance);
+				CTestPerformanceMeasure PackedMapMeasure("PackedMap");
+
+				auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
+				umint FoundPackedMap = 0;
+				fp_MeasureForAllKeysSorted
+					(
+						PackedMapMeasure
+						, [&](umint _Key) inline_always_lambda
+						{
+							if (PackedMap.f_FindEqual(_Key))
+								++FoundPackedMap;
+						}
+						, []
+						{
+						}
+						, []
+						{
+						}
+					)
+				;
+				PerfTest.f_Add(PackedMapMeasure);
+
+				CTestPerformanceMeasure MapMeasure("Map");
+				auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
+				umint FoundMap = 0;
+				fp_MeasureForAllKeysSorted
+					(
+						MapMeasure
+						, [&](umint _Key) inline_always_lambda
+						{
+							if (Map.f_FindEqual(_Key))
+								++FoundMap;
+						}
+						, []
+						{
+						}
+						, []
+						{
+						}
+					)
+				;
+				PerfTest.f_AddReference(MapMeasure);
+				DMibExpect(FoundPackedMap, ==, gc_nItemsToTest * gc_nTries);
+				DMibExpect(FoundMap, ==, gc_nItemsToTest * gc_nTries);
+				DMibExpectTrue(PerfTest);
+			};
+		}
+
+		void CPackedMapTester::f_Erase()
+		{
+			DMibTestSuite("Erase")
+			{
+				fp_CheckInit();
+				CTestPerformance PerfTest(gc_AllowedPerformance);
+				CTestPerformanceMeasure PackedMapMeasure("PackedMap");
+
+				TCPackedMap<umint, umint> PackedMap;
+				fp_MeasureForAllKeys
+					(
+						PackedMapMeasure
+						, [&](umint _Key) inline_always_lambda
+						{
+							PackedMap.f_Remove(_Key);
+						}
+						, [&]
+						{
+							PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
+						}
+						, [&]
+						{
 							PackedMap.f_Clear();
 						}
-						();
-					}
+					)
+				;
+				PerfTest.f_Add(PackedMapMeasure);
 
-					PerfTest.f_Add(PackedMapMeasure);
-
-					CTestPerformanceMeasure MapMeasure("Map");
-
-					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
-					{
-						auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
-						[&]() inline_never
+				CTestPerformanceMeasure MapMeasure("Map");
+				TCMap<umint, umint> Map;
+				fp_MeasureForAllKeys
+					(
+						MapMeasure
+						, [&](umint _Key) inline_always_lambda
 						{
-							DMibTestScopeMeasure(MapMeasure, gc_nItemsToTest);
+							Map.f_Remove(_Key);
+						}
+						, [&]
+						{
+							Map = fp_GetFilledMap<TCMap<umint, umint>>();
+						}
+						, [&]
+						{
 							Map.f_Clear();
 						}
-						();
-					}
+					)
+				;
+				PerfTest.f_AddReference(MapMeasure);
+				DMibExpectTrue(PerfTest);
+			};
+		}
 
-					PerfTest.f_AddReference(MapMeasure);
-					DMibExpectTrue(PerfTest);
-				};
-			}
-
-			void f_Copy()
+		void CPackedMapTester::f_Clear()
+		{
+			DMibTestSuite("Clear")
 			{
-				DMibTestSuite("Copy")
+				fp_CheckInit();
+				CTestPerformance PerfTest(gc_AllowedPerformance);
+				CTestPerformanceMeasure PackedMapMeasure("PackedMap");
+
+				for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 				{
-					fp_CheckInit();
-					CTestPerformance PerfTest(gc_AllowedPerformance);
+					auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
+					[&]() inline_never
+					{
+						DMibTestScopeMeasure(PackedMapMeasure, gc_nItemsToTest);
+						PackedMap.f_Clear();
+					}
+					();
+				}
+
+				PerfTest.f_Add(PackedMapMeasure);
+
+				CTestPerformanceMeasure MapMeasure("Map");
+
+				for (umint iTry = 0; iTry < gc_nTries; ++iTry)
+				{
+					auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
+					[&]() inline_never
+					{
+						DMibTestScopeMeasure(MapMeasure, gc_nItemsToTest);
+						Map.f_Clear();
+					}
+					();
+				}
+
+				PerfTest.f_AddReference(MapMeasure);
+				DMibExpectTrue(PerfTest);
+			};
+		}
+
+		void CPackedMapTester::f_Copy()
+		{
+			DMibTestSuite("Copy")
+			{
+				fp_CheckInit();
+				CTestPerformance PerfTest(gc_AllowedPerformance);
+				CTestPerformanceMeasure PackedMapMeasure("PackedMap");
+
+				auto PackedMapSource = fp_GetFilledMap<TCPackedMap<umint, umint>>();
+				TCPackedMap<umint, umint> PackedMapCopy;
+				for (umint iTry = 0; iTry < gc_nTries; ++iTry)
+				{
+					[&]() inline_never
+					{
+						DMibTestScopeMeasure(PackedMapMeasure, gc_nItemsToTest);
+						PackedMapCopy = PackedMapSource;
+					}
+					();
+					PackedMapCopy.f_Clear();
+				}
+
+				PerfTest.f_Add(PackedMapMeasure);
+
+				CTestPerformanceMeasure MapMeasure("Map");
+				auto MapSource = fp_GetFilledMap<TCMap<umint, umint>>();
+				TCMap<umint, umint> MapCopy;
+				for (umint iTry = 0; iTry < gc_nTries; ++iTry)
+				{
+					[&]() inline_never
+					{
+						DMibTestScopeMeasure(MapMeasure, gc_nItemsToTest);
+						MapCopy = MapSource;
+					}
+					();
+					MapCopy.f_Clear();
+				}
+
+				PerfTest.f_AddReference(MapMeasure);
+				DMibExpectTrue(PerfTest);
+			};
+		}
+
+		void CPackedMapTester::f_AccessAfterCopy()
+		{
+			DMibTestSuite("AccessAfterCopy")
+			{
+				fp_CheckInit();
+				CTestPerformance PerfTest(gc_AllowedPerformance);
+				CTestPerformanceMeasure PackedMapMeasure("PackedMap");
+
+				auto PackedMapSource = fp_GetFilledMap<TCPackedMap<umint, umint>>();
+				auto PackedMap = PackedMapSource;
+				umint FoundPackedMap = 0;
+				fp_MeasureForAllKeys
+					(
+						PackedMapMeasure
+						, [&](umint _Key) inline_always_lambda
+						{
+							if (PackedMap.f_FindEqual(_Key))
+								++FoundPackedMap;
+						}
+						, []
+						{
+						}
+						, []
+						{
+						}
+					)
+				;
+				PerfTest.f_Add(PackedMapMeasure);
+
+				CTestPerformanceMeasure MapMeasure("Map");
+				auto MapSource = fp_GetFilledMap<TCMap<umint, umint>>();
+				auto Map = MapSource;
+				umint FoundMap = 0;
+				fp_MeasureForAllKeys
+					(
+						MapMeasure
+						, [&](umint _Key) inline_always_lambda
+						{
+							if (Map.f_FindEqual(_Key))
+								++FoundMap;
+						}
+						, []
+						{
+						}
+						, []
+						{
+						}
+					)
+				;
+				PerfTest.f_AddReference(MapMeasure);
+
+				DMibExpect(FoundPackedMap, ==, gc_nItemsToTest * gc_nTries);
+				DMibExpect(FoundMap, ==, gc_nItemsToTest * gc_nTries);
+				DMibExpectTrue(PerfTest);
+			};
+		}
+
+		void CPackedMapTester::f_AccessAfterCopySorted()
+		{
+			DMibTestSuite("AccessAfterCopySorted")
+			{
+				fp_CheckInit();
+				CTestPerformance PerfTest(gc_AllowedPerformance);
+				CTestPerformanceMeasure PackedMapMeasure("PackedMap");
+
+				auto PackedMapSource = fp_GetFilledMap<TCPackedMap<umint, umint>>();
+				auto PackedMap = PackedMapSource;
+				umint FoundPackedMap = 0;
+				fp_MeasureForAllKeysSorted
+					(
+						PackedMapMeasure
+						, [&](umint _Key) inline_always_lambda
+						{
+							if (PackedMap.f_FindEqual(_Key))
+								++FoundPackedMap;
+						}
+						, []
+						{
+						}
+						, []
+						{
+						}
+					)
+				;
+				PerfTest.f_Add(PackedMapMeasure);
+
+				CTestPerformanceMeasure MapMeasure("Map");
+				auto MapSource = fp_GetFilledMap<TCMap<umint, umint>>();
+				auto Map = MapSource;
+				umint FoundMap = 0;
+				fp_MeasureForAllKeysSorted
+					(
+						MapMeasure
+						, [&](umint _Key) inline_always_lambda
+						{
+							if (Map.f_FindEqual(_Key))
+								++FoundMap;
+						}
+						, []
+						{
+						}
+						, []
+						{
+						}
+					)
+				;
+				PerfTest.f_AddReference(MapMeasure);
+
+				DMibExpect(FoundPackedMap, ==, gc_nItemsToTest * gc_nTries);
+				DMibExpect(FoundMap, ==, gc_nItemsToTest * gc_nTries);
+				DMibExpectTrue(PerfTest);
+			};
+		}
+
+		void CPackedMapTester::f_Iterate()
+		{
+			DMibTestSuite("Iterate")
+			{
+				fp_CheckInit();
+				CTestPerformance PerfTest(gc_AllowedPerformance);
+				{
 					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
 
-					auto PackedMapSource = fp_GetFilledMap<TCPackedMap<umint, umint>>();
-					TCPackedMap<umint, umint> PackedMapCopy;
+					auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
+					umint SumPackedMap = 0;
 					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 					{
 						[&]() inline_never
 						{
 							DMibTestScopeMeasure(PackedMapMeasure, gc_nItemsToTest);
-							PackedMapCopy = PackedMapSource;
+							for (auto iIter = PackedMap.f_GetIterator(); iIter; ++iIter)
+								SumPackedMap += *iIter;
 						}
 						();
-						PackedMapCopy.f_Clear();
 					}
 
 					PerfTest.f_Add(PackedMapMeasure);
+				}
 
+				{
+					CTestPerformanceMeasure PackedMapScanMeasure("PackedMapScan");
+
+					auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
+					umint SumPackedMap = 0;
+					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
+					{
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(PackedMapScanMeasure, gc_nItemsToTest);
+							PackedMap.f_Scan
+								(
+									[&](auto &_Key, auto &_Value)
+									{
+										SumPackedMap += _Value;
+									}
+								)
+							;
+						}
+						();
+					}
+
+					PerfTest.f_Add(PackedMapScanMeasure);
+				}
+
+				{
+					// This tests the overhead of having the early exit branch in the scan algorithm
+					CTestPerformanceMeasure PackedMapScanMeasure("PackedMapScanEarly");
+
+					auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
+					umint SumPackedMap = 0;
+					umint CheckValue = 0;
+					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
+					{
+						[&]() inline_never
+						{
+							DMibTestScopeMeasure(PackedMapScanMeasure, gc_nItemsToTest);
+							PackedMap.f_Scan
+								(
+									[&](auto &_Key, auto &_Value)
+									{
+										SumPackedMap += _Value;
+
+										return CheckValue < 0xfffffff0u;
+									}
+								)
+							;
+						}
+						();
+					}
+
+					PerfTest.f_Add(PackedMapScanMeasure);
+				}
+
+				{
 					CTestPerformanceMeasure MapMeasure("Map");
-					auto MapSource = fp_GetFilledMap<TCMap<umint, umint>>();
-					TCMap<umint, umint> MapCopy;
+					auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
+					umint SumMap = 0;
 					for (umint iTry = 0; iTry < gc_nTries; ++iTry)
 					{
 						[&]() inline_never
 						{
 							DMibTestScopeMeasure(MapMeasure, gc_nItemsToTest);
-							MapCopy = MapSource;
+							for (auto iIter = Map.f_GetIterator(); iIter; ++iIter)
+								SumMap += *iIter;
 						}
 						();
-						MapCopy.f_Clear();
 					}
 
 					PerfTest.f_AddReference(MapMeasure);
-					DMibExpectTrue(PerfTest);
-				};
-			}
-
-			void f_AccessAfterCopy()
-			{
-				DMibTestSuite("AccessAfterCopy")
-				{
-					fp_CheckInit();
-					CTestPerformance PerfTest(gc_AllowedPerformance);
-					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
-
-					auto PackedMapSource = fp_GetFilledMap<TCPackedMap<umint, umint>>();
-					auto PackedMap = PackedMapSource;
-					umint FoundPackedMap = 0;
-					fp_MeasureForAllKeys
-						(
-							PackedMapMeasure
-							, [&](umint _Key) inline_always_lambda
-							{
-								if (PackedMap.f_FindEqual(_Key))
-									++FoundPackedMap;
-							}
-							, []
-							{
-							}
-							, []
-							{
-							}
-						)
-					;
-					PerfTest.f_Add(PackedMapMeasure);
-
-					CTestPerformanceMeasure MapMeasure("Map");
-					auto MapSource = fp_GetFilledMap<TCMap<umint, umint>>();
-					auto Map = MapSource;
-					umint FoundMap = 0;
-					fp_MeasureForAllKeys
-						(
-							MapMeasure
-							, [&](umint _Key) inline_always_lambda
-							{
-								if (Map.f_FindEqual(_Key))
-									++FoundMap;
-							}
-							, []
-							{
-							}
-							, []
-							{
-							}
-						)
-					;
-					PerfTest.f_AddReference(MapMeasure);
-
-					DMibExpect(FoundPackedMap, ==, gc_nItemsToTest * gc_nTries);
-					DMibExpect(FoundMap, ==, gc_nItemsToTest * gc_nTries);
-					DMibExpectTrue(PerfTest);
-				};
-			}
-
-			void f_AccessAfterCopySorted()
-			{
-				DMibTestSuite("AccessAfterCopySorted")
-				{
-					fp_CheckInit();
-					CTestPerformance PerfTest(gc_AllowedPerformance);
-					CTestPerformanceMeasure PackedMapMeasure("PackedMap");
-
-					auto PackedMapSource = fp_GetFilledMap<TCPackedMap<umint, umint>>();
-					auto PackedMap = PackedMapSource;
-					umint FoundPackedMap = 0;
-					fp_MeasureForAllKeysSorted
-						(
-							PackedMapMeasure
-							, [&](umint _Key) inline_always_lambda
-							{
-								if (PackedMap.f_FindEqual(_Key))
-									++FoundPackedMap;
-							}
-							, []
-							{
-							}
-							, []
-							{
-							}
-						)
-					;
-					PerfTest.f_Add(PackedMapMeasure);
-
-					CTestPerformanceMeasure MapMeasure("Map");
-					auto MapSource = fp_GetFilledMap<TCMap<umint, umint>>();
-					auto Map = MapSource;
-					umint FoundMap = 0;
-					fp_MeasureForAllKeysSorted
-						(
-							MapMeasure
-							, [&](umint _Key) inline_always_lambda
-							{
-								if (Map.f_FindEqual(_Key))
-									++FoundMap;
-							}
-							, []
-							{
-							}
-							, []
-							{
-							}
-						)
-					;
-					PerfTest.f_AddReference(MapMeasure);
-
-					DMibExpect(FoundPackedMap, ==, gc_nItemsToTest * gc_nTries);
-					DMibExpect(FoundMap, ==, gc_nItemsToTest * gc_nTries);
-					DMibExpectTrue(PerfTest);
-				};
-			}
-
-			void f_Iterate()
-			{
-				DMibTestSuite("Iterate")
-				{
-					fp_CheckInit();
-					CTestPerformance PerfTest(gc_AllowedPerformance);
-					{
-						CTestPerformanceMeasure PackedMapMeasure("PackedMap");
-
-						auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
-						umint SumPackedMap = 0;
-						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
-						{
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(PackedMapMeasure, gc_nItemsToTest);
-								for (auto iIter = PackedMap.f_GetIterator(); iIter; ++iIter)
-									SumPackedMap += *iIter;
-							}
-							();
-						}
-
-						PerfTest.f_Add(PackedMapMeasure);
-					}
-
-					{
-						CTestPerformanceMeasure PackedMapScanMeasure("PackedMapScan");
-
-						auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
-						umint SumPackedMap = 0;
-						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
-						{
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(PackedMapScanMeasure, gc_nItemsToTest);
-								PackedMap.f_Scan
-									(
-										[&](auto &_Key, auto &_Value)
-										{
-											SumPackedMap += _Value;
-										}
-									)
-								;
-							}
-							();
-						}
-
-						PerfTest.f_Add(PackedMapScanMeasure);
-					}
-
-					{
-						// This tests the overhead of having the early exit branch in the scan algorithm
-						CTestPerformanceMeasure PackedMapScanMeasure("PackedMapScanEarly");
-
-						auto PackedMap = fp_GetFilledMap<TCPackedMap<umint, umint>>();
-						umint SumPackedMap = 0;
-						umint CheckValue = 0;
-						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
-						{
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(PackedMapScanMeasure, gc_nItemsToTest);
-								PackedMap.f_Scan
-									(
-										[&](auto &_Key, auto &_Value)
-										{
-											SumPackedMap += _Value;
-
-											return CheckValue < 0xfffffff0u;
-										}
-									)
-								;
-							}
-							();
-						}
-
-						PerfTest.f_Add(PackedMapScanMeasure);
-					}
-
-					{
-						CTestPerformanceMeasure MapMeasure("Map");
-						auto Map = fp_GetFilledMap<TCMap<umint, umint>>();
-						umint SumMap = 0;
-						for (umint iTry = 0; iTry < gc_nTries; ++iTry)
-						{
-							[&]() inline_never
-							{
-								DMibTestScopeMeasure(MapMeasure, gc_nItemsToTest);
-								for (auto iIter = Map.f_GetIterator(); iIter; ++iIter)
-									SumMap += *iIter;
-							}
-							();
-						}
-
-						PerfTest.f_AddReference(MapMeasure);
-					}
-					DMibExpectTrue(PerfTest);
-				};
-			}
-
-			struct CKeyValue
-			{
-				umint m_Key = 0;
-				umint m_Value = 0;
-
-				auto operator <=> (CKeyValue const &_Right) const noexcept = default;
+				}
+				DMibExpectTrue(PerfTest);
 			};
+		}
 
-			EPopulateMode m_PopulateMode;
-			NContainer::TCVector<CKeyValue> m_Key_Data;
-			NContainer::TCVector<CKeyValue> m_Key_DataSorted;
-		};
+		template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+		void CPackedMapTester::fp_MeasureForAllKeysRandomSorted
+			(
+				CTestPerformanceMeasure &_PerformanceMeasure
+				, tf_FOperation const &_fOperation
+				, tf_FInit const &_fInit
+				, tf_FDestruct const &_fDestruct
+			)
+			const
+		{
+			auto pDataStart = m_Key_DataSorted.f_GetArray();
+			auto pDataEnd = pDataStart + gc_nItemsToTest;
+			auto fMeasure = [_fOperation, pDataStart, pDataEnd]() inline_never
+				{
+					for (auto *pData = pDataStart; pData != pDataEnd; ++pData)
+						_fOperation(pData->m_Key);
+				}
+			;
+			for (umint iTry = 0; iTry < gc_nTries; ++iTry)
+			{
+				_fInit();
+				{
+					DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
+					fMeasure();
+				}
+				_fDestruct();
+			}
+		}
+
+		template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+		void CPackedMapTester::fp_MeasureForAllKeysSorted
+			(
+				CTestPerformanceMeasure &_PerformanceMeasure
+				, tf_FOperation const &_fOperation
+				, tf_FInit const &_fInit
+				, tf_FDestruct const &_fDestruct
+			)
+			const
+		{
+			if (fp_IsRandom())
+				fp_MeasureForAllKeysRandomSorted(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
+			else
+				fp_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
+		}
+
+		template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+		void CPackedMapTester::fp_MeasureForAllKeysRandom
+			(
+				CTestPerformanceMeasure &_PerformanceMeasure
+				, tf_FOperation const &_fOperation
+				, tf_FInit const &_fInit
+				, tf_FDestruct const &_fDestruct
+			)
+			const
+		{
+			auto pDataStart = m_Key_Data.f_GetArray();
+			auto pDataEnd = pDataStart + gc_nItemsToTest;
+			auto fMeasure = [_fOperation, pDataStart, pDataEnd]() inline_never
+				{
+					for (auto *pData = pDataStart; pData != pDataEnd; ++pData)
+						_fOperation(pData->m_Key);
+				}
+			;
+			for (umint iTry = 0; iTry < gc_nTries; ++iTry)
+			{
+				_fInit();
+				{
+					DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
+					fMeasure();
+				}
+				_fDestruct();
+			}
+		}
+
+		template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+		void CPackedMapTester::fp_MeasureForAllKeysLinear
+			(
+				CTestPerformanceMeasure &_PerformanceMeasure
+				, tf_FOperation const &_fOperation
+				, tf_FInit const &_fInit
+				, tf_FDestruct const &_fDestruct
+			)
+			const
+		{
+			auto fMeasure = [_fOperation]() inline_never
+				{
+					for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
+						_fOperation(iTest);
+				}
+			;
+			for (umint iTry = 0; iTry < gc_nTries; ++iTry)
+			{
+				_fInit();
+				{
+					DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
+					fMeasure();
+				}
+				_fDestruct();
+			}
+		}
+
+		template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+		void CPackedMapTester::fp_MeasureForAllKeys
+			(
+				CTestPerformanceMeasure &_PerformanceMeasure
+				, tf_FOperation const &_fOperation
+				, tf_FInit const &_fInit
+				, tf_FDestruct const &_fDestruct
+			)
+			const
+		{
+			if (fp_IsRandom())
+				fp_MeasureForAllKeysRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
+			else
+				fp_MeasureForAllKeysLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
+		}
+
+		template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+		void CPackedMapTester::fp_MeasureForAllKeyValuesRandom
+			(
+				CTestPerformanceMeasure &_PerformanceMeasure
+				, tf_FOperation const &_fOperation
+				, tf_FInit const &_fInit
+				, tf_FDestruct const &_fDestruct
+			)
+			const
+		{
+			auto pDataStart = m_Key_Data.f_GetArray();
+			auto pDataEnd = pDataStart + gc_nItemsToTest;
+			auto fMeasure = [_fOperation, pDataStart, pDataEnd]() inline_never
+				{
+					for (auto *pData = pDataStart; pData != pDataEnd; ++pData)
+						_fOperation(pData->m_Key, pData->m_Value);
+				}
+			;
+			for (umint iTry = 0; iTry < gc_nTries; ++iTry)
+			{
+				_fInit();
+				{
+					DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
+					fMeasure();
+				}
+				_fDestruct();
+			}
+		}
+
+		template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+		void CPackedMapTester::fp_MeasureForAllKeyValuesLinear
+			(
+				CTestPerformanceMeasure &_PerformanceMeasure
+				, tf_FOperation const &_fOperation
+				, tf_FInit const &_fInit
+				, tf_FDestruct const &_fDestruct
+			)
+			const
+		{
+			auto fMeasure = [_fOperation]() inline_never
+				{
+					for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
+						_fOperation(iTest, iTest);
+				}
+			;
+			for (umint iTry = 0; iTry < gc_nTries; ++iTry)
+			{
+				_fInit();
+				{
+					DMibTestScopeMeasure(_PerformanceMeasure, gc_nItemsToTest);
+					fMeasure();
+				}
+				_fDestruct();
+			}
+		}
+
+		template <typename tf_FOperation, typename tf_FInit, typename tf_FDestruct>
+		void CPackedMapTester::fp_MeasureForAllKeyValues
+			(
+				CTestPerformanceMeasure &_PerformanceMeasure
+				, tf_FOperation const &_fOperation
+				, tf_FInit const &_fInit
+				, tf_FDestruct const &_fDestruct
+			)
+			const
+		{
+			if (fp_IsRandom())
+				fp_MeasureForAllKeyValuesRandom(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
+			else
+				fp_MeasureForAllKeyValuesLinear(_PerformanceMeasure, _fOperation, _fInit, _fDestruct);
+		}
+
+		template <typename tf_CMap>
+		tf_CMap CPackedMapTester::fp_GetFilledMap() const
+		{
+			if (fp_IsRandom())
+			{
+				tf_CMap Map;
+				for (auto &Source : m_Key_Data)
+					Map[Source.m_Key] = Source.m_Value;
+				return Map;
+			}
+			else if (fp_IsBulkLoad())
+			{
+				tf_CMap Map;
+				Map.f_BulkLoad
+					(
+						gc_nItemsToTest
+						, [](auto &&_fInsert)
+						{
+							for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
+								_fInsert(iTest, iTest);
+						}
+					)
+				;
+				return Map;
+			}
+			else
+			{
+				tf_CMap Map;
+				for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
+					Map[iTest] = iTest;
+				return Map;
+			}
+		}
+
+		template <>
+		TCMap<umint, umint> CPackedMapTester::fp_GetFilledMap<TCMap<umint, umint>>() const
+		{
+			if (fp_IsRandom())
+			{
+				TCMap<umint, umint> Map;
+				for (auto &Source : m_Key_Data)
+					Map[Source.m_Key] = Source.m_Value;
+				return Map;
+			}
+			else
+			{
+				TCMap<umint, umint> Map;
+				for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
+					Map[iTest] = iTest;
+				return Map;
+			}
+		}
+
+		bool CPackedMapTester::fp_IsRandom() const
+		{
+			return m_PopulateMode == EPopulateMode_Random;
+		}
+
+		bool CPackedMapTester::fp_IsBulkLoad() const
+		{
+			return m_PopulateMode == EPopulateMode_LinearBulkLoad;
+		}
+
+		void CPackedMapTester::fp_CheckInit()
+		{
+			if (!fp_IsRandom())
+				return;
+
+			if (m_Key_Data.f_IsEmpty())
+			{
+				m_Key_Data.f_Reserve(gc_nItemsToTest);
+				NCryptography::CSecureRandom RandomRng;
+				RandomRng.f_InsecureDeterministicReseed(constant_uint64(0xDEADBEEFDEADBEEF));
+
+				for (umint iTest = 0; iTest < gc_nItemsToTest; ++iTest)
+					m_Key_Data.f_Insert({RandomRng.f_GetValue<umint>(), RandomRng.f_GetValue<umint>()});
+
+				m_Key_DataSorted = m_Key_Data;
+				m_Key_DataSorted.f_Sort();
+			}
+		}
 
 		struct CPackedMapPerformance_Tests : public CTest
 		{
-			void f_Suite(CPackedMapTester &&_Tester)
-			{
-				_Tester.f_Insert();
-				_Tester.f_Access();
-				_Tester.f_AccessSorted();
-				_Tester.f_Erase();
-				_Tester.f_Clear();
-				_Tester.f_Copy();
-				_Tester.f_AccessAfterCopy();
-				_Tester.f_AccessAfterCopySorted();
-				_Tester.f_Iterate();
-			}
+			void f_Suite(CPackedMapTester &&_Tester);
 
-			void f_DoTests()
-			{
-				DMibTestCategory(CTestCategory("Performance") << CTestGroup("Performance"))
-				{
-					DMibTestCategory("Random Input")
-					{
-						f_Suite(CPackedMapTester(EPopulateMode_Random));
-					};
-					DMibTestCategory("Linear Input")
-					{
-						f_Suite(CPackedMapTester(EPopulateMode_Linear));
-					};
-					DMibTestCategory("Linear Input (BulkLoad)")
-					{
-						f_Suite(CPackedMapTester(EPopulateMode_LinearBulkLoad));
-					};
-				};
-			}
+			void f_DoTests();
 		};
+
+		void CPackedMapPerformance_Tests::f_Suite(CPackedMapTester &&_Tester)
+		{
+			_Tester.f_Insert();
+			_Tester.f_Access();
+			_Tester.f_AccessSorted();
+			_Tester.f_Erase();
+			_Tester.f_Clear();
+			_Tester.f_Copy();
+			_Tester.f_AccessAfterCopy();
+			_Tester.f_AccessAfterCopySorted();
+			_Tester.f_Iterate();
+		}
+
+		void CPackedMapPerformance_Tests::f_DoTests()
+		{
+			DMibTestCategory(CTestCategory("Performance") << CTestGroup("Performance"))
+			{
+				DMibTestCategory("Random Input")
+				{
+					f_Suite(CPackedMapTester(EPopulateMode_Random));
+				};
+				DMibTestCategory("Linear Input")
+				{
+					f_Suite(CPackedMapTester(EPopulateMode_Linear));
+				};
+				DMibTestCategory("Linear Input (BulkLoad)")
+				{
+					f_Suite(CPackedMapTester(EPopulateMode_LinearBulkLoad));
+				};
+			};
+		}
 
 		DMibTestRegister(CPackedMapPerformance_Tests, Malterlib::Container);
 	}

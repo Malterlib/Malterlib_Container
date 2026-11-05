@@ -73,16 +73,6 @@ namespace NMib::NContainer
 		using CLocation = NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>;
 
 	private:
-		using CChar = typename t_CStr::CChar;
-
-		using CRegistryKey = TCConditional
-			<
-				(t_Flags & ERegistryFlag_DuplicateKeys) != 0
-				, TCConditional<(t_Flags & ERegistryFlag_PreserveWhitspace) != 0, TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>, TCRegistryKeyStrMulti<t_CKey, t_CStr>>
-				, TCRegistryKeyStr<t_CKey, t_CStr>
-			>
-		;
-
 		template <typename t_CKey2, typename t_CStr2>
 		friend struct TCRegistryKeyStr;
 
@@ -97,6 +87,16 @@ namespace NMib::NContainer
 
 		template <typename tf_CObjectType, typename tf_CAllocator, typename ...tfp_CParams>
 		friend tf_CObjectType *NMib::fg_ConstructObject(tf_CAllocator &&_Allocator, tfp_CParams && ...p_Params);
+
+		using CChar = typename t_CStr::CChar;
+
+		using CRegistryKey = TCConditional
+			<
+				(t_Flags & ERegistryFlag_DuplicateKeys) != 0
+				, TCConditional<(t_Flags & ERegistryFlag_PreserveWhitspace) != 0, TCRegistryKeyStrPreserve<t_CKey, t_CStr, t_Flags>, TCRegistryKeyStrMulti<t_CKey, t_CStr>>
+				, TCRegistryKeyStr<t_CKey, t_CStr>
+			>
+		;
 
 		struct CAVLCompare_TCRegistry
 		{
@@ -116,8 +116,9 @@ namespace NMib::NContainer
 			using CIterator = typename CTree::CIterator;
 
 			CChildren_Sorted(CChildren_Sorted &&_Other);
-			CChildren_Sorted &operator = (CChildren_Sorted &&_Other);
 			CChildren_Sorted();
+
+			CChildren_Sorted &operator = (CChildren_Sorted &&_Other);
 
 			CIterator f_GetIterator() const;
 			void f_Insert(TCRegistry *_pReg);
@@ -212,10 +213,9 @@ namespace NMib::NContainer
 			t_CStr f_FormatLocation(int _Location) const;
 		};
 
-	public:
-		static constexpr bool mc_bSupportForceCreate = CRegistryKey::mc_bSupportForceCreate;
-		static constexpr bool mc_bSupportWhiteSpace = CRegistryKey::mc_bSupportWhiteSpace;
-		static constexpr bool mc_bSupportLocation = CRegistryKey::mc_bSupportLocation;
+	public: // NOLINT(malterlib-member-order): the public declarations use the private CRegistryKey, CChildren_Sorted, CChildren_PreserveOrder, CPreserveParseContext and CEmptyParseContext
+		static constexpr bool mc_bSupportWhiteSpace = CRegistryKey::mc_bSupportWhiteSpace; // NOLINT(malterlib-member-order): CParseContext and the default template arguments below use it
+		static constexpr bool mc_bSupportLocation = CRegistryKey::mc_bSupportLocation;     // NOLINT(malterlib-member-order): CParseContext and the default template arguments below use it
 
 		using CChildren = TCConditional<(t_Flags & ERegistryFlag_PreserveOrder) != 0, CChildren_PreserveOrder, CChildren_Sorted>;
 		using CKey = t_CKey;
@@ -379,6 +379,8 @@ namespace NMib::NContainer
 
 		template <bool tf_bAllowLineBreakInEscapedString>
 		static t_CStr fs_ParseIdentifierStr(ch8 const * &o_pParse, CParseContext &_ParseContext, bool &_bWasEscaped);
+
+		static constexpr bool mc_bSupportForceCreate = CRegistryKey::mc_bSupportForceCreate;
 
 	private:
 		TCRegistry(TCRegistry *_pParent);

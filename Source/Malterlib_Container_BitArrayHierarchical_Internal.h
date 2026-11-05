@@ -9,13 +9,7 @@ namespace NMib::NContainer::NPrivate
 	struct TCBitArrayHierarchicalInternalArray
 		: public TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>
 	{
-		static constexpr bool mc_bIsRoot = (t_nBitsInternal <= t_nBitsPerEntry);
-		static constexpr bool mc_bIsFirstLevel = t_nBitsInternal == t_nBits;
-		static constexpr aint mc_nSuperBits = t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry);
-
 		using CSuper = TCBitArrayHierarchicalInternalArray<t_nBitsPerEntry, t_nBits, t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry)>;
-
-		TCBitArray<t_nBitsInternal> m_Bits;
 
 		constexpr TCBitArrayHierarchicalInternalArray(bool _bInitValues);
 		void f_Clear();
@@ -56,6 +50,12 @@ namespace NMib::NContainer::NPrivate
 
 		template <typename tf_CFunctor>
 		void f_EnumSetBits(tf_CFunctor &&_Functor, umint _StartBit, umint _EndBit) const;
+
+		static constexpr bool mc_bIsRoot = (t_nBitsInternal <= t_nBitsPerEntry);
+		static constexpr bool mc_bIsFirstLevel = t_nBitsInternal == t_nBits;
+		static constexpr aint mc_nSuperBits = t_nBitsInternal == 1 ? 0 : ((t_nBitsInternal + t_nBitsPerEntry - 1) / t_nBitsPerEntry);
+
+		TCBitArray<t_nBitsInternal> m_Bits;
 	};
 
 	template <umint t_nBitsPerEntry, umint t_nBits, umint t_nBitsInternal>

@@ -108,9 +108,9 @@ namespace NMib::NContainer
 
 		struct CPageAllocator : public NMemory::CAllocator_Heap
 		{
-			static constexpr bool mc_bIsDefault = false;
-
 			DMibNamedAsMemberFunction only_parameters_aliased static void f_Free(void *_pBlock, umint _Size);
+
+			static constexpr bool mc_bIsDefault = false;
 		};
 
 		uint8 *fp_InsertPage(bool _bFront);

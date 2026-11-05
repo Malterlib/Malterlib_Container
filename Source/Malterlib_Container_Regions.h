@@ -33,7 +33,7 @@ namespace NMib::NContainer
 		struct CRegionData;
 		using CMap = TCMap<t_CKey, CRegionData, CSort_Default, t_CAllocator>;
 
-	public:
+	public: // NOLINT(malterlib-member-order): the public declarations use CMap and CRegionData
 		using CIterator = typename CMap::CIterator;
 		using CIteratorConst = typename CMap::CIteratorConst;
 

@@ -6,21 +6,17 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CStr>
 	struct TCRegistryKeyStr
 	{
-		static constexpr bool mc_bSupportForceCreate = false;
-		static constexpr bool mc_bSupportLocation = false;
-		static constexpr bool mc_bSupportWhiteSpace = false;
-
 		using CKey = t_CKey;
 		using CStr = t_CStr;
+
+		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+		TCRegistryKeyStr(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
 		void f_Move(TCRegistryKeyStr &&_Other);
 		COrdering_Partial operator <=> (TCRegistryKeyStr const &_Right) const noexcept;
 		void f_Copy(TCRegistryKeyStr const &_Src);
 		void f_Set(t_CKey const &_Str);
 		t_CKey const &f_GetName() const;
-
-		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
-		TCRegistryKeyStr(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
 		template <typename tf_CKey>
 		COrdering_Partial operator <=> (tf_CKey const &_Right) const noexcept;
@@ -43,11 +39,15 @@ namespace NMib::NContainer
 		template <typename tf_CIterator, typename tf_CStr>
 		static void fs_FindIterator(tf_CIterator &_Iterator, tf_CStr const &_ToFind);
 
+		static constexpr bool mc_bSupportForceCreate = false;
+		static constexpr bool mc_bSupportLocation = false;
+		static constexpr bool mc_bSupportWhiteSpace = false;
+
 	private:
 		// Don't allow copy construction
 		TCRegistryKeyStr(TCRegistryKeyStr const &_Other) = delete;
-		TCRegistryKeyStr &operator = (TCRegistryKeyStr const &_Other) = delete;
 		TCRegistryKeyStr(TCRegistryKeyStr &&_Other) = delete;
+		TCRegistryKeyStr &operator = (TCRegistryKeyStr const &_Other) = delete;
 		TCRegistryKeyStr &operator = (TCRegistryKeyStr &&_Other) = delete;
 
 		t_CKey mp_Name;
@@ -56,24 +56,20 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CStr>
 	struct TCRegistryKeyStrMulti
 	{
-		static constexpr bool mc_bSupportForceCreate = true;
-		static constexpr bool mc_bSupportLocation = false;
-		static constexpr bool mc_bSupportWhiteSpace = false;
-
 		struct CKey
 		{
 			t_CKey m_Name;
 			uint32 m_Sequence;
 		};
 
+		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+		TCRegistryKeyStrMulti(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
+
 		void f_Move(TCRegistryKeyStrMulti &&_Other);
 		COrdering_Partial operator <=> (TCRegistryKeyStrMulti const &_Right) const noexcept;
 		void f_Copy(TCRegistryKeyStrMulti const &_Src);
 		void f_Set(t_CStr const &_Str);
 		t_CKey const &f_GetName() const;
-
-		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
-		TCRegistryKeyStrMulti(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
 		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
 		void f_NewSequence(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
@@ -99,10 +95,14 @@ namespace NMib::NContainer
 		template <typename tf_CIterator, typename tf_CKey>
 		static void fs_FindIterator(tf_CIterator &_Iterator, tf_CKey const &_ToFind);
 
+		static constexpr bool mc_bSupportForceCreate = true;
+		static constexpr bool mc_bSupportLocation = false;
+		static constexpr bool mc_bSupportWhiteSpace = false;
+
 	private:
 		TCRegistryKeyStrMulti(TCRegistryKeyStrMulti const &_Other) = delete;
-		TCRegistryKeyStrMulti &operator = (TCRegistryKeyStrMulti const &_Other) = delete;
 		TCRegistryKeyStrMulti(TCRegistryKeyStrMulti &&_Other) = delete;
+		TCRegistryKeyStrMulti &operator = (TCRegistryKeyStrMulti const &_Other) = delete;
 		TCRegistryKeyStrMulti &operator = (TCRegistryKeyStrMulti &&_Other) = delete;
 
 		t_CKey mp_Name;
@@ -113,10 +113,6 @@ namespace NMib::NContainer
 	template <typename t_CKey, typename t_CStr, ERegistryFlag t_Flags>
 	struct TCRegistryKeyStrPreserve
 	{
-		static constexpr bool mc_bSupportWhiteSpace = true;
-		static constexpr bool mc_bSupportForceCreate = true;
-		static constexpr bool mc_bSupportLocation = true;
-
 		struct CKey
 		{
 			t_CKey m_Name;
@@ -125,6 +121,9 @@ namespace NMib::NContainer
 
 		using CValueLocation = TCConditional<(t_Flags & ERegistryFlag_FullLocation) != 0, NStr::TCParseLocation<t_CStr, true>, uint8>;
 		using CLocation = NStr::TCParseLocation<t_CStr, (t_Flags & ERegistryFlag_FullLocation) != 0>;
+
+		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
+		TCRegistryKeyStrPreserve(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
 		void f_Move(TCRegistryKeyStrPreserve &&_Other);
 		COrdering_Partial operator <=> (TCRegistryKeyStrPreserve const &_Right) const noexcept;
@@ -143,9 +142,6 @@ namespace NMib::NContainer
 		void f_SetForceEscapedValue(bool _bForced);
 		void f_SetWhiteSpace(ERegistryWhiteSpaceLocation _Location, t_CStr const &_Str);
 		t_CStr const &f_GetWhiteSpace(ERegistryWhiteSpaceLocation _Location) const;
-
-		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
-		TCRegistryKeyStrPreserve(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
 
 		template <typename tf_CKey, typename tf_CData, ERegistryFlag tf_Flags, typename tf_CStr>
 		void f_NewSequence(TCRegistry<tf_CKey, tf_CData, tf_Flags, tf_CStr> *_pParent);
@@ -170,10 +166,14 @@ namespace NMib::NContainer
 		template <typename tf_CIterator, typename tf_CStr>
 		static void fs_FindIterator(tf_CIterator &_Iterator, tf_CStr const &_ToFind);
 
+		static constexpr bool mc_bSupportWhiteSpace = true;
+		static constexpr bool mc_bSupportForceCreate = true;
+		static constexpr bool mc_bSupportLocation = true;
+
 	private:
 		TCRegistryKeyStrPreserve(TCRegistryKeyStrPreserve const &_Other) = delete;
-		TCRegistryKeyStrPreserve &operator = (TCRegistryKeyStrPreserve const &_Other) = delete;
 		TCRegistryKeyStrPreserve(TCRegistryKeyStrPreserve &&_Other) = delete;
+		TCRegistryKeyStrPreserve &operator = (TCRegistryKeyStrPreserve const &_Other) = delete;
 		TCRegistryKeyStrPreserve &operator = (TCRegistryKeyStrPreserve &&_Other) = delete;
 
 		t_CKey mp_Name;

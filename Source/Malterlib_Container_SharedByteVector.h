@@ -24,9 +24,9 @@ namespace NMib::NContainer
 		CSharedByteVector(CSharedByteVector const &_Other, umint _Offset, umint _nBytes);
 
 		CSharedByteVector(CSharedByteVector const &_Other) = default;
-		CSharedByteVector &operator = (CSharedByteVector const &_Other);
-
 		CSharedByteVector(CSharedByteVector &&_Other);
+
+		CSharedByteVector &operator = (CSharedByteVector const &_Other);
 		CSharedByteVector &operator = (CSharedByteVector &&_Other);
 
 		uint8 const *f_GetArray() const;

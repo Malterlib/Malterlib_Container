@@ -13,9 +13,6 @@ namespace NMib::NContainer::NPrivate
 		TCMapNodeCompare_Default(TCMapNodeCompare_Default const &_Other) = default;
 		TCMapNodeCompare_Default(TCMapNodeCompare_Default &&_Other) = default;
 
-		TCMapNodeCompare_Default &operator = (TCMapNodeCompare_Default const &_Other) = default;
-		TCMapNodeCompare_Default &operator = (TCMapNodeCompare_Default &&_Other) = default;
-
 		template <typename tf_CNode, typename tf_CKey>
 		TCMapNodeCompare_Default(TCMapNodeCompare_Default<tf_CNode, tf_CKey> const &_Other)
 		{
@@ -25,6 +22,9 @@ namespace NMib::NContainer::NPrivate
 		TCMapNodeCompare_Default(TCMapNodeCompare_Default<tf_CNode, tf_CKey> &&_Other)
 		{
 		}
+
+		TCMapNodeCompare_Default &operator = (TCMapNodeCompare_Default const &_Other) = default;
+		TCMapNodeCompare_Default &operator = (TCMapNodeCompare_Default &&_Other) = default;
 
 		template <typename tf_CNode, typename tf_CKey>
 		TCMapNodeCompare_Default &operator = (TCMapNodeCompare_Default<tf_CNode, tf_CKey> const &_Other)
@@ -65,9 +65,6 @@ namespace NMib::NContainer::NPrivate
 		TCMapNodeCompare_Custom(TCMapNodeCompare_Custom const &_Other) = default;
 		TCMapNodeCompare_Custom(TCMapNodeCompare_Custom &&_Other) = default;
 
-		TCMapNodeCompare_Custom &operator = (TCMapNodeCompare_Custom const &_Other) = default;
-		TCMapNodeCompare_Custom &operator = (TCMapNodeCompare_Custom &&_Other) = default;
-
 		template <typename tf_CNode>
 		TCMapNodeCompare_Custom(TCMapNodeCompare_Custom<tf_CNode, t_CCompare> const &_Other)
 			: mp_Compare(_Other.mp_Compare)
@@ -79,6 +76,15 @@ namespace NMib::NContainer::NPrivate
 			: mp_Compare(fg_Move(_Other.mp_Compare))
 		{
 		}
+
+		template <typename ...tfp_CParams>
+		TCMapNodeCompare_Custom(tfp_CParams && ...p_Params)
+			: mp_Compare(fg_Forward<tfp_CParams>(p_Params)...)
+		{
+		}
+
+		TCMapNodeCompare_Custom &operator = (TCMapNodeCompare_Custom const &_Other) = default;
+		TCMapNodeCompare_Custom &operator = (TCMapNodeCompare_Custom &&_Other) = default;
 
 		template <typename tf_CNode>
 		TCMapNodeCompare_Custom &operator = (TCMapNodeCompare_Custom<tf_CNode, t_CCompare> const &_Other)
@@ -92,12 +98,6 @@ namespace NMib::NContainer::NPrivate
 		{
 			mp_Compare = fg_Move(_Other.mp_Compare);
 			return *this;
-		}
-
-		template <typename ...tfp_CParams>
-		TCMapNodeCompare_Custom(tfp_CParams && ...p_Params)
-			: mp_Compare(fg_Forward<tfp_CParams>(p_Params)...)
-		{
 		}
 
 		template <typename tf_CKeyLeft, typename tf_CKeyRight>
@@ -144,9 +144,6 @@ namespace NMib::NContainer::NPrivate
 		TCMapNodeCompare_Custom(TCMapNodeCompare_Custom const &_Other) = default;
 		TCMapNodeCompare_Custom(TCMapNodeCompare_Custom &&_Other) = default;
 
-		TCMapNodeCompare_Custom &operator = (TCMapNodeCompare_Custom const &_Other) = default;
-		TCMapNodeCompare_Custom &operator = (TCMapNodeCompare_Custom &&_Other) = default;
-
 		template <typename tf_CNode>
 		TCMapNodeCompare_Custom(TCMapNodeCompare_Custom<tf_CNode, t_CCompare> const &_Other)
 		{
@@ -156,6 +153,14 @@ namespace NMib::NContainer::NPrivate
 		TCMapNodeCompare_Custom(TCMapNodeCompare_Custom<tf_CNode, t_CCompare> &&_Other)
 		{
 		}
+
+		template <typename ...tfp_CParams>
+		TCMapNodeCompare_Custom(tfp_CParams && ...p_Params)
+		{
+		}
+
+		TCMapNodeCompare_Custom &operator = (TCMapNodeCompare_Custom const &_Other) = default;
+		TCMapNodeCompare_Custom &operator = (TCMapNodeCompare_Custom &&_Other) = default;
 
 		template <typename tf_CNode>
 		TCMapNodeCompare_Custom &operator = (TCMapNodeCompare_Custom<tf_CNode, t_CCompare> const &_Other)
@@ -167,11 +172,6 @@ namespace NMib::NContainer::NPrivate
 		TCMapNodeCompare_Custom &operator = (TCMapNodeCompare_Custom<tf_CNode, t_CCompare> &&_Other)
 		{
 			return *this;
-		}
-
-		template <typename ...tfp_CParams>
-		TCMapNodeCompare_Custom(tfp_CParams && ...p_Params)
-		{
 		}
 
 		template <typename tf_CKeyLeft, typename tf_CKeyRight>
