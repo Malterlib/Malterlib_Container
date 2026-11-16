@@ -234,7 +234,7 @@ namespace NMib::NContainer
 		template <typename t_CMap2, EMapIteratorAccess t_Access2, EMapIteratorFlags t_Flags2>
 		friend struct NPrivate::TCMapIterator;
 
-		using CUserData =NTraits::TCRemoveReference<typename NPrivate::TCMapUserData<t_CKey, t_CValue>::CType>;
+		using CUserData = NTraits::TCRemoveReference<typename NPrivate::TCMapUserData<t_CKey, t_CValue>::CType>;
 
 	public: // NOLINT(malterlib-member-order): the public declarations use the protected CUserData
 		constexpr ~TCMap();
