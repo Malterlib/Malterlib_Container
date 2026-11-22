@@ -226,9 +226,10 @@ namespace NMib::NContainer
 
 	template <typename t_CKey, typename t_CData, ERegistryFlag t_Flags, typename t_CStr>
 		requires cCompatibleRegistryFlags<t_CStr, t_Flags>
-	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_DeleteChild(t_CStr _Name, bool _bDeleteEmptyParentDirs)
+	bool TCRegistry<t_CKey, t_CData, t_Flags, t_CStr>::f_DeleteChild(t_CStr const &_Name, bool _bDeleteEmptyParentDirs)
 	{
-		TCRegistry *pChild = fp_GetChildParse(_Name, fg_NullPtr<t_CStr>());
+		t_CStr Path = _Name;
+		TCRegistry *pChild = fp_GetChildParse(Path, fg_NullPtr<t_CStr>());
 
 		if (pChild)
 		{

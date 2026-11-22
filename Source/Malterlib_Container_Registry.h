@@ -253,7 +253,7 @@ namespace NMib::NContainer
 		TCRegistry const *f_GetChildNoPath(t_CKey const &_Str) const;
 		TCRegistry *f_GetChildNoPath(t_CKey const &_Str);
 		void f_DeleteChild(TCRegistry *_pChild);
-		bool f_DeleteChild(t_CStr _Name, bool _bDeleteEmptyParentDirs = false);
+		bool f_DeleteChild(t_CStr const &_Name, bool _bDeleteEmptyParentDirs = false);
 		bool f_DeleteChildNoPath(t_CKey const &_Name, bool _bDeleteEmptyParentDirs = false);
 		void f_DeleteAllChildren();
 		void f_MoveChild(TCRegistry *_pChild, TCRegistry *_pAfter);
